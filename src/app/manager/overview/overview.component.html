@@ -1,3 +1,17 @@
 <p>
   Overview works!
 </p>
+
+<ag-grid-angular
+  style="width: 100%; height: 100%;"
+  class="ag-theme-balham"
+
+  [enableSorting]="true"
+  [enableFilter]="true"
+
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+
+  rowSelection="multiple"
+>
+</ag-grid-angular>
