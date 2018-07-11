@@ -1,0 +1,82 @@
+@import 'colors';
+@import 'media';
+
+:host {
+  justify-self: end;
+  align-self: center;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+
+  @include for-tablet-landscape-down {
+    font-size: 10px;
+  }
+
+  /* Style the list */
+  ul.navigation {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  /* Display list items side by side */
+  ul.navigation li {
+    // padding: 0 8px;
+    margin-left: 8px;
+    display: inline;
+    user-select: none;
+    position: relative;
+    // font-size: 18px;
+    span::after {
+      content: '';
+      // min-width: 4px;
+      // min-height: 4px;
+      height: 2px;
+      // width: 100%;
+      border-radius: 4px;
+      background: $green;
+      position: absolute;
+      // left: calc(50% - 2px);
+      left: 12px;
+      right: 0px;
+      bottom: -4px;
+      transform: scaleX(1);
+      transition: transform 300ms ease;
+    }
+    &:before {
+      padding: 8px 2px 8px 4px;
+      color: $dark;
+      content: '|';
+      opacity: 0.2;
+    }
+    &:first-of-type {
+      span::after {
+        left: 0px;
+      }
+      &:before {
+        content: '';
+      }
+    }
+  }
+
+  /* Add a color to all links inside the list */
+  ul.navigation li a {
+    color: $dark;
+    opacity: 0.6;
+    text-decoration: none;
+    transform: opacity 100ms ease;
+    user-select: unset;
+    cursor: pointer;
+
+    &::after {
+      transform: scaleX(0.2);
+    }
+  }
+
+  /* Add a color on mouse-over */
+  ul.navigation li a:hover {
+    color: $dark;
+    opacity: 1;
+  }
+}

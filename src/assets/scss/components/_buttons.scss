@@ -1,0 +1,71 @@
+@import 'colors';
+
+.btn {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border-radius: 4px;
+  border: 2px solid transparentize($text, 0.8);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+  color: $text;
+  cursor: pointer;
+  transition: all 100ms;
+
+  &:hover {
+    border: 2px solid transparentize($text, 0.4);
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.rounded {
+    border-radius: 20px;
+  }
+
+  &.icon {
+    padding: 0;
+  }
+  &.icon-left {
+    padding-left: 0;
+  }
+  &.icon-right {
+    padding-right: 0;
+  }
+
+  &.ghost {
+    border-color: transparent;
+  }
+
+  &.grey {
+    background-color: $grey;
+    border-color: $grey;
+  }
+
+  &.no-fill {
+    background-color: transparent;
+  }
+
+  &.green {
+    background-color: $green;
+    border-color: $green;
+    color: $white;
+    &:hover {
+      background-color: $green-alt;
+      border-color: $green-alt;
+    }
+  }
+
+  &.raised {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    &:hover {
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    }
+  }
+}

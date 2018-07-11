@@ -1,0 +1,8 @@
+.cdk-overlay-backdrop {
+  &.cdk-overlay-backdrop-showing {
+    &.dark-backdrop {
+      background-color: #343a40;
+      opacity: 0.9;
+    }
+  }
+}

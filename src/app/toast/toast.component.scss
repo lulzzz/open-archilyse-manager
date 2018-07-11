@@ -1,0 +1,29 @@
+@import 'colors';
+
+:host {
+  background-color: $dark;
+  opacity: 0.9;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 6px;
+  padding: 10px 10px 10px 10px;
+  width: 240px;
+  height: 40px;
+  border-radius: 3px 3px 3px 3px;
+  color: #ffffff;
+  pointer-events: all;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: opacity 100ms ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

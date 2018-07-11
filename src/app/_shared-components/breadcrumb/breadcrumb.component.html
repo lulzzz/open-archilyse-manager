@@ -1,0 +1,24 @@
+<ul class="breadcrumb" [ngClass]="{'multiple': breadcrumb?.length > 2}">
+  <li *ngFor="let crumb of breadcrumb" class="breadcrumb-item">
+    <a *ngIf="crumb.back" href="javascript:history.back()" >
+      <span class="back-icon">
+        <i class="far fa-ellipsis-h"></i>
+      </span>
+      <span class="link-title">{{ crumb.title }}</span>
+    </a>
+    <a *ngIf="crumb.link" routerLink="{{crumb.link}}">
+      <span class="back-icon">
+        <i class="far fa-ellipsis-h"></i>
+      </span>
+      <span class="link-title">{{ crumb.title }}</span>
+    </a>
+    <span *ngIf="!crumb.link && !crumb.back && !crumb.compare1" [innerHTML]="crumb.title | safeHtml"></span>
+    <span *ngIf="crumb.compare1">
+      <span [ngClass]="{'layoutName': true, 'layoutNameRed': selected_mode==='Diff' || selected_mode==='A'}" routerLink="{{crumb.compare1Link}}">{{crumb.compare1}}</span>
+      <span class="vs">vs</span>
+      <span [ngClass]="{'layoutName': true, 'layoutNameBlue': selected_mode==='Diff' || selected_mode==='B'}" routerLink="{{crumb.compare2Link}}">{{crumb.compare2}}</span>
+    </span>
+  </li>
+</ul>
+
+

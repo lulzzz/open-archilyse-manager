@@ -1,0 +1,46 @@
+<div class="contents">
+  <h2>LOG IN</h2>
+
+  <form [formGroup]="logInForm" (ngSubmit)="logIn()" novalidate>
+
+    <div class="input">
+      <div class="input-label-wrapper">
+        <input type="text" id="email" formControlName="email" [ngClass]="{'shift': logInForm.value.email.length }">
+        <label for="email">Email</label>
+      </div>
+      <div class="subscript">
+        <div *ngIf="email.invalid && email.touched; then warn else info"></div>
+        <ng-template #info>
+          <div class="info">Your email address</div>
+        </ng-template>
+        <ng-template #warn>
+          <div class="warn">A valid email address is required</div>
+        </ng-template>
+      </div>
+    </div>
+
+
+    <div class="input">
+      <div class="input-label-wrapper">
+        <input type="password" id="password" formControlName="password" [ngClass]="{'shift': logInForm.value.password.length }">
+        <label for="password">Password</label>
+      </div>
+      <div class="subscript">
+        <div *ngIf="password.invalid && password.touched; then warnPw else infoPw"></div>
+        <ng-template #infoPw></ng-template>
+        <ng-template #warnPw>
+          <div class="warn">This is required</div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div *ngIf="userError$ | async" class="error">{{userErrorString}}</div>
+
+    <button type="submit" class="btn green" *ngIf="!(userLoading$ | async)" [disabled]="logInForm.invalid">Log In</button>
+    <button type="submit" class="btn green" *ngIf="userLoading$ | async" disabled>Logging In
+      <app-icon class="options" icon="fa-circle-notch fa-spin"></app-icon>
+    </button>
+
+  </form>
+
+</div>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="40px" viewBox="0 0 36 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Polygon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-5" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Tablet" transform="translate(-22.000000, -10.000000)" fill="#BBBDC6">
+            <path d="M42,11.1547005 L55.3205081,18.8452995 C56.5581124,19.5598306 57.3205081,20.8803387 57.3205081,22.3094011 L57.3205081,37.6905989 C57.3205081,39.1196613 56.5581124,40.4401694 55.3205081,41.1547005 L42,48.8452995 C40.7623957,49.5598306 39.2376043,49.5598306 38,48.8452995 L24.6794919,41.1547005 C23.4418876,40.4401694 22.6794919,39.1196613 22.6794919,37.6905989 L22.6794919,22.3094011 C22.6794919,20.8803387 23.4418876,19.5598306 24.6794919,18.8452995 L38,11.1547005 C39.2376043,10.4401694 40.7623957,10.4401694 42,11.1547005 Z" id="Polygon"></path>
+        </g>
+    </g>
+</svg>

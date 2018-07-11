@@ -1,0 +1,115 @@
+@import 'colors';
+@import 'media';
+
+::ng-deep .vs {
+  font-size: 10px;
+  font-weight: 800;
+  opacity: 0.6;
+}
+
+:host {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+
+  /* Style the list */
+  ul.breadcrumb {
+    padding: 10px 0;
+    list-style: none;
+  }
+
+  /* Display list items side by side */
+  ul.breadcrumb li {
+    display: inline;
+    // color: $green;
+    user-select: none;
+    opacity: 1;
+    position: relative;
+  }
+
+  /* Add a slash symbol (/) before/behind each list item */
+  ul.breadcrumb li + li:before {
+    padding: 8px 2px 8px 4px;
+    color: $dark;
+    font-family: 'Font Awesome 5 Pro';
+    content: '\f105';
+    opacity: 0.2;
+  }
+
+  /* Add a color to all links inside the list */
+  ul.breadcrumb li a {
+    color: $dark;
+    opacity: 0.6;
+    text-decoration: none;
+    transform: opacity 100ms ease;
+  }
+
+  /* Add a color on mouse-over */
+  ul.breadcrumb li a:hover {
+    // color: $green;
+    opacity: 1;
+    // text-decoration: underline;
+  }
+}
+
+.layoutName{
+  cursor: pointer;
+  white-space: nowrap;
+}
+.layoutNameRed{
+  border-bottom: 2px solid $red;
+}
+.layoutNameBlue{
+  border-bottom: 2px solid $blue;
+}
+.layoutNameRed:hover{
+  color: $red;
+}
+.layoutNameBlue:hover{
+  color: $blue;
+}
+
+@include for-tablet-landscape-down {
+  .multiple {
+    li:first-of-type {
+      .link-title {
+        display: none;
+        visibility: hidden;
+      }
+      .back-icon {
+        display: inline;
+        visibility: visible;
+      }
+    }
+  }
+
+  // ::ng-deep .layoutName {
+  //   max-width: 140px;
+  //   display: inline-block;
+  //   overflow: hidden;
+  //   white-space: nowrap;
+  //   text-overflow: ellipsis;
+  // }
+  // .link-title {
+  //   display: none;
+  //   visibility: hidden;
+  // }
+}
+
+// @include for-tablet-landscape-up {
+.back-icon {
+  display: none;
+  visibility: hidden;
+}
+// }
+
+// @include for-mo {
+//   .back-icon {
+//     display: none;
+//     visibility: hidden;
+//   }
+// }

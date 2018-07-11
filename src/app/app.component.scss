@@ -1,0 +1,96 @@
+@import 'media';
+@import 'colors';
+
+.app-content {
+
+  // display: flex;
+  // flex-direction: column;
+  // padding: 0 20px;
+  // position: relative;
+
+  // This avoids the footer to be over the message ("No projects"), push the footer down
+  flex-grow: 1;
+}
+
+.sub-nav-wrapper {
+  height: 40px;
+  border-top: 1px solid $grey;
+  border-bottom: 1px solid $grey;
+}
+
+.sub-nav {
+  display: grid;
+  grid-template-columns: 3fr 1fr; // A little more space for the breadcrumb
+  grid-template-areas: 'breadcrumb tabs';
+
+  @include for-phone-only {
+    grid-template-columns: 1fr; // A little more space for the breadcrumb
+    grid-template-areas: 'breadcrumb' 'tabs';
+  }
+}
+
+app-breadcrumb {
+  grid-area: breadcrumb;
+  @include for-phone-only {
+    // align-self: center !important;
+    // justify-self: center !important;
+  }
+}
+
+app-navigation {
+  grid-area: tabs;
+
+  /**
+    For the phone the parallel graph doesn't work
+    We don't give the users the ability to change.
+   */
+  @include for-phone-only {
+    visibility: hidden;
+    display: none;
+    margin-top: 8px;
+    align-self: center !important;
+    justify-self: center !important;
+  }
+}
+
+.background {
+  position: fixed;
+  z-index: -100;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  // background-color: #ffe066;
+  background-color: #fff;
+  // background-image: linear-gradient(-135deg, #e7ffd7 0%, #a8f7fb 100%);
+  background-image: linear-gradient(-135deg, #eff0f5 0%, #f4f1eb 100%);
+  &.dusty {
+    background-image: linear-gradient(-180deg, #dee2ed 0%, #f0ebd7 100%);
+  }
+
+  .dark-section {
+    position: absolute;
+    z-index: -100;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    clip-path: polygon(0% 100%, 100% 0%, 100% 100%, 0% 100%);
+    // background: rgba(0, 0, 0, 0.01);
+  }
+}
+
+.footer {
+  margin-top: 4px;
+  text-align: center;
+  color: #252c3a;
+  position: relative;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+  // position: absolute;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
+}

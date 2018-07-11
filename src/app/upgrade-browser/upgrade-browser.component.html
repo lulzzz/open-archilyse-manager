@@ -1,0 +1,33 @@
+<div class="errorWrapper">
+
+  <div class="content">
+    <h2>Please consider upgrading your browser.</h2>
+    <p>This application requires a modern browser.</p>
+    <p>There are a number of popular browsers for you to choose from should you wish to upgrade.</p>
+
+    <div class="browsers">
+      <a class="browser" href="https://www.google.com/chrome/" target="_blank">
+        <img src="assets/images/browsers/chrome48.png" />
+      </a>
+      <a class="browser" href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank">
+        <img src="assets/images/browsers/edge48.png" />
+      </a>
+      <a class="browser" href="https://www.mozilla.org/firefox/new/" target="_blank">
+        <img src="assets/images/browsers/firefox48.png" />
+      </a>
+      <a class="browser" href="https://www.opera.com/" target="_blank">
+        <img src="assets/images/browsers/opera48.png" />
+      </a>
+      <a class="browser" href="https://www.apple.com/macos/high-sierra/" target="_blank">
+        <img src="assets/images/browsers/safari48.png" />
+      </a>
+    </div>
+    <button *ngIf="isUserLoggedIn" class="btn green" (click)="toProjects()">
+      Go to project list
+    </button>
+    <button *ngIf="!isUserLoggedIn" class="btn green" (click)="toLogin()">
+      Go to login
+    </button>
+  </div>
+
+</div>

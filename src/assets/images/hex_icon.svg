@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Re:Re:Design" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" transform="translate(-5.000000, -5.000000)">
+            <rect id="Rectangle-3" x="0" y="0" width="32" height="32"></rect>
+            <g id="Group" transform="translate(5.000000, 6.000000)" fill="#FFFFFF" stroke="#FFFFFF" stroke-linejoin="round">
+                <polygon id="hex-1" points="5 10 9.33012702 12.5 9.33012702 17.5 5 20 0.669872981 17.5 0.669872981 12.5"></polygon>
+                <polygon id="hex-2" points="11 0 15.330127 2.5 15.330127 7.5 11 10 6.66987298 7.5 6.66987298 2.5"></polygon>
+                <polygon id="hex-3" points="17 10 21.330127 12.5 21.330127 17.5 17 20 12.669873 17.5 12.669873 12.5"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,56 @@
+.view-header {
+  height: 80px;
+  padding: 0 40px;
+  background-color: #ffffff;
+  margin-bottom: 40px;
+
+  .content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .title {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .nav {
+    display: flex;
+
+    .nav-item {
+      height: 80px;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      margin-right: 16px;
+      border-bottom: 2px solid transparent;
+      color: #252c3a;
+      &:last-child {
+        margin-right: 0;
+      }
+      &:focus {
+        outline: none;
+      }
+
+      &.active {
+        border-bottom: 2px solid #fbac33;
+      }
+
+      .icon {
+        width: 40px;
+      }
+    }
+  }
+}
+
+.view-body {
+  max-width: 1040px;
+  margin: 0 auto;
+}

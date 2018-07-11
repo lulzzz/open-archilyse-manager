@@ -1,0 +1,97 @@
+// // TAGS
+
+.ng2-tag-input {
+  border-bottom: none !important;
+  tag {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.05rem !important;
+    color: #444 !important;
+    border: 1px solid #e9ecef;
+    border-radius: 4px !important;
+    transition: all 0.3s !important;
+    padding: 0 8px !important;
+    height: 32px !important;
+    line-height: 32px !important;
+    background: #fff !important;
+    user-select: none !important;
+    outline: 0 !important;
+    cursor: default !important;
+    position: relative !important;
+    white-space: nowrap !important;
+    margin-right: 4px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+}
+
+.ng2-tags-container .tag-ripple {
+  display: none;
+  visibility: hidden;
+}
+
+tag:hover {
+  color: initial;
+  box-shadow: none !important;
+}
+
+.ng2-tags-container {
+  tag-input-form {
+    position: absolute;
+    bottom: -50px;
+    left: 4px;
+    width: 100%;
+    // display: none;
+    // visibility: hidden;
+
+    .ng2-tag-input__text-input {
+      width: 100%;
+    }
+  }
+
+  // The list of tags in the tag-edit sidebar
+  .tag-content {
+    display: flex;
+    align-items: center;
+    .value {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .color {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .delete-tag {
+      margin-left: 8px;
+    }
+  }
+}
+
+// The tags the appear on the project and layout lists
+.tag-list {
+  display: none;
+  @include for-tablet-portrait-up {
+    grid-area: tag-list;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .tag {
+    font-size: 13px;
+    height: 20px;
+    max-width: 90px;
+    white-space: nowrap;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 0 8px;
+    margin-right: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

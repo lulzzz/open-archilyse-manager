@@ -1,0 +1,35 @@
+@import 'colors';
+
+#floorplan{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#floorplanGraph{
+  width: 100%;
+  height: 100%;
+
+  //transform: rotateX(30deg)rotateZ(-45deg);
+
+  // This line avoid jagged edges in chrome
+  // https://stackoverflow.com/questions/6492027/css-transform-jagged-edges-in-chrome
+  -webkit-backface-visibility: hidden;
+
+}
+
+#parallelLegend,
+#floorplanLegend {
+  background-color: $text;
+  color: white;
+  position: absolute;
+  visibility: hidden;
+  padding: 10px;
+  border-radius: 4px;
+  height: auto;
+  white-space: nowrap;
+}
+
+#chart {
+  text-align: center;
+}

@@ -1,0 +1,194 @@
+@import 'colors';
+@import 'media';
+
+.sidebar {
+  height: 100vh;
+  width: 100vw;
+  max-width: 400px;
+  // background-color: #e9ecef;
+  background-color: #f1f1f1;
+  position: absolute;
+  right: 0;
+  box-shadow: -3px 0px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+  display: grid;
+  grid-template-areas:
+    'header'
+    'content'
+    'footer';
+  grid-template-rows: 60px 1fr auto;
+
+  h4{
+    margin: 0.4em 0 0 0.2em;
+  }
+
+  input,
+  textarea {
+    background: #fff;
+    border-radius: 4px;
+    padding: 8px;
+    font-weight: 400;
+  }
+  .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+    color: #252c3a;
+  }
+
+  .header {
+    grid-area: header;
+    height: 60px;
+    background: #495057;
+    font-size: 13px;
+    color: #f8f9fa;
+    letter-spacing: 0.21px;
+    padding: 20px;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    width: 100vw;
+    max-width: 400px;
+
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    align-items: center;
+  }
+
+  .content {
+    width: 100%;
+    grid-area: content;
+    padding: 20px;
+    max-width: 400px;
+
+    btn {
+      float: right;
+    }
+  }
+
+  .footer {
+    grid-area: footer;
+    padding: 20px;
+    .inline-buttons {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+
+  .valueRow{
+    justify-content: space-between;
+    display: flex;
+
+    &:hover{
+        text-decoration: underline;
+    }
+
+    .valueTitle{
+      float: left;
+    }
+    .valueColumn{
+      float: right;
+      font-weight: bold;
+    }
+  }
+
+  #flooplanBoxplot,
+  #flooplanBoxplotCompare,
+  #flooplanHistogram {
+    margin: 0 0 10px 0;
+    #legend {
+      color: #495057;
+    }
+  }
+}
+
+
+/**
+Controls for A -  Diff - B
+*/
+.center-button,
+.left-button,
+.right-button{
+  display: inline-block;
+}
+
+.center-button,
+.left-button {
+  margin-right: 0 !important;
+  button {
+    margin-right: 0 !important;
+    padding-right: 6px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+}
+
+.center-button {
+  button {
+    border-right: none !important;
+    border-left: none !important;
+  }
+}
+
+.center-button,
+.right-button {
+  margin-left: 0 !important;
+  button {
+    margin-left: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    padding-left: 6px !important;
+  }
+}
+
+.layoutRed{
+  border-bottom: 1px solid $red;
+}
+.layoutBlue{
+  border-bottom: 1px solid $blue;
+}
+
+/**
+  Floorplan sidebar specifics
+ */
+#floorplan {
+
+  /**
+    backdrop is not clicable except for the upper bar
+    That allows to change the content clicking in the 3d diagram
+   */
+  .backdrop {
+    right: 0;
+    left: 0;
+    top: 0;
+    height: 100px;
+  }
+
+  /**
+    Value in the sidebar is mor important tan any other value
+   */
+  .sidebar {
+    .boxplotTitle,
+    .histogramTitle {
+      text-align: center;
+      color: $dark;
+      font-weight: bold;
+      font-size: 12px;
+    }
+    .boxplotSubTitle,
+    .histogramSubTitle {
+      text-align: center;
+      color: $dark;
+      font-size: 12px;
+    }
+
+    .title {
+      font-size: 20px;
+    }
+    .value {
+      font-size: 25px;
+    }
+    .mediumText {
+      font-size: 20px;
+    }
+  }
+}

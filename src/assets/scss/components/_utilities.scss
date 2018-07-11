@@ -1,0 +1,15 @@
+@import 'media';
+
+.hidden-for-phone-only {
+  @include for-phone-only {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.hidden-for-tablet-portrait-up {
+  @include for-tablet-portrait-up {
+    display: none;
+    visibility: hidden;
+  }
+}

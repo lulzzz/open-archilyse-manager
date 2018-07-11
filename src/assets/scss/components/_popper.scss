@@ -1,0 +1,20 @@
+.ngxp__container {
+
+  text-transform: none !important;
+
+  &.arch {
+    border-radius: 4px;
+    border: 1px solid #495057;
+    background: #495057;
+    color: #fff;
+    font-weight: 400;
+    font-size: 13px;
+    box-shadow: none;
+    padding: 8px 16px;
+    z-index: 20;
+
+    .ngxp__arrow {
+      border-color: #495057;
+    }
+  }
+}
