@@ -2,6 +2,8 @@
   Floorplan overview
 </h1>
 
+<button class="btn green" (click)="georeference($event)" [disabled]="selectedNodes.length<=0" >Georeference</button>
+
 <ag-grid-angular
   style="width: 100%; height: 100%;"
   class="ag-theme-balham"

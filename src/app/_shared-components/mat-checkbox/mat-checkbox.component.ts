@@ -3,7 +3,7 @@ import { ICellRendererAngularComp } from "ag-grid-angular/main";
 
 @Component({
   selector: "checkbox-cell",
-  template: `<mat-checkbox [checked]="checked" (change)="onChange($event)"></mat-checkbox>`,
+  template: `<mat-checkbox [checked]="checked" [disabled]="!editable" (change)="onChange($event)"></mat-checkbox>`,
   styles: [
     `
       ::ng-deep
@@ -21,16 +21,25 @@ export class MatCheckboxComponent implements ICellRendererAngularComp {
   private params: any;
 
   checked: boolean = false;
+  editable: boolean = true;
 
   agInit(params: any): void {
     this.params = params;
+
+    if (this.params.editable === true ||
+        this.params.editable === false ){
+      this.editable = this.params.editable;
+    }
+
     this.checked = this.params.value;
   }
 
   // demonstrates how you can do "inline" editing of a cell
   onChange(event) {
-    this.checked = event.checked;
-    this.params.node.setDataValue(this.params.colDef, event.checked);
+    if (this.editable) {
+      this.checked = event.checked;
+      this.params.node.setDataValue(this.params.colDef, event.checked);
+    }
   }
 
   refresh(params: any): boolean {

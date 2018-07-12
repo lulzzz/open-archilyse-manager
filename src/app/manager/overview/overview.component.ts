@@ -83,6 +83,7 @@ export class OverviewComponent implements OnInit {
       frameworkComponents: {
         checkboxRenderer: MatCheckboxComponent,
       },
+      enableColResize: true,
       enableSorting: true,
       enableFilter: true,
       rowSelection:"multiple"

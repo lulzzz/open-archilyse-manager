@@ -14,11 +14,14 @@ export class FloorplanOverviewComponent implements OnInit {
    * https://www.ag-grid.com/angular-getting-started/
    */
 
+  selectedNodes = [];
+  selectedRows = [];
+
   gridOptions;
 
   columnDefs = [
-    {headerName: 'FloorPlan', field: 'floorPlan',  editable: false},
-    {headerName: 'ModelStructure_ID', field: 'modelStructureId',  editable: false},
+    {headerName: 'FloorPlan', field: 'floorPlan',  cellRenderer: this.cellPdfDownloadLink, editable: false},
+    {headerName: 'ModelStructure_ID', field: 'modelStructureId',  cellRenderer: this.cellEditorLink, editable: false},
     {headerName: 'Brüstungshöhe', field: 'bruestungshoehe', editable: true},
     {headerName: 'Fensterhöhe', field: 'fensterhoehe', editable: true},
     {headerName: 'Raumhöhe', field: 'raumhoehe', editable: true},
@@ -77,6 +80,10 @@ export class FloorplanOverviewComponent implements OnInit {
     this.gridOptions = <GridOptions>{
       rowData: this.rowData,
       columnDefs: this.columnDefs,
+      onSelectionChanged: () => {
+        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+        this.selectedRows = this.gridOptions.api.getSelectedRows();
+      },
       onGridReady: () => {
         this.gridOptions.api.sizeColumnsToFit();
       },
@@ -84,10 +91,25 @@ export class FloorplanOverviewComponent implements OnInit {
       frameworkComponents: {
         checkboxRenderer: MatCheckboxComponent,
       },
+      enableColResize: true,
       enableSorting: true,
       enableFilter: true,
       rowSelection:"multiple"
     };
   }
+
+  cellPdfDownloadLink(params) {
+    return '<a href="/assets/pdf/example.pdf" download="'+ params.value+'">'+ params.value+'</a>'
+  }
+
+  cellEditorLink(params) {
+    return '<a href="https://workplace.archilyse.com/editor" >'+ params.value+'</a>'
+  }
+
+  georeference(){
+    console.log("georeference", this.selectedNodes, this.selectedRows);
+    window.open(encodeURI("https://workplace.archilyse.com/georeference/building/the_feature_id_also_building_id/5b3f3cb4adcbc100097a6b36"), "_blank");
+  }
+
 
 }
