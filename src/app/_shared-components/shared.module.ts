@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from './icon/icon.component';
 import { RouterModule } from '@angular/router';
-import { MatInputModule, MatSlideToggleModule } from '@angular/material';
+import { MatInputModule, MatSlideToggleModule} from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 import { NgxPopperModule } from 'ngx-popper';
@@ -15,6 +15,7 @@ import {BreadcrumbComponent} from './breadcrumb/breadcrumb.component';
 import {NavigationComponent} from './navigation/navigation.component';
 import {SafeHtmlPipe} from '../_pipes/safeHtml.pipe';
 import {OrdinalPipe} from '../_pipes/ordinal.pipe';
+import { MatCheckboxComponent } from './mat-checkbox/mat-checkbox.component';
 
 @NgModule({
   imports: [
