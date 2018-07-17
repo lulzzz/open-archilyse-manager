@@ -31,7 +31,7 @@ export class OverviewComponent implements OnInit {
     {headerName: 'Position', field: 'position',  editable: true, onCellValueChanged: this.onCellValueChanged},
     {headerName: 'Area (m²)', field: 'area',  editable: true, onCellValueChanged: this.onCellValueChanged},
     {headerName: 'Rooms', field: 'rooms',  editable: true, onCellValueChanged: this.onCellValueChanged},
-    {headerName: 'InFloorplan', field: 'infloorplan',  editable: true, onCellValueChanged: this.onCellValueChanged},
+    {headerName: 'InFloorplan', field: 'infloorplan',  editable: true, cellRenderer: this.cellPdfDownloadLink, onCellValueChanged: this.onCellValueChanged},
     {headerName: 'CheckedPlan', field: 'checkedplan',
       cellRenderer: 'checkboxRenderer',
       editable: true, onCellValueChanged: this.onCellValueChanged}
@@ -102,6 +102,11 @@ export class OverviewComponent implements OnInit {
       rowSelection: 'multiple'
     };
   }
+
+  cellPdfDownloadLink(params) {
+    return `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`;
+  }
+
   onCellValueChanged(event) {
     // console.log('onCellValueChanged',event.newValue,event.oldValue);
     // console.log('ROW', event.data);
