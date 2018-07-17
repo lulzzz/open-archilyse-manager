@@ -25,9 +25,10 @@ export class NavigationService {
   setDiagramLinkActive(value: boolean) {
     this.diagramLinkActive.next(value);
   }
+
   /**
    * Current navigation options
-   * @param value
+   * @param options
    */
   setOptions(options) {
     this.options.next(options);

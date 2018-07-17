@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {GridOptions} from 'ag-grid';
 import {MatCheckboxComponent} from '../../_shared-components/mat-checkbox/mat-checkbox.component';
+import {ProcentRendererComponent} from '../../_shared-components/procent-renderer/procent-renderer.component';
 
 @Component({
   selector: 'app-overview',
@@ -13,6 +14,11 @@ export class OverviewComponent implements OnInit {
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
+
+  gridApi;
+  gridColumnApi;
+
+  filterModelSet = false;
 
   gridOptions;
 
@@ -27,7 +33,7 @@ export class OverviewComponent implements OnInit {
     {headerName: 'Rooms', field: 'rooms',  editable: true, onCellValueChanged: this.onCellValueChanged},
     {headerName: 'InFloorplan', field: 'infloorplan',  editable: true, onCellValueChanged: this.onCellValueChanged},
     {headerName: 'CheckedPlan', field: 'checkedplan',
-      cellRenderer: "checkboxRenderer",
+      cellRenderer: 'checkboxRenderer',
       editable: true, onCellValueChanged: this.onCellValueChanged}
   ];
 
@@ -76,22 +82,35 @@ export class OverviewComponent implements OnInit {
     this.gridOptions = <GridOptions>{
       rowData: this.rowData,
       columnDefs: this.columnDefs,
-      onGridReady: () => {
+      onFilterChanged: (params) => {
+        const model = params.api.getFilterModel();
+        this.filterModelSet = (model !== null) || Object.keys(model).length > 0;
+      },
+      onGridReady: (params) => {
+        this.gridApi = params.api;
+        this.gridColumnApi = params.columnApi;
         this.gridOptions.api.sizeColumnsToFit();
       },
       // rowHeight: 48, recommended row height for material design data grids,
       frameworkComponents: {
         checkboxRenderer: MatCheckboxComponent,
+        procentRenderer: ProcentRendererComponent
       },
       enableColResize: true,
       enableSorting: true,
       enableFilter: true,
-      rowSelection:"multiple"
+      rowSelection: 'multiple'
     };
   }
-  onCellValueChanged(event){
-    // console.log("onCellValueChanged",event.newValue,event.oldValue);
-    // console.log("ROW", event.data);
+  onCellValueChanged(event) {
+    // console.log('onCellValueChanged',event.newValue,event.oldValue);
+    // console.log('ROW', event.data);
+  }
+
+  clearFilters() {
+    this.filterModelSet = false;
+    this.gridApi.setFilterModel(null);
+    this.gridApi.onFilterChanged();
   }
 
 

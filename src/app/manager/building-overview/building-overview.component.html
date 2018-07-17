@@ -2,6 +2,8 @@
   Building overview
 </h1>
 
+<button class="btn green" (click)="clearFilters()">Clear Filters</button>
+
 <button class="btn green" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
 
 <button class="btn green" (click)="georeference($event)" [disabled]="selectedNodes.length<=0" >Georeference</button>

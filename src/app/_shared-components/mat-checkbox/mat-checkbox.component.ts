@@ -1,33 +1,22 @@
-import { Component } from "@angular/core";
-import { ICellRendererAngularComp } from "ag-grid-angular/main";
+import { Component } from '@angular/core';
+import { ICellRendererAngularComp } from 'ag-grid-angular/main';
 
 @Component({
-  selector: "checkbox-cell",
+  selector: 'checkbox-cell',
   template: `<mat-checkbox [checked]="checked" [disabled]="!editable" (change)="onChange($event)"></mat-checkbox>`,
-  styles: [
-    `
-      ::ng-deep
-      .mat-checkbox-layout {
-        /* horizontally align the checkbox */
-        width: 100%;
-        display: inline-block !important;
-        text-align: center;
-        margin-top: -4px; /* to offset the cells internal padding - could be done in cells CSS instead*/
-      }
-    `
-  ]
+  styleUrls: ['./mat-checkbox.component.scss']
 })
 export class MatCheckboxComponent implements ICellRendererAngularComp {
   private params: any;
 
-  checked: boolean = false;
-  editable: boolean = true;
+  checked = false;
+  editable = true;
 
   agInit(params: any): void {
     this.params = params;
 
     if (this.params.editable === true ||
-        this.params.editable === false ){
+        this.params.editable === false ) {
       this.editable = this.params.editable;
     }
 

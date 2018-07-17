@@ -16,6 +16,7 @@ import {NavigationComponent} from './navigation/navigation.component';
 import {SafeHtmlPipe} from '../_pipes/safeHtml.pipe';
 import {OrdinalPipe} from '../_pipes/ordinal.pipe';
 import { MatCheckboxComponent } from './mat-checkbox/mat-checkbox.component';
+import { ProcentRendererComponent } from './procent-renderer/procent-renderer.component';
 
 @NgModule({
   imports: [
