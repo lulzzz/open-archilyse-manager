@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AddRangeSelectionParams, GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-site-overview',
@@ -204,24 +205,32 @@ export class SiteOverviewComponent implements OnInit {
     };
   }
 
-  selectNotGeoreferenced() {
-    this.gridOptions.api.selectAll();
-    const nodes = this.gridOptions.api.getSelectedNodes();
-    nodes.forEach(node => {
-      if (node.data.building_id !== '') {
-        node.setSelected(false);
+  delete() {
+    let title;
+    let text;
+    let confirmButtonText;
+
+    if (this.selectedRows.length <= 1) {
+      title = `Delete this site?`;
+      text = `This action cannot be undone. Are you sure you want to delete this site?`;
+      confirmButtonText = 'Yes, delete it';
+    } else {
+      title = `Delete these ${this.selectedRows.length} sites?`;
+      text = `This action cannot be undone. Are you sure you want to delete these sites?`;
+      confirmButtonText = 'Yes, delete them';
+    }
+
+    swal({
+      title: title,
+      text: text,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      customClass: 'arch',
+    }).then(result => {
+      if (result.value) {
+        alert('Sites deleted!');
       }
     });
-  }
-
-  georeference() {
-    const address = 'Example Address';
-    const modelId = '5b3f3cb4adcbc100097a6b36';
-
-    window.open(
-      encodeURI('https://workplace.archilyse.com/georeference/map/' + address + '/' + modelId),
-      '_blank'
-    );
   }
 
   clearSelection() {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
+import swal from "sweetalert2";
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -129,7 +130,31 @@ export class UnitOverviewComponent implements OnInit {
   }
 
   delete() {
-    alert('Layouts deleted!');
+    let title;
+    let text;
+    let confirmButtonText;
+
+    if (this.selectedRows.length <= 1) {
+      title = `Delete this unit?`;
+      text = `This action cannot be undone. Are you sure you want to delete this unit?`;
+      confirmButtonText = 'Yes, delete it';
+    } else {
+      title = `Delete these ${this.selectedRows.length} units?`;
+      text = `This action cannot be undone. Are you sure you want to delete these units?`;
+      confirmButtonText = 'Yes, delete them';
+    }
+
+    swal({
+      title: title,
+      text: text,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      customClass: 'arch',
+    }).then(result => {
+      if (result.value) {
+        alert('Units deleted!');
+      }
+    });
   }
 
   georeference() {

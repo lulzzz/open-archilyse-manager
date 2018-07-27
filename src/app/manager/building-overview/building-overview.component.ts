@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AddRangeSelectionParams, GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-building-overview',
@@ -252,7 +253,31 @@ export class BuildingOverviewComponent implements OnInit {
   }
 
   delete() {
-    alert('Buildings deleted!');
+    let title;
+    let text;
+    let confirmButtonText;
+
+    if (this.selectedRows.length <= 1) {
+      title = `Delete this building?`;
+      text = `This action cannot be undone. Are you sure you want to delete this building?`;
+      confirmButtonText = 'Yes, delete it';
+    } else {
+      title = `Delete these ${this.selectedRows.length} buildings?`;
+      text = `This action cannot be undone. Are you sure you want to delete these buildings?`;
+      confirmButtonText = 'Yes, delete them';
+    }
+
+    swal({
+      title: title,
+      text: text,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      customClass: 'arch',
+    }).then(result => {
+      if (result.value) {
+        alert('Buildings deleted!');
+      }
+    });
   }
 
   georeference() {
