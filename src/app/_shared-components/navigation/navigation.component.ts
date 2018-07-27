@@ -48,29 +48,39 @@ export class NavigationComponent implements OnInit, OnDestroy {
       {
         tooltip: 'Global overview',
         title: 'Global',
-        link: '/manager'
+        link: '/manager',
       },
       {
         tooltip: 'Country overview',
         title: 'Country',
-        link: '/manager/country'
+        link: '/manager/country',
       },
       {
         tooltip: 'Region overview',
         title: 'Region',
-        link: '/manager/region'
+        link: '/manager/region',
+      },
+      {
+        tooltip: 'Site overview',
+        title: 'Sites',
+        link: '/manager/site',
       },
       {
         tooltip: 'Building overview',
         title: 'Building',
-        link: '/manager/building'
+        link: '/manager/building',
       },
       {
-        tooltip: 'Floorplan overview',
-        title: 'Floorplan',
-        link: '/manager/floorplan'
-      }];
-
+        tooltip: 'Unit overview',
+        title: 'Unit',
+        link: '/manager/unit',
+      },
+      {
+        tooltip: 'Layout overview',
+        title: 'Layout',
+        link: '/manager/layout',
+      },
+    ];
   }
 
   processURL(url) {

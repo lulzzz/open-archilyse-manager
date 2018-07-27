@@ -4,11 +4,11 @@ import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 
 @Component({
-  selector: 'app-building-overview',
-  templateUrl: './building-overview.component.html',
-  styleUrls: ['./building-overview.component.scss'],
+  selector: 'app-site-overview',
+  templateUrl: './site-overview.component.html',
+  styleUrls: ['./site-overview.component.scss'],
 })
-export class BuildingOverviewComponent implements OnInit {
+export class SiteOverviewComponent implements OnInit {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -25,182 +25,150 @@ export class BuildingOverviewComponent implements OnInit {
   gridOptions;
 
   columnDefs = [
-    { headerName: 'Site_Id', field: 'site_id', editable: false },
     { headerName: 'Object_ID', field: 'object_id', editable: false },
     { headerName: 'Building_ID', field: 'building_id', editable: false },
-    { headerName: 'Street', field: 'street', editable: true },
-    { headerName: 'Number', field: 'number', editable: true },
-    { headerName: 'ZIP', field: 'zip', editable: true },
-    { headerName: 'City', field: 'city', editable: true },
-    { headerName: 'Country', field: 'country', editable: true },
-    { headerName: 'Apartments', field: 'apartments', editable: false },
+    { headerName: 'Street', field: 'street', editable: false },
+    { headerName: 'Number', field: 'number', editable: false },
+    { headerName: 'ZIP', field: 'zip', editable: false },
+    { headerName: 'City', field: 'city', editable: false },
+    { headerName: 'Buildings', field: 'buildings', editable: false },
   ];
 
   rowData = [
     {
-      site_id: 'Example Site Id 0',
       object_id: '2102440',
       building_id: '01',
-      country: 'Switzerland',
       street: 'Gartenstrasse',
       number: '6',
       zip: '8002',
       city: 'Zürich',
-      apartments: '18',
+      buildings: '18',
     },
     {
-      site_id: 'Example Site Id 0',
       object_id: '2102440',
       building_id: '02',
-      country: 'Switzerland',
       street: 'Stockerstrasse',
       number: '54',
       zip: '8002',
       city: 'Zürich',
-      apartments: '5',
+      buildings: '5',
     },
     {
-      site_id: 'Example Site Id 1',
       object_id: '2105090',
       building_id: '01',
-      country: 'Switzerland',
       street: 'Turbinenstrasse',
       number: '31',
       zip: '8005',
       city: 'Zürich',
-      apartments: '31',
+      buildings: '31',
     },
     {
-      site_id: 'Example Site Id 1',
       object_id: '2105090',
       building_id: '02',
-      country: 'Switzerland',
       street: 'Turbinenstrasse',
       number: '33',
       zip: '8005',
       city: 'Zürich',
-      apartments: '29',
+      buildings: '29',
     },
     {
-      site_id: 'Example Site Id 1',
       object_id: '2105090',
       building_id: '03',
-      country: 'Switzerland',
       street: 'Turbinenstrasse',
       number: '35',
       zip: '8005',
       city: 'Zürich',
-      apartments: '32',
+      buildings: '32',
     },
     {
-      site_id: 'Example Site Id 1',
       object_id: '2105090',
       building_id: '04',
-      country: 'Switzerland',
       street: 'Turbinenstrasse',
       number: '37',
       zip: '8005',
       city: 'Zürich',
-      apartments: '30',
+      buildings: '30',
     },
     {
-      site_id: 'Example Site Id 1',
       object_id: '2105090',
       building_id: '05',
-      country: 'Switzerland',
       street: 'Turbinenstrasse',
       number: '39',
       zip: '8005',
       city: 'Zürich',
-      apartments: '32',
+      buildings: '32',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2105090',
       building_id: '06',
-      country: 'Switzerland',
       street: 'Turbinenstrasse',
       number: '41',
       zip: '8005',
       city: 'Zürich',
-      apartments: '30',
+      buildings: '30',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2109010',
       building_id: '01',
-      country: 'Switzerland',
       street: 'Badenerstrasse',
       number: '575',
       zip: '8048',
       city: 'Zürich',
-      apartments: '0',
+      buildings: '0',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2109010',
       building_id: '02',
-      country: 'Switzerland',
       street: 'Badenerstrasse',
       number: '581',
       zip: '8048',
       city: 'Zürich',
-      apartments: '0',
+      buildings: '0',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2111060',
       building_id: '01',
-      country: 'Switzerland',
       street: 'Leutschenbachstrasse',
       number: '50',
       zip: '8050',
       city: 'Zürich',
-      apartments: '79',
+      buildings: '79',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2111060',
       building_id: '',
-      country: 'Switzerland',
       street: 'Leutschenbachstrasse',
       number: '52',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      buildings: '4',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2111060',
       building_id: '',
-      country: 'Switzerland',
       street: 'Leutschenbachstrasse',
       number: '54',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      buildings: '4',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2111060',
       building_id: '',
-      country: 'Switzerland',
       street: 'Leutschenbachstrasse',
       number: '56',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      buildings: '4',
     },
     {
-      site_id: 'Example Site Id 2',
       object_id: '2111060',
       building_id: '',
-      country: 'Switzerland',
       street: 'Leutschenbachstrasse',
       number: '58',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      buildings: '4',
     },
   ];
 
@@ -236,11 +204,6 @@ export class BuildingOverviewComponent implements OnInit {
     };
   }
 
-  clearSelection() {
-    const nodes = this.gridOptions.api.getSelectedNodes();
-    nodes.forEach(node => node.setSelected(false));
-  }
-
   selectNotGeoreferenced() {
     this.gridOptions.api.selectAll();
     const nodes = this.gridOptions.api.getSelectedNodes();
@@ -251,10 +214,6 @@ export class BuildingOverviewComponent implements OnInit {
     });
   }
 
-  delete() {
-    alert('Buildings deleted!');
-  }
-
   georeference() {
     const address = 'Example Address';
     const modelId = '5b3f3cb4adcbc100097a6b36';
@@ -263,6 +222,11 @@ export class BuildingOverviewComponent implements OnInit {
       encodeURI('https://workplace.archilyse.com/georeference/map/' + address + '/' + modelId),
       '_blank'
     );
+  }
+
+  clearSelection() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    nodes.forEach(node => node.setSelected(false));
   }
 
   clearFilters() {

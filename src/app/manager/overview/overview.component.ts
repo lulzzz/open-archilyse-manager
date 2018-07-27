@@ -15,6 +15,9 @@ export class OverviewComponent implements OnInit {
    * https://www.ag-grid.com/angular-getting-started/
    */
 
+  selectedNodes = [];
+  selectedRows = [];
+
   gridApi;
   gridColumnApi;
 
@@ -86,6 +89,10 @@ export class OverviewComponent implements OnInit {
         const model = params.api.getFilterModel();
         this.filterModelSet = (model !== null) || Object.keys(model).length > 0;
       },
+      onSelectionChanged: () => {
+        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+        this.selectedRows = this.gridOptions.api.getSelectedRows();
+      },
       onGridReady: (params) => {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
@@ -110,6 +117,11 @@ export class OverviewComponent implements OnInit {
   onCellValueChanged(event) {
     // console.log('onCellValueChanged',event.newValue,event.oldValue);
     // console.log('ROW', event.data);
+  }
+
+  clearSelection() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    nodes.forEach(node => node.setSelected(false));
   }
 
   clearFilters() {

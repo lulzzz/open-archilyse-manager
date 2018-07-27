@@ -20,11 +20,11 @@
 
 .sub-nav {
   display: grid;
-  grid-template-columns: 1fr 1fr; // A little more space for the breadcrumb
+  grid-template-columns: 1fr 2fr;
   grid-template-areas: 'breadcrumb tabs';
 
   @include for-phone-only {
-    grid-template-columns: 1fr; // A little more space for the breadcrumb
+    grid-template-columns: 1fr 2fr;
     grid-template-areas: 'breadcrumb' 'tabs';
   }
 }

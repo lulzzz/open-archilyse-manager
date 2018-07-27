@@ -1,17 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { ManagerRoutingModule } from './manager-routing.module';
+import { NgxPopperModule } from 'ngx-popper';
+import { ManagerComponent } from './manager.component';
+import { AgGridModule } from 'ag-grid-angular';
+
+import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-checkbox.component';
+import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
+import { MatCheckboxModule } from '@angular/material';
+
 import { OverviewComponent } from './overview/overview.component';
-import {ManagerRoutingModule} from './manager-routing.module';
-import {NgxPopperModule} from 'ngx-popper';
-import {ManagerComponent} from './manager.component';
-import {AgGridModule} from 'ag-grid-angular';
-import { BuildingOverviewComponent } from './building-overview/building-overview.component';
 import { RegionOverviewComponent } from './region-overview/region-overview.component';
 import { CountryOverviewComponent } from './country-overview/country-overview.component';
-import { FloorplanOverviewComponent } from './floorplan-overview/floorplan-overview.component';
-import { MatCheckboxComponent} from '../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
-import {MatCheckboxModule} from '@angular/material';
+
+import { BuildingOverviewComponent } from './building-overview/building-overview.component';
+import { SiteOverviewComponent } from './site-overview/site-overview.component';
+import { UnitOverviewComponent } from './unit-overview/unit-overview.component';
+import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
 
 @NgModule({
   imports: [
@@ -36,7 +42,9 @@ import {MatCheckboxModule} from '@angular/material';
     BuildingOverviewComponent,
     RegionOverviewComponent,
     CountryOverviewComponent,
-    FloorplanOverviewComponent
-  ]
+    SiteOverviewComponent,
+    UnitOverviewComponent,
+    LayoutOverviewComponent,
+  ],
 })
-export class ManagerModule { }
+export class ManagerModule {}
