@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
-import swal from "sweetalert2";
+import swal from 'sweetalert2';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { parseParms } from '../url';
 
 @Component({
   selector: 'app-floorplan-overview',
   templateUrl: './layout-overview.component.html',
   styleUrls: ['./layout-overview.component.scss'],
 })
-export class LayoutOverviewComponent implements OnInit {
+export class LayoutOverviewComponent implements OnInit, OnDestroy {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -25,12 +28,18 @@ export class LayoutOverviewComponent implements OnInit {
 
   gridOptions;
 
+  fragment_sub: Subscription;
+
   columnDefs = [
     {
-      headerName: 'Unit_Id',
+      headerName: 'Unit_id',
       field: 'unit_id',
-      editable: false,
+      cellRenderer: this.viewUnit,
+      editable: true,
     },
+    { headerName: 'Name', field: 'name', editable: true },
+    { headerName: 'Description', field: 'description', editable: true },
+
     {
       headerName: 'FloorPlan',
       field: 'floorPlan',
@@ -43,19 +52,13 @@ export class LayoutOverviewComponent implements OnInit {
       cellRenderer: this.cellEditorLink,
       editable: false,
     },
-    {
-      headerName: 'Brüstungshöhe',
-      field: 'bruestungshoehe',
-      filter: 'agNumberColumnFilter',
-      editable: true,
-    },
-    {
-      headerName: 'Fensterhöhe',
-      field: 'fensterhoehe',
-      filter: 'agNumberColumnFilter',
-      editable: true,
-    },
-    { headerName: 'Raumhöhe', field: 'raumhoehe', filter: 'agNumberColumnFilter', editable: true },
+
+    { headerName: 'Images', field: 'images', editable: true },
+    { headerName: 'Model_structure', field: 'model_structure', editable: true },
+    { headerName: 'Created', field: 'created', editable: true },
+    { headerName: 'Updated', field: 'updated', editable: true },
+
+    // Custom externals params
     { headerName: 'Remarks', field: 'remarks', editable: true },
   ];
 
@@ -116,7 +119,27 @@ export class LayoutOverviewComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  addRow() {
+    this.gridOptions.api.updateRowData({
+      add: [
+        {
+          unit_id: '',
+          floorPlan: '',
+          modelStructureId: '',
+          bruestungshoehe: 0,
+          fensterhoehe: 0,
+          raumhoehe: 0,
+          remarks: '',
+        },
+      ],
+    });
+  }
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  viewUnit(params) {
+    return params.value + `<a href='/manager/unit#unit_id=` + params.data.unit_id + `' > View </a>`;
+  }
 
   ngOnInit() {
     this.gridOptions = <GridOptions>{
@@ -124,7 +147,7 @@ export class LayoutOverviewComponent implements OnInit {
       columnDefs: this.columnDefs,
       onFilterChanged: params => {
         const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null || Object.keys(model).length > 0;
+        this.filterModelSet = model !== null && Object.keys(model).length > 0;
       },
       onSelectionChanged: () => {
         this.selectedNodes = this.gridOptions.api.getSelectedNodes();
@@ -134,6 +157,23 @@ export class LayoutOverviewComponent implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridOptions.api.sizeColumnsToFit();
+
+        this.fragment_sub = this.route.fragment.subscribe(fragment => {
+          const urlParams = parseParms(fragment);
+
+          const model = {};
+          Object.keys(urlParams).forEach(key => {
+            const found = this.columnDefs.find(columnDef => columnDef.field === key);
+            if (found) {
+              model[key] = {
+                filter: urlParams[key],
+                filterType: 'text',
+                type: 'equals',
+              };
+            }
+          });
+          this.gridApi.setFilterModel(model);
+        });
       },
       // rowHeight: 48, recommended row height for material design data grids,
       frameworkComponents: {
@@ -158,29 +198,31 @@ export class LayoutOverviewComponent implements OnInit {
   }
 
   delete() {
-    let title;
-    let text;
-    let confirmButtonText;
+    let titleVal;
+    let textVal;
+    let confirmButtonTextVal;
 
     if (this.selectedRows.length <= 1) {
-      title = `Delete this layout?`;
-      text = `This action cannot be undone. Are you sure you want to delete this layout?`;
-      confirmButtonText = 'Yes, delete it';
+      titleVal = `Delete this layout?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete this layout?`;
+      confirmButtonTextVal = 'Yes, delete it';
     } else {
-      title = `Delete these ${this.selectedRows.length} layouts?`;
-      text = `This action cannot be undone. Are you sure you want to delete these layouts?`;
-      confirmButtonText = 'Yes, delete them';
+      titleVal = `Delete these ${this.selectedRows.length} layouts?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete these layouts?`;
+      confirmButtonTextVal = 'Yes, delete them';
     }
 
     swal({
-      title: title,
-      text: text,
+      title: titleVal,
+      text: textVal,
       showCancelButton: true,
-      confirmButtonText: confirmButtonText,
+      confirmButtonText: confirmButtonTextVal,
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        alert('Layouts deleted!');
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }
@@ -205,6 +247,11 @@ export class LayoutOverviewComponent implements OnInit {
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
-    this.gridApi.onFilterChanged();
+  }
+
+  ngOnDestroy(): void {
+    if (this.fragment_sub) {
+      this.fragment_sub.unsubscribe();
+    }
   }
 }

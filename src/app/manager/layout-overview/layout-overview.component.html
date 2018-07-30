@@ -6,7 +6,7 @@
 <button class="btn green" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
 <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="georeference($event)" >Georeference ({{selectedNodes.length}})</button>
 <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
-
+<button class="btn green" (click)="addRow()">Add layout</button>
 <ag-grid-angular
   style="width: 100%; height: 100%;"
   class="ag-theme-balham"

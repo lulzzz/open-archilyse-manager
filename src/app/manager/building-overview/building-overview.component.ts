@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { AddRangeSelectionParams, GridOptions } from 'ag-grid';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+import { parseParms } from '../url';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-building-overview',
   templateUrl: './building-overview.component.html',
   styleUrls: ['./building-overview.component.scss'],
 })
-export class BuildingOverviewComponent implements OnInit {
+export class BuildingOverviewComponent implements OnInit, OnDestroy {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -25,16 +28,34 @@ export class BuildingOverviewComponent implements OnInit {
 
   gridOptions;
 
+  fragment_sub: Subscription;
+
   columnDefs = [
-    { headerName: 'Site_Id', field: 'site_id', editable: false },
-    { headerName: 'Object_ID', field: 'object_id', editable: false },
-    { headerName: 'Building_ID', field: 'building_id', editable: false },
+    { headerName: 'Building_id', field: 'building_id', editable: true },
+    { headerName: 'User_id', field: 'user_id', editable: true },
+    { headerName: 'Site_id', field: 'site_id', editable: true },
+    { headerName: 'Name', field: 'name', editable: true },
+    { headerName: 'Description', field: 'description', editable: true },
+    { headerName: 'Images', field: 'images', editable: true },
+    { headerName: 'Status', field: 'status', editable: true },
+    { headerName: 'Address', field: 'address', editable: true },
     { headerName: 'Street', field: 'street', editable: true },
-    { headerName: 'Number', field: 'number', editable: true },
-    { headerName: 'ZIP', field: 'zip', editable: true },
+    { headerName: 'Street_nr', field: 'street_nr', editable: true },
+    { headerName: 'Postal_code', field: 'postal_code', editable: true },
     { headerName: 'City', field: 'city', editable: true },
     { headerName: 'Country', field: 'country', editable: true },
-    { headerName: 'Apartments', field: 'apartments', editable: false },
+    { headerName: 'Building_reference', field: 'building_reference', editable: true },
+    { headerName: 'Swiss_topo', field: 'swiss_topo', editable: true },
+    { headerName: 'Open_street_maps', field: 'open_street_maps', editable: true },
+    { headerName: 'Created', field: 'created', editable: false },
+    { headerName: 'Updated', field: 'updated', editable: false },
+    {
+      headerName: 'Units',
+      field: 'units',
+      filter: 'agNumberColumnFilter',
+      cellRenderer: this.viewUnits,
+      editable: false,
+    },
   ];
 
   rowData = [
@@ -47,7 +68,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '6',
       zip: '8002',
       city: 'Zürich',
-      apartments: '18',
+      units: '18',
     },
     {
       site_id: 'Example Site Id 0',
@@ -58,7 +79,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '54',
       zip: '8002',
       city: 'Zürich',
-      apartments: '5',
+      units: '5',
     },
     {
       site_id: 'Example Site Id 1',
@@ -69,7 +90,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '31',
       zip: '8005',
       city: 'Zürich',
-      apartments: '31',
+      units: '31',
     },
     {
       site_id: 'Example Site Id 1',
@@ -80,7 +101,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '33',
       zip: '8005',
       city: 'Zürich',
-      apartments: '29',
+      units: '29',
     },
     {
       site_id: 'Example Site Id 1',
@@ -91,7 +112,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '35',
       zip: '8005',
       city: 'Zürich',
-      apartments: '32',
+      units: '32',
     },
     {
       site_id: 'Example Site Id 1',
@@ -102,7 +123,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '37',
       zip: '8005',
       city: 'Zürich',
-      apartments: '30',
+      units: '30',
     },
     {
       site_id: 'Example Site Id 1',
@@ -113,7 +134,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '39',
       zip: '8005',
       city: 'Zürich',
-      apartments: '32',
+      units: '32',
     },
     {
       site_id: 'Example Site Id 2',
@@ -124,7 +145,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '41',
       zip: '8005',
       city: 'Zürich',
-      apartments: '30',
+      units: '30',
     },
     {
       site_id: 'Example Site Id 2',
@@ -135,7 +156,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '575',
       zip: '8048',
       city: 'Zürich',
-      apartments: '0',
+      units: '0',
     },
     {
       site_id: 'Example Site Id 2',
@@ -146,7 +167,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '581',
       zip: '8048',
       city: 'Zürich',
-      apartments: '0',
+      units: '0',
     },
     {
       site_id: 'Example Site Id 2',
@@ -157,7 +178,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '50',
       zip: '8050',
       city: 'Zürich',
-      apartments: '79',
+      units: '79',
     },
     {
       site_id: 'Example Site Id 2',
@@ -168,7 +189,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '52',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      units: '4',
     },
     {
       site_id: 'Example Site Id 2',
@@ -179,7 +200,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '54',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      units: '4',
     },
     {
       site_id: 'Example Site Id 2',
@@ -190,7 +211,7 @@ export class BuildingOverviewComponent implements OnInit {
       number: '56',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      units: '4',
     },
     {
       site_id: 'Example Site Id 2',
@@ -201,11 +222,20 @@ export class BuildingOverviewComponent implements OnInit {
       number: '58',
       zip: '8050',
       city: 'Zürich',
-      apartments: '4',
+      units: '4',
     },
   ];
 
-  constructor() {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  viewUnits(params) {
+    return (
+      params.value +
+      `<a href='/manager/unit#building_id=` +
+      params.data.building_id +
+      `' > View </a>`
+    );
+  }
 
   ngOnInit() {
     this.gridOptions = <GridOptions>{
@@ -214,7 +244,8 @@ export class BuildingOverviewComponent implements OnInit {
 
       onFilterChanged: params => {
         const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null || Object.keys(model).length > 0;
+        this.filterModelSet = model !== null && Object.keys(model).length > 0;
+        console.log('model', model);
       },
       onSelectionChanged: () => {
         this.selectedNodes = this.gridOptions.api.getSelectedNodes();
@@ -224,6 +255,23 @@ export class BuildingOverviewComponent implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridOptions.api.sizeColumnsToFit();
+
+        this.fragment_sub = this.route.fragment.subscribe(fragment => {
+          const urlParams = parseParms(fragment);
+
+          const model = {};
+          Object.keys(urlParams).forEach(key => {
+            const found = this.columnDefs.find(columnDef => columnDef.field === key);
+            if (found) {
+              model[key] = {
+                filter: urlParams[key],
+                filterType: 'text',
+                type: 'equals',
+              };
+            }
+          });
+          this.gridApi.setFilterModel(model);
+        });
       },
       // rowHeight: 48, recommended row height for material design data grids,
       frameworkComponents: {
@@ -252,30 +300,50 @@ export class BuildingOverviewComponent implements OnInit {
     });
   }
 
+  addRow() {
+    this.gridOptions.api.updateRowData({
+      add: [
+        {
+          site_id: '',
+          object_id: '',
+          building_id: '',
+          country: '',
+          street: '',
+          number: '',
+          zip: '',
+          city: '',
+          units: '0',
+        },
+      ],
+    });
+  }
+
   delete() {
-    let title;
-    let text;
-    let confirmButtonText;
+    let titleVal;
+    let textVal;
+    let confirmButtonTextVal;
 
     if (this.selectedRows.length <= 1) {
-      title = `Delete this building?`;
-      text = `This action cannot be undone. Are you sure you want to delete this building?`;
-      confirmButtonText = 'Yes, delete it';
+      titleVal = `Delete this building?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete this building?`;
+      confirmButtonTextVal = 'Yes, delete it';
     } else {
-      title = `Delete these ${this.selectedRows.length} buildings?`;
-      text = `This action cannot be undone. Are you sure you want to delete these buildings?`;
-      confirmButtonText = 'Yes, delete them';
+      titleVal = `Delete these ${this.selectedRows.length} buildings?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete these buildings?`;
+      confirmButtonTextVal = 'Yes, delete them';
     }
 
     swal({
-      title: title,
-      text: text,
+      title: titleVal,
+      text: textVal,
       showCancelButton: true,
-      confirmButtonText: confirmButtonText,
+      confirmButtonText: confirmButtonTextVal,
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        alert('Buildings deleted!');
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }
@@ -293,6 +361,11 @@ export class BuildingOverviewComponent implements OnInit {
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
-    this.gridApi.onFilterChanged();
+  }
+
+  ngOnDestroy(): void {
+    if (this.fragment_sub) {
+      this.fragment_sub.unsubscribe();
+    }
   }
 }

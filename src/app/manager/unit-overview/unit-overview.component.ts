@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
-import swal from "sweetalert2";
+import swal from 'sweetalert2';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { parseParms } from '../url';
 
 @Component({
   selector: 'app-floorplan-overview',
   templateUrl: './unit-overview.component.html',
   styleUrls: ['./unit-overview.component.scss'],
 })
-export class UnitOverviewComponent implements OnInit {
+export class UnitOverviewComponent implements OnInit, OnDestroy {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -25,70 +28,149 @@ export class UnitOverviewComponent implements OnInit {
 
   gridOptions;
 
+  fragment_sub: Subscription;
+
   columnDefs = [
-    { headerName: 'Building_Id', field: 'building_id', editable: false },
-    { headerName: 'Raumhöhe', field: 'raumhoehe', filter: 'agNumberColumnFilter', editable: true },
+    { headerName: 'Unit_id', field: 'unit_id', editable: false },
+    { headerName: 'User_id', field: 'user_id', editable: false },
+    {
+      headerName: 'Building_id',
+      field: 'building_id',
+      cellRenderer: this.viewBuilding,
+      editable: false,
+    },
+    { headerName: 'Name', field: 'name', editable: true },
+    { headerName: 'Description', field: 'description', editable: true },
+    { headerName: 'Images', field: 'images', editable: false },
+    { headerName: 'Address Line1', field: 'line1', editable: true },
+    { headerName: 'Address Line2', field: 'line2', editable: true },
+    { headerName: 'Address Line3', field: 'line3', editable: true },
+    { headerName: 'Created', field: 'created', editable: false },
+    { headerName: 'Updated', field: 'updated', editable: false },
+    {
+      headerName: 'Layouts',
+      field: 'layouts',
+      filter: 'agNumberColumnFilter',
+      cellRenderer: this.viewLayouts,
+      editable: false,
+    },
+    // Custom externals params
     { headerName: 'Remarks', field: 'remarks', editable: true },
   ];
 
   rowData = [
     {
+      unit_id: '01',
+      user_id: '01',
       building_id: 'Example Building Id 0',
       floorPlan: '2102440-01-00.pdf',
       modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
       bruestungshoehe: 1.0,
       fensterhoehe: 1.2,
       raumhoehe: 3.04,
+
+      layouts: 1,
       remarks: '',
     },
     {
+      unit_id: '01',
+      user_id: '01',
       building_id: 'Example Building Id 0',
       floorPlan: '2102440-01-01.pdf',
       modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
       bruestungshoehe: 1.0,
       fensterhoehe: 1.12,
       raumhoehe: 3.04,
+
+      layouts: 1,
       remarks: ' This layout is not good, somebody drunk created it while he was food poisoned',
     },
     {
+      unit_id: '02',
+      user_id: '01',
       building_id: 'Example Building Id 0',
       floorPlan: '2102440-01-02.pdf',
       modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
       bruestungshoehe: 1.0,
       fensterhoehe: 1.2,
       raumhoehe: 3.02,
+
+      layouts: 1,
       remarks: '',
     },
     {
+      unit_id: '02',
+      user_id: '01',
       building_id: 'Example Building Id 0',
       floorPlan: '2102440-01-03.pdf',
       modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
       bruestungshoehe: 1.0,
       fensterhoehe: 1.2,
       raumhoehe: 2.04,
+
+      layouts: 1,
       remarks: '',
     },
     {
+      unit_id: '02',
+      user_id: '01',
       building_id: 'Example Building Id 1',
       floorPlan: '2102440-01-04.pdf',
       modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
       bruestungshoehe: 1.0,
       fensterhoehe: 1.2,
       raumhoehe: 3.04,
+
+      layouts: 1,
       remarks: '',
     },
     {
+      unit_id: '03',
+      user_id: '02',
       building_id: 'Example Building Id 1',
       floorPlan: '2102440-02-00.pdf',
       modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
       bruestungshoehe: 1.0,
       fensterhoehe: 1.2,
       raumhoehe: 3.04,
+
+      layouts: 1,
       remarks: '',
     },
   ];
 
-  constructor() {}
+  addRow() {
+    this.gridOptions.api.updateRowData({
+      add: [
+        {
+          building_id: '',
+          floorPlan: '',
+          modelStructureId: '',
+          bruestungshoehe: 0,
+          fensterhoehe: 0,
+          raumhoehe: 0,
+          remarks: '',
+        },
+      ],
+    });
+  }
+
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
+  viewBuilding(params) {
+    return (
+      params.value +
+      `<a href='/manager/building#building_id=` +
+      params.data.building_id +
+      `' > View </a>`
+    );
+  }
+
+  viewLayouts(params) {
+    return (
+      params.value + `<a href='/manager/layout#unit_id=` + params.data.unit_id + `' > View </a>`
+    );
+  }
 
   ngOnInit() {
     this.gridOptions = <GridOptions>{
@@ -106,6 +188,23 @@ export class UnitOverviewComponent implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridOptions.api.sizeColumnsToFit();
+
+        this.fragment_sub = this.route.fragment.subscribe(fragment => {
+          const urlParams = parseParms(fragment);
+
+          const model = {};
+          Object.keys(urlParams).forEach(key => {
+            const found = this.columnDefs.find(columnDef => columnDef.field === key);
+            if (found) {
+              model[key] = {
+                filter: urlParams[key],
+                filterType: 'text',
+                type: 'equals',
+              };
+            }
+          });
+          this.gridApi.setFilterModel(model);
+        });
       },
       // rowHeight: 48, recommended row height for material design data grids,
       frameworkComponents: {
@@ -119,40 +218,32 @@ export class UnitOverviewComponent implements OnInit {
     };
   }
 
-  cellPdfDownloadLink(params) {
-    return (
-      `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
-    );
-  }
-
-  cellEditorLink(params) {
-    return `<a href='https://workplace.archilyse.com/editor' >` + params.value + `</a>`;
-  }
-
   delete() {
-    let title;
-    let text;
-    let confirmButtonText;
+    let titleVal;
+    let textVal;
+    let confirmButtonTextVal;
 
     if (this.selectedRows.length <= 1) {
-      title = `Delete this unit?`;
-      text = `This action cannot be undone. Are you sure you want to delete this unit?`;
-      confirmButtonText = 'Yes, delete it';
+      titleVal = `Delete this unit?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete this unit?`;
+      confirmButtonTextVal = 'Yes, delete it';
     } else {
-      title = `Delete these ${this.selectedRows.length} units?`;
-      text = `This action cannot be undone. Are you sure you want to delete these units?`;
-      confirmButtonText = 'Yes, delete them';
+      titleVal = `Delete these ${this.selectedRows.length} units?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete these units?`;
+      confirmButtonTextVal = 'Yes, delete them';
     }
 
     swal({
-      title: title,
-      text: text,
+      title: titleVal,
+      text: textVal,
       showCancelButton: true,
-      confirmButtonText: confirmButtonText,
+      confirmButtonText: confirmButtonTextVal,
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        alert('Units deleted!');
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }
@@ -177,6 +268,11 @@ export class UnitOverviewComponent implements OnInit {
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
-    this.gridApi.onFilterChanged();
+  }
+
+  ngOnDestroy(): void {
+    if (this.fragment_sub) {
+      this.fragment_sub.unsubscribe();
+    }
   }
 }

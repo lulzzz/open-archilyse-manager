@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { AddRangeSelectionParams, GridOptions } from 'ag-grid';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import swal from 'sweetalert2';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { parseParms } from '../url';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-site-overview',
   templateUrl: './site-overview.component.html',
   styleUrls: ['./site-overview.component.scss'],
 })
-export class SiteOverviewComponent implements OnInit {
+export class SiteOverviewComponent implements OnInit, OnDestroy {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -25,164 +29,201 @@ export class SiteOverviewComponent implements OnInit {
 
   gridOptions;
 
+  fragment_sub: Subscription;
+
   columnDefs = [
-    { headerName: 'Object_ID', field: 'object_id', editable: false },
-    { headerName: 'Building_ID', field: 'building_id', editable: false },
-    { headerName: 'Street', field: 'street', editable: false },
-    { headerName: 'Number', field: 'number', editable: false },
-    { headerName: 'ZIP', field: 'zip', editable: false },
-    { headerName: 'City', field: 'city', editable: false },
-    { headerName: 'Buildings', field: 'buildings', editable: false },
+    { headerName: 'Site_id', field: 'site_id', editable: false },
+    { headerName: 'Name', field: 'name', editable: true },
+    { headerName: 'Description', field: 'description', editable: true },
+    {
+      headerName: 'Buildings',
+      field: 'buildings',
+      filter: 'agNumberColumnFilter',
+      cellRenderer: this.viewBuildings,
+      editable: false,
+    },
+
+    // Custom externals params
+    { headerName: 'Remarks', field: 'remarks', editable: true },
   ];
 
   rowData = [
     {
-      object_id: '2102440',
-      building_id: '01',
-      street: 'Gartenstrasse',
-      number: '6',
-      zip: '8002',
-      city: 'Zürich',
-      buildings: '18',
+      site_id: 'Example Site Id 0',
+      name: 'Example site 1',
+      description: '',
+      buildings: 10,
+      remarks: '',
     },
     {
-      object_id: '2102440',
-      building_id: '02',
-      street: 'Stockerstrasse',
-      number: '54',
-      zip: '8002',
-      city: 'Zürich',
-      buildings: '5',
+      site_id: 'Example Site Id 1',
+      name: 'Example site 2',
+      description: 'Example description',
+      buildings: 5,
+      remarks: '',
     },
     {
-      object_id: '2105090',
-      building_id: '01',
-      street: 'Turbinenstrasse',
-      number: '31',
-      zip: '8005',
-      city: 'Zürich',
-      buildings: '31',
-    },
-    {
-      object_id: '2105090',
-      building_id: '02',
-      street: 'Turbinenstrasse',
-      number: '33',
-      zip: '8005',
-      city: 'Zürich',
-      buildings: '29',
-    },
-    {
-      object_id: '2105090',
-      building_id: '03',
-      street: 'Turbinenstrasse',
-      number: '35',
-      zip: '8005',
-      city: 'Zürich',
-      buildings: '32',
-    },
-    {
-      object_id: '2105090',
-      building_id: '04',
-      street: 'Turbinenstrasse',
-      number: '37',
-      zip: '8005',
-      city: 'Zürich',
-      buildings: '30',
-    },
-    {
-      object_id: '2105090',
-      building_id: '05',
-      street: 'Turbinenstrasse',
-      number: '39',
-      zip: '8005',
-      city: 'Zürich',
-      buildings: '32',
-    },
-    {
-      object_id: '2105090',
-      building_id: '06',
-      street: 'Turbinenstrasse',
-      number: '41',
-      zip: '8005',
-      city: 'Zürich',
-      buildings: '30',
-    },
-    {
-      object_id: '2109010',
-      building_id: '01',
-      street: 'Badenerstrasse',
-      number: '575',
-      zip: '8048',
-      city: 'Zürich',
-      buildings: '0',
-    },
-    {
-      object_id: '2109010',
-      building_id: '02',
-      street: 'Badenerstrasse',
-      number: '581',
-      zip: '8048',
-      city: 'Zürich',
-      buildings: '0',
-    },
-    {
-      object_id: '2111060',
-      building_id: '01',
-      street: 'Leutschenbachstrasse',
-      number: '50',
-      zip: '8050',
-      city: 'Zürich',
-      buildings: '79',
-    },
-    {
-      object_id: '2111060',
-      building_id: '',
-      street: 'Leutschenbachstrasse',
-      number: '52',
-      zip: '8050',
-      city: 'Zürich',
-      buildings: '4',
-    },
-    {
-      object_id: '2111060',
-      building_id: '',
-      street: 'Leutschenbachstrasse',
-      number: '54',
-      zip: '8050',
-      city: 'Zürich',
-      buildings: '4',
-    },
-    {
-      object_id: '2111060',
-      building_id: '',
-      street: 'Leutschenbachstrasse',
-      number: '56',
-      zip: '8050',
-      city: 'Zürich',
-      buildings: '4',
-    },
-    {
-      object_id: '2111060',
-      building_id: '',
-      street: 'Leutschenbachstrasse',
-      number: '58',
-      zip: '8050',
-      city: 'Zürich',
-      buildings: '4',
+      site_id: 'Example Site Id 2',
+      name: 'Example site 3',
+      description: '',
+      buildings: 0,
+      remarks: '',
     },
   ];
 
-  constructor() {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+
+  viewBuildings(params) {
+    return (
+      params.value + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`
+    );
+  }
+
+  addRow() {
+    this.gridOptions.api.updateRowData({
+      add: [
+        {
+          site_id: 'Autogenerated Id',
+          name: '',
+          description: '',
+          buildings: 0,
+          remarks: '',
+        },
+      ],
+    });
+  }
 
   ngOnInit() {
+    /** SITES */
+    this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+      console.log('sites', sites);
+    });
+
+    /**
+    const site_id = "Example site id";
+    this.http.delete('http://api.archilyse.com/v1/sites/'+ site_id).subscribe(sites => {
+      console.log('DELETE sites', sites, site_id);
+    });
+    this.http
+      .post('http://api.archilyse.com/v1/sites', {
+        description: 'New Archilyse Site',
+        name: 'My favorite Site!',
+      })
+      .subscribe(sites => {
+        console.log('POST sites', sites);
+      });
+    */
+
+    /** BUILDINGS */
+
+    this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+      console.log('buildings', buildings);
+    });
+
+    /**
+    const building_id = "Example building id";
+    this.http.delete('http://api.archilyse.com/v1/buildings/'+ building_id).subscribe(buildings => {
+      console.log('DELETE buildings', buildings, building_id);
+    });
+
+    this.http
+      .post('http://api.archilyse.com/v1/buildings', {
+        address: {
+          city: 'Zurich',
+          country: 'Switzerland',
+          postal_code: '8005',
+          street: 'Technopark',
+          street_nr: '1',
+        },
+
+        building_reference: {
+          open_street_maps: '5a8fec5c4cdf4c000b04f8cf',
+          swiss_topo: '5a8fec994cdf4c000a3b13b3',
+        },
+
+        description: "The best building ever built in the universe, cause Archilyse's there.",
+        images: 'http://s3-bucket-url.com/image/123',
+        name: 'My favorite building!',
+        site_id: '5a8fec5c4cdf4c000b04f8cf',
+      })
+      .subscribe(buildings => {
+        console.log('buildings', buildings);
+      });
+    */
+
+    /** UNITS */
+
+    this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+      console.log('units', units);
+    });
+
+    /**
+    const units_id = "Example unit id";
+    this.http.delete('http://api.archilyse.com/v1/units/'+ units_id).subscribe(units => {
+      console.log('DELETE units', units, units_id);
+    });
+
+    this.http
+      .post('http://api.archilyse.com/v1/units', {
+        address: {
+          line1: 'asdf321',
+          line2: '2b',
+          line3: 'adf32314',
+        },
+        building_id: '5a8fec5c4cdf4c000b04f8cf',
+        created: '2018-07-27T12:34:21.875Z',
+        description: 'Optimizing for most optimum mobility inside the space.',
+        images: 'http://s3-bucket-url.com/image/123',
+        name: 'My unit',
+        updated: '2018-07-27T12:34:21.875Z',
+      })
+      .subscribe(units => {
+        console.log('units', units);
+      });
+    */
+
+    /** LAYOUTS */
+
+    this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
+      console.log('layouts', layouts);
+    });
+
+    /**
+    const layouts_id = "Example layout id";
+    this.http.delete('http://api.archilyse.com/v1/layouts/'+ layouts_id).subscribe(layouts => {
+      console.log('DELETE layouts', layouts, layouts_id);
+    });
+
+    this.http
+      .post('http://api.archilyse.com/v1/layouts', {
+        description: 'Layout 2 related to swiss topo',
+        images: 'http://s3-bucket-url.com/image/123',
+        movement: {
+          angle: 180.2,
+          source: 'swiss_topo',
+          x_off: 21231.8,
+          x_pivot: 5.2,
+          y_off: 12356.6,
+          y_pivot: 52.1,
+          z_off: 212.5,
+          z_pivot: 24.2,
+        },
+        name: 'My favorite Layout!',
+        site_id: '5a8fec5c4cdf4c123b04f8cf',
+        source: 'archilogic.com/scene/!675fe04b-4ee8-478a-a758-647f9f1e6f27?mode=3d',
+      })
+      .subscribe(layouts => {
+        console.log('layouts', layouts);
+      });
+    */
+
     this.gridOptions = <GridOptions>{
       rowData: this.rowData,
       columnDefs: this.columnDefs,
 
       onFilterChanged: params => {
         const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null || Object.keys(model).length > 0;
+        this.filterModelSet = model !== null && Object.keys(model).length > 0;
       },
       onSelectionChanged: () => {
         this.selectedNodes = this.gridOptions.api.getSelectedNodes();
@@ -192,6 +233,23 @@ export class SiteOverviewComponent implements OnInit {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
         this.gridOptions.api.sizeColumnsToFit();
+
+        this.fragment_sub = this.route.fragment.subscribe(fragment => {
+          const urlParams = parseParms(fragment);
+
+          const model = {};
+          Object.keys(urlParams).forEach(key => {
+            const found = this.columnDefs.find(columnDef => columnDef.field === key);
+            if (found) {
+              model[key] = {
+                filter: urlParams[key],
+                filterType: 'text',
+                type: 'equals',
+              };
+            }
+          });
+          this.gridApi.setFilterModel(model);
+        });
       },
       // rowHeight: 48, recommended row height for material design data grids,
       frameworkComponents: {
@@ -206,29 +264,31 @@ export class SiteOverviewComponent implements OnInit {
   }
 
   delete() {
-    let title;
-    let text;
-    let confirmButtonText;
+    let titleVal;
+    let textVal;
+    let confirmButtonTextVal;
 
     if (this.selectedRows.length <= 1) {
-      title = `Delete this site?`;
-      text = `This action cannot be undone. Are you sure you want to delete this site?`;
-      confirmButtonText = 'Yes, delete it';
+      titleVal = `Delete this site?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete this site?`;
+      confirmButtonTextVal = 'Yes, delete it';
     } else {
-      title = `Delete these ${this.selectedRows.length} sites?`;
-      text = `This action cannot be undone. Are you sure you want to delete these sites?`;
-      confirmButtonText = 'Yes, delete them';
+      titleVal = `Delete these ${this.selectedRows.length} sites?`;
+      textVal = `This action cannot be undone. Are you sure you want to delete these sites?`;
+      confirmButtonTextVal = 'Yes, delete them';
     }
 
     swal({
-      title: title,
-      text: text,
+      title: titleVal,
+      text: textVal,
       showCancelButton: true,
-      confirmButtonText: confirmButtonText,
+      confirmButtonText: confirmButtonTextVal,
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        alert('Sites deleted!');
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }
@@ -241,6 +301,11 @@ export class SiteOverviewComponent implements OnInit {
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
-    this.gridApi.onFilterChanged();
+  }
+
+  ngOnDestroy(): void {
+    if (this.fragment_sub) {
+      this.fragment_sub.unsubscribe();
+    }
   }
 }
