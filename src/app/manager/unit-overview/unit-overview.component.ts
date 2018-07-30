@@ -6,6 +6,7 @@ import swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { parseParms } from '../url';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -140,22 +141,40 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   ];
 
   addRow() {
-    this.gridOptions.api.updateRowData({
-      add: [
-        {
-          building_id: '',
-          floorPlan: '',
-          modelStructureId: '',
-          bruestungshoehe: 0,
-          fensterhoehe: 0,
-          raumhoehe: 0,
-          remarks: '',
+    this.http
+      .post('http://api.archilyse.com/v1/units', {
+        address: {
+          line1: 'asdf321',
+          line2: '2b',
+          line3: 'adf32314',
         },
-      ],
-    });
+        building_id: '5a8fec5c4cdf4c000b04f8cf',
+        created: '2018-07-27T12:34:21.875Z',
+        description: 'Optimizing for most optimum mobility inside the space.',
+        images: 'http://s3-bucket-url.com/image/123',
+        name: 'My unit',
+        updated: '2018-07-27T12:34:21.875Z',
+      })
+      .subscribe(units => {
+        console.log('units', units);
+
+        this.gridOptions.api.updateRowData({
+          add: [
+            {
+              building_id: '',
+              floorPlan: '',
+              modelStructureId: '',
+              bruestungshoehe: 0,
+              fensterhoehe: 0,
+              raumhoehe: 0,
+              remarks: '',
+            },
+          ],
+        });
+      }, console.error);
   }
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   viewBuilding(params) {
     return (
@@ -173,49 +192,55 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gridOptions = <GridOptions>{
-      rowData: this.rowData,
-      columnDefs: this.columnDefs,
-      onFilterChanged: params => {
-        const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null || Object.keys(model).length > 0;
-      },
-      onSelectionChanged: () => {
-        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-        this.selectedRows = this.gridOptions.api.getSelectedRows();
-      },
-      onGridReady: params => {
-        this.gridApi = params.api;
-        this.gridColumnApi = params.columnApi;
-        this.gridOptions.api.sizeColumnsToFit();
+    /** UNITS */
 
-        this.fragment_sub = this.route.fragment.subscribe(fragment => {
-          const urlParams = parseParms(fragment);
+    this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+      console.log('units', units);
 
-          const model = {};
-          Object.keys(urlParams).forEach(key => {
-            const found = this.columnDefs.find(columnDef => columnDef.field === key);
-            if (found) {
-              model[key] = {
-                filter: urlParams[key],
-                filterType: 'text',
-                type: 'equals',
-              };
-            }
+      this.gridOptions = <GridOptions>{
+        rowData: this.rowData,
+        columnDefs: this.columnDefs,
+        onFilterChanged: params => {
+          const model = params.api.getFilterModel();
+          this.filterModelSet = model !== null || Object.keys(model).length > 0;
+        },
+        onSelectionChanged: () => {
+          this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+          this.selectedRows = this.gridOptions.api.getSelectedRows();
+        },
+        onGridReady: params => {
+          this.gridApi = params.api;
+          this.gridColumnApi = params.columnApi;
+          this.gridOptions.api.sizeColumnsToFit();
+
+          this.fragment_sub = this.route.fragment.subscribe(fragment => {
+            const urlParams = parseParms(fragment);
+
+            const model = {};
+            Object.keys(urlParams).forEach(key => {
+              const found = this.columnDefs.find(columnDef => columnDef.field === key);
+              if (found) {
+                model[key] = {
+                  filter: urlParams[key],
+                  filterType: 'text',
+                  type: 'equals',
+                };
+              }
+            });
+            this.gridApi.setFilterModel(model);
           });
-          this.gridApi.setFilterModel(model);
-        });
-      },
-      // rowHeight: 48, recommended row height for material design data grids,
-      frameworkComponents: {
-        checkboxRenderer: MatCheckboxComponent,
-        procentRenderer: ProcentRendererComponent,
-      },
-      enableColResize: true,
-      enableSorting: true,
-      enableFilter: true,
-      rowSelection: 'multiple',
-    };
+        },
+        // rowHeight: 48, recommended row height for material design data grids,
+        frameworkComponents: {
+          checkboxRenderer: MatCheckboxComponent,
+          procentRenderer: ProcentRendererComponent,
+        },
+        enableColResize: true,
+        enableSorting: true,
+        enableFilter: true,
+        rowSelection: 'multiple',
+      };
+    }, console.error);
   }
 
   delete() {
@@ -241,9 +266,14 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        this.gridOptions.api.updateRowData({
-          remove: this.selectedRows,
-        });
+        const units_id = 'Example unit id';
+        this.http.delete('http://api.archilyse.com/v1/units/' + units_id).subscribe(units => {
+          console.log('DELETE units', units, units_id);
+
+          this.gridOptions.api.updateRowData({
+            remove: this.selectedRows,
+          });
+        }, console.error);
       }
     });
   }

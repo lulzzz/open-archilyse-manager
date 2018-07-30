@@ -6,6 +6,7 @@ import swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 import { parseParms } from '../url';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-building-overview',
@@ -32,7 +33,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs = [
     { headerName: 'Building_id', field: 'building_id', editable: true },
-    { headerName: 'User_id', field: 'user_id', editable: true },
     { headerName: 'Site_id', field: 'site_id', editable: true },
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },
@@ -42,13 +42,14 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     { headerName: 'Street', field: 'street', editable: true },
     { headerName: 'Street_nr', field: 'street_nr', editable: true },
     { headerName: 'Postal_code', field: 'postal_code', editable: true },
-    { headerName: 'City', field: 'city', editable: true },
-    { headerName: 'Country', field: 'country', editable: true },
-    { headerName: 'Building_reference', field: 'building_reference', editable: true },
-    { headerName: 'Swiss_topo', field: 'swiss_topo', editable: true },
-    { headerName: 'Open_street_maps', field: 'open_street_maps', editable: true },
-    { headerName: 'Created', field: 'created', editable: false },
-    { headerName: 'Updated', field: 'updated', editable: false },
+
+    { headerName: 'City', field: 'city', filter: 'agSetColumnFilter', editable: true },
+    { headerName: 'Country', field: 'country', filter: 'agSetColumnFilter', editable: true },
+
+    // { headerName: 'Building_reference', field: 'building_reference', editable: true },
+    { headerName: 'Ref - Swiss topo', field: 'swiss_topo', editable: true },
+    { headerName: 'Ref - Open_street_maps', field: 'open_street_maps', editable: true },
+
     {
       headerName: 'Units',
       field: 'units',
@@ -56,6 +57,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: this.viewUnits,
       editable: false,
     },
+
+    { headerName: 'User_id', field: 'user_id', editable: true },
+    { headerName: 'Created', field: 'created', editable: false },
+    { headerName: 'Updated', field: 'updated', editable: false },
   ];
 
   rowData = [
@@ -226,7 +231,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   viewUnits(params) {
     return (
@@ -238,51 +243,57 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.gridOptions = <GridOptions>{
-      rowData: this.rowData,
-      columnDefs: this.columnDefs,
+    /** BUILDINGS */
 
-      onFilterChanged: params => {
-        const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null && Object.keys(model).length > 0;
-        console.log('model', model);
-      },
-      onSelectionChanged: () => {
-        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-        this.selectedRows = this.gridOptions.api.getSelectedRows();
-      },
-      onGridReady: params => {
-        this.gridApi = params.api;
-        this.gridColumnApi = params.columnApi;
-        this.gridOptions.api.sizeColumnsToFit();
+    this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+      console.log('buildings', buildings);
 
-        this.fragment_sub = this.route.fragment.subscribe(fragment => {
-          const urlParams = parseParms(fragment);
+      this.gridOptions = <GridOptions>{
+        rowData: this.rowData,
+        columnDefs: this.columnDefs,
 
-          const model = {};
-          Object.keys(urlParams).forEach(key => {
-            const found = this.columnDefs.find(columnDef => columnDef.field === key);
-            if (found) {
-              model[key] = {
-                filter: urlParams[key],
-                filterType: 'text',
-                type: 'equals',
-              };
-            }
-          });
-          this.gridApi.setFilterModel(model);
-        });
-      },
-      // rowHeight: 48, recommended row height for material design data grids,
-      frameworkComponents: {
-        checkboxRenderer: MatCheckboxComponent,
-        procentRenderer: ProcentRendererComponent,
-      },
-      enableColResize: true,
-      enableSorting: true,
-      enableFilter: true,
-      rowSelection: 'multiple',
-    };
+        onFilterChanged: params => {
+          const model = params.api.getFilterModel();
+          this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          console.log('model', model);
+        },
+        onSelectionChanged: () => {
+          this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+          this.selectedRows = this.gridOptions.api.getSelectedRows();
+        },
+        onGridReady: params => {
+          this.gridApi = params.api;
+          this.gridColumnApi = params.columnApi;
+          this.gridOptions.api.sizeColumnsToFit();
+
+          this.fragment_sub = this.route.fragment.subscribe(fragment => {
+            const urlParams = parseParms(fragment);
+
+            const model = {};
+            Object.keys(urlParams).forEach(key => {
+              const found = this.columnDefs.find(columnDef => columnDef.field === key);
+              if (found) {
+                model[key] = {
+                  filter: urlParams[key],
+                  filterType: 'text',
+                  type: 'equals',
+                };
+              }
+            });
+            this.gridApi.setFilterModel(model);
+          }, console.error);
+        },
+        // rowHeight: 48, recommended row height for material design data grids,
+        frameworkComponents: {
+          checkboxRenderer: MatCheckboxComponent,
+          procentRenderer: ProcentRendererComponent,
+        },
+        enableColResize: true,
+        enableSorting: true,
+        enableFilter: true,
+        rowSelection: 'multiple',
+      };
+    }, console.error);
   }
 
   clearSelection() {
@@ -301,21 +312,45 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   addRow() {
-    this.gridOptions.api.updateRowData({
-      add: [
-        {
-          site_id: '',
-          object_id: '',
-          building_id: '',
-          country: '',
-          street: '',
-          number: '',
-          zip: '',
-          city: '',
-          units: '0',
+    this.http
+      .post('http://api.archilyse.com/v1/buildings', {
+        address: {
+          city: 'Zurich',
+          country: 'Switzerland',
+          postal_code: '8005',
+          street: 'Technopark',
+          street_nr: '1',
         },
-      ],
-    });
+
+        building_reference: {
+          open_street_maps: '5a8fec5c4cdf4c000b04f8cf',
+          swiss_topo: '5a8fec994cdf4c000a3b13b3',
+        },
+
+        description: "The best building ever built in the universe, cause Archilyse's there.",
+        images: 'http://s3-bucket-url.com/image/123',
+        name: 'My favorite building!',
+        site_id: '5a8fec5c4cdf4c000b04f8cf',
+      })
+      .subscribe(buildings => {
+        console.log('buildings', buildings);
+
+        this.gridOptions.api.updateRowData({
+          add: [
+            {
+              site_id: '',
+              object_id: '',
+              building_id: '',
+              country: '',
+              street: '',
+              number: '',
+              zip: '',
+              city: '',
+              units: '0',
+            },
+          ],
+        });
+      }, console.error);
   }
 
   delete() {
@@ -341,9 +376,19 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        this.gridOptions.api.updateRowData({
-          remove: this.selectedRows,
-        });
+        const building_id = 'Example building id';
+        this.http
+          .delete('http://api.archilyse.com/v1/buildings/' + building_id)
+          .subscribe(buildings => {
+            console.log('DELETE buildings', buildings, building_id);
+
+            this.gridOptions.api.updateRowData({
+              remove: this.selectedRows,
+            });
+
+          }, console.error);
+
+
       }
     });
   }
