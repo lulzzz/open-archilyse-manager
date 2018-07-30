@@ -42,12 +42,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     },
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },
-    { headerName: 'Images', field: 'images', editable: false },
+    { headerName: 'Images', field: 'images', cellRenderer: this.viewImg, editable: false },
     { headerName: 'Address Line1', field: 'line1', editable: true },
     { headerName: 'Address Line2', field: 'line2', editable: true },
     { headerName: 'Address Line3', field: 'line3', editable: true },
-    { headerName: 'Created', field: 'created', editable: false },
-    { headerName: 'Updated', field: 'updated', editable: false },
     {
       headerName: 'Layouts',
       field: 'layouts',
@@ -55,91 +53,14 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: this.viewLayouts,
       editable: false,
     },
+    { headerName: 'Created', field: 'created', cellRenderer: this.viewDate, editable: false },
+    { headerName: 'Updated', field: 'updated', cellRenderer: this.viewDate, editable: false },
+
     // Custom externals params
     { headerName: 'Remarks', field: 'remarks', editable: true },
   ];
 
-
-  rowData = [
-    {
-      unit_id: '01',
-      user_id: '01',
-      building_id: 'Example Building Id 0',
-      floorPlan: '2102440-01-00.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.04,
-
-      layouts: 1,
-      remarks: '',
-    },
-    {
-      unit_id: '01',
-      user_id: '01',
-      building_id: 'Example Building Id 0',
-      floorPlan: '2102440-01-01.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.12,
-      raumhoehe: 3.04,
-
-      layouts: 1,
-      remarks: ' This layout is not good, somebody drunk created it while he was food poisoned',
-    },
-    {
-      unit_id: '02',
-      user_id: '01',
-      building_id: 'Example Building Id 0',
-      floorPlan: '2102440-01-02.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.02,
-
-      layouts: 1,
-      remarks: '',
-    },
-    {
-      unit_id: '02',
-      user_id: '01',
-      building_id: 'Example Building Id 0',
-      floorPlan: '2102440-01-03.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 2.04,
-
-      layouts: 1,
-      remarks: '',
-    },
-    {
-      unit_id: '02',
-      user_id: '01',
-      building_id: 'Example Building Id 1',
-      floorPlan: '2102440-01-04.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.04,
-
-      layouts: 1,
-      remarks: '',
-    },
-    {
-      unit_id: '03',
-      user_id: '02',
-      building_id: 'Example Building Id 1',
-      floorPlan: '2102440-02-00.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.04,
-
-      layouts: 1,
-      remarks: '',
-    },
-  ];
+  rowData;
 
   addRow() {
     this.http
@@ -162,7 +83,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions.api.updateRowData({
           add: [
             {
-
               unit_id: '',
               user_id: '',
               building_id: '',
@@ -176,13 +96,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
               updated: '',
               layouts: '',
               remarks: '',
-
             },
           ],
         });
       }, console.error);
   }
-
 
   editRow(unit) {
     this.http.patch('http://api.archilyse.com/v1/units/' + unit.unit_id, unit).subscribe(unit => {
@@ -191,6 +109,25 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+
+  viewImg(params) {
+    if (params.value && params.value !== '') {
+      return `<a href='` + params.value + `' > View ` + params.value + `</a>`;
+    } else {
+      return ``;
+    }
+  }
+
+  viewDate(params) {
+    if (params.value && params.value !== '') {
+      const readable = new Date(params.value);
+      const m = readable.getMonth(); // returns 6
+      const d = readable.getDay(); // returns 15
+      const y = readable.getFullYear(); // returns 2012
+      return `${d}.${m}.${y}`;
+    }
+    return ``;
+  }
 
   viewBuilding(params) {
     return (
@@ -202,9 +139,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   }
 
   viewLayouts(params) {
-    return (
-      params.value + `<a href='/manager/layout#unit_id=` + params.data.unit_id + `' > View </a>`
-    );
+    const number = params.value > 0 ? params.value : 0;
+    return number + `<a href='/manager/layout#unit_id=` + params.data.unit_id + `' > View </a>`;
   }
 
   ngOnInit() {
@@ -214,15 +150,12 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       console.log('units', units);
 
       this.gridOptions = <GridOptions>{
-        rowData: this.rowData,
+        rowData: <any[]>units, //this.rowData,
         columnDefs: this.columnDefs,
 
         onCellValueChanged: params => {
           console.log('onCellValueChanged', params);
-          const unit = {
-            unit_id: '???',
-          };
-          this.editRow(unit);
+          this.editRow(params.data);
         },
 
         onFilterChanged: params => {
@@ -236,7 +169,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         onGridReady: params => {
           this.gridApi = params.api;
           this.gridColumnApi = params.columnApi;
-          this.gridOptions.api.sizeColumnsToFit();
+          // this.gridOptions.api.sizeColumnsToFit();
 
           this.fragment_sub = this.route.fragment.subscribe(fragment => {
             const urlParams = parseParms(fragment);

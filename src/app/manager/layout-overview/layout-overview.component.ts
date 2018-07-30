@@ -33,6 +33,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs = [
     {
+      headerName: 'Layout_id',
+      field: 'layout_id',
+      editable: false,
+    },
+    {
       headerName: 'Unit_id',
       field: 'unit_id',
       cellRenderer: this.viewUnit,
@@ -40,85 +45,28 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     },
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },
-
     {
       headerName: 'FloorPlan',
       field: 'floorPlan',
       cellRenderer: this.cellPdfDownloadLink,
       editable: false,
     },
-    {
-      headerName: 'ModelStructure_ID',
-      field: 'modelStructureId',
-      cellRenderer: this.cellEditorLink,
-      editable: false,
-    },
+    { headerName: 'Images', field: 'images', cellRenderer: this.viewImg, editable: true },
 
-    { headerName: 'Images', field: 'images', editable: true },
-    { headerName: 'Model_structure', field: 'model_structure', editable: true },
-    { headerName: 'Created', field: 'created', editable: true },
-    { headerName: 'Updated', field: 'updated', editable: true },
+    {
+      headerName: 'Model_structure',
+      field: 'model_structure',
+      cellRenderer: this.viewModel,
+      editable: true,
+    },
+    { headerName: 'Created', field: 'created', cellRenderer: this.viewDate, editable: true },
+    { headerName: 'Updated', field: 'updated', cellRenderer: this.viewDate, editable: true },
 
     // Custom externals params
     { headerName: 'Remarks', field: 'remarks', editable: true },
   ];
 
-  rowData = [
-    {
-      unit_id: 'Example Id 1',
-      floorPlan: '2102440-01-00.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.04,
-      remarks: '',
-    },
-    {
-      unit_id: 'Example Id 2',
-      floorPlan: '2102440-01-01.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.12,
-      raumhoehe: 3.04,
-      remarks: ' This layout is not good, somebody drunk created it while he was food poisoned',
-    },
-    {
-      unit_id: 'Example Id 3',
-      floorPlan: '2102440-01-02.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.02,
-      remarks: '',
-    },
-    {
-      unit_id: 'Example Id 4',
-      floorPlan: '2102440-01-03.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 2.04,
-      remarks: '',
-    },
-    {
-      unit_id: 'Example Id 5',
-      floorPlan: '2102440-01-04.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.04,
-      remarks: '',
-    },
-    {
-      unit_id: 'Example Id 6',
-      floorPlan: '2102440-02-00.pdf',
-      modelStructureId: 'dfb8e436-6bfa-429b-9cd1-6a06727ef711',
-      bruestungshoehe: 1.0,
-      fensterhoehe: 1.2,
-      raumhoehe: 3.04,
-      remarks: '',
-    },
-  ];
+  rowData;
 
   addRow() {
     this.http
@@ -171,8 +119,34 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
+  viewImg(params) {
+    if (params.value && params.value !== '') {
+      return `<a href='` + params.value + `' > View</a>`;
+    } else {
+      return ``;
+    }
+  }
+
+  viewDate(params) {
+    if (params.value && params.value!==''){
+      const readable = new Date(params.value);
+      const m = readable.getMonth(); // returns 6
+      const d = readable.getDay();  // returns 15
+      const y = readable.getFullYear();  // returns 2012
+      return `${d}.${m}.${y}`;
+    }
+    return ``;
+  }
+
+  viewModel(params) {
+    return `<a href='/editor/` + params.data.layout_id + `' > View model </a>`;
+  }
+
   viewUnit(params) {
-    return params.value + `<a href='/manager/unit#unit_id=` + params.data.unit_id + `' > View </a>`;
+    if (params.value && params.value !== '' && params.value !== 'None') {
+      return `<a href='/manager/unit#unit_id=` + params.value + `' >` + params.value + ` </a>`;
+    }
+    return ``;
   }
 
   ngOnInit() {
@@ -182,15 +156,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       console.log('layouts', layouts);
 
       this.gridOptions = <GridOptions>{
-        rowData: this.rowData,
+        rowData: <any[]>layouts, //this.rowData,
         columnDefs: this.columnDefs,
 
         onCellValueChanged: params => {
           console.log('onCellValueChanged', params);
-          const layout = {
-            layout_id: '???',
-          };
-          this.editRow(layout);
+          this.editRow(params.data);
         },
 
         onFilterChanged: params => {
@@ -237,13 +208,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   cellPdfDownloadLink(params) {
-    return (
-      `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
-    );
-  }
-
-  cellEditorLink(params) {
-    return `<a href='https://workplace.archilyse.com/editor' >` + params.value + `</a>`;
+    if (params && params.value && params.value !== '') {
+      return (
+        `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
+      );
+    }
+    return '';
   }
 
   delete() {
@@ -290,12 +260,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     const buildingId = 'the_feature_id_also_building_id';
     const modelId = '5b3f3cb4adcbc100097a6b36';
 
-    window.open(
-      encodeURI(
-        'https://workplace.archilyse.com/georeference/building/' + buildingId + '/' + modelId
-      ),
-      '_blank'
-    );
+    window.open(encodeURI('/georeference/building/' + buildingId + '/' + modelId), '_blank');
   }
 
   clearSelection() {

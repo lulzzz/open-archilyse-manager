@@ -37,19 +37,27 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },
-    { headerName: 'Images', field: 'images', editable: true },
+    { headerName: 'Images', field: 'images', cellRenderer: this.viewImg, editable: true },
     { headerName: 'Status', field: 'status', editable: true },
-    { headerName: 'Address', field: 'address', editable: true },
-    { headerName: 'Street', field: 'street', editable: true },
-    { headerName: 'Street_nr', field: 'street_nr', editable: true },
-    { headerName: 'Postal_code', field: 'postal_code', editable: true },
 
-    { headerName: 'City', field: 'city', filter: 'agSetColumnFilter', editable: true },
-    { headerName: 'Country', field: 'country', filter: 'agSetColumnFilter', editable: true },
+    {
+      headerName: 'Country',
+      field: 'address.country',
+      filter: 'agSetColumnFilter',
+      editable: true,
+    },
+    { headerName: 'City', field: 'address.city', filter: 'agSetColumnFilter', editable: true },
+    { headerName: 'Street', field: 'address.street', editable: true },
+    { headerName: 'Street_nr', field: 'address.street_nr', editable: true },
+    { headerName: 'Postal_code', field: 'address.postal_code', editable: true },
 
     // { headerName: 'Building_reference', field: 'building_reference', editable: true },
-    { headerName: 'Ref - Swiss topo', field: 'swiss_topo', editable: true },
-    { headerName: 'Ref - Open_street_maps', field: 'open_street_maps', editable: true },
+    { headerName: 'Ref - Swiss topo', field: 'building_reference.swiss_topo', editable: true },
+    {
+      headerName: 'Ref - Open_street_maps',
+      field: 'building_reference.open_street_maps',
+      editable: true,
+    },
 
     {
       headerName: 'Units',
@@ -60,187 +68,38 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     },
 
     { headerName: 'User_id', field: 'user_id', editable: true },
-    { headerName: 'Created', field: 'created', editable: false },
-    { headerName: 'Updated', field: 'updated', editable: false },
+    { headerName: 'Created', field: 'created', cellRenderer: this.viewDate, editable: false },
+    { headerName: 'Updated', field: 'updated', cellRenderer: this.viewDate, editable: false },
   ];
 
-  rowData = [
-    {
-      site_id: 'Example Site Id 0',
-      object_id: '2102440',
-      building_id: '01',
-      country: 'Switzerland',
-      street: 'Gartenstrasse',
-      number: '6',
-      zip: '8002',
-      city: 'Zürich',
-      units: '18',
-    },
-    {
-      site_id: 'Example Site Id 0',
-      object_id: '2102440',
-      building_id: '02',
-      country: 'Switzerland',
-      street: 'Stockerstrasse',
-      number: '54',
-      zip: '8002',
-      city: 'Zürich',
-      units: '5',
-    },
-    {
-      site_id: 'Example Site Id 1',
-      object_id: '2105090',
-      building_id: '01',
-      country: 'Switzerland',
-      street: 'Turbinenstrasse',
-      number: '31',
-      zip: '8005',
-      city: 'Zürich',
-      units: '31',
-    },
-    {
-      site_id: 'Example Site Id 1',
-      object_id: '2105090',
-      building_id: '02',
-      country: 'Switzerland',
-      street: 'Turbinenstrasse',
-      number: '33',
-      zip: '8005',
-      city: 'Zürich',
-      units: '29',
-    },
-    {
-      site_id: 'Example Site Id 1',
-      object_id: '2105090',
-      building_id: '03',
-      country: 'Switzerland',
-      street: 'Turbinenstrasse',
-      number: '35',
-      zip: '8005',
-      city: 'Zürich',
-      units: '32',
-    },
-    {
-      site_id: 'Example Site Id 1',
-      object_id: '2105090',
-      building_id: '04',
-      country: 'Switzerland',
-      street: 'Turbinenstrasse',
-      number: '37',
-      zip: '8005',
-      city: 'Zürich',
-      units: '30',
-    },
-    {
-      site_id: 'Example Site Id 1',
-      object_id: '2105090',
-      building_id: '05',
-      country: 'Switzerland',
-      street: 'Turbinenstrasse',
-      number: '39',
-      zip: '8005',
-      city: 'Zürich',
-      units: '32',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2105090',
-      building_id: '06',
-      country: 'Switzerland',
-      street: 'Turbinenstrasse',
-      number: '41',
-      zip: '8005',
-      city: 'Zürich',
-      units: '30',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2109010',
-      building_id: '01',
-      country: 'Switzerland',
-      street: 'Badenerstrasse',
-      number: '575',
-      zip: '8048',
-      city: 'Zürich',
-      units: '0',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2109010',
-      building_id: '02',
-      country: 'Switzerland',
-      street: 'Badenerstrasse',
-      number: '581',
-      zip: '8048',
-      city: 'Zürich',
-      units: '0',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2111060',
-      building_id: '01',
-      country: 'Switzerland',
-      street: 'Leutschenbachstrasse',
-      number: '50',
-      zip: '8050',
-      city: 'Zürich',
-      units: '79',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2111060',
-      building_id: '',
-      country: 'Switzerland',
-      street: 'Leutschenbachstrasse',
-      number: '52',
-      zip: '8050',
-      city: 'Zürich',
-      units: '4',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2111060',
-      building_id: '',
-      country: 'Switzerland',
-      street: 'Leutschenbachstrasse',
-      number: '54',
-      zip: '8050',
-      city: 'Zürich',
-      units: '4',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2111060',
-      building_id: '',
-      country: 'Switzerland',
-      street: 'Leutschenbachstrasse',
-      number: '56',
-      zip: '8050',
-      city: 'Zürich',
-      units: '4',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      object_id: '2111060',
-      building_id: '',
-      country: 'Switzerland',
-      street: 'Leutschenbachstrasse',
-      number: '58',
-      zip: '8050',
-      city: 'Zürich',
-      units: '4',
-    },
-  ];
+  rowData;
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   viewUnits(params) {
+    const number = params.value > 0 ? params.value : 0;
     return (
-      params.value +
-      `<a href='/manager/unit#building_id=` +
-      params.data.building_id +
-      `' > View </a>`
+      number + `<a href='/manager/unit#building_id=` + params.data.building_id + `' > View </a>`
     );
+  }
+
+  viewDate(params) {
+    if (params.value && params.value!==''){
+      const readable = new Date(params.value);
+      const m = readable.getMonth(); // returns 6
+      const d = readable.getDay();  // returns 15
+      const y = readable.getFullYear();  // returns 2012
+      return `${d}.${m}.${y}`;
+    }
+    return ``;
+  }
+
+  viewImg(params) {
+    if (params.value && params.value !== '') {
+      return `<a href='` + params.value + `' > View ` + params.value + `</a>`;
+    } else {
+      return ``;
+    }
   }
 
   ngOnInit() {
@@ -250,15 +109,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       console.log('buildings', buildings);
 
       this.gridOptions = <GridOptions>{
-        rowData: this.rowData,
+        rowData: <any[]>buildings, //this.rowData,
         columnDefs: this.columnDefs,
 
         onCellValueChanged: params => {
           console.log('onCellValueChanged', params);
-          const building = {
-            building_id: '???',
-          };
-          this.editRow(building);
+          this.editRow(params.data);
         },
 
         onFilterChanged: params => {
@@ -273,7 +129,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         onGridReady: params => {
           this.gridApi = params.api;
           this.gridColumnApi = params.columnApi;
-          this.gridOptions.api.sizeColumnsToFit();
+
+          // this.gridOptions.api.sizeColumnsToFit();
 
           this.fragment_sub = this.route.fragment.subscribe(fragment => {
             const urlParams = parseParms(fragment);
@@ -324,11 +181,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     this.http
       .post('http://api.archilyse.com/v1/buildings', {
         address: {
-          city: 'Zurich',
+          city: 'St. Gallen',
           country: 'Switzerland',
-          postal_code: '8005',
-          street: 'Technopark',
-          street_nr: '1',
+          postal_code: '9000',
+          street: 'Ruhbergstrasse',
+          street_nr: '44',
         },
 
         building_reference: {
@@ -341,9 +198,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         name: 'My favorite building!',
         site_id: '5a8fec5c4cdf4c000b04f8cf',
       })
-      .subscribe(buildings => {
-        console.log('buildings', buildings);
-
+      .subscribe(building => {
+        console.log('buildings', building);
+        this.gridOptions.api.updateRowData({
+          add: [building],
+        });
+        /**
         this.gridOptions.api.updateRowData({
           add: [
             {
@@ -372,6 +232,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             },
           ],
         });
+         */
       }, console.error);
   }
 
