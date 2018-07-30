@@ -81,23 +81,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         console.log('units', units);
 
         this.gridOptions.api.updateRowData({
-          add: [
-            {
-              unit_id: '',
-              user_id: '',
-              building_id: '',
-              name: '',
-              description: '',
-              images: '',
-              line1: '',
-              line2: '',
-              line3: '',
-              created: '',
-              updated: '',
-              layouts: '',
-              remarks: '',
-            },
-          ],
+          add: [units],
         });
       }, console.error);
   }
@@ -226,9 +210,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       if (result.value) {
         this.selectedRows.forEach(selectedRow => {
           console.log('selectedRow', selectedRow);
-          const units_id = 'Example unit id';
-          this.http.delete('http://api.archilyse.com/v1/units/' + units_id).subscribe(units => {
-            console.log('DELETE units', units, units_id);
+          const unit_id = selectedRow.unit_id;
+          this.http.delete('http://api.archilyse.com/v1/units/' + unit_id).subscribe(units => {
+            console.log('DELETE units', units, unit_id);
           }, console.error);
         });
 

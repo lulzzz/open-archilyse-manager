@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { parseParms } from '../url';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { split } from 'ts-node';
 
 @Component({
   selector: 'app-building-overview',
@@ -84,11 +85,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   viewDate(params) {
-    if (params.value && params.value!==''){
+    if (params.value && params.value !== '') {
       const readable = new Date(params.value);
       const m = readable.getMonth(); // returns 6
-      const d = readable.getDay();  // returns 15
-      const y = readable.getFullYear();  // returns 2012
+      const d = readable.getDay(); // returns 15
+      const y = readable.getFullYear(); // returns 2012
       return `${d}.${m}.${y}`;
     }
     return ``;
@@ -114,7 +115,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
         onCellValueChanged: params => {
           console.log('onCellValueChanged', params);
-          this.editRow(params.data);
+          this.editRow(params);
         },
 
         onFilterChanged: params => {
@@ -171,7 +172,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     this.gridOptions.api.selectAll();
     const nodes = this.gridOptions.api.getSelectedNodes();
     nodes.forEach(node => {
-      if (node.data.building_id !== '') {
+      if (
+        node.data.building_reference.swiss_topo !== '' ||
+        node.data.building_reference.open_street_maps !== ''
+      ) {
         node.setSelected(false);
       }
     });
@@ -203,42 +207,33 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions.api.updateRowData({
           add: [building],
         });
-        /**
-        this.gridOptions.api.updateRowData({
-          add: [
-            {
-              site_id: '',
-              building_id: '',
-              name: '',
-              description: '',
-              images: '',
-              status: '',
-              address: '',
-              street: '',
-              street_nr: '',
-              postal_code: '',
-
-              city: '',
-              country: '',
-
-              swiss_topo: '',
-              open_street_maps: '',
-
-              units: 0,
-
-              user_id: '',
-              created: '',
-              updated: '',
-            },
-          ],
-        });
-         */
       }, console.error);
   }
 
-  editRow(building) {
+  editRow(params) {
+    const building = params.data;
+    const building_id = building.building_id;
+
+    const column = params.column.colId;
+    const columnValue = params.value;
+
+    const newValue = {};
+
+    const columnParts = column.split('.');
+
+    if (columnParts.length <= 1) {
+      newValue[column] = columnValue;
+    } else if (columnParts.length <= 2) {
+      newValue[columnParts[0]] = {};
+      newValue[columnParts[0]][columnParts[1]] = columnValue;
+    } else if (columnParts.length <= 3) {
+      newValue[columnParts[0]] = {};
+      newValue[columnParts[0]][columnParts[1]] = {};
+      newValue[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
+    }
+
     this.http
-      .patch('http://api.archilyse.com/v1/buildings/' + building.building_id, building)
+      .patch('http://api.archilyse.com/v1/buildings/' + building_id, newValue)
       .subscribe(building => {
         console.log('EDIT building', building);
       }, console.error);
@@ -269,7 +264,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       if (result.value) {
         this.selectedRows.forEach(selectedRow => {
           console.log('selectedRow', selectedRow);
-          const building_id = 'Example building id';
+          const building_id = selectedRow.building_id;
           this.http
             .delete('http://api.archilyse.com/v1/buildings/' + building_id)
             .subscribe(buildings => {

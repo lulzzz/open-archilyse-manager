@@ -91,20 +91,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         console.log('layouts', layouts);
 
         this.gridOptions.api.updateRowData({
-          add: [
-            {
-              unit_id: '',
-              name: '',
-              description: '',
-              floorPlan: '',
-              modelStructureId: '',
-              images: '',
-              model_structure: '',
-              created: '',
-              updated: '',
-              remarks: '',
-            },
-          ],
+          add: [layouts],
         });
       }, console.error);
   }
@@ -128,11 +115,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   viewDate(params) {
-    if (params.value && params.value!==''){
+    if (params.value && params.value !== '') {
       const readable = new Date(params.value);
       const m = readable.getMonth(); // returns 6
-      const d = readable.getDay();  // returns 15
-      const y = readable.getFullYear();  // returns 2012
+      const d = readable.getDay(); // returns 15
+      const y = readable.getFullYear(); // returns 2012
       return `${d}.${m}.${y}`;
     }
     return ``;
@@ -241,11 +228,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       if (result.value) {
         this.selectedRows.forEach(selectedRow => {
           console.log('selectedRow', selectedRow);
-          const layouts_id = 'Example layout id';
+          const layout_id = selectedRow.layout_id;
           this.http
-            .delete('http://api.archilyse.com/v1/layouts/' + layouts_id)
+            .delete('http://api.archilyse.com/v1/layouts/' + layout_id)
             .subscribe(layouts => {
-              console.log('DELETE layouts', layouts, layouts_id);
+              console.log('DELETE layouts', layouts, layout_id);
             }, console.error);
         });
 
