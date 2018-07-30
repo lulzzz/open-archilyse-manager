@@ -32,8 +32,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   fragment_sub: Subscription;
 
   columnDefs = [
-    { headerName: 'Building_id', field: 'building_id', editable: true },
     { headerName: 'Site_id', field: 'site_id', editable: true },
+    { headerName: 'Building_id', field: 'building_id', editable: true },
+
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },
     { headerName: 'Images', field: 'images', editable: true },
@@ -252,6 +253,14 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         rowData: this.rowData,
         columnDefs: this.columnDefs,
 
+        onCellValueChanged: params => {
+          console.log('onCellValueChanged', params);
+          const building = {
+            building_id: '???',
+          };
+          this.editRow(building);
+        },
+
         onFilterChanged: params => {
           const model = params.api.getFilterModel();
           this.filterModelSet = model !== null && Object.keys(model).length > 0;
@@ -339,17 +348,38 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           add: [
             {
               site_id: '',
-              object_id: '',
               building_id: '',
-              country: '',
+              name: '',
+              description: '',
+              images: '',
+              status: '',
+              address: '',
               street: '',
-              number: '',
-              zip: '',
+              street_nr: '',
+              postal_code: '',
+
               city: '',
-              units: '0',
+              country: '',
+
+              swiss_topo: '',
+              open_street_maps: '',
+
+              units: 0,
+
+              user_id: '',
+              created: '',
+              updated: '',
             },
           ],
         });
+      }, console.error);
+  }
+
+  editRow(building) {
+    this.http
+      .patch('http://api.archilyse.com/v1/buildings/' + building.building_id, building)
+      .subscribe(building => {
+        console.log('EDIT building', building);
       }, console.error);
   }
 
@@ -376,19 +406,19 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        const building_id = 'Example building id';
-        this.http
-          .delete('http://api.archilyse.com/v1/buildings/' + building_id)
-          .subscribe(buildings => {
-            console.log('DELETE buildings', buildings, building_id);
+        this.selectedRows.forEach(selectedRow => {
+          console.log('selectedRow', selectedRow);
+          const building_id = 'Example building id';
+          this.http
+            .delete('http://api.archilyse.com/v1/buildings/' + building_id)
+            .subscribe(buildings => {
+              console.log('DELETE buildings', buildings, building_id);
+            }, console.error);
+        });
 
-            this.gridOptions.api.updateRowData({
-              remove: this.selectedRows,
-            });
-
-          }, console.error);
-
-
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }

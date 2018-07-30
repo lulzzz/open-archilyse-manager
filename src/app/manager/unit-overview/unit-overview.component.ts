@@ -59,6 +59,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     { headerName: 'Remarks', field: 'remarks', editable: true },
   ];
 
+
   rowData = [
     {
       unit_id: '01',
@@ -161,17 +162,32 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions.api.updateRowData({
           add: [
             {
+
+              unit_id: '',
+              user_id: '',
               building_id: '',
-              floorPlan: '',
-              modelStructureId: '',
-              bruestungshoehe: 0,
-              fensterhoehe: 0,
-              raumhoehe: 0,
+              name: '',
+              description: '',
+              images: '',
+              line1: '',
+              line2: '',
+              line3: '',
+              created: '',
+              updated: '',
+              layouts: '',
               remarks: '',
+
             },
           ],
         });
       }, console.error);
+  }
+
+
+  editRow(unit) {
+    this.http.patch('http://api.archilyse.com/v1/units/' + unit.unit_id, unit).subscribe(unit => {
+      console.log('EDIT unit', unit);
+    }, console.error);
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
@@ -200,6 +216,15 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       this.gridOptions = <GridOptions>{
         rowData: this.rowData,
         columnDefs: this.columnDefs,
+
+        onCellValueChanged: params => {
+          console.log('onCellValueChanged', params);
+          const unit = {
+            unit_id: '???',
+          };
+          this.editRow(unit);
+        },
+
         onFilterChanged: params => {
           const model = params.api.getFilterModel();
           this.filterModelSet = model !== null || Object.keys(model).length > 0;
@@ -266,14 +291,17 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        const units_id = 'Example unit id';
-        this.http.delete('http://api.archilyse.com/v1/units/' + units_id).subscribe(units => {
-          console.log('DELETE units', units, units_id);
+        this.selectedRows.forEach(selectedRow => {
+          console.log('selectedRow', selectedRow);
+          const units_id = 'Example unit id';
+          this.http.delete('http://api.archilyse.com/v1/units/' + units_id).subscribe(units => {
+            console.log('DELETE units', units, units_id);
+          }, console.error);
+        });
 
-          this.gridOptions.api.updateRowData({
-            remove: this.selectedRows,
-          });
-        }, console.error);
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }

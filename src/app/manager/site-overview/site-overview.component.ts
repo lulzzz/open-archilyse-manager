@@ -80,7 +80,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   }
 
   addRow() {
-
     this.http
       .post('http://api.archilyse.com/v1/sites', {
         description: 'New Archilyse Site',
@@ -100,9 +99,13 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             },
           ],
         });
-
       }, console.error);
+  }
 
+  editRow(site) {
+    this.http.patch('http://api.archilyse.com/v1/sites/' + site.site_id, site).subscribe(site => {
+      console.log('EDIT site', site);
+    }, console.error);
   }
 
   ngOnInit() {
@@ -113,6 +116,14 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       this.gridOptions = <GridOptions>{
         rowData: this.rowData,
         columnDefs: this.columnDefs,
+
+        onCellValueChanged: params => {
+          console.log('onCellValueChanged', params);
+          const site = {
+            site_id: '???',
+          };
+          this.editRow(site);
+        },
 
         onFilterChanged: params => {
           const model = params.api.getFilterModel();
@@ -154,9 +165,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
         enableFilter: true,
         rowSelection: 'multiple',
       };
-
     }, console.error);
-
   }
 
   delete() {
@@ -182,17 +191,17 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
+        this.selectedRows.forEach(selectedRow => {
+          console.log('selectedRow', selectedRow);
+          const site_id = 'Example site id';
+          this.http.delete('http://api.archilyse.com/v1/sites/' + site_id).subscribe(sites => {
+            console.log('DELETE sites', sites, site_id);
+          }, console.error);
+        });
 
-        const site_id = "Example site id";
-        this.http.delete('http://api.archilyse.com/v1/sites/'+ site_id).subscribe(sites => {
-          console.log('DELETE sites', sites, site_id);
-
-          this.gridOptions.api.updateRowData({
-            remove: this.selectedRows,
-          });
-
-        }, console.error);
-
+        this.gridOptions.api.updateRowData({
+          remove: this.selectedRows,
+        });
       }
     });
   }

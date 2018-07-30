@@ -121,7 +121,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   ];
 
   addRow() {
-
     this.http
       .post('http://api.archilyse.com/v1/layouts', {
         description: 'Layout 2 related to swiss topo',
@@ -147,15 +146,26 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           add: [
             {
               unit_id: '',
+              name: '',
+              description: '',
               floorPlan: '',
               modelStructureId: '',
-              bruestungshoehe: 0,
-              fensterhoehe: 0,
-              raumhoehe: 0,
+              images: '',
+              model_structure: '',
+              created: '',
+              updated: '',
               remarks: '',
             },
           ],
         });
+      }, console.error);
+  }
+
+  editRow(layout) {
+    this.http
+      .patch('http://api.archilyse.com/v1/layouts/' + layout.layout_id, layout)
+      .subscribe(layout => {
+        console.log('EDIT layout', layout);
       }, console.error);
   }
 
@@ -174,6 +184,15 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       this.gridOptions = <GridOptions>{
         rowData: this.rowData,
         columnDefs: this.columnDefs,
+
+        onCellValueChanged: params => {
+          console.log('onCellValueChanged', params);
+          const layout = {
+            layout_id: '???',
+          };
+          this.editRow(layout);
+        },
+
         onFilterChanged: params => {
           const model = params.api.getFilterModel();
           this.filterModelSet = model !== null && Object.keys(model).length > 0;
@@ -215,7 +234,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         rowSelection: 'multiple',
       };
     }, console.error);
-
   }
 
   cellPdfDownloadLink(params) {
@@ -251,11 +269,15 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-
-        const layouts_id = "Example layout id";
-        this.http.delete('http://api.archilyse.com/v1/layouts/'+ layouts_id).subscribe(layouts => {
-          console.log('DELETE layouts', layouts, layouts_id);
-        }, console.error);
+        this.selectedRows.forEach(selectedRow => {
+          console.log('selectedRow', selectedRow);
+          const layouts_id = 'Example layout id';
+          this.http
+            .delete('http://api.archilyse.com/v1/layouts/' + layouts_id)
+            .subscribe(layouts => {
+              console.log('DELETE layouts', layouts, layouts_id);
+            }, console.error);
+        });
 
         this.gridOptions.api.updateRowData({
           remove: this.selectedRows,
