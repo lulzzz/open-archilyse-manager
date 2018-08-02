@@ -30,36 +30,44 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   fragment_sub: Subscription;
 
-  columnDefs = [
-    { headerName: 'Unit_id', field: 'unit_id', width: 190, editable: false },
-    {
-      headerName: 'Building_id',
-      field: 'building_id',
-      width: 230,
-      cellRenderer: this.viewBuilding,
-      editable: true,
-    },
-    { headerName: 'Name', field: 'name', editable: true },
-    { headerName: 'Description', field: 'description', editable: true },
-    {
-      headerName: 'Images',
-      field: 'images',
-      cellRenderer: ManagerFunctions.viewImg,
-      editable: false,
-    },
-    { headerName: 'Address Line1', field: 'line1', editable: true },
-    { headerName: 'Address Line2', field: 'line2', editable: true },
-    { headerName: 'Address Line3', field: 'line3', editable: true },
-    {
-      headerName: 'Layouts',
-      field: 'layouts',
-      filter: 'agNumberColumnFilter',
-      width: 90,
-      cellRenderer: this.viewLayouts,
-      editable: false,
-    },
-    ...ManagerFunctions.metaUserAndData,
-  ];
+  columnDefs;
+
+  buildColumDefinitions(buildings) {
+    this.columnDefs = [
+      { headerName: 'Unit_id', field: 'unit_id', width: 190, editable: false },
+      {
+        headerName: 'Building_id',
+        field: 'building_id',
+        width: 230,
+        cellRenderer: this.viewBuilding,
+        cellEditor: 'agPopupSelectCellEditor',
+        cellEditorParams: {
+          values: buildings.map(building => building.building_id),
+        },
+        editable: true,
+      },
+      { headerName: 'Name', field: 'name', editable: true },
+      { headerName: 'Description', field: 'description', editable: true },
+      {
+        headerName: 'Images',
+        field: 'images',
+        cellRenderer: ManagerFunctions.viewImg,
+        editable: false,
+      },
+      { headerName: 'Address Line1', field: 'line1', editable: true },
+      { headerName: 'Address Line2', field: 'line2', editable: true },
+      { headerName: 'Address Line3', field: 'line3', editable: true },
+      {
+        headerName: 'Layouts',
+        field: 'layouts',
+        filter: 'agNumberColumnFilter',
+        width: 90,
+        cellRenderer: this.viewLayouts,
+        editable: false,
+      },
+      ...ManagerFunctions.metaUserAndData,
+    ];
+  }
 
   addRow() {
     this.http
@@ -103,54 +111,57 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     /** UNITS */
+    this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+      this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
+        console.log('layouts', layouts);
+        const layoutsArray = <any[]>layouts;
 
-    this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
-      console.log('layouts', layouts);
-      const layoutsArray = <any[]>layouts;
+        this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+          const unitsArray = <any[]>units;
 
-      this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
-        const unitsArray = <any[]>units;
+          this.buildColumDefinitions(buildings);
 
-        unitsArray.forEach(unit => {
-          unit.layouts = layoutsArray.filter(layout => layout.unit_id === unit.unit_id).length;
-        });
+          unitsArray.forEach(unit => {
+            unit.layouts = layoutsArray.filter(layout => layout.unit_id === unit.unit_id).length;
+          });
 
-        this.gridOptions = <GridOptions>{
-          rowData: unitsArray,
-          columnDefs: this.columnDefs,
+          this.gridOptions = <GridOptions>{
+            rowData: unitsArray,
+            columnDefs: this.columnDefs,
 
-          onCellValueChanged: params => {
-            ManagerFunctions.reactToEdit(this.http, params, 'unit_id', 'units');
-          },
+            onCellValueChanged: params => {
+              ManagerFunctions.reactToEdit(this.http, params, 'unit_id', 'units');
+            },
 
-          onFilterChanged: params => {
-            const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null || Object.keys(model).length > 0;
-          },
-          onSelectionChanged: () => {
-            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-            this.selectedRows = this.gridOptions.api.getSelectedRows();
-          },
-          onGridReady: params => {
-            this.gridApi = params.api;
-            this.gridColumnApi = params.columnApi;
-            // this.gridOptions.api.sizeColumnsToFit();
-            this.fragment_sub = ManagerFunctions.setDefaultFilters(
-              this.route,
-              this.columnDefs,
-              this.gridApi
-            );
-          },
-          // rowHeight: 48, recommended row height for material design data grids,
-          frameworkComponents: {
-            checkboxRenderer: MatCheckboxComponent,
-            procentRenderer: ProcentRendererComponent,
-          },
-          enableColResize: true,
-          enableSorting: true,
-          enableFilter: true,
-          rowSelection: 'multiple',
-        };
+            onFilterChanged: params => {
+              const model = params.api.getFilterModel();
+              this.filterModelSet = model !== null || Object.keys(model).length > 0;
+            },
+            onSelectionChanged: () => {
+              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+              this.selectedRows = this.gridOptions.api.getSelectedRows();
+            },
+            onGridReady: params => {
+              this.gridApi = params.api;
+              this.gridColumnApi = params.columnApi;
+              // this.gridOptions.api.sizeColumnsToFit();
+              this.fragment_sub = ManagerFunctions.setDefaultFilters(
+                this.route,
+                this.columnDefs,
+                this.gridApi
+              );
+            },
+            // rowHeight: 48, recommended row height for material design data grids,
+            frameworkComponents: {
+              checkboxRenderer: MatCheckboxComponent,
+              procentRenderer: ProcentRendererComponent,
+            },
+            enableColResize: true,
+            enableSorting: true,
+            enableFilter: true,
+            rowSelection: 'multiple',
+          };
+        }, console.error);
       }, console.error);
     }, console.error);
   }

@@ -33,48 +33,56 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   fragment_sub: Subscription;
 
-  columnDefs = [
-    {
-      headerName: 'Layout_id',
-      field: 'layout_id',
-      width: 190,
-      editable: false,
-    },
-    {
-      headerName: 'Unit_id',
-      field: 'unit_id',
-      width: 230,
-      cellRenderer: this.viewUnit,
-      editable: true,
-    },
-    { headerName: 'Name', field: 'name', editable: true },
-    { headerName: 'Description', field: 'description', editable: true },
-    {
-      headerName: 'FloorPlan',
-      field: 'floorPlan',
-      cellRenderer: ManagerFunctions.cellPdfDownloadLink,
-      editable: false,
-    },
-    {
-      headerName: 'Images',
-      field: 'images',
-      cellRenderer: ManagerFunctions.viewImg,
-      editable: true,
-    },
-    {
-      headerName: 'Movement',
-      field: 'movement',
-      cellRenderer: this.viewMovement,
-      editable: true,
-    },
-    {
-      headerName: 'Model_structure',
-      field: 'model_structure',
-      cellRenderer: this.viewModel,
-      editable: true,
-    },
-    ...ManagerFunctions.metaUserAndData,
-  ];
+  columnDefs;
+
+  buildColumDefinitions(layouts, units) {
+    this.columnDefs = [
+      {
+        headerName: 'Layout_id',
+        field: 'layout_id',
+        width: 190,
+        editable: false,
+      },
+      {
+        headerName: 'Unit_id',
+        field: 'unit_id',
+        width: 230,
+        cellRenderer: this.viewUnit,
+        cellEditor: 'agPopupSelectCellEditor',
+        cellEditorParams: {
+          values: units.map(unit => unit.unit_id),
+        },
+        editable: true,
+      },
+      { headerName: 'Name', field: 'name', editable: true },
+      { headerName: 'Description', field: 'description', editable: true },
+      {
+        headerName: 'FloorPlan',
+        field: 'floorPlan',
+        cellRenderer: ManagerFunctions.cellPdfDownloadLink,
+        editable: false,
+      },
+      {
+        headerName: 'Images',
+        field: 'images',
+        cellRenderer: ManagerFunctions.viewImg,
+        editable: true,
+      },
+      {
+        headerName: 'Movement',
+        field: 'movement',
+        cellRenderer: this.viewMovement,
+        editable: true,
+      },
+      {
+        headerName: 'Model_structure',
+        field: 'model_structure',
+        cellRenderer: this.viewModel,
+        editable: true,
+      },
+      ...ManagerFunctions.metaUserAndData,
+    ];
+  }
 
   addRow() {
     this.http
@@ -140,44 +148,50 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
       console.log('layouts', layouts);
 
-      this.gridOptions = <GridOptions>{
-        rowData: <any[]>layouts,
-        columnDefs: this.columnDefs,
+      this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+        const unitsArray = <any[]>units;
 
-        onCellValueChanged: params => {
-          ManagerFunctions.reactToEdit(this.http, params, 'layout_id', 'layouts');
-        },
+        this.buildColumDefinitions(layouts, units);
 
-        onFilterChanged: params => {
-          const model = params.api.getFilterModel();
-          this.filterModelSet = model !== null && Object.keys(model).length > 0;
-        },
-        onSelectionChanged: () => {
-          this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-          this.selectedRows = this.gridOptions.api.getSelectedRows();
-        },
-        onGridReady: params => {
-          this.gridApi = params.api;
-          this.gridColumnApi = params.columnApi;
+        this.gridOptions = <GridOptions>{
+          rowData: <any[]>layouts,
+          columnDefs: this.columnDefs,
 
-          // this.gridOptions.api.sizeColumnsToFit();
+          onCellValueChanged: params => {
+            ManagerFunctions.reactToEdit(this.http, params, 'layout_id', 'layouts');
+          },
 
-          this.fragment_sub = ManagerFunctions.setDefaultFilters(
-            this.route,
-            this.columnDefs,
-            this.gridApi
-          );
-        },
-        // rowHeight: 48, recommended row height for material design data grids,
-        frameworkComponents: {
-          checkboxRenderer: MatCheckboxComponent,
-          procentRenderer: ProcentRendererComponent,
-        },
-        enableColResize: true,
-        enableSorting: true,
-        enableFilter: true,
-        rowSelection: 'multiple',
-      };
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+
+            // this.gridOptions.api.sizeColumnsToFit();
+
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
+          },
+          // rowHeight: 48, recommended row height for material design data grids,
+          frameworkComponents: {
+            checkboxRenderer: MatCheckboxComponent,
+            procentRenderer: ProcentRendererComponent,
+          },
+          enableColResize: true,
+          enableSorting: true,
+          enableFilter: true,
+          rowSelection: 'multiple',
+        };
+      }, console.error);
     }, console.error);
   }
 

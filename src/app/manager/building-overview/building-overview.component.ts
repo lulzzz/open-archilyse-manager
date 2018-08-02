@@ -29,52 +29,59 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   gridOptions;
 
   fragment_sub: Subscription;
+  columnDefs;
 
-  columnDefs = [
-    { headerName: 'Building_id', field: 'building_id', width: 190, editable: false },
-    {
-      headerName: 'Site_id',
-      field: 'site_id',
-      cellRenderer: this.viewSite,
-      width: 230,
-      editable: true,
-    },
+  buildColumDefinitions(sites) {
+    this.columnDefs = [
+      { headerName: 'Building_id', field: 'building_id', width: 190, editable: false },
+      {
+        headerName: 'Site_id',
+        field: 'site_id',
+        width: 230,
+        cellRenderer: this.viewSite,
+        cellEditor: 'agPopupSelectCellEditor',
+        cellEditorParams: {
+          values: sites.map(site => site.site_id),
+        },
+        editable: true,
+      },
 
-    { headerName: 'Name', field: 'name', editable: true },
-    { headerName: 'Description', field: 'description', editable: true },
-    {
-      headerName: 'Images',
-      field: 'images',
-      cellRenderer: ManagerFunctions.viewImg,
-      editable: true,
-    },
-    {
-      headerName: 'Country',
-      field: 'address.country',
-      editable: true,
-    },
-    { headerName: 'City', field: 'address.city', editable: true },
-    { headerName: 'Street', field: 'address.street', editable: true },
-    { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
-    { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
+      { headerName: 'Name', field: 'name', editable: true },
+      { headerName: 'Description', field: 'description', editable: true },
+      {
+        headerName: 'Images',
+        field: 'images',
+        cellRenderer: ManagerFunctions.viewImg,
+        editable: true,
+      },
+      {
+        headerName: 'Country',
+        field: 'address.country',
+        editable: true,
+      },
+      { headerName: 'City', field: 'address.city', editable: true },
+      { headerName: 'Street', field: 'address.street', editable: true },
+      { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
+      { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
 
-    // { headerName: 'Building_reference', field: 'building_reference', editable: true },
-    { headerName: 'Ref - Swiss topo', field: 'building_reference.swiss_topo', editable: true },
-    {
-      headerName: 'Ref - Open_street_maps',
-      field: 'building_reference.open_street_maps',
-      editable: true,
-    },
-    {
-      headerName: 'Units',
-      field: 'units',
-      filter: 'agNumberColumnFilter',
-      width: 90,
-      cellRenderer: this.viewUnits,
-      editable: false,
-    },
-    ...ManagerFunctions.metaUserAndData,
-  ];
+      // { headerName: 'Building_reference', field: 'building_reference', editable: true },
+      { headerName: 'Ref - Swiss topo', field: 'building_reference.swiss_topo', editable: true },
+      {
+        headerName: 'Ref - Open_street_maps',
+        field: 'building_reference.open_street_maps',
+        editable: true,
+      },
+      {
+        headerName: 'Units',
+        field: 'units',
+        filter: 'agNumberColumnFilter',
+        width: 90,
+        cellRenderer: this.viewUnits,
+        editable: false,
+      },
+      ...ManagerFunctions.metaUserAndData,
+    ];
+  }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
@@ -91,59 +98,63 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     /** BUILDINGS */
-    this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
-      console.log('units', units);
-      const unitsArray = <any[]>units;
+    this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+      this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+        console.log('units', units);
+        const unitsArray = <any[]>units;
 
-      this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
-        console.log('buildings', buildings);
+        this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+          console.log('buildings', buildings);
 
-        const buildingsArray = <any[]>buildings;
+          const buildingsArray = <any[]>buildings;
 
-        buildingsArray.forEach(building => {
-          building.units = unitsArray.filter(
-            unit => unit.building_id === building.building_id
-          ).length;
-        });
+          this.buildColumDefinitions(sites);
 
-        this.gridOptions = <GridOptions>{
-          rowData: buildingsArray,
-          columnDefs: this.columnDefs,
+          buildingsArray.forEach(building => {
+            building.units = unitsArray.filter(
+              unit => unit.building_id === building.building_id
+            ).length;
+          });
 
-          onCellValueChanged: params => {
-            ManagerFunctions.reactToEdit(this.http, params, 'building_id', 'buildings');
-          },
+          this.gridOptions = <GridOptions>{
+            rowData: buildingsArray,
+            columnDefs: this.columnDefs,
 
-          onFilterChanged: params => {
-            const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null && Object.keys(model).length > 0;
-          },
-          onSelectionChanged: () => {
-            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-            this.selectedRows = this.gridOptions.api.getSelectedRows();
-          },
-          onGridReady: params => {
-            this.gridApi = params.api;
-            this.gridColumnApi = params.columnApi;
+            onCellValueChanged: params => {
+              ManagerFunctions.reactToEdit(this.http, params, 'building_id', 'buildings');
+            },
 
-            // this.gridOptions.api.sizeColumnsToFit();
+            onFilterChanged: params => {
+              const model = params.api.getFilterModel();
+              this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            },
+            onSelectionChanged: () => {
+              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+              this.selectedRows = this.gridOptions.api.getSelectedRows();
+            },
+            onGridReady: params => {
+              this.gridApi = params.api;
+              this.gridColumnApi = params.columnApi;
 
-            this.fragment_sub = ManagerFunctions.setDefaultFilters(
-              this.route,
-              this.columnDefs,
-              this.gridApi
-            );
-          },
-          // rowHeight: 48, recommended row height for material design data grids,
-          frameworkComponents: {
-            checkboxRenderer: MatCheckboxComponent,
-            procentRenderer: ProcentRendererComponent,
-          },
-          enableColResize: true,
-          enableSorting: true,
-          enableFilter: true,
-          rowSelection: 'multiple',
-        };
+              // this.gridOptions.api.sizeColumnsToFit();
+
+              this.fragment_sub = ManagerFunctions.setDefaultFilters(
+                this.route,
+                this.columnDefs,
+                this.gridApi
+              );
+            },
+            // rowHeight: 48, recommended row height for material design data grids,
+            frameworkComponents: {
+              checkboxRenderer: MatCheckboxComponent,
+              procentRenderer: ProcentRendererComponent,
+            },
+            enableColResize: true,
+            enableSorting: true,
+            enableFilter: true,
+            rowSelection: 'multiple',
+          };
+        }, console.error);
       }, console.error);
     }, console.error);
   }
