@@ -3,10 +3,9 @@ import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { parseParms } from '../url';
-import {ManagerFunctions} from '../managerFunctions';
-import {HttpClient} from '@angular/common/http';
+import { Subscription } from 'rxjs/Subscription';
+import { ManagerFunctions } from '../managerFunctions';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-overview',
@@ -138,7 +137,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
@@ -160,7 +158,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
             this.gridColumnApi = params.columnApi;
             this.gridOptions.api.sizeColumnsToFit();
 
-            this.fragment_sub = ManagerFunctions.setDefaultFilters(this.route, this.columnDefs, this.gridApi);
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
           },
           // rowHeight: 48, recommended row height for material design data grids,
           frameworkComponents: {
@@ -172,9 +174,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
           enableFilter: true,
           rowSelection: 'multiple',
         };
-
-      });
-
+      }
+    );
   }
 
   onCellValueChanged(event) {

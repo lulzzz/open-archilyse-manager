@@ -3,7 +3,7 @@ import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
 
@@ -95,12 +95,12 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
         const countries = buildingsArray.map(building => building.address.country);
         const countriesNoDuplicates = countries.filter(
-          (item, pos) => countries.indexOf(item) == pos
+          (item, pos) => countries.indexOf(item) === pos
         );
 
-        const rowData = countriesNoDuplicates.map(country => {
+        const rowsData = countriesNoDuplicates.map(countryVal => {
           const buildingsThisCountry = buildingsArray.filter(
-            building => building.address.country === country
+            building => building.address.country === countryVal
           );
           const numBuildings = buildingsThisCountry.length;
           const buildingsReferenced = buildingsThisCountry.filter(building =>
@@ -118,7 +118,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           const progressBuildings =
             numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
           return {
-            country: country,
+            country: countryVal,
             buildings: numBuildings,
             units: numUnits,
             progress: progressBuildings,
@@ -140,7 +140,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
         });
 
         this.gridOptions = <GridOptions>{
-          rowData: rowData,
+          rowData: rowsData,
           columnDefs: this.columnDefs,
           onFilterChanged: params => {
             const model = params.api.getFilterModel();

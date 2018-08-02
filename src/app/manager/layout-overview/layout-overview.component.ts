@@ -3,7 +3,8 @@ import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { catchError, map } from 'rxjs/operators';
@@ -119,7 +120,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       console.log('layouts', layouts);
 
       this.gridOptions = <GridOptions>{
-        rowData: <any[]>layouts, //this.rowData,
+        rowData: <any[]>layouts,
         columnDefs: this.columnDefs,
 
         onCellValueChanged: params => {

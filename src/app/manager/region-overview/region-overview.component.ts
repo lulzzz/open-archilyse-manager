@@ -3,7 +3,7 @@ import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
 
@@ -86,34 +86,34 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
         const countries = buildingsArray.map(building => building.address.country);
         const countriesNoDuplicates = countries.filter(
-          (item, pos) => countries.indexOf(item) == pos
+          (item, pos) => countries.indexOf(item) === pos
         );
 
         const countryCitiesNoDuplicates = [];
-        countriesNoDuplicates.forEach(country => {
+        countriesNoDuplicates.forEach(countryVal => {
           const buildingsThisCountry = buildingsArray.filter(
-            building => building.address.country === country
+            building => building.address.country === countryVal
           );
 
           const cities = buildingsThisCountry.map(building => building.address.city);
-          const citiesNoDuplicates = cities.filter((item, pos) => cities.indexOf(item) == pos);
+          const citiesNoDuplicates = cities.filter((item, pos) => cities.indexOf(item) === pos);
 
-          citiesNoDuplicates.forEach(city => {
+          citiesNoDuplicates.forEach(cityVal => {
             countryCitiesNoDuplicates.push({
-              country: country,
-              city: city,
+              country: countryVal,
+              city: cityVal,
             });
           });
         });
 
         console.log('citiesNoDuplicates ', countryCitiesNoDuplicates);
 
-        const rowData = countryCitiesNoDuplicates.map(countryCity => {
-          const country = countryCity.country;
-          const city = countryCity.city;
+        const rowsData = countryCitiesNoDuplicates.map(countryCity => {
+          const countryVal = countryCity.country;
+          const cityVal = countryCity.city;
 
           const buildingsThisCity = buildingsArray.filter(
-            building => building.address.country === country && building.address.city === city
+            building => building.address.country === countryVal && building.address.city === cityVal
           );
 
           const numBuildings = buildingsThisCity.length;
@@ -132,8 +132,8 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
           const progressBuildings =
             numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
           return {
-            country: country,
-            city: city,
+            country: countryVal,
+            city: cityVal,
             buildings: numBuildings,
             units: numUnits,
             progress: progressBuildings,
@@ -155,7 +155,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
         });
 
         this.gridOptions = <GridOptions>{
-          rowData: rowData, // this.rowData,
+          rowData: rowsData,
           columnDefs: this.columnDefs,
           onFilterChanged: params => {
             const model = params.api.getFilterModel();

@@ -3,7 +3,7 @@ import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 
@@ -116,7 +116,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         });
 
         this.gridOptions = <GridOptions>{
-          rowData: unitsArray, //this.rowData,
+          rowData: unitsArray,
           columnDefs: this.columnDefs,
 
           onCellValueChanged: params => {

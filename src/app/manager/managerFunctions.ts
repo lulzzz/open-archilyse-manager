@@ -1,6 +1,5 @@
 import swal from 'sweetalert2';
 import { parseParms } from './url';
-import { Observable } from 'rxjs';
 
 export class ManagerFunctions {
   /**
@@ -133,9 +132,9 @@ export class ManagerFunctions {
   public static viewImg(params) {
     if (params.value && params.value !== '') {
       return `<a href='` + params.value + `' > View ` + params.value + `</a>`;
-    } else {
-      return ``;
     }
+
+    return ``;
   }
 
   public static viewDate(params) {
