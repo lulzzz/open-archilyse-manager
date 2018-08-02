@@ -5,6 +5,8 @@ import { ProcentRendererComponent } from '../../_shared-components/procent-rende
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { parseParms } from '../url';
+import {ManagerFunctions} from '../managerFunctions';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-overview',
@@ -82,7 +84,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       headerName: 'InFloorplan',
       field: 'infloorplan',
       editable: true,
-      cellRenderer: this.cellPdfDownloadLink,
+      cellRenderer: ManagerFunctions.cellPdfDownloadLink,
       onCellValueChanged: this.onCellValueChanged,
     },
     {
@@ -133,58 +135,46 @@ export class OverviewComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.gridOptions = <GridOptions>{
-      rowData: this.rowData,
-      columnDefs: this.columnDefs,
-      onFilterChanged: params => {
-        const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null && Object.keys(model).length > 0;
-      },
-      onSelectionChanged: () => {
-        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-        this.selectedRows = this.gridOptions.api.getSelectedRows();
-      },
-      onGridReady: params => {
-        this.gridApi = params.api;
-        this.gridColumnApi = params.columnApi;
-        this.gridOptions.api.sizeColumnsToFit();
 
-        this.fragment_sub = this.route.fragment.subscribe(fragment => {
-          const urlParams = parseParms(fragment);
+    ManagerFunctions.requestAllData(
+      this.http,
+      (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
+        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
-          const model = {};
-          Object.keys(urlParams).forEach(key => {
-            const found = this.columnDefs.find(columnDef => columnDef.field === key);
-            if (found) {
-              model[key] = {
-                filter: urlParams[key],
-                filterType: 'text',
-                type: 'equals',
-              };
-            }
-          });
-          this.gridApi.setFilterModel(model);
-        });
-      },
-      // rowHeight: 48, recommended row height for material design data grids,
-      frameworkComponents: {
-        checkboxRenderer: MatCheckboxComponent,
-        procentRenderer: ProcentRendererComponent,
-      },
-      enableColResize: true,
-      enableSorting: true,
-      enableFilter: true,
-      rowSelection: 'multiple',
-    };
-  }
+        this.gridOptions = <GridOptions>{
+          rowData: this.rowData,
+          columnDefs: this.columnDefs,
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+            this.gridOptions.api.sizeColumnsToFit();
 
-  cellPdfDownloadLink(params) {
-    return (
-      `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
-    );
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(this.route, this.columnDefs, this.gridApi);
+          },
+          // rowHeight: 48, recommended row height for material design data grids,
+          frameworkComponents: {
+            checkboxRenderer: MatCheckboxComponent,
+            procentRenderer: ProcentRendererComponent,
+          },
+          enableColResize: true,
+          enableSorting: true,
+          enableFilter: true,
+          rowSelection: 'multiple',
+        };
+
+      });
+
   }
 
   onCellValueChanged(event) {
@@ -193,8 +183,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
   clearSelection() {
-    const nodes = this.gridOptions.api.getSelectedNodes();
-    nodes.forEach(node => node.setSelected(false));
+    ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
   clearFilters() {

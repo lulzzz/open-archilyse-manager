@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
-import swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { parseParms } from '../url';
+import { Observable, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ManagerFunctions } from '../managerFunctions';
+import { catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -48,10 +49,15 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     {
       headerName: 'FloorPlan',
       field: 'floorPlan',
-      cellRenderer: this.cellPdfDownloadLink,
+      cellRenderer: ManagerFunctions.cellPdfDownloadLink,
       editable: false,
     },
-    { headerName: 'Images', field: 'images', cellRenderer: this.viewImg, editable: true },
+    {
+      headerName: 'Images',
+      field: 'images',
+      cellRenderer: ManagerFunctions.viewImg,
+      editable: true,
+    },
 
     {
       headerName: 'Model_structure',
@@ -59,32 +65,27 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: this.viewModel,
       editable: true,
     },
-    { headerName: 'Created', field: 'created', cellRenderer: this.viewDate, editable: true },
-    { headerName: 'Updated', field: 'updated', cellRenderer: this.viewDate, editable: true },
-
-    // Custom externals params
-    { headerName: 'Remarks', field: 'remarks', editable: true },
+    ...ManagerFunctions.metaUserAndData,
   ];
-
-  rowData;
 
   addRow() {
     this.http
       .post('http://api.archilyse.com/v1/layouts', {
-        description: 'Layout 2 related to swiss topo',
-        images: 'http://s3-bucket-url.com/image/123',
+        name: '',
+        description: '',
+        images: '',
         movement: {
-          angle: 180.2,
+          angle: 0,
           source: 'swiss_topo',
-          x_off: 21231.8,
-          x_pivot: 5.2,
-          y_off: 12356.6,
-          y_pivot: 52.1,
-          z_off: 212.5,
-          z_pivot: 24.2,
+          x_off: 0,
+          x_pivot: 0,
+          y_off: 0,
+          y_pivot: 0,
+          z_off: 0,
+          z_pivot: 0,
         },
-        name: 'My favorite Layout!',
-        site_id: '5a8fec5c4cdf4c123b04f8cf',
+        site_id: '',
+        unit_id: '',
         source: 'archilogic.com/scene/!675fe04b-4ee8-478a-a758-647f9f1e6f27?mode=3d',
       })
       .subscribe(layouts => {
@@ -96,34 +97,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       }, console.error);
   }
 
-  editRow(layout) {
-    this.http
-      .patch('http://api.archilyse.com/v1/layouts/' + layout.layout_id, layout)
-      .subscribe(layout => {
-        console.log('EDIT layout', layout);
-      }, console.error);
-  }
-
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
-
-  viewImg(params) {
-    if (params.value && params.value !== '') {
-      return `<a href='` + params.value + `' > View</a>`;
-    } else {
-      return ``;
-    }
-  }
-
-  viewDate(params) {
-    if (params.value && params.value !== '') {
-      const readable = new Date(params.value);
-      const m = readable.getMonth(); // returns 6
-      const d = readable.getDay(); // returns 15
-      const y = readable.getFullYear(); // returns 2012
-      return `${d}.${m}.${y}`;
-    }
-    return ``;
-  }
 
   viewModel(params) {
     return `<a href='/editor/` + params.data.layout_id + `' > View model </a>`;
@@ -147,8 +121,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         columnDefs: this.columnDefs,
 
         onCellValueChanged: params => {
-          console.log('onCellValueChanged', params);
-          this.editRow(params.data);
+          ManagerFunctions.reactToEdit(this.http, params, 'layout_id', 'layouts');
         },
 
         onFilterChanged: params => {
@@ -164,22 +137,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           this.gridColumnApi = params.columnApi;
           this.gridOptions.api.sizeColumnsToFit();
 
-          this.fragment_sub = this.route.fragment.subscribe(fragment => {
-            const urlParams = parseParms(fragment);
-
-            const model = {};
-            Object.keys(urlParams).forEach(key => {
-              const found = this.columnDefs.find(columnDef => columnDef.field === key);
-              if (found) {
-                model[key] = {
-                  filter: urlParams[key],
-                  filterType: 'text',
-                  type: 'equals',
-                };
-              }
-            });
-            this.gridApi.setFilterModel(model);
-          });
+          this.fragment_sub = ManagerFunctions.setDefaultFilters(
+            this.route,
+            this.columnDefs,
+            this.gridApi
+          );
         },
         // rowHeight: 48, recommended row height for material design data grids,
         frameworkComponents: {
@@ -194,65 +156,67 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     }, console.error);
   }
 
-  cellPdfDownloadLink(params) {
-    if (params && params.value && params.value !== '') {
-      return (
-        `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
-      );
-    }
-    return '';
-  }
-
   delete() {
-    let titleVal;
-    let textVal;
-    let confirmButtonTextVal;
-
-    if (this.selectedRows.length <= 1) {
-      titleVal = `Delete this layout?`;
-      textVal = `This action cannot be undone. Are you sure you want to delete this layout?`;
-      confirmButtonTextVal = 'Yes, delete it';
-    } else {
-      titleVal = `Delete these ${this.selectedRows.length} layouts?`;
-      textVal = `This action cannot be undone. Are you sure you want to delete these layouts?`;
-      confirmButtonTextVal = 'Yes, delete them';
-    }
-
-    swal({
-      title: titleVal,
-      text: textVal,
-      showCancelButton: true,
-      confirmButtonText: confirmButtonTextVal,
-      customClass: 'arch',
-    }).then(result => {
-      if (result.value) {
-        this.selectedRows.forEach(selectedRow => {
-          console.log('selectedRow', selectedRow);
-          const layout_id = selectedRow.layout_id;
-          this.http
-            .delete('http://api.archilyse.com/v1/layouts/' + layout_id)
-            .subscribe(layouts => {
-              console.log('DELETE layouts', layouts, layout_id);
-            }, console.error);
-        });
-
-        this.gridOptions.api.updateRowData({
-          remove: this.selectedRows,
-        });
-      }
-    });
+    ManagerFunctions.reactToDelete(
+      this.http,
+      this.selectedRows,
+      this.gridOptions.api,
+      'layout',
+      'layouts',
+      'layout_id',
+      'layouts'
+    );
   }
 
   georeference() {
-    const buildingId = 'the_feature_id_also_building_id';
-    const modelId = '5b3f3cb4adcbc100097a6b36';
+    const nodes = this.gridOptions.api.getSelectedNodes();
 
-    window.open(encodeURI('/georeference/building/' + buildingId + '/' + modelId), '_blank');
+    if (nodes.length === 1) {
+      const node = nodes[0];
+
+      const layout_id = node.data.layout_id;
+      const unit_id = node.data.unit_id;
+
+      /**
+       * We need to request the unit to link
+       */
+      this.http.get('http://api.archilyse.com/v1/units/' + unit_id).subscribe(unit => {
+        if (unit) {
+          const building_id = unit['building_id'];
+          ManagerFunctions.openNewWindow('/georeference/building/' + building_id + '/' + layout_id);
+        }
+      });
+    } else if (nodes.length > 1) {
+      const layout_ids = nodes.map(node => node.data.layout_id);
+      const getBuildingsIds = nodes.map(node =>
+        this.http
+          .get('http://api.archilyse.com/v1/units/' + node.data.unit_id) // node.data.unit_id
+          .pipe(map(unit => unit['building_id']), catchError(error => of(null)))
+      );
+
+      Observable.forkJoin(getBuildingsIds).subscribe(buildings_id => {
+        const lines = layout_ids.map((layoutId, i) => {
+          const building_id = buildings_id[i];
+          if (building_id && building_id !== null) {
+            return [building_id, layoutId];
+          }
+        });
+        const filteredList = lines.filter(value => value);
+        if (filteredList.length === 1) {
+          const building_id = filteredList[0][0];
+          const layout_id = filteredList[0][1];
+          ManagerFunctions.openNewWindow('/georeference/building/' + building_id + '/' + layout_id);
+        } else if (filteredList.length > 1) {
+          const filteredListJoined = filteredList.map(lines => lines.join(`\t`));
+          const list = filteredListJoined.join('\n');
+          ManagerFunctions.openNewWindow('/georeference?list=' + list);
+        }
+      });
+    }
   }
 
   clearSelection() {
-    const nodes = this.gridOptions.api.getSelectedNodes();
-    nodes.forEach(node => node.setSelected(false));
+    ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
   clearFilters() {

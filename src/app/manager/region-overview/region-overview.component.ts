@@ -4,7 +4,8 @@ import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { parseParms } from '../url';
+import { ManagerFunctions } from '../managerFunctions';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-region-overview',
@@ -30,9 +31,22 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
   fragment_sub: Subscription;
 
   columnDefs = [
-    { headerName: 'Country', field: 'country', editable: false },
-    { headerName: 'Region', field: 'region', editable: false },
-    { headerName: 'Apartments', field: 'apartments', editable: false },
+    { headerName: 'Country', field: 'country', cellRenderer: this.viewCountry, editable: false },
+    { headerName: 'City', field: 'city', editable: false },
+    {
+      headerName: 'Buildings',
+      field: 'buildings',
+      filter: 'agNumberColumnFilter',
+      cellRenderer: this.viewBuildings,
+      editable: false,
+    },
+    {
+      headerName: 'Units',
+      field: 'units',
+      filter: 'agNumberColumnFilter',
+      cellRenderer: this.viewUnits,
+      editable: false,
+    },
     {
       headerName: 'Progress',
       field: 'progress',
@@ -126,160 +140,140 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
     },
   ];
 
-  rowData = [
-    {
-      country: 'Switzerland',
-      region: 'Rebstein',
-      progress: 100,
-      apartments: 24,
-      delivered: true,
-      structured: true,
-      digitized: true,
-      TLM: true,
-      LOD1: true,
-      LOD2: true,
-      ALTI: true,
-      georeferenced: true,
-      data: true,
-      DPOI: true,
-      view: true,
-      acoustics: true,
-      WBS: true,
-      basicFeatures: true,
-    },
-    {
-      country: 'Switzerland',
-      region: 'Steinach',
-      progress: 90,
-      apartments: 30,
-      delivered: true,
-      structured: true,
-      digitized: true,
-      TLM: true,
-      LOD1: true,
-      LOD2: true,
-      ALTI: true,
-      georeferenced: true,
-      data: true,
-      DPOI: true,
-      view: true,
-      acoustics: true,
-      WBS: true,
-      basicFeatures: true,
-    },
-    {
-      country: 'Switzerland',
-      region: 'Schlieren',
-      progress: 60,
-      apartments: 48,
-      delivered: true,
-      structured: true,
-      digitized: true,
-      TLM: true,
-      LOD1: true,
-      LOD2: true,
-      ALTI: true,
-      georeferenced: true,
-      data: true,
-      DPOI: true,
-      view: true,
-      acoustics: true,
-      WBS: true,
-      basicFeatures: true,
-    },
-    {
-      country: 'Switzerland',
-      region: 'St. Gallen',
-      progress: 17,
-      apartments: 125,
-      delivered: true,
-      structured: true,
-      digitized: true,
-      TLM: true,
-      LOD1: true,
-      LOD2: true,
-      ALTI: true,
-      georeferenced: true,
-      data: true,
-      DPOI: true,
-      view: true,
-      acoustics: true,
-      WBS: true,
-      basicFeatures: true,
-    },
-    {
-      country: 'Switzerland',
-      region: 'Zürich',
-      progress: 34,
-      apartments: 302,
-      delivered: true,
-      structured: true,
-      digitized: true,
-      TLM: true,
-      LOD1: true,
-      LOD2: true,
-      ALTI: true,
-      georeferenced: true,
-      data: true,
-      DPOI: true,
-      view: true,
-      acoustics: true,
-      WBS: true,
-      basicFeatures: true,
-    },
-  ];
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  viewCountry(params) {
+    const country = params.value ? params.value : 'Not defined';
+    return country + ` <a href='/manager/country#country=` + params.value + `' > View </a>`;
+  }
+
+  viewBuildings(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return (
+      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
+    );
+  }
+
+  viewUnits(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
+  }
 
   ngOnInit() {
-    this.gridOptions = <GridOptions>{
-      rowData: this.rowData,
-      columnDefs: this.columnDefs,
-      onFilterChanged: params => {
-        const model = params.api.getFilterModel();
-        this.filterModelSet = model !== null && Object.keys(model).length > 0;
-      },
-      onSelectionChanged: () => {
-        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-        this.selectedRows = this.gridOptions.api.getSelectedRows();
-      },
-      onGridReady: params => {
-        this.gridApi = params.api;
-        this.gridColumnApi = params.columnApi;
-        this.gridOptions.api.sizeColumnsToFit();
+    ManagerFunctions.requestAllData(
+      this.http,
+      (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
+        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
-        this.fragment_sub = this.route.fragment.subscribe(fragment => {
-          const urlParams = parseParms(fragment);
+        const countries = buildingsArray.map(building => building.address.country);
+        const countriesNoDuplicates = countries.filter(
+          (item, pos) => countries.indexOf(item) == pos
+        );
 
-          const model = {};
-          Object.keys(urlParams).forEach(key => {
-            const found = this.columnDefs.find(columnDef => columnDef.field === key);
-            if (found) {
-              model[key] = {
-                filter: urlParams[key],
-                filterType: 'text',
-                type: 'equals',
-              };
-            }
+        const countryCitiesNoDuplicates = [];
+        countriesNoDuplicates.forEach(country => {
+          const buildingsThisCountry = buildingsArray.filter(
+            building => building.address.country === country
+          );
+
+          const cities = buildingsThisCountry.map(building => building.address.city);
+          const citiesNoDuplicates = cities.filter((item, pos) => cities.indexOf(item) == pos);
+
+          citiesNoDuplicates.forEach(city => {
+            countryCitiesNoDuplicates.push({
+              country: country,
+              city: city,
+            });
           });
-          this.gridApi.setFilterModel(model);
         });
-      },
-      // rowHeight: 48, recommended row height for material design data grids,
-      frameworkComponents: {
-        checkboxRenderer: MatCheckboxComponent,
-        procentRenderer: ProcentRendererComponent,
-      },
-      enableColResize: true,
-      enableSorting: true,
-      enableFilter: true,
-      rowSelection: 'multiple',
-    };
+
+        console.log('citiesNoDuplicates ', countryCitiesNoDuplicates);
+
+        const rowData = countryCitiesNoDuplicates.map(countryCity => {
+          const country = countryCity.country;
+          const city = countryCity.city;
+
+          const buildingsThisCity = buildingsArray.filter(
+            building => building.address.country === country && building.address.city === city
+          );
+
+          const numBuildings = buildingsThisCity.length;
+          const buildingsReferenced = buildingsThisCity.filter(building =>
+            ManagerFunctions.isReferenced(building)
+          );
+
+          const numBuildingsReferenced = buildingsReferenced.length;
+
+          const buildingsThisCountryIds = buildingsThisCity.map(b => b.building_id);
+          const unitsThisCountry = unitsArray.filter(unit =>
+            buildingsThisCountryIds.includes(unit.building_id)
+          );
+
+          const numUnits = unitsThisCountry.length;
+          const progressBuildings =
+            numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
+          return {
+            country: country,
+            city: city,
+            buildings: numBuildings,
+            units: numUnits,
+            progress: progressBuildings,
+            delivered: false,
+            structured: false,
+            digitized: false,
+            TLM: false,
+            LOD1: false,
+            LOD2: false,
+            ALTI: false,
+            georeferenced: false,
+            data: false,
+            DPOI: false,
+            view: false,
+            acoustics: false,
+            WBS: false,
+            basicFeatures: false,
+          };
+        });
+
+        this.gridOptions = <GridOptions>{
+          rowData: rowData, // this.rowData,
+          columnDefs: this.columnDefs,
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+
+            // this.gridOptions.api.sizeColumnsToFit();
+
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
+          },
+          // rowHeight: 48, recommended row height for material design data grids,
+          frameworkComponents: {
+            checkboxRenderer: MatCheckboxComponent,
+            procentRenderer: ProcentRendererComponent,
+          },
+          enableColResize: true,
+          enableSorting: true,
+          enableFilter: true,
+          rowSelection: 'multiple',
+        };
+      }
+    );
   }
 
   clearSelection() {
-    const nodes = this.gridOptions.api.getSelectedNodes();
-    nodes.forEach(node => node.setSelected(false));
+    ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
   clearFilters() {

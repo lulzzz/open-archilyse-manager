@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
 import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
-import swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { parseParms } from '../url';
+import { Observable, Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ManagerFunctions } from '../managerFunctions';
+import { catchError, map } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-site-overview',
@@ -42,33 +43,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: this.viewBuildings,
       editable: false,
     },
-
-    // Custom externals params
-    { headerName: 'Remarks', field: 'remarks', editable: true },
-  ];
-
-  rowData = [
-    {
-      site_id: 'Example Site Id 0',
-      name: 'Example site 1',
-      description: '',
-      buildings: 10,
-      remarks: '',
-    },
-    {
-      site_id: 'Example Site Id 1',
-      name: 'Example site 2',
-      description: 'Example description',
-      buildings: 5,
-      remarks: '',
-    },
-    {
-      site_id: 'Example Site Id 2',
-      name: 'Example site 3',
-      description: '',
-      buildings: 0,
-      remarks: '',
-    },
+    ...ManagerFunctions.metaUserAndData
   ];
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
@@ -91,109 +66,78 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       }, console.error);
   }
 
-  editRow(site) {
-    this.http.patch('http://api.archilyse.com/v1/sites/' + site.site_id, site).subscribe(site => {
-      console.log('EDIT site', site);
-    }, console.error);
-  }
-
   ngOnInit() {
     /** SITES */
-    this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
-      console.log('sites', sites);
-      this.gridOptions = <GridOptions>{
-        rowData: <any[]>sites, //this.rowData,
-        columnDefs: this.columnDefs,
 
-        onCellValueChanged: params => {
-          console.log('onCellValueChanged', params);
-          this.editRow(params.data);
-        },
+    this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+      console.log('buildings', buildings);
+      const buildingsArray = <any[]>buildings;
+      this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+        console.log('sites', sites);
+        const sitesArray = <any[]>sites;
 
-        onFilterChanged: params => {
-          const model = params.api.getFilterModel();
-          this.filterModelSet = model !== null && Object.keys(model).length > 0;
-        },
-        onSelectionChanged: () => {
-          this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-          this.selectedRows = this.gridOptions.api.getSelectedRows();
-        },
-        onGridReady: params => {
-          this.gridApi = params.api;
-          this.gridColumnApi = params.columnApi;
-          this.gridOptions.api.sizeColumnsToFit();
+        sitesArray.forEach(site => {
+          site.buildings = buildingsArray.filter(
+            building => building.site_id === site.site_id
+          ).length;
+        });
 
-          this.fragment_sub = this.route.fragment.subscribe(fragment => {
-            const urlParams = parseParms(fragment);
+        console.log('sitesArray', sitesArray);
 
-            const model = {};
-            Object.keys(urlParams).forEach(key => {
-              const found = this.columnDefs.find(columnDef => columnDef.field === key);
-              if (found) {
-                model[key] = {
-                  filter: urlParams[key],
-                  filterType: 'text',
-                  type: 'equals',
-                };
-              }
-            });
-            this.gridApi.setFilterModel(model);
-          });
-        },
-        // rowHeight: 48, recommended row height for material design data grids,
-        frameworkComponents: {
-          checkboxRenderer: MatCheckboxComponent,
-          procentRenderer: ProcentRendererComponent,
-        },
-        enableColResize: true,
-        enableSorting: true,
-        enableFilter: true,
-        rowSelection: 'multiple',
-      };
+        this.gridOptions = <GridOptions>{
+          rowData: sitesArray,
+          columnDefs: this.columnDefs,
+
+          onCellValueChanged: params => {
+            ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites');
+          },
+
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+            this.gridOptions.api.sizeColumnsToFit();
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
+          },
+          // rowHeight: 48, recommended row height for material design data grids,
+          frameworkComponents: {
+            checkboxRenderer: MatCheckboxComponent,
+            procentRenderer: ProcentRendererComponent,
+          },
+          enableColResize: true,
+          enableSorting: true,
+          enableFilter: true,
+          rowSelection: 'multiple',
+        };
+      }, console.error);
     }, console.error);
   }
 
   delete() {
-    let titleVal;
-    let textVal;
-    let confirmButtonTextVal;
-
-    if (this.selectedRows.length <= 1) {
-      titleVal = `Delete this site?`;
-      textVal = `This action cannot be undone. Are you sure you want to delete this site?`;
-      confirmButtonTextVal = 'Yes, delete it';
-    } else {
-      titleVal = `Delete these ${this.selectedRows.length} sites?`;
-      textVal = `This action cannot be undone. Are you sure you want to delete these sites?`;
-      confirmButtonTextVal = 'Yes, delete them';
-    }
-
-    swal({
-      title: titleVal,
-      text: textVal,
-      showCancelButton: true,
-      confirmButtonText: confirmButtonTextVal,
-      customClass: 'arch',
-    }).then(result => {
-      if (result.value) {
-        this.selectedRows.forEach(selectedRow => {
-          console.log('selectedRow', selectedRow);
-          const site_id = selectedRow.site_id;
-          this.http.delete('http://api.archilyse.com/v1/sites/' + site_id).subscribe(sites => {
-            console.log('DELETE sites', sites, site_id);
-          }, console.error);
-        });
-
-        this.gridOptions.api.updateRowData({
-          remove: this.selectedRows,
-        });
-      }
-    });
+    ManagerFunctions.reactToDelete(
+      this.http,
+      this.selectedRows,
+      this.gridOptions.api,
+      'site',
+      'sites',
+      'site_id',
+      'sites'
+    );
   }
 
   clearSelection() {
-    const nodes = this.gridOptions.api.getSelectedNodes();
-    nodes.forEach(node => node.setSelected(false));
+    ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
   clearFilters() {

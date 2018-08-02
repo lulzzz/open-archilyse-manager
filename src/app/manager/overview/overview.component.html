@@ -7,6 +7,7 @@
 <button class="btn green" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
 
 <ag-grid-angular
+  *ngIf="gridOptions"
   style="width: 100%; height: 100%;"
   class="ag-theme-balham"
   [gridOptions]="gridOptions">
