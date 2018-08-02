@@ -54,6 +54,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       headerName: 'Layouts',
       field: 'layouts',
       filter: 'agNumberColumnFilter',
+      width: 90,
       cellRenderer: this.viewLayouts,
       editable: false,
     },

@@ -212,7 +212,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         } else if (filteredList.length > 1) {
           const filteredListJoined = filteredList.map(lines => lines.join(`\t`));
           const list = filteredListJoined.join('\n');
-          ManagerFunctions.openNewWindow('/georeference?list=' + list);
+          ManagerFunctions.openNewWindow('/georeference/multiple?list=' + list);
         }
       });
     }

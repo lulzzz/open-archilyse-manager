@@ -42,6 +42,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       field: 'buildings',
       filter: 'agNumberColumnFilter',
       cellRenderer: this.viewBuildings,
+      width: 100,
       editable: false,
     },
     {
@@ -49,6 +50,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       field: 'units',
       filter: 'agNumberColumnFilter',
       cellRenderer: this.viewUnits,
+      width: 100,
       editable: false,
     },
     {
@@ -58,7 +60,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
     },
-    ...ManagerFunctions.progress
+    ...ManagerFunctions.progress,
   ];
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}

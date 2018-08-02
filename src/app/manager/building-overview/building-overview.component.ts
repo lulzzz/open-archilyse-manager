@@ -55,8 +55,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     },
     { headerName: 'City', field: 'address.city', editable: true },
     { headerName: 'Street', field: 'address.street', editable: true },
-    { headerName: 'Street_nr', field: 'address.street_nr', editable: true },
-    { headerName: 'Postal_code', field: 'address.postal_code', editable: true },
+    { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
+    { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
 
     // { headerName: 'Building_reference', field: 'building_reference', editable: true },
     { headerName: 'Ref - Swiss topo', field: 'building_reference.swiss_topo', editable: true },
@@ -69,6 +69,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       headerName: 'Units',
       field: 'units',
       filter: 'agNumberColumnFilter',
+      width: 90,
       cellRenderer: this.viewUnits,
       editable: false,
     },
@@ -210,8 +211,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       ManagerFunctions.openNewWindow('/georeference/map/' + node.data.building_id);
     } else if (nodes.length > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
-      const list = building_ids.join('\n');
-      ManagerFunctions.openNewWindow('/georeference?buildingList=' + list);
+      const list = building_ids.join('\t\n');
+      ManagerFunctions.openNewWindow('/georeference/multiple?list=' + list);
     }
   }
 
