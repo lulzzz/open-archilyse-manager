@@ -32,7 +32,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs = [
     { headerName: 'Building_id', field: 'building_id', editable: false },
-    { headerName: 'Site_id', field: 'site_id', editable: true },
+    { headerName: 'Site_id', field: 'site_id', cellRenderer: this.viewSite, editable: true },
 
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },
@@ -70,6 +70,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+
+  viewSite(params) {
+    return params.value + `<a href='/manager/site#site_id=` + params.data.site_id + `' > View </a>`;
+  }
 
   viewUnits(params) {
     const number = params.value > 0 ? params.value : 0;
