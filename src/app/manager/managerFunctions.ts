@@ -188,7 +188,6 @@ export class ManagerFunctions {
     return ``;
   }
 
-
   public static viewBuildings(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
@@ -200,7 +199,6 @@ export class ManagerFunctions {
     const number = params.value > 0 ? params.value : 0;
     return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
   }
-
 
   public static cellPdfDownloadLink(params) {
     if (params && params.value && params.value !== '') {
@@ -215,7 +213,7 @@ export class ManagerFunctions {
    * TOOLS
    */
 
-  public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray){
+  public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray) {
     const numBuildings = buildingsList.length;
     const buildingsReferenced = buildingsList.filter(building =>
       ManagerFunctions.isReferencedBuilding(building)
@@ -241,8 +239,7 @@ export class ManagerFunctions {
     const numLayouts = layoutsThisCountry.length;
     const numLayoutsReferenced = layoutsReferenced.length;
 
-    const progressBuildings =
-      numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
+    const progressBuildings = numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
 
     const progressLayouts = numLayouts > 0 ? numLayoutsReferenced * 100 / numLayouts : 0;
 
@@ -251,9 +248,8 @@ export class ManagerFunctions {
       numberOfUnits: numUnits,
       numberOfLayouts: numLayouts,
       progressOfBuildings: progressBuildings,
-      progressOfLayouts: progressLayouts
+      progressOfLayouts: progressLayouts,
     };
-
   }
 
   public static isReferencedBuilding(building) {

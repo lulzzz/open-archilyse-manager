@@ -110,7 +110,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   viewMovement(params) {
     let result = '';
     if (params.movement) {
-      for (let i = 0; i < params.movement.length; i++) {
+      for (let i = 0; i < params.movement.length; i += 1) {
         const movement = params.movement[i];
         result += `<div>
             source: ${movement.source},
