@@ -31,8 +31,14 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   fragment_sub: Subscription;
 
   columnDefs = [
-    { headerName: 'Building_id', field: 'building_id', editable: false },
-    { headerName: 'Site_id', field: 'site_id', cellRenderer: this.viewSite, editable: true },
+    { headerName: 'Building_id', field: 'building_id', width: 190, editable: false },
+    {
+      headerName: 'Site_id',
+      field: 'site_id',
+      cellRenderer: this.viewSite,
+      width: 230,
+      editable: true,
+    },
 
     { headerName: 'Name', field: 'name', editable: true },
     { headerName: 'Description', field: 'description', editable: true },

@@ -36,11 +36,13 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     {
       headerName: 'Layout_id',
       field: 'layout_id',
+      width: 190,
       editable: false,
     },
     {
       headerName: 'Unit_id',
       field: 'unit_id',
+      width: 230,
       cellRenderer: this.viewUnit,
       editable: true,
     },
@@ -105,7 +107,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   viewUnit(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
-      return `<a href='/manager/unit#unit_id=` + params.value + `' >` + params.value + ` </a>`;
+      return params.value + ` <a href='/manager/unit#unit_id=` + params.value + `' > View </a>`;
     }
     return ``;
   }
@@ -135,7 +137,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         onGridReady: params => {
           this.gridApi = params.api;
           this.gridColumnApi = params.columnApi;
-          this.gridOptions.api.sizeColumnsToFit();
+
+          // this.gridOptions.api.sizeColumnsToFit();
 
           this.fragment_sub = ManagerFunctions.setDefaultFilters(
             this.route,

@@ -33,17 +33,18 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   fragment_sub: Subscription;
 
   columnDefs = [
-    { headerName: 'Site_id', field: 'site_id', editable: false },
-    { headerName: 'Name', field: 'name', editable: true },
-    { headerName: 'Description', field: 'description', editable: true },
+    { headerName: 'Site_id', field: 'site_id', width: 190, editable: false },
+    { headerName: 'Name', field: 'name', minWidth: 190, editable: true },
+    { headerName: 'Description', field: 'description', minWidth: 300, editable: true },
     {
       headerName: 'Buildings',
       field: 'buildings',
       filter: 'agNumberColumnFilter',
+      maxWidth: 100,
       cellRenderer: this.viewBuildings,
       editable: false,
     },
-    ...ManagerFunctions.metaUserAndData
+    ...ManagerFunctions.metaUserAndData,
   ];
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}

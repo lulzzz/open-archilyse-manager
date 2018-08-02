@@ -31,10 +31,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   fragment_sub: Subscription;
 
   columnDefs = [
-    { headerName: 'Unit_id', field: 'unit_id', editable: false },
+    { headerName: 'Unit_id', field: 'unit_id', width: 190, editable: false },
     {
       headerName: 'Building_id',
       field: 'building_id',
+      width: 230,
       cellRenderer: this.viewBuilding,
       editable: true,
     },
@@ -56,7 +57,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: this.viewLayouts,
       editable: false,
     },
-    ...ManagerFunctions.metaUserAndData
+    ...ManagerFunctions.metaUserAndData,
   ];
 
   addRow() {

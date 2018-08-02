@@ -8,19 +8,108 @@ export class ManagerFunctions {
    */
 
   public static metaUserAndData = [
-    { headerName: 'User_id', field: 'user_id', editable: false },
+    { headerName: 'User_id', field: 'user_id', width: 100, editable: false },
     {
       headerName: 'Created',
       field: 'created',
+      width: 100,
       cellRenderer: ManagerFunctions.viewDate,
       editable: false,
     },
     {
       headerName: 'Updated',
       field: 'updated',
+      width: 100,
       cellRenderer: ManagerFunctions.viewDate,
       editable: false,
-    }
+    },
+  ];
+
+  public static progress = [
+    {
+      headerName: 'Delivered',
+      field: 'delivered',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: true },
+    },
+    {
+      headerName: 'Structured',
+      field: 'structured',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: true },
+    },
+    {
+      headerName: 'Digitized',
+      field: 'digitized',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: true },
+    },
+    {
+      headerName: 'TLM-OBJ',
+      field: 'TLM',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'LOD1-OBJ',
+      field: 'LOD1',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'LOD2-OBJ',
+      field: 'LOD2',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'ALTI-OBJ',
+      field: 'ALTI',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'Georeferenced',
+      field: 'georeferenced',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'Data Complete',
+      field: 'data',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'DPOI',
+      field: 'DPOI',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'View & Sun',
+      field: 'view',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'Acoustics',
+      field: 'acoustics',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'WBS',
+      field: 'WBS',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'BasicFeatures',
+      field: 'basicFeatures',
+      cellRenderer: 'checkboxRenderer',
+      cellRendererParams: { editable: false },
+    },
   ];
 
   /**
