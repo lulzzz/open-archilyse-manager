@@ -24,6 +24,46 @@ export class ManagerFunctions {
     },
   ];
 
+  public static buildingsUnitsLayouts = [
+    {
+      headerName: 'Buildings',
+      field: 'buildings',
+      filter: 'agNumberColumnFilter',
+      width: 100,
+      cellRenderer: ManagerFunctions.viewBuildings,
+      editable: false,
+    },
+    {
+      headerName: 'Units',
+      field: 'units',
+      filter: 'agNumberColumnFilter',
+      width: 100,
+      cellRenderer: ManagerFunctions.viewUnits,
+      editable: false,
+    },
+    {
+      headerName: 'Layouts',
+      field: 'layouts',
+      filter: 'agNumberColumnFilter',
+      width: 100,
+      editable: false,
+    },
+    {
+      headerName: 'Progress',
+      field: 'progress',
+      cellRenderer: 'procentRenderer',
+      filter: 'agNumberColumnFilter',
+      cellRendererParams: { editable: false },
+    },
+    {
+      headerName: 'Progress Layouts',
+      field: 'progressLayout',
+      cellRenderer: 'procentRenderer',
+      filter: 'agNumberColumnFilter',
+      cellRendererParams: { editable: false },
+    },
+  ];
+
   public static progress = [
     {
       headerName: 'Delivered',
@@ -148,6 +188,20 @@ export class ManagerFunctions {
     return ``;
   }
 
+
+  public static viewBuildings(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return (
+      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
+    );
+  }
+
+  public static viewUnits(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
+  }
+
+
   public static cellPdfDownloadLink(params) {
     if (params && params.value && params.value !== '') {
       return (
@@ -161,11 +215,56 @@ export class ManagerFunctions {
    * TOOLS
    */
 
-  public static isReferenced(building) {
+  public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray){
+    const numBuildings = buildingsList.length;
+    const buildingsReferenced = buildingsList.filter(building =>
+      ManagerFunctions.isReferencedBuilding(building)
+    );
+
+    const numBuildingsReferenced = buildingsReferenced.length;
+
+    const buildingsThisCountryIds = buildingsList.map(b => b.building_id);
+    const unitsThisCountry = unitsArray.filter(unit =>
+      buildingsThisCountryIds.includes(unit.building_id)
+    );
+
+    const unitsThisCountryIds = unitsThisCountry.map(b => b.unit_id);
+    const layoutsThisCountry = layoutsArray.filter(layout =>
+      unitsThisCountryIds.includes(layout.unit_id)
+    );
+
+    const layoutsReferenced = layoutsThisCountry.filter(layout =>
+      ManagerFunctions.isReferencedLayout(layout)
+    );
+
+    const numUnits = unitsThisCountry.length;
+    const numLayouts = layoutsThisCountry.length;
+    const numLayoutsReferenced = layoutsReferenced.length;
+
+    const progressBuildings =
+      numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
+
+    const progressLayouts = numLayouts > 0 ? numLayoutsReferenced * 100 / numLayouts : 0;
+
+    return {
+      numberOfBuildings: numBuildings,
+      numberOfUnits: numUnits,
+      numberOfLayouts: numLayouts,
+      progressOfBuildings: progressBuildings,
+      progressOfLayouts: progressLayouts
+    };
+
+  }
+
+  public static isReferencedBuilding(building) {
     return (
       building.building_reference.swiss_topo !== '' ||
       building.building_reference.open_street_maps !== ''
     );
+  }
+
+  public static isReferencedLayout(building) {
+    return building.movement && building.movement.length > 0;
   }
 
   public static requestAllData(httpService, onComplete) {

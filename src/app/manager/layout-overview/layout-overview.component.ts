@@ -61,7 +61,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: ManagerFunctions.viewImg,
       editable: true,
     },
-
+    {
+      headerName: 'Movement',
+      field: 'movement',
+      cellRenderer: this.viewMovement,
+      editable: true,
+    },
     {
       headerName: 'Model_structure',
       field: 'model_structure',
@@ -101,6 +106,22 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+
+  viewMovement(params) {
+    let result = '';
+    if (params.movement) {
+      for (let i = 0; i < params.movement.length; i++) {
+        const movement = params.movement[i];
+        result += `<div>
+            source: ${movement.source},
+            angle: ${movement.angle}°,
+            offset (xyz): ${movement.x_off}, ${movement.y_off}, ${movement.z_off}
+            pivot (xyz): ${movement.x_pivot}, ${movement.y_pivot}, ${movement.z_pivot}
+          </div>`;
+      }
+    }
+    return result;
+  }
 
   viewModel(params) {
     return `<a href='/editor/` + params.data.layout_id + `' > View model </a>`;
@@ -172,6 +193,16 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  selectNotGeoreferenced() {
+    this.gridOptions.api.selectAll();
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    nodes.forEach(node => {
+      if (ManagerFunctions.isReferencedLayout(node.data)) {
+        node.setSelected(false);
+      }
+    });
+  }
+
   georeference() {
     const nodes = this.gridOptions.api.getSelectedNodes();
 
@@ -179,43 +210,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       const node = nodes[0];
 
       const layout_id = node.data.layout_id;
-      const unit_id = node.data.unit_id;
-
-      /**
-       * We need to request the unit to link
-       */
-      this.http.get('http://api.archilyse.com/v1/units/' + unit_id).subscribe(unit => {
-        if (unit) {
-          const building_id = unit['building_id'];
-          ManagerFunctions.openNewWindow('/georeference/building/' + building_id + '/' + layout_id);
-        }
-      });
+      ManagerFunctions.openNewWindow('/georeference/building/' + layout_id);
     } else if (nodes.length > 1) {
       const layout_ids = nodes.map(node => node.data.layout_id);
-      const getBuildingsIds = nodes.map(node =>
-        this.http
-          .get('http://api.archilyse.com/v1/units/' + node.data.unit_id) // node.data.unit_id
-          .pipe(map(unit => unit['building_id']), catchError(error => of(null)))
-      );
 
-      Observable.forkJoin(getBuildingsIds).subscribe(buildings_id => {
-        const lines = layout_ids.map((layoutId, i) => {
-          const building_id = buildings_id[i];
-          if (building_id && building_id !== null) {
-            return [building_id, layoutId];
-          }
-        });
-        const filteredList = lines.filter(value => value);
-        if (filteredList.length === 1) {
-          const building_id = filteredList[0][0];
-          const layout_id = filteredList[0][1];
-          ManagerFunctions.openNewWindow('/georeference/building/' + building_id + '/' + layout_id);
-        } else if (filteredList.length > 1) {
-          const filteredListJoined = filteredList.map(lines => lines.join(`\t`));
-          const list = filteredListJoined.join('\n');
-          ManagerFunctions.openNewWindow('/georeference/multiple?list=' + list);
-        }
-      });
+      const list = layout_ids.map(layout_id => `\t` + layout_id.join + `\n`);
+      ManagerFunctions.openNewWindow('/georeference/multiple?list=' + list);
     }
   }
 

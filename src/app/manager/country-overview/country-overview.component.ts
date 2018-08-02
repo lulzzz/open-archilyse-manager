@@ -37,29 +37,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       cellRenderer: this.viewCountry,
       editable: false,
     },
-    {
-      headerName: 'Buildings',
-      field: 'buildings',
-      filter: 'agNumberColumnFilter',
-      cellRenderer: this.viewBuildings,
-      width: 100,
-      editable: false,
-    },
-    {
-      headerName: 'Units',
-      field: 'units',
-      filter: 'agNumberColumnFilter',
-      cellRenderer: this.viewUnits,
-      width: 100,
-      editable: false,
-    },
-    {
-      headerName: 'Progress',
-      field: 'progress',
-      cellRenderer: 'procentRenderer',
-      filter: 'agNumberColumnFilter',
-      cellRendererParams: { editable: false },
-    },
+    ...ManagerFunctions.buildingsUnitsLayouts,
     ...ManagerFunctions.progress,
   ];
 
@@ -68,23 +46,6 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
   viewCountry(params) {
     const country = params.value ? params.value : 'Not defined';
     return country + ` <a href='/manager/region#country=` + params.value + `' > View </a>`;
-  }
-
-  viewBuildings(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number +
-      ` <a href='/manager/building#address.country=` +
-      params.data.country +
-      `' > View </a>`
-    );
-  }
-
-  viewUnits(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='/manager/unit#address.country=` + params.data.country + `' > View </a>`
-    );
   }
 
   ngOnInit() {
@@ -102,26 +63,19 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           const buildingsThisCountry = buildingsArray.filter(
             building => building.address.country === countryVal
           );
-          const numBuildings = buildingsThisCountry.length;
-          const buildingsReferenced = buildingsThisCountry.filter(building =>
-            ManagerFunctions.isReferenced(building)
+          const progressResult = ManagerFunctions.progressOutOfBuildings(
+            buildingsThisCountry,
+            unitsArray,
+            layoutsArray
           );
 
-          const numBuildingsReferenced = buildingsReferenced.length;
-
-          const buildingsThisCountryIds = buildingsThisCountry.map(b => b.building_id);
-          const unitsThisCountry = unitsArray.filter(unit =>
-            buildingsThisCountryIds.includes(unit.building_id)
-          );
-
-          const numUnits = unitsThisCountry.length;
-          const progressBuildings =
-            numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
           return {
             country: countryVal,
-            buildings: numBuildings,
-            units: numUnits,
-            progress: progressBuildings,
+            buildings: progressResult.numberOfBuildings,
+            units: progressResult.numberOfUnits,
+            layouts: progressResult.numberOfLayouts,
+            progress: progressResult.progressOfBuildings,
+            progressLayout: progressResult.progressOfLayouts,
             delivered: false,
             structured: false,
             digitized: false,

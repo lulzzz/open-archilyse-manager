@@ -156,7 +156,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     this.gridOptions.api.selectAll();
     const nodes = this.gridOptions.api.getSelectedNodes();
     nodes.forEach(node => {
-      if (ManagerFunctions.isReferenced(node.data)) {
+      if (ManagerFunctions.isReferencedBuilding(node.data)) {
         node.setSelected(false);
       }
     });

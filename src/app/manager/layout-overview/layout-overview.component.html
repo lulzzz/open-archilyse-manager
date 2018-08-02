@@ -4,6 +4,7 @@
 
 <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
 <button class="btn green" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
+<button class="btn green" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
 <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="georeference($event)" >Georeference ({{selectedNodes.length}})</button>
 <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
 <button class="btn green" (click)="addRow()">Add layout</button>

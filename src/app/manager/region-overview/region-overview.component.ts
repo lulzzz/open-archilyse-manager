@@ -33,29 +33,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
   columnDefs = [
     { headerName: 'Country', field: 'country', cellRenderer: this.viewCountry, editable: false },
     { headerName: 'City', field: 'city', editable: false },
-    {
-      headerName: 'Buildings',
-      field: 'buildings',
-      filter: 'agNumberColumnFilter',
-      width: 100,
-      cellRenderer: this.viewBuildings,
-      editable: false,
-    },
-    {
-      headerName: 'Units',
-      field: 'units',
-      filter: 'agNumberColumnFilter',
-      width: 100,
-      cellRenderer: this.viewUnits,
-      editable: false,
-    },
-    {
-      headerName: 'Progress',
-      field: 'progress',
-      cellRenderer: 'procentRenderer',
-      filter: 'agNumberColumnFilter',
-      cellRendererParams: { editable: false },
-    },
+    ...ManagerFunctions.buildingsUnitsLayouts,
     ...ManagerFunctions.progress,
   ];
 
@@ -64,18 +42,6 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
   viewCountry(params) {
     const country = params.value ? params.value : 'Not defined';
     return country + ` <a href='/manager/country#country=` + params.value + `' > View </a>`;
-  }
-
-  viewBuildings(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
-    );
-  }
-
-  viewUnits(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
   }
 
   ngOnInit() {
@@ -116,27 +82,20 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
             building => building.address.country === countryVal && building.address.city === cityVal
           );
 
-          const numBuildings = buildingsThisCity.length;
-          const buildingsReferenced = buildingsThisCity.filter(building =>
-            ManagerFunctions.isReferenced(building)
+          const progressResult = ManagerFunctions.progressOutOfBuildings(
+            buildingsThisCity,
+            unitsArray,
+            layoutsArray
           );
 
-          const numBuildingsReferenced = buildingsReferenced.length;
-
-          const buildingsThisCountryIds = buildingsThisCity.map(b => b.building_id);
-          const unitsThisCountry = unitsArray.filter(unit =>
-            buildingsThisCountryIds.includes(unit.building_id)
-          );
-
-          const numUnits = unitsThisCountry.length;
-          const progressBuildings =
-            numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
           return {
             country: countryVal,
             city: cityVal,
-            buildings: numBuildings,
-            units: numUnits,
-            progress: progressBuildings,
+            buildings: progressResult.numberOfBuildings,
+            units: progressResult.numberOfUnits,
+            layouts: progressResult.numberOfLayouts,
+            progress: progressResult.progressOfBuildings,
+            progressLayout: progressResult.progressOfLayouts,
             delivered: false,
             structured: false,
             digitized: false,
