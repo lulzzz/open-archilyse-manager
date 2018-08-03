@@ -145,6 +145,11 @@ export class OverviewComponent implements OnInit, OnDestroy {
         this.gridOptions = <GridOptions>{
           rowData: this.rowData,
           columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ManagerFunctions.pagination,
+          ...ManagerFunctions.columnOptions,
+
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null && Object.keys(model).length > 0;
@@ -164,15 +169,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
               this.gridApi
             );
           },
-          // rowHeight: 48, recommended row height for material design data grids,
-          frameworkComponents: {
-            checkboxRenderer: MatCheckboxComponent,
-            procentRenderer: ProcentRendererComponent,
-          },
-          enableColResize: true,
-          enableSorting: true,
-          enableFilter: true,
-          rowSelection: 'multiple',
         };
       }
     );

@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
+import { Building, Site, Unit } from '../../_models';
 
 @Component({
   selector: 'app-building-overview',
@@ -49,10 +50,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       { headerName: 'Name', field: 'name', editable: true },
       { headerName: 'Description', field: 'description', editable: true },
       {
-        headerName: 'Images',
-        field: 'images',
-        cellRenderer: ManagerFunctions.viewImg,
-        editable: true,
+        headerName: 'Units',
+        field: 'units',
+        filter: 'agNumberColumnFilter',
+        width: 90,
+        cellRenderer: this.viewUnits,
+        editable: false,
       },
       {
         headerName: 'Country',
@@ -71,13 +74,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         field: 'building_reference.open_street_maps',
         editable: true,
       },
+
       {
-        headerName: 'Units',
-        field: 'units',
-        filter: 'agNumberColumnFilter',
-        width: 90,
-        cellRenderer: this.viewUnits,
-        editable: false,
+        headerName: 'Images',
+        field: 'images',
+        cellRenderer: ManagerFunctions.viewImg,
+        editable: true,
       },
       ...ManagerFunctions.metaUserAndData,
     ];
@@ -99,14 +101,17 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** BUILDINGS */
     this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+      console.log('sites', sites);
+
       this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
         console.log('units', units);
-        const unitsArray = <any[]>units;
 
         this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
           console.log('buildings', buildings);
 
-          const buildingsArray = <any[]>buildings;
+          const sitesArray = <Site[]>sites;
+          const unitsArray = <Unit[]>units;
+          const buildingsArray = <Building[]>buildings;
 
           this.buildColumDefinitions(sites);
 
@@ -119,6 +124,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           this.gridOptions = <GridOptions>{
             rowData: buildingsArray,
             columnDefs: this.columnDefs,
+
+            /** Pagination */
+            ...ManagerFunctions.pagination,
+            ...ManagerFunctions.columnOptions,
 
             onCellValueChanged: params => {
               ManagerFunctions.reactToEdit(this.http, params, 'building_id', 'buildings');
@@ -144,15 +153,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
                 this.gridApi
               );
             },
-            // rowHeight: 48, recommended row height for material design data grids,
-            frameworkComponents: {
-              checkboxRenderer: MatCheckboxComponent,
-              procentRenderer: ProcentRendererComponent,
-            },
-            enableColResize: true,
-            enableSorting: true,
-            enableFilter: true,
-            rowSelection: 'multiple',
           };
         }, console.error);
       }, console.error);
@@ -188,11 +188,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           open_street_maps: '',
           swiss_topo: '',
         },
-
         description: '',
         images: '',
         name: '',
-        site_id: '',
       })
       .subscribe(building => {
         console.log('buildings', building);

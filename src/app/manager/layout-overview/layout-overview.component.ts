@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { Layout, Unit } from '../../_models';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -69,8 +70,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         editable: true,
       },
       {
-        headerName: 'Movement',
-        field: 'movement',
+        headerName: 'Movements',
+        field: 'movements',
         cellRenderer: this.viewMovement,
         editable: true,
       },
@@ -90,18 +91,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         name: '',
         description: '',
         images: '',
-        movement: {
-          angle: 0,
-          source: 'swiss_topo',
-          x_off: 0,
-          x_pivot: 0,
-          y_off: 0,
-          y_pivot: 0,
-          z_off: 0,
-          z_pivot: 0,
-        },
-        site_id: '',
-        unit_id: '',
+        movements: [],
         source: 'archilogic.com/scene/!675fe04b-4ee8-478a-a758-647f9f1e6f27?mode=3d',
       })
       .subscribe(layouts => {
@@ -117,14 +107,14 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   viewMovement(params) {
     let result = '';
-    if (params.movement) {
-      for (let i = 0; i < params.movement.length; i += 1) {
-        const movement = params.movement[i];
+    if (params.movements) {
+      for (let i = 0; i < params.movements.length; i += 1) {
+        const movements = params.movements[i];
         result += `<div>
-            source: ${movement.source},
-            angle: ${movement.angle}°,
-            offset (xyz): ${movement.x_off}, ${movement.y_off}, ${movement.z_off}
-            pivot (xyz): ${movement.x_pivot}, ${movement.y_pivot}, ${movement.z_pivot}
+            source: ${movements.source},
+            angle: ${movements.angle}°,
+            offset (xyz): ${movements.x_off}, ${movements.y_off}, ${movements.z_off}
+            pivot (xyz): ${movements.x_pivot}, ${movements.y_pivot}, ${movements.z_pivot}
           </div>`;
       }
     }
@@ -146,16 +136,20 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     /** LAYOUTS */
 
     this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
-      console.log('layouts', layouts);
+      const layoutsArray = <Layout[]>layouts;
 
       this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
-        const unitsArray = <any[]>units;
+        const unitsArray = <Unit[]>units;
 
         this.buildColumDefinitions(layouts, units);
 
         this.gridOptions = <GridOptions>{
-          rowData: <any[]>layouts,
+          rowData: layoutsArray,
           columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ManagerFunctions.pagination,
+          ...ManagerFunctions.columnOptions,
 
           onCellValueChanged: params => {
             ManagerFunctions.reactToEdit(this.http, params, 'layout_id', 'layouts');
@@ -181,15 +175,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               this.gridApi
             );
           },
-          // rowHeight: 48, recommended row height for material design data grids,
-          frameworkComponents: {
-            checkboxRenderer: MatCheckboxComponent,
-            procentRenderer: ProcentRendererComponent,
-          },
-          enableColResize: true,
-          enableSorting: true,
-          enableFilter: true,
-          rowSelection: 'multiple',
         };
       }, console.error);
     }, console.error);

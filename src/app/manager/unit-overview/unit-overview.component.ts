@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
+import { Building, Layout, Unit } from '../../_models';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -49,15 +50,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       { headerName: 'Name', field: 'name', editable: true },
       { headerName: 'Description', field: 'description', editable: true },
       {
-        headerName: 'Images',
-        field: 'images',
-        cellRenderer: ManagerFunctions.viewImg,
-        editable: false,
-      },
-      { headerName: 'Address Line1', field: 'line1', editable: true },
-      { headerName: 'Address Line2', field: 'line2', editable: true },
-      { headerName: 'Address Line3', field: 'line3', editable: true },
-      {
         headerName: 'Layouts',
         field: 'layouts',
         filter: 'agNumberColumnFilter',
@@ -65,6 +57,17 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         cellRenderer: this.viewLayouts,
         editable: false,
       },
+
+      { headerName: 'Address Line1', field: 'line1', editable: true },
+      { headerName: 'Address Line2', field: 'line2', editable: true },
+      { headerName: 'Address Line3', field: 'line3', editable: true },
+      {
+        headerName: 'Images',
+        field: 'images',
+        cellRenderer: ManagerFunctions.viewImg,
+        editable: false,
+      },
+
       ...ManagerFunctions.metaUserAndData,
     ];
   }
@@ -112,12 +115,15 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** UNITS */
     this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+      console.log('buildings', buildings);
       this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
         console.log('layouts', layouts);
-        const layoutsArray = <any[]>layouts;
-
         this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
-          const unitsArray = <any[]>units;
+          console.log('units', units);
+
+          const buildingsArray = <Building[]>buildings;
+          const layoutsArray = <Layout[]>layouts;
+          const unitsArray = <Unit[]>units;
 
           this.buildColumDefinitions(buildings);
 
@@ -128,6 +134,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           this.gridOptions = <GridOptions>{
             rowData: unitsArray,
             columnDefs: this.columnDefs,
+
+            /** Pagination */
+            ...ManagerFunctions.pagination,
+            ...ManagerFunctions.columnOptions,
 
             onCellValueChanged: params => {
               ManagerFunctions.reactToEdit(this.http, params, 'unit_id', 'units');
@@ -151,15 +161,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
                 this.gridApi
               );
             },
-            // rowHeight: 48, recommended row height for material design data grids,
-            frameworkComponents: {
-              checkboxRenderer: MatCheckboxComponent,
-              procentRenderer: ProcentRendererComponent,
-            },
-            enableColResize: true,
-            enableSorting: true,
-            enableFilter: true,
-            rowSelection: 'multiple',
           };
         }, console.error);
       }, console.error);

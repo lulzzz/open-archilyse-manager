@@ -1,10 +1,31 @@
 import swal from 'sweetalert2';
 import { parseParms } from './url';
+import { Building, Layout, Site, Unit } from '../_models';
+import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-checkbox.component';
+import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
 
 export class ManagerFunctions {
   /**
    * Parameters
    */
+
+  public static pagination = {
+    pagination: true,
+    paginationAutoPageSize: true,
+  };
+
+  public static columnOptions = {
+    frameworkComponents: {
+      checkboxRenderer: MatCheckboxComponent,
+      procentRenderer: ProcentRendererComponent,
+    },
+
+    // rowHeight: 48, recommended row height for material design data grids,
+    enableColResize: true,
+    enableSorting: true,
+    enableFilter: true,
+    rowSelection: 'multiple',
+  };
 
   public static metaUserAndData = [
     { headerName: 'User_id', field: 'user_id', width: 100, editable: false },
@@ -23,46 +44,47 @@ export class ManagerFunctions {
       editable: false,
     },
   ];
-
-  public static buildingsUnitsLayouts = [
-    {
-      headerName: 'Buildings',
-      field: 'buildings',
-      filter: 'agNumberColumnFilter',
-      width: 100,
-      cellRenderer: ManagerFunctions.viewBuildings,
-      editable: false,
-    },
-    {
-      headerName: 'Units',
-      field: 'units',
-      filter: 'agNumberColumnFilter',
-      width: 100,
-      cellRenderer: ManagerFunctions.viewUnits,
-      editable: false,
-    },
-    {
-      headerName: 'Layouts',
-      field: 'layouts',
-      filter: 'agNumberColumnFilter',
-      width: 100,
-      editable: false,
-    },
-    {
-      headerName: 'Progress',
-      field: 'progress',
-      cellRenderer: 'procentRenderer',
-      filter: 'agNumberColumnFilter',
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'Progress Layouts',
-      field: 'progressLayout',
-      cellRenderer: 'procentRenderer',
-      filter: 'agNumberColumnFilter',
-      cellRendererParams: { editable: false },
-    },
-  ];
+  public static getBuildingsUnitsLayouts(viewBuildings, viewUnits) {
+    return [
+      {
+        headerName: 'Buildings',
+        field: 'buildings',
+        filter: 'agNumberColumnFilter',
+        width: 100,
+        cellRenderer: viewBuildings,
+        editable: false,
+      },
+      {
+        headerName: 'Units',
+        field: 'units',
+        filter: 'agNumberColumnFilter',
+        width: 100,
+        cellRenderer: viewUnits,
+        editable: false,
+      },
+      {
+        headerName: 'Layouts',
+        field: 'layouts',
+        filter: 'agNumberColumnFilter',
+        width: 100,
+        editable: false,
+      },
+      {
+        headerName: 'Progress',
+        field: 'progress',
+        cellRenderer: 'procentRenderer',
+        filter: 'agNumberColumnFilter',
+        cellRendererParams: { editable: false },
+      },
+      {
+        headerName: 'Progress Layouts',
+        field: 'progressLayout',
+        cellRenderer: 'procentRenderer',
+        filter: 'agNumberColumnFilter',
+        cellRendererParams: { editable: false },
+      },
+    ];
+  }
 
   public static progress = [
     {
@@ -188,14 +210,31 @@ export class ManagerFunctions {
     return ``;
   }
 
-  public static viewBuildings(params) {
+  public static viewBuildingsCountry(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return (
+      number +
+      ` <a href='/manager/building#address.country=` +
+      params.data.country +
+      `' > View </a>`
+    );
+  }
+
+  public static viewUnitsCountry(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return (
+      number + ` <a href='/manager/unit#address.country=` + params.data.country + `' > View </a>`
+    );
+  }
+
+  public static viewBuildingsCity(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
       number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
     );
   }
 
-  public static viewUnits(params) {
+  public static viewUnitsCity(params) {
     const number = params.value > 0 ? params.value : 0;
     return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
   }
@@ -260,7 +299,7 @@ export class ManagerFunctions {
   }
 
   public static isReferencedLayout(building) {
-    return building.movement && building.movement.length > 0;
+    return building.movements && building.movements.length > 0;
   }
 
   public static requestAllData(httpService, onComplete) {
@@ -270,13 +309,13 @@ export class ManagerFunctions {
     ]).subscribe(data => {});
    */
     httpService.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
-      const layoutsArray = <any[]>layouts;
+      const layoutsArray = <Layout[]>layouts;
       httpService.get('http://api.archilyse.com/v1/units').subscribe(units => {
-        const unitsArray = <any[]>units;
+        const unitsArray = <Unit[]>units;
         httpService.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
-          const buildingsArray = <any[]>buildings;
+          const buildingsArray = <Building[]>buildings;
           httpService.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
-            const sitesArray = <any[]>sites;
+            const sitesArray = <Site[]>sites;
             onComplete(sitesArray, buildingsArray, unitsArray, layoutsArray);
           }, console.error);
         }, console.error);

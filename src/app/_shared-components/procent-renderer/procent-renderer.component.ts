@@ -1,12 +1,11 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-procent-renderer',
   templateUrl: './procent-renderer.component.html',
-  styleUrls: ['./procent-renderer.component.scss']
+  styleUrls: ['./procent-renderer.component.scss'],
 })
 export class ProcentRendererComponent {
-
   params: any;
   value: any;
   styles: any;
@@ -14,11 +13,11 @@ export class ProcentRendererComponent {
   // called on init
   agInit(params: any): void {
     this.params = params;
-    this.value = this.params.value;
+    this.value = parseInt(this.params.value);
 
     this.styles = {
       width: this.value + '%',
-      backgroundColor: '#81d688'
+      backgroundColor: '#81d688',
     };
 
     if (this.value < 20) {
@@ -29,5 +28,4 @@ export class ProcentRendererComponent {
       this.styles.backgroundColor = '#b5d686';
     }
   }
-
 }

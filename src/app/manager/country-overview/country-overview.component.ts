@@ -30,16 +30,23 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
   fragment_sub: Subscription;
 
-  columnDefs = [
-    {
-      headerName: 'Country',
-      field: 'country',
-      cellRenderer: this.viewCountry,
-      editable: false,
-    },
-    ...ManagerFunctions.buildingsUnitsLayouts,
-    ...ManagerFunctions.progress,
-  ];
+  columnDefs;
+
+  buildColumDefinitions() {
+    this.columnDefs = [
+      {
+        headerName: 'Country',
+        field: 'country',
+        cellRenderer: this.viewCountry,
+        editable: false,
+      },
+      ...ManagerFunctions.getBuildingsUnitsLayouts(
+        ManagerFunctions.viewBuildingsCountry,
+        ManagerFunctions.viewUnitsCountry
+      ),
+      ...ManagerFunctions.progress,
+    ];
+  }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
@@ -53,6 +60,8 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
+
+        this.buildColumDefinitions();
 
         const countries = buildingsArray.map(building => building.address.country);
         const countriesNoDuplicates = countries.filter(
@@ -96,6 +105,11 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions = <GridOptions>{
           rowData: rowsData,
           columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ManagerFunctions.pagination,
+          ...ManagerFunctions.columnOptions,
+
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null || Object.keys(model).length > 0;
@@ -116,15 +130,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
               this.gridApi
             );
           },
-          // rowHeight: 48, recommended row height for material design data grids,
-          frameworkComponents: {
-            checkboxRenderer: MatCheckboxComponent,
-            procentRenderer: ProcentRendererComponent,
-          },
-          enableColResize: true,
-          enableSorting: true,
-          enableFilter: true,
-          rowSelection: 'multiple',
+
         };
       }
     );

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
+import { Building, Site } from '../../_models';
 
 @Component({
   selector: 'app-site-overview',
@@ -68,12 +69,14 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** SITES */
 
-    this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
-      console.log('buildings', buildings);
-      const buildingsArray = <any[]>buildings;
-      this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
-        console.log('sites', sites);
-        const sitesArray = <any[]>sites;
+    this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+      console.log('sites', sites);
+
+      this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+        console.log('buildings', buildings);
+
+        const sitesArray = <Site[]>sites;
+        const buildingsArray = <Building[]>buildings;
 
         sitesArray.forEach(site => {
           site.buildings = buildingsArray.filter(
@@ -86,6 +89,10 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions = <GridOptions>{
           rowData: sitesArray,
           columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ManagerFunctions.pagination,
+          ...ManagerFunctions.columnOptions,
 
           onCellValueChanged: params => {
             ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites');
@@ -102,22 +109,14 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           onGridReady: params => {
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
-            this.gridOptions.api.sizeColumnsToFit();
+            // this.gridOptions.api.sizeColumnsToFit();
+
             this.fragment_sub = ManagerFunctions.setDefaultFilters(
               this.route,
               this.columnDefs,
               this.gridApi
             );
           },
-          // rowHeight: 48, recommended row height for material design data grids,
-          frameworkComponents: {
-            checkboxRenderer: MatCheckboxComponent,
-            procentRenderer: ProcentRendererComponent,
-          },
-          enableColResize: true,
-          enableSorting: true,
-          enableFilter: true,
-          rowSelection: 'multiple',
         };
       }, console.error);
     }, console.error);
