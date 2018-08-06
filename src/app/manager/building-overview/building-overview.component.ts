@@ -7,6 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Site, Unit } from '../../_models';
+import { ApiFunctions } from '../apiFunctions';
+import { urlGeoreference, urlPortfolio } from '../url';
 
 @Component({
   selector: 'app-building-overview',
@@ -88,25 +90,33 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   viewSite(params) {
-    return params.value + `<a href='/manager/site#site_id=` + params.data.site_id + `' > View </a>`;
+    return (
+      params.value +
+      `<a href='${urlPortfolio}/site#site_id=` +
+      params.data.site_id +
+      `' > View </a>`
+    );
   }
 
   viewUnits(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number + `<a href='/manager/unit#building_id=` + params.data.building_id + `' > View </a>`
+      number +
+      `<a href='${urlPortfolio}/unit#building_id=` +
+      params.data.building_id +
+      `' > View </a>`
     );
   }
 
   ngOnInit() {
     /** BUILDINGS */
-    this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+    ApiFunctions.get(this.http, 'sites', sites => {
       console.log('sites', sites);
 
-      this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+      ApiFunctions.get(this.http, 'units', units => {
         console.log('units', units);
 
-        this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+        ApiFunctions.get(this.http, 'buildings', buildings => {
           console.log('buildings', buildings);
 
           const sitesArray = <Site[]>sites;
@@ -154,9 +164,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               );
             },
           };
-        }, console.error);
-      }, console.error);
-    }, console.error);
+        });
+      });
+    });
   }
 
   clearSelection() {
@@ -174,8 +184,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   addRow() {
-    this.http
-      .post('http://api.archilyse.com/v1/buildings', {
+    ApiFunctions.post(
+      this.http,
+      'buildings',
+      {
         address: {
           city: '', // St. Gallen
           country: '', // Switzerland
@@ -191,13 +203,14 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         description: '',
         images: '',
         name: '',
-      })
-      .subscribe(building => {
+      },
+      building => {
         console.log('buildings', building);
         this.gridOptions.api.updateRowData({
           add: [building],
         });
-      }, console.error);
+      }
+    );
   }
 
   delete() {
@@ -217,11 +230,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
     if (nodes.length === 1) {
       const node = nodes[0];
-      ManagerFunctions.openNewWindow('/georeference/map/' + node.data.building_id);
+      ManagerFunctions.openNewWindow(urlGeoreference + '/map/' + node.data.building_id);
     } else if (nodes.length > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
-      const list = building_ids.join('\t\n');
-      ManagerFunctions.openNewWindow('/georeference/multiple?list=' + list);
+      const list = building_ids.join('\t\n') + '\t\n';
+      ManagerFunctions.openNewWindow(urlGeoreference + '/multiple#list=' + list);
     }
   }
 

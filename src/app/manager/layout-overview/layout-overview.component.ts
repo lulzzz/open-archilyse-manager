@@ -10,6 +10,8 @@ import { ManagerFunctions } from '../managerFunctions';
 import { catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Layout, Unit } from '../../_models';
+import {ApiFunctions} from '../apiFunctions';
+import {urlGeoreference, urlPortfolio} from '../url';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -86,21 +88,19 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   addRow() {
-    this.http
-      .post('http://api.archilyse.com/v1/layouts', {
+    ApiFunctions.post(this.http,'layouts', {
         name: '',
         description: '',
         images: '',
         movements: [],
         source: 'archilogic.com/scene/!675fe04b-4ee8-478a-a758-647f9f1e6f27?mode=3d',
-      })
-      .subscribe(layouts => {
+      }, layouts => {
         console.log('layouts', layouts);
 
         this.gridOptions.api.updateRowData({
           add: [layouts],
         });
-      }, console.error);
+      });
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
@@ -127,7 +127,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   viewUnit(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
-      return params.value + ` <a href='/manager/unit#unit_id=` + params.value + `' > View </a>`;
+      return params.value + ` <a href='${urlPortfolio}/unit#unit_id=` + params.value + `' > View </a>`;
     }
     return ``;
   }
@@ -135,10 +135,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** LAYOUTS */
 
-    this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
+    ApiFunctions.get(this.http,'layouts',layouts => {
       const layoutsArray = <Layout[]>layouts;
 
-      this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+      ApiFunctions.get(this.http,'units',units => {
         const unitsArray = <Unit[]>units;
 
         this.buildColumDefinitions(layouts, units);
@@ -176,8 +176,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
-      }, console.error);
-    }, console.error);
+      });
+    });
   }
 
   delete() {
@@ -209,12 +209,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       const node = nodes[0];
 
       const layout_id = node.data.layout_id;
-      ManagerFunctions.openNewWindow('/georeference/building/' + layout_id);
+      ManagerFunctions.openNewWindow( urlGeoreference + '/building/' + layout_id);
     } else if (nodes.length > 1) {
       const layout_ids = nodes.map(node => node.data.layout_id);
 
       const list = layout_ids.map(layout_id => `\t` + layout_id.join + `\n`);
-      ManagerFunctions.openNewWindow('/georeference/multiple?list=' + list);
+      ManagerFunctions.openNewWindow(urlGeoreference + '/multiple#list=' + list);
     }
   }
 

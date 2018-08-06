@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
+import {urlGeoreference, urlPortfolio} from '../url';
 
 @Component({
   selector: 'app-country-overview',
@@ -52,7 +53,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
   viewCountry(params) {
     const country = params.value ? params.value : 'Not defined';
-    return country + ` <a href='/manager/region#country=` + params.value + `' > View </a>`;
+    return country + ` <a href='${urlPortfolio}/region#country=` + params.value + `' > View </a>`;
   }
 
   ngOnInit() {
@@ -63,7 +64,9 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions();
 
-        const countries = buildingsArray.map(building => building.address.country);
+        const countries = buildingsArray.map(
+          building => (building.address.country ? building.address.country : '')
+        );
         const countriesNoDuplicates = countries.filter(
           (item, pos) => countries.indexOf(item) === pos
         );
@@ -130,7 +133,6 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
               this.gridApi
             );
           },
-
         };
       }
     );

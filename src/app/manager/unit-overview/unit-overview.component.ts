@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Layout, Unit } from '../../_models';
+import { ApiFunctions } from '../apiFunctions';
+import {urlPortfolio} from '../url';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -73,8 +75,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   }
 
   addRow() {
-    this.http
-      .post('http://api.archilyse.com/v1/units', {
+    ApiFunctions.post(
+      this.http,
+      'units',
+      {
         address: {
           line1: 'asdf321',
           line2: '2b',
@@ -86,14 +90,14 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         images: 'http://s3-bucket-url.com/image/123',
         name: 'My unit',
         updated: '2018-07-27T12:34:21.875Z',
-      })
-      .subscribe(units => {
+      },
+      units => {
         console.log('units', units);
-
         this.gridOptions.api.updateRowData({
           add: [units],
         });
-      }, console.error);
+      }
+    );
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
@@ -101,7 +105,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   viewBuilding(params) {
     return (
       params.value +
-      `<a href='/manager/building#building_id=` +
+      `<a href='${urlPortfolio}/building#building_id=` +
       params.data.building_id +
       `' > View </a>`
     );
@@ -109,16 +113,17 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   viewLayouts(params) {
     const number = params.value > 0 ? params.value : 0;
-    return number + `<a href='/manager/layout#unit_id=` + params.data.unit_id + `' > View </a>`;
+    return number + `<a href='${urlPortfolio}/layout#unit_id=` + params.data.unit_id + `' > View </a>`;
   }
 
   ngOnInit() {
     /** UNITS */
-    this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+
+    ApiFunctions.get(this.http, 'buildings', buildings => {
       console.log('buildings', buildings);
-      this.http.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
+      ApiFunctions.get(this.http, 'layouts', layouts => {
         console.log('layouts', layouts);
-        this.http.get('http://api.archilyse.com/v1/units').subscribe(units => {
+        ApiFunctions.get(this.http, 'units', units => {
           console.log('units', units);
 
           const buildingsArray = <Building[]>buildings;
@@ -162,9 +167,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
               );
             },
           };
-        }, console.error);
-      }, console.error);
-    }, console.error);
+        });
+      });
+    });
   }
 
   delete() {

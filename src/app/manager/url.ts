@@ -16,3 +16,15 @@ export function parseParms(str) {
   }
   return data;
 }
+
+/** Development */
+export const urlEditor = 'http://localhost:4201/editor';
+export const urlGeoreference = 'http://localhost:4202/georeference';
+export const urlPortfolio = 'http://localhost:4201/manager';
+
+/** Production */
+/**
+ export const urlEditor = 'http://localhost:4201/editor';
+ export const urlGeoreference = 'http://localhost:4202/georeference';
+ export const urlPortfolio = 'http://localhost:4201/manager';
+ */

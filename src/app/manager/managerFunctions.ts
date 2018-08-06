@@ -3,6 +3,7 @@ import { parseParms } from './url';
 import { Building, Layout, Site, Unit } from '../_models';
 import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
+import { ApiFunctions } from './apiFunctions';
 
 export class ManagerFunctions {
   /**
@@ -291,15 +292,28 @@ export class ManagerFunctions {
     };
   }
 
-  public static isReferencedBuilding(building) {
+  /**
+   * We check that the building has the building reference in swiss_topo or open_street_maps
+   * @param building
+   */
+  public static isReferencedBuilding(building: Building) {
+    console.log('building', building);
     return (
-      building.building_reference.swiss_topo !== '' ||
-      building.building_reference.open_street_maps !== ''
+      building.building_reference &&
+      // Swiss topo is defined
+      ((building.building_reference.swiss_topo && building.building_reference.swiss_topo !== '') ||
+        // Swiss open_street_maps is defined
+        (building.building_reference.open_street_maps &&
+          building.building_reference.open_street_maps !== ''))
     );
   }
 
-  public static isReferencedLayout(building) {
-    return building.movements && building.movements.length > 0;
+  /**
+   * We check that the layout has at least one movement in the list
+   * @param layout
+   */
+  public static isReferencedLayout(layout: Layout) {
+    return layout.movements && layout.movements.length > 0;
   }
 
   public static requestAllData(httpService, onComplete) {
@@ -308,19 +322,19 @@ export class ManagerFunctions {
 
     ]).subscribe(data => {});
    */
-    httpService.get('http://api.archilyse.com/v1/layouts').subscribe(layouts => {
+    ApiFunctions.get(httpService, 'layouts', layouts => {
       const layoutsArray = <Layout[]>layouts;
-      httpService.get('http://api.archilyse.com/v1/units').subscribe(units => {
+      ApiFunctions.get(httpService, 'units', units => {
         const unitsArray = <Unit[]>units;
-        httpService.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+        ApiFunctions.get(httpService, 'buildings', buildings => {
           const buildingsArray = <Building[]>buildings;
-          httpService.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+          ApiFunctions.get(httpService, 'sites', sites => {
             const sitesArray = <Site[]>sites;
             onComplete(sitesArray, buildingsArray, unitsArray, layoutsArray);
-          }, console.error);
-        }, console.error);
-      }, console.error);
-    }, console.error);
+          });
+        });
+      });
+    });
   }
 
   public static openNewWindow(url) {
@@ -381,11 +395,10 @@ export class ManagerFunctions {
       if (result.value) {
         selectedRows.forEach(selectedRow => {
           const elementKey = selectedRow[key];
-          httpService
-            .delete('http://api.archilyse.com/v1/' + route + '/' + elementKey)
-            .subscribe(elements => {
-              console.log(`DELETE ${plural}`, elements, elementKey);
-            }, console.error);
+
+          ApiFunctions.delete(httpService, route + '/' + elementKey, elements => {
+            console.log(`DELETE ${plural}`, elements, elementKey);
+          });
         });
 
         gridApi.updateRowData({
@@ -400,7 +413,10 @@ export class ManagerFunctions {
     const elementKey = element[key];
 
     const column = params.column.colId;
-    const columnValue = params.value;
+    let columnValue = params.value;
+
+    // TODO: API should understand null
+    // if (columnValue === null) columnValue = '';
 
     const newValue = {};
 
@@ -417,10 +433,8 @@ export class ManagerFunctions {
       newValue[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
     }
 
-    httpService
-      .patch('http://api.archilyse.com/v1/' + route + '/' + elementKey, newValue)
-      .subscribe(element => {
-        console.log('EDIT building completed', element);
-      }, console.error);
+    ApiFunctions.patch(httpService, route + '/' + elementKey, newValue, element => {
+      console.log('EDIT building completed', element);
+    });
   }
 }

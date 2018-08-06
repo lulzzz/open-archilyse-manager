@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
+import {urlGeoreference, urlPortfolio} from '../url';
 
 @Component({
   selector: 'app-region-overview',
@@ -48,7 +49,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
   viewCountry(params) {
     const country = params.value ? params.value : 'Not defined';
-    return country + ` <a href='/manager/country#country=` + params.value + `' > View </a>`;
+    return country + ` <a href='${urlPortfolio}/country#country=` + params.value + `' > View </a>`;
   }
 
   ngOnInit() {
@@ -75,8 +76,8 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
           citiesNoDuplicates.forEach(cityVal => {
             countryCitiesNoDuplicates.push({
-              country: countryVal,
-              city: cityVal,
+              country: countryVal && countryVal.length ? countryVal : '',
+              city: cityVal && cityVal.length ? cityVal : '',
             });
           });
         });
@@ -84,8 +85,9 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
         console.log('citiesNoDuplicates ', countryCitiesNoDuplicates);
 
         const rowsData = countryCitiesNoDuplicates.map(countryCity => {
-          const countryVal = countryCity.country;
-          const cityVal = countryCity.city;
+          const countryVal =
+            countryCity.country && countryCity.country.length ? countryCity.country : '';
+          const cityVal = countryCity.city && countryCity.city.length ? countryCity.city : '';
 
           const buildingsThisCity = buildingsArray.filter(
             building => building.address.country === countryVal && building.address.city === cityVal

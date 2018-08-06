@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Site } from '../../_models';
+import { ApiFunctions } from '../apiFunctions';
+import {urlPortfolio} from '../url';
 
 @Component({
   selector: 'app-site-overview',
@@ -50,29 +52,31 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
   viewBuildings(params) {
     const number = params.value > 0 ? params.value : 0;
-    return number + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`;
+    return number + `<a href='${urlPortfolio}/building#site_id=` + params.data.site_id + `' > View </a>`;
   }
 
   addRow() {
-    this.http
-      .post('http://api.archilyse.com/v1/sites', {
+    ApiFunctions.post(
+      this.http,
+      'sites',
+      {
         description: '',
         name: '',
-      })
-      .subscribe(site => {
+      },
+      site => {
         this.gridOptions.api.updateRowData({
           add: [site],
         });
-      }, console.error);
+      }
+    );
   }
 
   ngOnInit() {
     /** SITES */
-
-    this.http.get('http://api.archilyse.com/v1/sites').subscribe(sites => {
+    ApiFunctions.get(this.http, 'sites', sites => {
       console.log('sites', sites);
 
-      this.http.get('http://api.archilyse.com/v1/buildings').subscribe(buildings => {
+      ApiFunctions.get(this.http, 'buildings', buildings => {
         console.log('buildings', buildings);
 
         const sitesArray = <Site[]>sites;
@@ -118,8 +122,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
-      }, console.error);
-    }, console.error);
+      });
+    });
   }
 
   delete() {
