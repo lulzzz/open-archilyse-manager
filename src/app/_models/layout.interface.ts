@@ -8,8 +8,17 @@ export interface Layout {
   images?: string;
   movements?: Movement[];
 
+  model_structure?: ModelStructure;
+
   /** Control values */
   user_id: string;
   created: string;
   updated: string;
+}
+
+export interface ModelStructure {
+  id: string;
+  type: string;
+  is_office: boolean;
+  children: Object[];
 }

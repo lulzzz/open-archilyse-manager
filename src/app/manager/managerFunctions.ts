@@ -192,6 +192,18 @@ export class ManagerFunctions {
    * RENDER FUNCTIONS
    */
 
+  public static viewSource(params) {
+    if (params.value && params.value !== '') {
+      let text = 'View source';
+      if (params.value.indexOf('archilogic.com') >= 0) {
+        text = 'View in Archilogic';
+      }
+      return `<a href='` + params.value + `' target="_blank"> ${text} </a>`;
+    }
+
+    return ``;
+  }
+
   public static viewImg(params) {
     if (params.value && params.value !== '') {
       return `<a href='` + params.value + `' > View ` + params.value + `</a>`;
@@ -252,6 +264,13 @@ export class ManagerFunctions {
   /**
    * TOOLS
    */
+
+  public static getCountry(building) {
+    return building.address && building.address.country ? building.address.country : '';
+  }
+  public static getCity(building) {
+    return building.address && building.address.city ? building.address.city : '';
+  }
 
   public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray) {
     const numBuildings = buildingsList.length;
@@ -314,6 +333,10 @@ export class ManagerFunctions {
    */
   public static isReferencedLayout(layout: Layout) {
     return layout.movements && layout.movements.length > 0;
+  }
+
+  public static isDigitalizedLayout(layout: Layout) {
+    return layout.model_structure && layout.model_structure.id && layout.model_structure.children;
   }
 
   public static requestAllData(httpService, onComplete) {
@@ -408,15 +431,17 @@ export class ManagerFunctions {
     });
   }
 
-  public static reactToEdit(httpService, params, key, route) {
+  public static reactToEdit(httpService, params, key, route, gridApi) {
     const element = params.data;
     const elementKey = element[key];
+
+    const node = params.node;
 
     const column = params.column.colId;
     let columnValue = params.value;
 
     // TODO: API should understand null
-    // if (columnValue === null) columnValue = '';
+    if (columnValue === null) columnValue = '';
 
     const newValue = {};
 
@@ -434,7 +459,23 @@ export class ManagerFunctions {
     }
 
     ApiFunctions.patch(httpService, route + '/' + elementKey, newValue, element => {
-      console.log('EDIT building completed', element);
+      // Side elements updated after the request
+      if (element.user_id) {
+        node.data['user_id'] = element.user_id;
+      }
+      if (element.created) {
+        node.data['created'] = element.created;
+      }
+      if (element.update) {
+        node.data['update'] = element.update;
+      }
+      if (element.model_structure) {
+        node.data['model_structure'] = element.model_structure;
+      }
+
+      gridApi.updateRowData({
+        update: [node.data],
+      });
     });
   }
 }

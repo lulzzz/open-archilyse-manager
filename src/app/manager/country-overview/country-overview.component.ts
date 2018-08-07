@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
-import {urlGeoreference, urlPortfolio} from '../url';
+import { urlGeoreference, urlPortfolio } from '../url';
 
 @Component({
   selector: 'app-country-overview',
@@ -64,16 +64,14 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions();
 
-        const countries = buildingsArray.map(
-          building => (building.address.country ? building.address.country : '')
-        );
+        const countries = buildingsArray.map(building => ManagerFunctions.getCountry(building));
         const countriesNoDuplicates = countries.filter(
           (item, pos) => countries.indexOf(item) === pos
         );
 
         const rowsData = countriesNoDuplicates.map(countryVal => {
           const buildingsThisCountry = buildingsArray.filter(
-            building => building.address.country === countryVal
+            building => ManagerFunctions.getCountry(building) === countryVal
           );
           const progressResult = ManagerFunctions.progressOutOfBuildings(
             buildingsThisCountry,

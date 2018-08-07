@@ -1,17 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
-import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
-import { catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
 import { Layout, Unit } from '../../_models';
-import {ApiFunctions} from '../apiFunctions';
-import {urlGeoreference, urlPortfolio} from '../url';
+import { ApiFunctions } from '../apiFunctions';
+import { urlEditor, urlGeoreference, urlPortfolio } from '../url';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -66,6 +61,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         editable: false,
       },
       {
+        headerName: 'Source',
+        field: 'source',
+        cellRenderer: ManagerFunctions.viewSource,
+        editable: true,
+      },
+      {
         headerName: 'Images',
         field: 'images',
         cellRenderer: ManagerFunctions.viewImg,
@@ -88,19 +89,26 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   addRow() {
-    ApiFunctions.post(this.http,'layouts', {
+    ApiFunctions.post(
+      this.http,
+      'layouts',
+      {
         name: '',
         description: '',
         images: '',
+        model_structure: {},
         movements: [],
-        source: 'archilogic.com/scene/!675fe04b-4ee8-478a-a758-647f9f1e6f27?mode=3d',
-      }, layouts => {
+        source: '',
+        unit_id: '',
+      },
+      layouts => {
         console.log('layouts', layouts);
 
         this.gridOptions.api.updateRowData({
           add: [layouts],
         });
-      });
+      }
+    );
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
@@ -122,12 +130,18 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   viewModel(params) {
-    return `<a href='/editor/` + params.data.layout_id + `' > View model </a>`;
+    if (ManagerFunctions.isDigitalizedLayout(params.data)) {
+      return `<a href='${urlEditor}/` + params.data.layout_id + `' > View model </a>`;
+    } else {
+      return `Not digitalized`;
+    }
   }
 
   viewUnit(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
-      return params.value + ` <a href='${urlPortfolio}/unit#unit_id=` + params.value + `' > View </a>`;
+      return (
+        params.value + ` <a href='${urlPortfolio}/unit#unit_id=` + params.value + `' > View </a>`
+      );
     }
     return ``;
   }
@@ -135,10 +149,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** LAYOUTS */
 
-    ApiFunctions.get(this.http,'layouts',layouts => {
+    ApiFunctions.get(this.http, 'layouts', layouts => {
       const layoutsArray = <Layout[]>layouts;
 
-      ApiFunctions.get(this.http,'units',units => {
+      ApiFunctions.get(this.http, 'units', units => {
         const unitsArray = <Unit[]>units;
 
         this.buildColumDefinitions(layouts, units);
@@ -152,7 +166,13 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           ...ManagerFunctions.columnOptions,
 
           onCellValueChanged: params => {
-            ManagerFunctions.reactToEdit(this.http, params, 'layout_id', 'layouts');
+            ManagerFunctions.reactToEdit(
+              this.http,
+              params,
+              'layout_id',
+              'layouts',
+              this.gridOptions.api
+            );
           },
 
           onFilterChanged: params => {
@@ -202,6 +222,16 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  selectNotDigitalized() {
+    this.gridOptions.api.selectAll();
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    nodes.forEach(node => {
+      if (ManagerFunctions.isDigitalizedLayout(node.data)) {
+        node.setSelected(false);
+      }
+    });
+  }
+
   georeference() {
     const nodes = this.gridOptions.api.getSelectedNodes();
 
@@ -209,7 +239,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       const node = nodes[0];
 
       const layout_id = node.data.layout_id;
-      ManagerFunctions.openNewWindow( urlGeoreference + '/building/' + layout_id);
+      ManagerFunctions.openNewWindow(urlGeoreference + '/building/' + layout_id);
     } else if (nodes.length > 1) {
       const layout_ids = nodes.map(node => node.data.layout_id);
 

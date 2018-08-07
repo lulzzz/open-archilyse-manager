@@ -99,7 +99,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           ...ManagerFunctions.columnOptions,
 
           onCellValueChanged: params => {
-            ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites');
+            ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites', this.gridOptions.api);
           },
 
           onFilterChanged: params => {

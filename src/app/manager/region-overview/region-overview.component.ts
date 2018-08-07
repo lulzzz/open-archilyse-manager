@@ -6,7 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
-import {urlGeoreference, urlPortfolio} from '../url';
+import { urlGeoreference, urlPortfolio } from '../url';
+import { FunctionMetadata } from '@angular/compiler-cli';
 
 @Component({
   selector: 'app-region-overview',
@@ -60,7 +61,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions();
 
-        const countries = buildingsArray.map(building => building.address.country);
+        const countries = buildingsArray.map(building => ManagerFunctions.getCountry(building));
         const countriesNoDuplicates = countries.filter(
           (item, pos) => countries.indexOf(item) === pos
         );
@@ -68,10 +69,10 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
         const countryCitiesNoDuplicates = [];
         countriesNoDuplicates.forEach(countryVal => {
           const buildingsThisCountry = buildingsArray.filter(
-            building => building.address.country === countryVal
+            building => ManagerFunctions.getCountry(building) === countryVal
           );
 
-          const cities = buildingsThisCountry.map(building => building.address.city);
+          const cities = buildingsThisCountry.map(building => ManagerFunctions.getCity(building));
           const citiesNoDuplicates = cities.filter((item, pos) => cities.indexOf(item) === pos);
 
           citiesNoDuplicates.forEach(cityVal => {
@@ -90,7 +91,9 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
           const cityVal = countryCity.city && countryCity.city.length ? countryCity.city : '';
 
           const buildingsThisCity = buildingsArray.filter(
-            building => building.address.country === countryVal && building.address.city === cityVal
+            building =>
+              ManagerFunctions.getCountry(building) === countryVal &&
+              ManagerFunctions.getCity(building) === cityVal
           );
 
           const progressResult = ManagerFunctions.progressOutOfBuildings(

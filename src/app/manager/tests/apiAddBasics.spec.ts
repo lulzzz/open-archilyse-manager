@@ -57,11 +57,11 @@ describe('Api Add requests', () => {
     const testName = 'Test Name building';
     const testDescription = 'Test Description building';
 
-    const testCity = 'Zurich';
+    const testCity = 'St. Gallen';
     const testCountry = 'Switzerland';
-    const testPostal_code = '8005';
-    const testStreet = 'Technopark';
-    const testStreet_nr = '1';
+    const testPostal_code = '9000';
+    const testStreet = 'Ruhbergstrasse';
+    const testStreet_nr = '44';
 
     const newBuilding = {
       name: testName,

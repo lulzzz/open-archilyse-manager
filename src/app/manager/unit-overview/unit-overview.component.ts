@@ -145,7 +145,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             ...ManagerFunctions.columnOptions,
 
             onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(this.http, params, 'unit_id', 'units');
+              ManagerFunctions.reactToEdit(this.http, params, 'unit_id', 'units', this.gridOptions.api);
             },
 
             onFilterChanged: params => {

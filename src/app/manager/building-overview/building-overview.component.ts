@@ -140,7 +140,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             ...ManagerFunctions.columnOptions,
 
             onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(this.http, params, 'building_id', 'buildings');
+              ManagerFunctions.reactToEdit(this.http, params, 'building_id', 'buildings', this.gridOptions.api);
             },
 
             onFilterChanged: params => {
