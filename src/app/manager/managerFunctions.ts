@@ -110,34 +110,6 @@ export class ManagerFunctions {
       cellRendererParams: { editable: true },
     },
     {
-      headerName: 'TLM-OBJ',
-      field: 'TLM',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'LOD1-OBJ',
-      field: 'LOD1',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'LOD2-OBJ',
-      field: 'LOD2',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'ALTI-OBJ',
-      field: 'ALTI',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
       headerName: 'Georeferenced',
       field: 'georeferenced',
       cellRenderer: 'checkboxRenderer',
@@ -316,7 +288,6 @@ export class ManagerFunctions {
    * @param building
    */
   public static isReferencedBuilding(building: Building) {
-    console.log('building', building);
     return (
       building.building_reference &&
       // Swiss topo is defined
@@ -431,7 +402,7 @@ export class ManagerFunctions {
     });
   }
 
-  public static reactToEdit(httpService, params, key, route, gridApi) {
+  public static reactToEdit(httpService, params, key, route, gridApi, extraReaction) {
     const element = params.data;
     const elementKey = element[key];
 
@@ -469,8 +440,8 @@ export class ManagerFunctions {
       if (element.update) {
         node.data['update'] = element.update;
       }
-      if (element.model_structure) {
-        node.data['model_structure'] = element.model_structure;
+      if (extraReaction) {
+        extraReaction(node.data, element);
       }
 
       gridApi.updateRowData({
