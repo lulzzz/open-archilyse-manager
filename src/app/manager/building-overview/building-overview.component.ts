@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
-import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -9,6 +7,8 @@ import { ManagerFunctions } from '../managerFunctions';
 import { Building, Site, Unit } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
 import { urlGeoreference, urlPortfolio } from '../url';
+import { CellRender } from '../cellRender';
+import { ColumnDefinitions } from '../columnDefinitions';
 
 @Component({
   selector: 'app-building-overview',
@@ -36,54 +36,76 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   buildColumDefinitions(sites) {
     this.columnDefs = [
-      { headerName: 'Building_id', field: 'building_id', width: 190, editable: false },
       {
-        headerName: 'Site_id',
-        field: 'site_id',
-        width: 230,
-        cellRenderer: this.viewSite,
-        cellEditor: 'agPopupSelectCellEditor',
-        cellEditorParams: {
-          values: sites.map(site => site.site_id),
-        },
-        editable: true,
-      },
-
-      { headerName: 'Name', field: 'name', editable: true },
-      { headerName: 'Description', field: 'description', editable: true },
-      {
-        headerName: 'Units',
-        field: 'units',
-        filter: 'agNumberColumnFilter',
-        width: 90,
-        cellRenderer: this.viewUnits,
-        editable: false,
+        headerName: 'Site',
+        children: [
+          {
+            headerName: 'Id',
+            field: 'site_id',
+            width: 230,
+            cellRenderer: this.viewSite,
+            cellEditor: 'agPopupSelectCellEditor',
+            cellEditorParams: {
+              values: sites.map(site => site.site_id),
+            },
+            editable: true,
+          },
+        ],
       },
       {
-        headerName: 'Country',
-        field: 'address.country',
-        editable: true,
+        headerName: 'Building',
+        children: [
+          { headerName: 'Id', field: 'building_id', width: 190, editable: false },
+          { headerName: 'Name', field: 'name', editable: true },
+          { headerName: 'Description', field: 'description', editable: true },
+          {
+            headerName: 'Units',
+            field: 'units',
+            filter: 'agNumberColumnFilter',
+            width: 90,
+            cellRenderer: this.viewUnits,
+            editable: false,
+          },
+        ],
       },
-      { headerName: 'City', field: 'address.city', editable: true },
-      { headerName: 'Street', field: 'address.street', editable: true },
-      { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
-      { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
-
-      // { headerName: 'Building_reference', field: 'building_reference', editable: true },
-      { headerName: 'Ref - Swiss topo', field: 'building_reference.swiss_topo', editable: true },
       {
-        headerName: 'Ref - Open_street_maps',
-        field: 'building_reference.open_street_maps',
-        editable: true,
+        headerName: 'Building Address',
+        children: [
+          {
+            headerName: 'Country',
+            field: 'address.country',
+            editable: true,
+          },
+          { headerName: 'City', field: 'address.city', editable: true },
+          { headerName: 'Street', field: 'address.street', editable: true },
+          { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
+          { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
+        ],
       },
-
+      {
+        headerName: 'Georeference',
+        children: [
+          // { headerName: 'Building_reference', field: 'building_reference', editable: true },
+          { headerName: 'Swiss topo', field: 'building_reference.swiss_topo', editable: true },
+          {
+            headerName: 'Open_street_maps',
+            field: 'building_reference.open_street_maps',
+            editable: true,
+          },
+        ],
+      },
       {
         headerName: 'Images',
-        field: 'images',
-        cellRenderer: ManagerFunctions.viewImg,
-        editable: true,
+        children: [
+          {
+            headerName: 'Images',
+            field: 'images',
+            cellRenderer: CellRender.viewImg,
+            editable: true,
+          },
+        ],
       },
-      ...ManagerFunctions.metaUserAndData,
+      ...ColumnDefinitions.metaUserAndData,
     ];
   }
 
@@ -136,11 +158,17 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             columnDefs: this.columnDefs,
 
             /** Pagination */
-            ...ManagerFunctions.pagination,
-            ...ManagerFunctions.columnOptions,
+            ...ColumnDefinitions.pagination,
+            ...ColumnDefinitions.columnOptions,
 
             onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(this.http, params, 'building_id', 'buildings', this.gridOptions.api);
+              ManagerFunctions.reactToEdit(
+                this.http,
+                params,
+                'building_id',
+                'buildings',
+                this.gridOptions.api
+              );
             },
 
             onFilterChanged: params => {
@@ -247,5 +275,20 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * Export functions
+   */
+  export() {
+    this.gridOptions.api.exportDataAsCsv({
+      columnSeparator: ';',
+    });
+  }
+  exportSelected() {
+    this.gridOptions.api.exportDataAsCsv({
+      onlySelected: true,
+      columnSeparator: ';',
+    });
   }
 }

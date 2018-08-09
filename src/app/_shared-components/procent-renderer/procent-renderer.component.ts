@@ -13,7 +13,7 @@ export class ProcentRendererComponent {
   // called on init
   agInit(params: any): void {
     this.params = params;
-    this.value = parseInt(this.params.value);
+    this.value = parseInt(this.params.value, 10);
 
     this.styles = {
       width: this.value + '%',

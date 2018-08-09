@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
-import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
-import { urlGeoreference, urlPortfolio } from '../url';
+import { urlPortfolio } from '../url';
+import { CellRender } from '../cellRender';
+import { ColumnDefinitions } from '../columnDefinitions';
 
 @Component({
   selector: 'app-country-overview',
@@ -36,16 +36,31 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
   buildColumDefinitions() {
     this.columnDefs = [
       {
-        headerName: 'Country',
-        field: 'country',
-        cellRenderer: this.viewCountry,
-        editable: false,
+        headerName: 'Location',
+        children: [
+          {
+            headerName: 'Country',
+            field: 'country',
+            cellRenderer: this.viewCountry,
+            editable: false,
+          },
+        ],
       },
-      ...ManagerFunctions.getBuildingsUnitsLayouts(
-        ManagerFunctions.viewBuildingsCountry,
-        ManagerFunctions.viewUnitsCountry
-      ),
-      ...ManagerFunctions.progress,
+      {
+        headerName: 'Count',
+        children: ColumnDefinitions.getBuildingsUnitsLayouts(
+          CellRender.viewBuildingsCountry,
+          CellRender.viewUnitsCountry
+        ),
+      },
+      {
+        headerName: 'Progress',
+        children: ColumnDefinitions.progressProcents,
+      },
+      {
+        headerName: 'Control',
+        children: ColumnDefinitions.progress,
+      },
     ];
   }
 
@@ -104,8 +119,8 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           columnDefs: this.columnDefs,
 
           /** Pagination */
-          ...ManagerFunctions.pagination,
-          ...ManagerFunctions.columnOptions,
+          ...ColumnDefinitions.pagination,
+          ...ColumnDefinitions.columnOptions,
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
@@ -145,5 +160,20 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * Export functions
+   */
+  export() {
+    this.gridOptions.api.exportDataAsCsv({
+      columnSeparator: ';',
+    });
+  }
+  exportSelected() {
+    this.gridOptions.api.exportDataAsCsv({
+      onlySelected: true,
+      columnSeparator: ';',
+    });
   }
 }

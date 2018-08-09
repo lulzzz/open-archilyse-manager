@@ -8,6 +8,8 @@
 <button class="btn green" (click)="georeference($event)" [disabled]="selectedNodes.length<=0" >Georeference ({{selectedNodes.length}})</button>
 <button class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
 <button class="btn green" (click)="addRow()">Add building</button>
+<button class="btn green" (click)="export()" > CSV </button>
+<button class="btn green" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
 
 <ag-grid-angular
   *ngIf="gridOptions"

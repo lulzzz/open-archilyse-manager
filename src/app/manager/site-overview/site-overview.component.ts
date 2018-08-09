@@ -1,14 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
-import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import {urlPortfolio} from '../url';
+import { urlPortfolio } from '../url';
+import { ColumnDefinitions } from '../columnDefinitions';
 
 @Component({
   selector: 'app-site-overview',
@@ -34,25 +33,32 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   fragment_sub: Subscription;
 
   columnDefs = [
-    { headerName: 'Site_id', field: 'site_id', width: 190, editable: false },
-    { headerName: 'Name', field: 'name', minWidth: 190, editable: true },
-    { headerName: 'Description', field: 'description', minWidth: 300, editable: true },
     {
-      headerName: 'Buildings',
-      field: 'buildings',
-      filter: 'agNumberColumnFilter',
-      maxWidth: 100,
-      cellRenderer: this.viewBuildings,
-      editable: false,
+      headerName: 'Site',
+      children: [
+        { headerName: 'Site_id', field: 'site_id', width: 190, editable: false },
+        { headerName: 'Name', field: 'name', width: 190, editable: true },
+        { headerName: 'Description', field: 'description', width: 300, editable: true },
+        {
+          headerName: 'Buildings',
+          field: 'buildings',
+          filter: 'agNumberColumnFilter',
+          width: 100,
+          cellRenderer: this.viewBuildings,
+          editable: false,
+        },
+      ],
     },
-    ...ManagerFunctions.metaUserAndData,
+    ...ColumnDefinitions.metaUserAndData,
   ];
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   viewBuildings(params) {
     const number = params.value > 0 ? params.value : 0;
-    return number + `<a href='${urlPortfolio}/building#site_id=` + params.data.site_id + `' > View </a>`;
+    return (
+      number + `<a href='${urlPortfolio}/building#site_id=` + params.data.site_id + `' > View </a>`
+    );
   }
 
   addRow() {
@@ -95,11 +101,17 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           columnDefs: this.columnDefs,
 
           /** Pagination */
-          ...ManagerFunctions.pagination,
-          ...ManagerFunctions.columnOptions,
+          ...ColumnDefinitions.pagination,
+          ...ColumnDefinitions.columnOptions,
 
           onCellValueChanged: params => {
-            ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites', this.gridOptions.api);
+            ManagerFunctions.reactToEdit(
+              this.http,
+              params,
+              'site_id',
+              'sites',
+              this.gridOptions.api
+            );
           },
 
           onFilterChanged: params => {
@@ -151,5 +163,20 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * Export functions
+   */
+  export() {
+    this.gridOptions.api.exportDataAsCsv({
+      columnSeparator: ';',
+    });
+  }
+  exportSelected() {
+    this.gridOptions.api.exportDataAsCsv({
+      onlySelected: true,
+      columnSeparator: ';',
+    });
   }
 }

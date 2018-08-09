@@ -6,8 +6,10 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Layout, Unit } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import { urlEditor, urlGeoreference, urlPortfolio } from '../url';
+import { urlGeoreference } from '../url';
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
+import { CellRender } from '../cellRender';
+import { ColumnDefinitions } from '../columnDefinitions';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -26,6 +28,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   selectedNodes = [];
   selectedRows = [];
 
+  buildingsArray;
+  layoutsArray;
+  unitsArray;
+
   gridApi;
   gridColumnApi;
 
@@ -40,111 +46,188 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   buildColumDefinitions(layouts, units, buildings) {
     this.columnDefs = [
       {
-        headerName: 'Layout_id',
-        field: 'layout_id',
-        width: 190,
-        editable: false,
+        headerName: 'Unit',
+        children: [
+          {
+            headerName: 'Id',
+            field: 'unit_id',
+            width: 230,
+            cellRenderer: CellRender.viewUnit,
+            cellEditor: 'agPopupSelectCellEditor',
+            cellEditorParams: {
+              values: units.map(unit => unit.unit_id),
+            },
+            editable: true,
+          },
+        ],
       },
       {
-        headerName: 'Unit_id',
-        field: 'unit_id',
-        width: 230,
-        cellRenderer: this.viewUnit,
-        cellEditor: 'agPopupSelectCellEditor',
-        cellEditorParams: {
-          values: units.map(unit => unit.unit_id),
-        },
-        editable: true,
+        headerName: 'Building',
+        children: [
+          {
+            headerName: 'Id',
+            field: 'building_id',
+            width: 230,
+            cellRenderer: CellRender.viewBuilding,
+            cellEditor: 'agPopupSelectCellEditor',
+            cellEditorParams: {
+              values: buildings.map(building => building.building_id),
+            },
+            editable: false,
+          },
+          {
+            headerName: 'Georeferenced',
+            field: 'building_referenced',
+            cellRenderer: 'checkboxRenderer',
+            width: 100,
+            cellRendererParams: { editable: false },
+          },
+        ],
       },
       {
-        headerName: 'Building_id',
-        field: 'building_id',
-        width: 230,
-        cellRenderer: this.viewBuilding,
-        cellEditor: 'agPopupSelectCellEditor',
-        cellEditorParams: {
-          values: buildings.map(building => building.building_id),
-        },
-        editable: false,
-      },
-      {
-        headerName: 'Building Georeferenced',
-        field: 'building_referenced',
-        cellRenderer: 'checkboxRenderer',
-        width: 100,
-        cellRendererParams: { editable: false },
-      },
-      { headerName: 'Name', field: 'name', editable: true },
-      { headerName: 'Description', field: 'description', editable: true },
-      {
-        headerName: 'FloorPlan',
-        field: 'floorPlan',
-        cellRenderer: ManagerFunctions.cellPdfDownloadLink,
-        editable: false,
-      },
-      {
-        headerName: 'Source',
-        field: 'source',
-        cellRenderer: ManagerFunctions.viewSource,
-        editable: true,
+        headerName: 'Layout',
+        children: [
+          {
+            headerName: 'Id',
+            field: 'layout_id',
+            width: 190,
+            editable: false,
+          },
+          { headerName: 'Name', field: 'name', editable: true },
+          { headerName: 'Description', field: 'description', editable: true },
+        ],
       },
       {
         headerName: 'Images',
-        field: 'images',
-        cellRenderer: ManagerFunctions.viewImg,
-        editable: true,
+        children: [
+          {
+            headerName: 'Images',
+            field: 'images',
+            cellRenderer: CellRender.viewImg,
+            editable: true,
+          },
+        ],
       },
       {
-        headerName: 'Movements',
-        field: 'movements',
-        cellRenderer: this.viewMovement,
-        editable: true,
+        headerName: 'Model',
+        children: [
+          {
+            headerName: 'FloorPlan',
+            field: 'floorPlan',
+            cellRenderer: CellRender.cellPdfDownloadLink,
+            editable: false,
+          },
+          {
+            headerName: 'Floors',
+            field: 'floors',
+            cellRenderer: CellRender.viewFloors,
+            editable: false,
+          },
+          {
+            headerName: 'Model_structure',
+            field: 'model_structure',
+            cellRenderer: CellRender.viewModel,
+            editable: true,
+          },
+          {
+            headerName: 'Total area',
+            field: 'total_area',
+            cellRenderer: CellRender.areaInfoTotal,
+            width: 100,
+            editable: false,
+          },
+          {
+            headerName: 'Other areas',
+            field: 'area',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+          },
+          {
+            headerName: 'Toilets',
+            field: 'toilet',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+          },
+          {
+            headerName: 'Kitchens',
+            field: 'kitchen',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+          },
+          {
+            headerName: 'Balcony',
+            field: 'balcony',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+          },
+        ],
       },
       {
-        headerName: 'Model_structure',
-        field: 'model_structure',
-        cellRenderer: this.viewModel,
-        editable: true,
+        headerName: 'Georeference',
+        children: [
+          {
+            headerName: 'Movements',
+            field: 'movements',
+            cellRenderer: CellRender.viewMovement,
+            editable: true,
+          },
+        ],
       },
 
-      {
-        headerName: 'Total area',
-        field: 'total_area',
-        cellRenderer: this.areaInfoTotal,
-        width: 100,
-        editable: false,
-      },
-      {
-        headerName: 'Other areas',
-        field: 'area',
-        cellRenderer: this.areaInfo,
-        width: 100,
-        editable: false,
-      },
-      {
-        headerName: 'Toilets',
-        field: 'toilet',
-        cellRenderer: this.areaInfo,
-        width: 100,
-        editable: false,
-      },
-      {
-        headerName: 'Kitchens',
-        field: 'kitchen',
-        cellRenderer: this.areaInfo,
-        width: 100,
-        editable: false,
-      },
-      {
-        headerName: 'Balcony',
-        field: 'balcony',
-        cellRenderer: this.areaInfo,
-        width: 100,
-        editable: false,
-      },
-
-      ...ManagerFunctions.metaUserAndData,
+      ...ColumnDefinitions.metaUserAndData,
     ];
+  }
+
+  changeSource(clear) {
+    const node = this.selectedNodes[0];
+    let newValue;
+
+    if (clear) {
+      newValue = {
+        floors: [],
+      };
+    } else {
+      const floor = document.getElementById('floor');
+      const sourceUrl = document.getElementById('sourceUrl');
+
+      if (floor['value'] && sourceUrl['value']) {
+        const floorVal = floor['value'];
+        const sourceUrlVal = sourceUrl['value'];
+
+        const previousFloors = node.data.floors ? node.data.floors : [];
+
+        console.log('previousFloors', previousFloors);
+
+        previousFloors.push({
+          floor_nr: floorVal,
+          source: sourceUrlVal,
+        });
+
+        console.log('newFloors', previousFloors);
+
+        newValue = {
+          floors: previousFloors,
+        };
+      } else {
+        console.error('Null source');
+      }
+    }
+
+    const layout_id = node.data.layout_id;
+    const url = 'layouts/' + layout_id;
+
+    ManagerFunctions.patchElement(
+      this.http,
+      this.selectedNodes[0],
+      url,
+      newValue,
+      this.gridOptions.api,
+      this.layoutReactionToEdit.bind(this)
+    );
   }
 
   addRow() {
@@ -155,10 +238,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         name: '',
         description: '',
         images: '',
-        model_structure: {},
         movements: [],
-        source: '',
-        unit_id: '',
+        floors: [],
       },
       layouts => {
         console.log('layouts', layouts);
@@ -172,80 +253,15 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
-  viewMovement(params) {
-    let result = '';
-    if (params.movements) {
-      for (let i = 0; i < params.movements.length; i += 1) {
-        const movements = params.movements[i];
-        result += `<div>
-            source: ${movements.source},
-            angle: ${movements.angle}°,
-            offset (xyz): ${movements.x_off}, ${movements.y_off}, ${movements.z_off}
-            pivot (xyz): ${movements.x_pivot}, ${movements.y_pivot}, ${movements.z_pivot}
-          </div>`;
-      }
-    }
-    return result;
-  }
-
-  viewModel(params) {
-    if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `<a href='${urlEditor}/` + params.data.layout_id + `' > View model </a>`;
-    } else {
-      return `Not digitalized`;
-    }
-  }
-
-  areaInfoTotal(params) {
-    if (params.value && params.value !== '' && params.value !== 'None' && params.value.length > 0) {
-      return params.value.reduce((a, b) => a + b, 0).toFixed(2) + `m<sup>2</sup> `;
-    }
-    return ``;
-  }
-
-  areaInfo(params) {
-    if (params.value && params.value !== '' && params.value !== 'None' && params.value.length > 0) {
-      if (params.value.length > 1) {
-        return (
-          `(${params.value.length}) ` +
-          params.value.map(v => v.toFixed(2)).join(`m<sup>2</sup>, `) +
-          `m<sup>2</sup> `
-        );
-      } else {
-        return params.value[0].toFixed(2) + `m<sup>2</sup> `;
-      }
-    }
-    return ``;
-  }
-
-  viewUnit(params) {
-    if (params.value && params.value !== '' && params.value !== 'None') {
-      return (
-        params.value + ` <a href='${urlPortfolio}/unit#unit_id=` + params.value + `' > View </a>`
-      );
-    }
-    return ``;
-  }
-
-  viewBuilding(params) {
-    if (params.value && params.value !== '' && params.value !== 'None') {
-      return (
-        params.value +
-        ` <a href='${urlPortfolio}/building#building_id=` +
-        params.value +
-        `' > View </a>`
-      );
-    }
-    return ``;
-  }
-
-  setLayoutBuildingData(layout, unitsArray, buildingsArray) {
+  setLayoutBuildingData(layout) {
     layout['building_referenced'] = false;
     if (layout.unit_id) {
-      const unit = unitsArray.find(unit => unit.unit_id === layout.unit_id);
+      const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
       if (unit) {
         layout['building_id'] = unit.building_id;
-        const building = buildingsArray.find(building => building.building_id === unit.building_id);
+        const building = this.buildingsArray.find(
+          building => building.building_id === unit.building_id
+        );
         if (building) {
           layout['building_referenced'] = ManagerFunctions.isReferencedBuilding(building);
         }
@@ -261,7 +277,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       kitchen: [],
       balcony: [],
     };
-    this.analyzeModelStructureRecursive(model.children, analysis);
+
+    if (model && model.children) {
+      this.analyzeModelStructureRecursive(model.children, analysis);
+    }
 
     layout['total_area'] = [
       ...analysis.area,
@@ -277,8 +296,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   calculateArea(element) {
     const currentArray = element.footprint.coordinates[0];
     const currentArrayVector = currentArray.map(coor => new Vector2(coor[COOR_X], coor[COOR_Y]));
-    const calculatedM2 = Math.abs(ShapeUtils.area(currentArrayVector));
-    return calculatedM2;
+    return Math.abs(ShapeUtils.area(currentArrayVector));
   }
   analyzeModelStructureRecursive(elements, analysis) {
     if (elements) {
@@ -302,28 +320,28 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     /** LAYOUTS */
 
     ApiFunctions.get(this.http, 'buildings', buildings => {
-      const buildingsArray = <Building[]>buildings;
+      this.buildingsArray = <Building[]>buildings;
 
       ApiFunctions.get(this.http, 'layouts', layouts => {
-        const layoutsArray = <Layout[]>layouts;
+        this.layoutsArray = <Layout[]>layouts;
 
         ApiFunctions.get(this.http, 'units', units => {
-          const unitsArray = <Unit[]>units;
+          this.unitsArray = <Unit[]>units;
 
-          layoutsArray.forEach(layout => {
-            this.setLayoutBuildingData(layout, unitsArray, buildingsArray);
+          this.layoutsArray.forEach(layout => {
+            this.setLayoutBuildingData(layout);
             this.analyzeModelStructure(layout);
           });
 
           this.buildColumDefinitions(layouts, units, buildings);
 
           this.gridOptions = <GridOptions>{
-            rowData: layoutsArray,
+            rowData: this.layoutsArray,
             columnDefs: this.columnDefs,
 
             /** Pagination */
-            ...ManagerFunctions.pagination,
-            ...ManagerFunctions.columnOptions,
+            ...ColumnDefinitions.pagination,
+            ...ColumnDefinitions.columnOptions,
 
             onCellValueChanged: params => {
               ManagerFunctions.reactToEdit(
@@ -332,18 +350,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
                 'layout_id',
                 'layouts',
                 this.gridOptions.api,
-                (nodeData, element) => {
-                  // if the new Layout has model_structure we update it.
-                  if (element.model_structure) {
-                    nodeData['model_structure'] = element.model_structure;
-                    this.analyzeModelStructure(nodeData);
-                  }
-
-                  // if the new Layout has new unit id, we update the building data.
-                  if (element.unit_id) {
-                    this.setLayoutBuildingData(nodeData, unitsArray, buildingsArray);
-                  }
-                }
+                this.layoutReactionToEdit.bind(this)
               );
             },
 
@@ -354,6 +361,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             onSelectionChanged: () => {
               this.selectedNodes = this.gridOptions.api.getSelectedNodes();
               this.selectedRows = this.gridOptions.api.getSelectedRows();
+
+              if (this.selectedRows && this.selectedRows.length === 1) {
+                console.log('this.selectedRows', this.selectedRows[0]);
+              }
             },
             onGridReady: params => {
               this.gridApi = params.api;
@@ -371,6 +382,23 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         });
       });
     });
+  }
+
+  layoutReactionToEdit(nodeData, element) {
+    // if the new Layout has model_structure we update it.
+    if (element.model_structure) {
+      nodeData['model_structure'] = element.model_structure;
+      this.analyzeModelStructure(nodeData);
+    }
+
+    if (element.floors) {
+      nodeData['floors'] = element.floors;
+    }
+
+    // if the new Layout has new unit id, we update the building data.
+    if (element.unit_id) {
+      this.setLayoutBuildingData(nodeData);
+    }
   }
 
   delete() {
@@ -434,5 +462,20 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * Export functions
+   */
+  export() {
+    this.gridOptions.api.exportDataAsCsv({
+      columnSeparator: ';',
+    });
+  }
+  exportSelected() {
+    this.gridOptions.api.exportDataAsCsv({
+      onlySelected: true,
+      columnSeparator: ';',
+    });
   }
 }

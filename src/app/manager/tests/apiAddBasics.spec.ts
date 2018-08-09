@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ApiFunctions } from '../apiFunctions';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Testers } from './testers';
 
 function httpError(done, error) {
   expect(error.status !== 500).toBeTruthy(error.message);
@@ -40,10 +41,7 @@ describe('Api Add requests', () => {
       newSite,
       site => {
         expect(site).toBeDefined();
-        expect(site.site_id).toBeDefined('id not defined');
-        if (usersActive) expect(site.user).toBeDefined('User not defined');
-        expect(site.updated).toBeDefined('Updated date not defined');
-        expect(site.created).toBeDefined('Created date not defined');
+        Testers.validateSites([site], usersActive);
 
         expect(site.name).toBe(testName);
         expect(site.description).toBe(testDescription);
@@ -81,10 +79,7 @@ describe('Api Add requests', () => {
       newBuilding,
       building => {
         expect(building).toBeDefined();
-        expect(building.building_id).toBeDefined('id not defined');
-        if (usersActive) expect(building.user).toBeDefined('User not defined');
-        expect(building.updated).toBeDefined('Updated date not defined');
-        expect(building.created).toBeDefined('Created date not defined');
+        Testers.validateBuildings([building], usersActive);
 
         expect(building.name).toBe(testName);
         expect(building.description).toBe(testDescription);
@@ -117,10 +112,7 @@ describe('Api Add requests', () => {
       newBuilding,
       unit => {
         expect(unit).toBeDefined();
-        expect(unit.unit_id).toBeDefined('id not defined');
-        if (usersActive) expect(unit.user).toBeDefined('User not defined');
-        expect(unit.updated).toBeDefined('Updated date not defined');
-        expect(unit.created).toBeDefined('Created date not defined');
+        Testers.validateUnits([unit], usersActive);
 
         expect(unit.name).toBe(testName);
         expect(unit.description).toBe(testDescription);
@@ -147,10 +139,7 @@ describe('Api Add requests', () => {
       newBuilding,
       layout => {
         expect(layout).toBeDefined();
-        expect(layout.layout_id).toBeDefined('id not defined');
-        if (usersActive) expect(layout.user).toBeDefined('User not defined');
-        expect(layout.updated).toBeDefined('Updated date not defined');
-        expect(layout.created).toBeDefined('Created date not defined');
+        Testers.validateLayouts([layout], usersActive);
 
         expect(layout.name).toBe(testName);
         expect(layout.description).toBe(testDescription);

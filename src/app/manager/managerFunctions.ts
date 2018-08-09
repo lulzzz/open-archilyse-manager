@@ -1,238 +1,9 @@
 import swal from 'sweetalert2';
 import { parseParms } from './url';
 import { Building, Layout, Site, Unit } from '../_models';
-import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
 import { ApiFunctions } from './apiFunctions';
 
 export class ManagerFunctions {
-  /**
-   * Parameters
-   */
-
-  public static pagination = {
-    pagination: true,
-    paginationAutoPageSize: true,
-  };
-
-  public static columnOptions = {
-    frameworkComponents: {
-      checkboxRenderer: MatCheckboxComponent,
-      procentRenderer: ProcentRendererComponent,
-    },
-
-    // rowHeight: 48, recommended row height for material design data grids,
-    enableColResize: true,
-    enableSorting: true,
-    enableFilter: true,
-    rowSelection: 'multiple',
-  };
-
-  public static metaUserAndData = [
-    { headerName: 'User_id', field: 'user_id', width: 100, editable: false },
-    {
-      headerName: 'Created',
-      field: 'created',
-      width: 100,
-      cellRenderer: ManagerFunctions.viewDate,
-      editable: false,
-    },
-    {
-      headerName: 'Updated',
-      field: 'updated',
-      width: 100,
-      cellRenderer: ManagerFunctions.viewDate,
-      editable: false,
-    },
-  ];
-  public static getBuildingsUnitsLayouts(viewBuildings, viewUnits) {
-    return [
-      {
-        headerName: 'Buildings',
-        field: 'buildings',
-        filter: 'agNumberColumnFilter',
-        width: 100,
-        cellRenderer: viewBuildings,
-        editable: false,
-      },
-      {
-        headerName: 'Units',
-        field: 'units',
-        filter: 'agNumberColumnFilter',
-        width: 100,
-        cellRenderer: viewUnits,
-        editable: false,
-      },
-      {
-        headerName: 'Layouts',
-        field: 'layouts',
-        filter: 'agNumberColumnFilter',
-        width: 100,
-        editable: false,
-      },
-      {
-        headerName: 'Progress',
-        field: 'progress',
-        cellRenderer: 'procentRenderer',
-        filter: 'agNumberColumnFilter',
-        cellRendererParams: { editable: false },
-      },
-      {
-        headerName: 'Progress Layouts',
-        field: 'progressLayout',
-        cellRenderer: 'procentRenderer',
-        filter: 'agNumberColumnFilter',
-        cellRendererParams: { editable: false },
-      },
-    ];
-  }
-
-  public static progress = [
-    {
-      headerName: 'Delivered',
-      field: 'delivered',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: true },
-    },
-    {
-      headerName: 'Structured',
-      field: 'structured',
-      cellRenderer: 'checkboxRenderer',
-      width: 110,
-      cellRendererParams: { editable: true },
-    },
-    {
-      headerName: 'Digitized',
-      field: 'digitized',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: true },
-    },
-    {
-      headerName: 'Georeferenced',
-      field: 'georeferenced',
-      cellRenderer: 'checkboxRenderer',
-      width: 140,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'Data Complete',
-      field: 'data',
-      cellRenderer: 'checkboxRenderer',
-      width: 140,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'DPOI',
-      field: 'DPOI',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'View & Sun',
-      field: 'view',
-      cellRenderer: 'checkboxRenderer',
-      width: 120,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'Acoustics',
-      field: 'acoustics',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'WBS',
-      field: 'WBS',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-    },
-    {
-      headerName: 'BasicFeatures',
-      field: 'basicFeatures',
-      cellRenderer: 'checkboxRenderer',
-      width: 140,
-      cellRendererParams: { editable: false },
-    },
-  ];
-
-  /**
-   * RENDER FUNCTIONS
-   */
-
-  public static viewSource(params) {
-    if (params.value && params.value !== '') {
-      let text = 'View source';
-      if (params.value.indexOf('archilogic.com') >= 0) {
-        text = 'View in Archilogic';
-      }
-      return `<a href='` + params.value + `' target="_blank"> ${text} </a>`;
-    }
-
-    return ``;
-  }
-
-  public static viewImg(params) {
-    if (params.value && params.value !== '') {
-      return `<a href='` + params.value + `' > View ` + params.value + `</a>`;
-    }
-
-    return ``;
-  }
-
-  public static viewDate(params) {
-    if (params.value && params.value !== '') {
-      const readable = new Date(params.value);
-      const m = readable.getMonth(); // returns 6
-      const d = readable.getDay(); // returns 15
-      const y = readable.getFullYear(); // returns 2012
-      return `${d}.${m}.${y}`;
-    }
-    return ``;
-  }
-
-  public static viewBuildingsCountry(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number +
-      ` <a href='/manager/building#address.country=` +
-      params.data.country +
-      `' > View </a>`
-    );
-  }
-
-  public static viewUnitsCountry(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='/manager/unit#address.country=` + params.data.country + `' > View </a>`
-    );
-  }
-
-  public static viewBuildingsCity(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
-    );
-  }
-
-  public static viewUnitsCity(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
-  }
-
-  public static cellPdfDownloadLink(params) {
-    if (params && params.value && params.value !== '') {
-      return (
-        `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
-      );
-    }
-    return '';
-  }
-
   /**
    * TOOLS
    */
@@ -402,34 +173,8 @@ export class ManagerFunctions {
     });
   }
 
-  public static reactToEdit(httpService, params, key, route, gridApi, extraReaction) {
-    const element = params.data;
-    const elementKey = element[key];
-
-    const node = params.node;
-
-    const column = params.column.colId;
-    let columnValue = params.value;
-
-    // TODO: API should understand null
-    if (columnValue === null) columnValue = '';
-
-    const newValue = {};
-
-    const columnParts = column.split('.');
-
-    if (columnParts.length <= 1) {
-      newValue[column] = columnValue;
-    } else if (columnParts.length <= 2) {
-      newValue[columnParts[0]] = {};
-      newValue[columnParts[0]][columnParts[1]] = columnValue;
-    } else if (columnParts.length <= 3) {
-      newValue[columnParts[0]] = {};
-      newValue[columnParts[0]][columnParts[1]] = {};
-      newValue[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
-    }
-
-    ApiFunctions.patch(httpService, route + '/' + elementKey, newValue, element => {
+  public static patchElement(httpService, node, url, newValue, gridApi, extraReaction?) {
+    ApiFunctions.patch(httpService, url, newValue, element => {
       // Side elements updated after the request
       if (element.user_id) {
         node.data['user_id'] = element.user_id;
@@ -448,5 +193,38 @@ export class ManagerFunctions {
         update: [node.data],
       });
     });
+  }
+
+  public static reactToEdit(httpService, params, key, route, gridApi, extraReaction?) {
+    const element = params.data;
+    const elementKey = element[key];
+
+    const node = params.node;
+
+    const column = params.column.colId;
+    let columnValue = params.value;
+
+    // TODO: API should understand null
+    if (columnValue === null) {
+      columnValue = '';
+    }
+
+    const newValue = {};
+
+    const columnParts = column.split('.');
+
+    if (columnParts.length <= 1) {
+      newValue[column] = columnValue;
+    } else if (columnParts.length <= 2) {
+      newValue[columnParts[0]] = {};
+      newValue[columnParts[0]][columnParts[1]] = columnValue;
+    } else if (columnParts.length <= 3) {
+      newValue[columnParts[0]] = {};
+      newValue[columnParts[0]][columnParts[1]] = {};
+      newValue[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
+    }
+
+    const url = route + '/' + elementKey;
+    ManagerFunctions.patchElement(httpService, node, url, newValue, gridApi, extraReaction);
   }
 }

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
-import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
+import { CellRender } from '../cellRender';
+import { ColumnDefinitions } from '../columnDefinitions';
 
 @Component({
   selector: 'app-overview',
@@ -83,7 +83,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       headerName: 'InFloorplan',
       field: 'infloorplan',
       editable: true,
-      cellRenderer: ManagerFunctions.cellPdfDownloadLink,
+      cellRenderer: CellRender.cellPdfDownloadLink,
       onCellValueChanged: this.onCellValueChanged,
     },
     {
@@ -147,8 +147,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
           columnDefs: this.columnDefs,
 
           /** Pagination */
-          ...ManagerFunctions.pagination,
-          ...ManagerFunctions.columnOptions,
+          ...ColumnDefinitions.pagination,
+          ...ColumnDefinitions.columnOptions,
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
@@ -192,5 +192,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * Export functions
+   */
+  export() {
+    this.gridOptions.api.exportDataAsCsv({
+      columnSeparator: ';',
+    });
+  }
+  exportSelected() {
+    this.gridOptions.api.exportDataAsCsv({
+      onlySelected: true,
+      columnSeparator: ';',
+    });
   }
 }

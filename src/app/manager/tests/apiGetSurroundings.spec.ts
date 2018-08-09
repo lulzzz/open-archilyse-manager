@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ApiFunctions } from '../apiFunctions';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Testers } from './testers';
 
 function httpError(done, error) {
   console.log('ERROR', error);
@@ -48,18 +49,7 @@ describe('Api get surroundings requests', () => {
               'buildings/' + firstBuilding.building_id + '/surroundings',
               surroundings => {
                 console.log('surroundings', surroundings);
-
-                // Top shot and candidates
-                expect(surroundings.top_shot_id).toBeDefined();
-                expect(surroundings.candidates_ids).toBeDefined();
-                expect(Array.isArray(surroundings.candidates_ids)).toBeTruthy();
-
-                // We check the geojson
-                expect(surroundings.geojson).toBeDefined();
-                expect(surroundings.geojson.crs).toBeDefined();
-                expect(surroundings.geojson.features).toBeDefined();
-                expect(Array.isArray(surroundings.geojson.features)).toBeTruthy();
-                expect(surroundings.geojson.type).toBeDefined();
+                Testers.validateSurroundings(surroundings);
 
                 done();
               },
@@ -72,7 +62,6 @@ describe('Api get surroundings requests', () => {
       httpError.bind(this, done)
     );
   });
-
 
   it('should add a building, get the surroundings and then remove it', (done: DoneFn) => {
     const testName = 'Test Name building';
@@ -88,10 +77,7 @@ describe('Api get surroundings requests', () => {
       newBuilding,
       building => {
         expect(building).toBeDefined();
-        expect(building.building_id).toBeDefined('id not defined');
-        if (usersActive) expect(building.user).toBeDefined('User not defined');
-        expect(building.updated).toBeDefined('Updated date not defined');
-        expect(building.created).toBeDefined('Created date not defined');
+        Testers.validateBuildings([building], usersActive);
 
         expect(building.name).toBe(testName);
         expect(building.description).toBe(testDescription);
@@ -100,22 +86,11 @@ describe('Api get surroundings requests', () => {
 
         ApiFunctions.get(
           http,
-          'buildings/' + firstBuilding.building_id + '/surroundings',
+          'buildings/' + buildingId + '/surroundings',
           surroundings => {
             console.log('surroundings', surroundings);
 
-            // Top shot and candidates
-            expect(surroundings.top_shot_id).toBeDefined();
-            expect(surroundings.candidates_ids).toBeDefined();
-            expect(Array.isArray(surroundings.candidates_ids)).toBeTruthy();
-
-            // We check the geojson
-            expect(surroundings.geojson).toBeDefined();
-            expect(surroundings.geojson.crs).toBeDefined();
-            expect(surroundings.geojson.features).toBeDefined();
-            expect(Array.isArray(surroundings.geojson.features)).toBeTruthy();
-            expect(surroundings.geojson.type).toBeDefined();
-
+            Testers.validateSurroundings(surroundings);
 
             ApiFunctions.delete(
               http,
@@ -126,7 +101,6 @@ describe('Api get surroundings requests', () => {
               },
               httpError.bind(this, done)
             );
-
           },
           httpError.bind(this, done)
         );
@@ -134,5 +108,4 @@ describe('Api get surroundings requests', () => {
       httpError.bind(this, done)
     );
   });
-
 });

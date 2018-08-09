@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ApiFunctions } from '../apiFunctions';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {Testers} from './testers';
 
 function httpError(done, error) {
   expect(error.status !== 500).toBeTruthy(error.message);
@@ -79,15 +80,7 @@ describe('Api List requests', () => {
       http,
       'sites',
       sites => {
-        expect(Array.isArray(sites)).toBeTruthy();
-
-        sites.forEach(site => {
-          expect(site.site_id).toBeDefined('id not defined');
-          if (usersActive) expect(site.user).toBeDefined('User not defined');
-          expect(site.updated).toBeDefined('Updated date not defined');
-          expect(site.created).toBeDefined('Created date not defined');
-        });
-
+        Testers.validateSites(sites, usersActive);
         done();
       },
       httpError.bind(this, done)
@@ -98,15 +91,7 @@ describe('Api List requests', () => {
       http,
       'buildings',
       buildings => {
-        expect(Array.isArray(buildings)).toBeTruthy();
-
-        buildings.forEach(building => {
-          expect(building.building_id).toBeDefined('id not defined');
-          if (usersActive) expect(building.user).toBeDefined('User not defined');
-          expect(building.updated).toBeDefined('Updated date not defined');
-          expect(building.created).toBeDefined('Created date not defined');
-        });
-
+        Testers.validateBuildings(buildings, usersActive);
         done();
       },
       httpError.bind(this, done)
@@ -117,15 +102,7 @@ describe('Api List requests', () => {
       http,
       'units',
       units => {
-        expect(Array.isArray(units)).toBeTruthy();
-
-        units.forEach(unit => {
-          expect(unit.unit_id).toBeDefined('id not defined');
-          if (usersActive) expect(unit.user).toBeDefined('User not defined');
-          expect(unit.updated).toBeDefined('Updated date not defined');
-          expect(unit.created).toBeDefined('Created date not defined');
-        });
-
+        Testers.validateUnits(units, usersActive);
         done();
       },
       httpError.bind(this, done)
@@ -136,15 +113,7 @@ describe('Api List requests', () => {
       http,
       'layouts',
       layouts => {
-        expect(Array.isArray(layouts)).toBeTruthy();
-
-        layouts.forEach(layout => {
-          expect(layout.layout_id).toBeDefined('id not defined');
-          if (usersActive) expect(layout.user).toBeDefined('User not defined');
-          expect(layout.updated).toBeDefined('Updated date not defined');
-          expect(layout.created).toBeDefined('Created date not defined');
-        });
-
+        Testers.validateLayouts(layouts, usersActive);
         done();
       },
       httpError.bind(this, done)

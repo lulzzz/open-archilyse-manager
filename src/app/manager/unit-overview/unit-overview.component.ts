@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GridOptions } from 'ag-grid';
-import { MatCheckboxComponent } from '../../_shared-components/mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from '../../_shared-components/procent-renderer/procent-renderer.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Layout, Unit } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import {urlPortfolio} from '../url';
+import { urlPortfolio } from '../url';
+import { CellRender } from '../cellRender';
+import { ColumnDefinitions } from '../columnDefinitions';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -37,40 +37,58 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   buildColumDefinitions(buildings) {
     this.columnDefs = [
-      { headerName: 'Unit_id', field: 'unit_id', width: 190, editable: false },
       {
-        headerName: 'Building_id',
-        field: 'building_id',
-        width: 230,
-        cellRenderer: this.viewBuilding,
-        cellEditor: 'agPopupSelectCellEditor',
-        cellEditorParams: {
-          values: buildings.map(building => building.building_id),
-        },
-        editable: true,
+        headerName: 'Building',
+        children: [
+          {
+            headerName: 'Building_id',
+            field: 'building_id',
+            width: 230,
+            cellRenderer: this.viewBuilding,
+            cellEditor: 'agPopupSelectCellEditor',
+            cellEditorParams: {
+              values: buildings.map(building => building.building_id),
+            },
+            editable: true,
+          },
+        ],
       },
-      { headerName: 'Name', field: 'name', editable: true },
-      { headerName: 'Description', field: 'description', editable: true },
       {
-        headerName: 'Layouts',
-        field: 'layouts',
-        filter: 'agNumberColumnFilter',
-        width: 90,
-        cellRenderer: this.viewLayouts,
-        editable: false,
+        headerName: 'Unit',
+        children: [
+          { headerName: 'Id', field: 'unit_id', width: 190, editable: false },
+          { headerName: 'Name', field: 'name', editable: true },
+          { headerName: 'Description', field: 'description', editable: true },
+          {
+            headerName: 'Layouts',
+            field: 'layouts',
+            filter: 'agNumberColumnFilter',
+            width: 90,
+            cellRenderer: this.viewLayouts,
+            editable: false,
+          },
+        ],
       },
-
-      { headerName: 'Address Line1', field: 'line1', editable: true },
-      { headerName: 'Address Line2', field: 'line2', editable: true },
-      { headerName: 'Address Line3', field: 'line3', editable: true },
+      {
+        headerName: 'Unit address',
+        children: [
+          { headerName: 'Line1', field: 'line1', editable: true },
+          { headerName: 'Line2', field: 'line2', editable: true },
+          { headerName: 'Line3', field: 'line3', editable: true },
+        ],
+      },
       {
         headerName: 'Images',
-        field: 'images',
-        cellRenderer: ManagerFunctions.viewImg,
-        editable: false,
+        children: [
+          {
+            headerName: 'Images',
+            field: 'images',
+            cellRenderer: CellRender.viewImg,
+            editable: false,
+          },
+        ],
       },
-
-      ...ManagerFunctions.metaUserAndData,
+      ...ColumnDefinitions.metaUserAndData,
     ];
   }
 
@@ -113,7 +131,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   viewLayouts(params) {
     const number = params.value > 0 ? params.value : 0;
-    return number + `<a href='${urlPortfolio}/layout#unit_id=` + params.data.unit_id + `' > View </a>`;
+    return (
+      number + `<a href='${urlPortfolio}/layout#unit_id=` + params.data.unit_id + `' > View </a>`
+    );
   }
 
   ngOnInit() {
@@ -141,11 +161,17 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             columnDefs: this.columnDefs,
 
             /** Pagination */
-            ...ManagerFunctions.pagination,
-            ...ManagerFunctions.columnOptions,
+            ...ColumnDefinitions.pagination,
+            ...ColumnDefinitions.columnOptions,
 
             onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(this.http, params, 'unit_id', 'units', this.gridOptions.api);
+              ManagerFunctions.reactToEdit(
+                this.http,
+                params,
+                'unit_id',
+                'units',
+                this.gridOptions.api
+              );
             },
 
             onFilterChanged: params => {
@@ -197,5 +223,21 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+
+  /**
+   * Export functions
+   */
+  export() {
+    this.gridOptions.api.exportDataAsCsv({
+      columnSeparator: ';',
+    });
+  }
+  exportSelected() {
+    this.gridOptions.api.exportDataAsCsv({
+      onlySelected: true,
+      columnSeparator: ';',
+    });
   }
 }
