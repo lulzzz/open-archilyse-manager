@@ -2,14 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/auth.guard';
 import { ManagerComponent } from './manager.component';
-import { OverviewComponent } from './overview/overview.component';
 
 import { BuildingOverviewComponent } from './building-overview/building-overview.component';
 import { CountryOverviewComponent } from './country-overview/country-overview.component';
 import { RegionOverviewComponent } from './region-overview/region-overview.component';
 import { UnitOverviewComponent } from './unit-overview/unit-overview.component';
 import { SiteOverviewComponent } from './site-overview/site-overview.component';
-import {LayoutOverviewComponent} from './layout-overview/layout-overview.component';
+import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
 
 const routes: Routes = [
   {
@@ -18,12 +17,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: OverviewComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'overview',
-        component: OverviewComponent,
+        component: CountryOverviewComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -58,7 +52,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        component: OverviewComponent,
+        component: CountryOverviewComponent,
         redirectTo: '',
       },
     ],

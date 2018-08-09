@@ -1,3 +1,5 @@
+import {} from 'jasmine';
+
 export class Testers {
   static validateCommon(object, usersActive: boolean) {
     if (usersActive) {

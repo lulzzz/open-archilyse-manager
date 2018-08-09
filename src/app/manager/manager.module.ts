@@ -10,7 +10,6 @@ import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-che
 import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
 import { MatCheckboxModule } from '@angular/material';
 
-import { OverviewComponent } from './overview/overview.component';
 import { RegionOverviewComponent } from './region-overview/region-overview.component';
 import { CountryOverviewComponent } from './country-overview/country-overview.component';
 
@@ -36,7 +35,6 @@ import { LayoutOverviewComponent } from './layout-overview/layout-overview.compo
   ],
   declarations: [
     ManagerComponent,
-    OverviewComponent,
     MatCheckboxComponent,
     ProcentRendererComponent,
     BuildingOverviewComponent,
