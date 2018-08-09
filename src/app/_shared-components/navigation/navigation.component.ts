@@ -46,11 +46,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
      */
     this.options = [
       {
-        tooltip: 'Global overview',
-        title: 'Global',
-        link: '/manager',
-      },
-      {
         tooltip: 'Country overview',
         title: 'Country',
         link: '/manager/country',
@@ -62,7 +57,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       },
       {
         tooltip: 'Site overview',
-        title: 'Sites',
+        title: 'Site',
         link: '/manager/site',
       },
       {

@@ -8,6 +8,7 @@ import { Building, Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
 import { urlPortfolio } from '../url';
 import { ColumnDefinitions } from '../columnDefinitions';
+import { CellRender } from '../cellRender';
 
 @Component({
   selector: 'app-site-overview',
@@ -39,6 +40,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
         { headerName: 'Site_id', field: 'site_id', width: 190, editable: false },
         { headerName: 'Name', field: 'name', width: 190, editable: true },
         { headerName: 'Description', field: 'description', width: 300, editable: true },
+        /**
         {
           headerName: 'Buildings',
           field: 'buildings',
@@ -47,7 +49,19 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           cellRenderer: this.viewBuildings,
           editable: false,
         },
+         */
       ],
+    },
+    {
+      headerName: 'Count',
+      children: ColumnDefinitions.getBuildingsUnitsLayouts(
+        CellRender.viewBuildingsCountry,
+        CellRender.viewUnitsCountry
+      ),
+    },
+    {
+      headerName: 'Progress',
+      children: ColumnDefinitions.progressProcents,
     },
     ...ColumnDefinitions.metaUserAndData,
   ];
@@ -79,19 +93,27 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     /** SITES */
-    ApiFunctions.get(this.http, 'sites', sites => {
-      console.log('sites', sites);
-
-      ApiFunctions.get(this.http, 'buildings', buildings => {
-        console.log('buildings', buildings);
-
-        const sitesArray = <Site[]>sites;
-        const buildingsArray = <Building[]>buildings;
+    ManagerFunctions.requestAllData(
+      this.http,
+      (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
+        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
         sitesArray.forEach(site => {
-          site.buildings = buildingsArray.filter(
+          const buildingsThisSite = buildingsArray.filter(
             building => building.site_id === site.site_id
-          ).length;
+          );
+
+          const progressResult = ManagerFunctions.progressOutOfBuildings(
+            buildingsThisSite,
+            unitsArray,
+            layoutsArray
+          );
+
+          site.buildings = progressResult.numberOfBuildings;
+          site.units = progressResult.numberOfUnits;
+          site.layouts = progressResult.numberOfLayouts;
+          site.progress = progressResult.progressOfBuildings;
+          site.progressLayout = progressResult.progressOfLayouts;
         });
 
         console.log('sitesArray', sitesArray);
@@ -134,8 +156,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
-      });
-    });
+      }
+    );
   }
 
   delete() {

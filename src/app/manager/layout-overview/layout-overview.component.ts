@@ -46,22 +46,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   buildColumDefinitions(layouts, units, buildings) {
     this.columnDefs = [
       {
-        headerName: 'Unit',
-        children: [
-          {
-            headerName: 'Id',
-            field: 'unit_id',
-            width: 230,
-            cellRenderer: CellRender.viewUnit,
-            cellEditor: 'agPopupSelectCellEditor',
-            cellEditorParams: {
-              values: units.map(unit => unit.unit_id),
-            },
-            editable: true,
-          },
-        ],
-      },
-      {
         headerName: 'Building',
         children: [
           {
@@ -81,6 +65,22 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
+          },
+        ],
+      },
+      {
+        headerName: 'Unit',
+        children: [
+          {
+            headerName: 'Id',
+            field: 'unit_id',
+            width: 230,
+            cellRenderer: CellRender.viewUnit,
+            cellEditor: 'agPopupSelectCellEditor',
+            cellEditorParams: {
+              values: units.map(unit => unit.unit_id),
+            },
+            editable: true,
           },
         ],
       },

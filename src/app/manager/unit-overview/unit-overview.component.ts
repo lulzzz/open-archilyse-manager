@@ -24,6 +24,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   selectedNodes = [];
   selectedRows = [];
 
+  buildingsArray;
+
   gridApi;
   gridColumnApi;
 
@@ -51,6 +53,13 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             },
             editable: true,
           },
+          {
+            headerName: 'Georeferenced',
+            field: 'building_referenced',
+            cellRenderer: 'checkboxRenderer',
+            width: 100,
+            cellRendererParams: { editable: false },
+          },
         ],
       },
       {
@@ -59,13 +68,25 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           { headerName: 'Id', field: 'unit_id', width: 190, editable: false },
           { headerName: 'Name', field: 'name', editable: true },
           { headerName: 'Description', field: 'description', editable: true },
+        ],
+      },
+      {
+        headerName: 'Layouts',
+        children: [
           {
-            headerName: 'Layouts',
+            headerName: 'Amount',
             field: 'layouts',
             filter: 'agNumberColumnFilter',
             width: 90,
             cellRenderer: this.viewLayouts,
             editable: false,
+          },
+          {
+            headerName: 'Progress',
+            field: 'progressLayout',
+            cellRenderer: 'procentRenderer',
+            filter: 'agNumberColumnFilter',
+            cellRendererParams: { editable: false },
           },
         ],
       },
@@ -136,6 +157,18 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  unitReactionToEdit(nodeData, element) {
+    // if the new Layout has new unit id, we update the building data.
+    if (element.building_id) {
+      const buildingThisUnit = this.buildingsArray.find(
+        building => building.building_id === nodeData.building_id
+      );
+
+      nodeData['building_referenced'] =
+        buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
+    }
+  }
+
   ngOnInit() {
     /** UNITS */
 
@@ -146,14 +179,25 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         ApiFunctions.get(this.http, 'units', units => {
           console.log('units', units);
 
-          const buildingsArray = <Building[]>buildings;
+          this.buildingsArray = <Building[]>buildings;
           const layoutsArray = <Layout[]>layouts;
           const unitsArray = <Unit[]>units;
 
           this.buildColumDefinitions(buildings);
 
           unitsArray.forEach(unit => {
-            unit.layouts = layoutsArray.filter(layout => layout.unit_id === unit.unit_id).length;
+            const layoutsThisUnit = layoutsArray.filter(layout => layout.unit_id === unit.unit_id);
+            unit.layouts = layoutsThisUnit.length;
+            unit['progressLayout'] = layoutsThisUnit.filter(layout =>
+              ManagerFunctions.isReferencedLayout(layout)
+            ).length;
+
+            const buildingThisUnit = this.buildingsArray.find(
+              building => building.building_id === unit.building_id
+            );
+
+            unit['building_referenced'] =
+              buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
           });
 
           this.gridOptions = <GridOptions>{
@@ -170,7 +214,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
                 params,
                 'unit_id',
                 'units',
-                this.gridOptions.api
+                this.gridOptions.api,
+                this.unitReactionToEdit.bind(this)
               );
             },
 
@@ -224,7 +269,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       this.fragment_sub.unsubscribe();
     }
   }
-
 
   /**
    * Export functions

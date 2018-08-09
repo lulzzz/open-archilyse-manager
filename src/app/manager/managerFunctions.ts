@@ -16,6 +16,7 @@ export class ManagerFunctions {
   }
 
   public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray) {
+
     const numBuildings = buildingsList.length;
     const buildingsReferenced = buildingsList.filter(building =>
       ManagerFunctions.isReferencedBuilding(building)

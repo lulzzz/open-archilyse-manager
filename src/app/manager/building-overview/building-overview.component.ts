@@ -58,14 +58,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           { headerName: 'Id', field: 'building_id', width: 190, editable: false },
           { headerName: 'Name', field: 'name', editable: true },
           { headerName: 'Description', field: 'description', editable: true },
-          {
-            headerName: 'Units',
-            field: 'units',
-            filter: 'agNumberColumnFilter',
-            width: 90,
-            cellRenderer: this.viewUnits,
-            editable: false,
-          },
         ],
       },
       {
@@ -80,6 +72,38 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           { headerName: 'Street', field: 'address.street', editable: true },
           { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
           { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
+        ],
+      },
+      {
+        headerName: 'Units',
+        children: [
+          {
+            headerName: 'Units',
+            field: 'units',
+            filter: 'agNumberColumnFilter',
+            width: 90,
+            cellRenderer: this.viewUnits,
+            editable: false,
+          },
+          {
+            headerName: 'Layouts',
+            field: 'layouts',
+            filter: 'agNumberColumnFilter',
+            width: 90,
+            editable: false,
+          },
+        ],
+      },
+      {
+        headerName: 'Progress',
+        children: [
+          {
+            headerName: 'Progress Layouts',
+            field: 'progressLayout',
+            cellRenderer: 'procentRenderer',
+            filter: 'agNumberColumnFilter',
+            cellRendererParams: { editable: false },
+          },
         ],
       },
       {
@@ -132,69 +156,66 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     /** BUILDINGS */
-    ApiFunctions.get(this.http, 'sites', sites => {
-      console.log('sites', sites);
+    ManagerFunctions.requestAllData(
+      this.http,
+      (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
+        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
-      ApiFunctions.get(this.http, 'units', units => {
-        console.log('units', units);
+        this.buildColumDefinitions(sitesArray);
 
-        ApiFunctions.get(this.http, 'buildings', buildings => {
-          console.log('buildings', buildings);
+        buildingsArray.forEach(building => {
+          const progressResult = ManagerFunctions.progressOutOfBuildings(
+            [building],
+            unitsArray,
+            layoutsArray
+          );
 
-          const sitesArray = <Site[]>sites;
-          const unitsArray = <Unit[]>units;
-          const buildingsArray = <Building[]>buildings;
-
-          this.buildColumDefinitions(sites);
-
-          buildingsArray.forEach(building => {
-            building.units = unitsArray.filter(
-              unit => unit.building_id === building.building_id
-            ).length;
-          });
-
-          this.gridOptions = <GridOptions>{
-            rowData: buildingsArray,
-            columnDefs: this.columnDefs,
-
-            /** Pagination */
-            ...ColumnDefinitions.pagination,
-            ...ColumnDefinitions.columnOptions,
-
-            onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(
-                this.http,
-                params,
-                'building_id',
-                'buildings',
-                this.gridOptions.api
-              );
-            },
-
-            onFilterChanged: params => {
-              const model = params.api.getFilterModel();
-              this.filterModelSet = model !== null && Object.keys(model).length > 0;
-            },
-            onSelectionChanged: () => {
-              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-              this.selectedRows = this.gridOptions.api.getSelectedRows();
-            },
-            onGridReady: params => {
-              this.gridApi = params.api;
-              this.gridColumnApi = params.columnApi;
-
-              // this.gridOptions.api.sizeColumnsToFit();
-
-              this.fragment_sub = ManagerFunctions.setDefaultFilters(
-                this.route,
-                this.columnDefs,
-                this.gridApi
-              );
-            },
-          };
+          building.units = progressResult.numberOfUnits;
+          building.layouts = progressResult.numberOfLayouts;
+          building.progressLayout = progressResult.progressOfLayouts;
         });
-      });
-    });
+
+        this.gridOptions = <GridOptions>{
+          rowData: buildingsArray,
+          columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ColumnDefinitions.pagination,
+          ...ColumnDefinitions.columnOptions,
+
+          onCellValueChanged: params => {
+            ManagerFunctions.reactToEdit(
+              this.http,
+              params,
+              'building_id',
+              'buildings',
+              this.gridOptions.api
+            );
+          },
+
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+
+            // this.gridOptions.api.sizeColumnsToFit();
+
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
+          },
+        };
+      }
+    );
   }
 
   clearSelection() {
