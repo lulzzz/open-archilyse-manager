@@ -32,6 +32,8 @@
     "@toverux/ngx-sweetalert2": "^3.4.0",
     "@types/hammerjs": "^2.0.35",
     "@types/snapsvg": "^0.4.30",
+    "ag-grid": "^18.1.1",
+    "ag-grid-angular": "^18.1.0",
     "angular-osm": "^1.2.2",
     "angular-pipes": "^7.1.0",
     "angular-translate": "^2.17.0",

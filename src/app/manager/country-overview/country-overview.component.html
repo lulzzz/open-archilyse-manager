@@ -1,0 +1,23 @@
+<h1>
+  Country overview
+</h1>
+<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+<div *ngIf="!loading && !generalError" class="topControls">
+  <div>
+    <button class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+    <button class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
+  </div>
+  <div>
+    <button class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+    <button class="btn yellow" (click)="export()" > CSV </button>
+  </div>
+</div>
+
+
+<ag-grid-angular
+  *ngIf="!loading && !generalError && gridOptions"
+  style="width: 100%; height: 100%;"
+  class="ag-theme-balham"
+  [gridOptions]="gridOptions">
+</ag-grid-angular>

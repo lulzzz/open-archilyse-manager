@@ -1,8 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/auth.guard';
-import {ManagerComponent} from './manager.component';
-import {OverviewComponent} from './overview/overview.component';
+import { ManagerComponent } from './manager.component';
+
+import { BuildingOverviewComponent } from './building-overview/building-overview.component';
+import { CountryOverviewComponent } from './country-overview/country-overview.component';
+import { RegionOverviewComponent } from './region-overview/region-overview.component';
+import { UnitOverviewComponent } from './unit-overview/unit-overview.component';
+import { SiteOverviewComponent } from './site-overview/site-overview.component';
+import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -10,14 +17,43 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: OverviewComponent,
-        /** The Guards have to be in every children because they don't activate switching between children */
+        component: CountryOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'country',
+        component: CountryOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'region',
+        component: RegionOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'site',
+        component: SiteOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'building',
+        component: BuildingOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'unit',
+        component: UnitOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'layout',
+        component: LayoutOverviewComponent,
         canActivate: [AuthGuard],
       },
       {
         path: '**',
-        component: OverviewComponent,
-        // redirectTo: '',
+        component: CountryOverviewComponent,
+        redirectTo: '',
       },
     ],
   },
@@ -28,4 +64,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [AuthGuard],
 })
-export class ManagerRoutingModule { }
+export class ManagerRoutingModule {}

@@ -1,0 +1,14 @@
+@import 'colors';
+@import "~ag-grid/dist/styles/ag-grid.css";
+@import "~ag-grid/dist/styles/ag-theme-balham.css";
+
+.mat-checkbox-disabled .mat-checkbox-background{
+  background-color: #d3f0e1 !important;
+}
+
+.ag-theme-balham{
+  a{
+    color: $blue;
+    text-decoration: underline;
+  }
+}

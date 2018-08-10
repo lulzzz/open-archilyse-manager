@@ -1,0 +1,8 @@
+::ng-deep
+.mat-checkbox-layout {
+  /* horizontally align the checkbox */
+  width: 100%;
+  display: inline-block !important;
+  text-align: center;
+  margin-top: -4px; /* to offset the cells internal padding - could be done in cells CSS instead*/
+}
