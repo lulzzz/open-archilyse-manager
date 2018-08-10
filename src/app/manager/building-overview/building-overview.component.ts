@@ -55,7 +55,13 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       {
         headerName: 'Building',
         children: [
-          { headerName: 'Id', field: 'building_id', width: 190, editable: false },
+          {
+            headerName: 'Id',
+            field: 'building_id',
+            width: 190,
+            editable: false,
+            cellClass: 'idCell',
+          },
           { headerName: 'Name', field: 'name', editable: true },
           { headerName: 'Description', field: 'description', editable: true },
         ],
@@ -67,6 +73,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Country',
             field: 'address.country',
             editable: true,
+            cellClass: 'readOnly',
           },
           { headerName: 'City', field: 'address.city', editable: true },
           { headerName: 'Street', field: 'address.street', editable: true },
@@ -84,6 +91,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             width: 90,
             cellRenderer: this.viewUnits,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Layouts',
@@ -91,6 +99,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             filter: 'agNumberColumnFilter',
             width: 90,
             editable: false,
+            cellClass: 'readOnly',
           },
         ],
       },
@@ -103,6 +112,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: 'procentRenderer',
             filter: 'agNumberColumnFilter',
             cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
           },
         ],
       },

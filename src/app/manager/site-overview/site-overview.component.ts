@@ -37,7 +37,13 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     {
       headerName: 'Site',
       children: [
-        { headerName: 'Site_id', field: 'site_id', width: 190, editable: false },
+        {
+          headerName: 'Site_id',
+          field: 'site_id',
+          width: 190,
+          editable: false,
+          cellClass: 'idCell',
+        },
         { headerName: 'Name', field: 'name', width: 190, editable: true },
         { headerName: 'Description', field: 'description', width: 300, editable: true },
         /**

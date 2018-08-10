@@ -29,13 +29,20 @@ export class ColumnDefinitions {
     {
       headerName: 'Log',
       children: [
-        { headerName: 'User_id', field: 'user_id', width: 100, editable: false },
+        {
+          headerName: 'User_id',
+          field: 'user_id',
+          width: 100,
+          editable: false,
+          cellClass: 'readOnly',
+        },
         {
           headerName: 'Created',
           field: 'created',
           width: 100,
           cellRenderer: CellRender.viewDate,
           editable: false,
+          cellClass: 'readOnly',
         },
         {
           headerName: 'Updated',
@@ -43,6 +50,7 @@ export class ColumnDefinitions {
           width: 100,
           cellRenderer: CellRender.viewDate,
           editable: false,
+          cellClass: 'readOnly',
         },
       ],
     },
@@ -55,6 +63,7 @@ export class ColumnDefinitions {
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'Progress Layouts',
@@ -62,6 +71,7 @@ export class ColumnDefinitions {
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
   ];
 
@@ -93,6 +103,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 140,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'Data Complete',
@@ -100,6 +111,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 140,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'DPOI',
@@ -107,6 +119,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 100,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'View & Sun',
@@ -114,6 +127,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 120,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'Acoustics',
@@ -121,6 +135,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 100,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'WBS',
@@ -128,6 +143,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 100,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
     {
       headerName: 'BasicFeatures',
@@ -135,6 +151,7 @@ export class ColumnDefinitions {
       cellRenderer: 'checkboxRenderer',
       width: 140,
       cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
     },
   ];
 
@@ -147,6 +164,7 @@ export class ColumnDefinitions {
         width: 100,
         cellRenderer: viewBuildings,
         editable: false,
+        cellClass: 'readOnly',
       },
       {
         headerName: 'Units',
@@ -155,6 +173,7 @@ export class ColumnDefinitions {
         width: 100,
         cellRenderer: viewUnits,
         editable: false,
+        cellClass: 'readOnly',
       },
       {
         headerName: 'Layouts',
@@ -162,6 +181,7 @@ export class ColumnDefinitions {
         filter: 'agNumberColumnFilter',
         width: 100,
         editable: false,
+        cellClass: 'readOnly',
       },
     ];
   }

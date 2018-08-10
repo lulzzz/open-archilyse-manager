@@ -43,6 +43,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
             field: 'country',
             cellRenderer: this.viewCountry,
             editable: false,
+            cellClass: 'readOnly',
           },
         ],
       },

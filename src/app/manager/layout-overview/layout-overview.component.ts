@@ -58,6 +58,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               values: buildings.map(building => building.building_id),
             },
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Georeferenced',
@@ -65,6 +66,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
           },
         ],
       },
@@ -92,6 +94,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             field: 'layout_id',
             width: 190,
             editable: false,
+            cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', editable: true },
           { headerName: 'Description', field: 'description', editable: true },
@@ -116,12 +119,14 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             field: 'floorPlan',
             cellRenderer: CellRender.cellPdfDownloadLink,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Floors',
             field: 'floors',
             cellRenderer: CellRender.viewFloors,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Model_structure',
@@ -135,6 +140,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.areaInfoTotal,
             width: 100,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Other areas',
@@ -142,6 +148,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Toilets',
@@ -149,6 +156,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Kitchens',
@@ -156,6 +164,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
+            cellClass: 'readOnly',
           },
           {
             headerName: 'Balcony',
@@ -163,6 +172,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
+            cellClass: 'readOnly',
           },
         ],
       },

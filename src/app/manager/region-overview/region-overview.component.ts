@@ -43,8 +43,9 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
             field: 'country',
             cellRenderer: this.viewCountry,
             editable: false,
+            cellClass: 'readOnly',
           },
-          { headerName: 'City', field: 'city', editable: false },
+          { headerName: 'City', field: 'city', editable: false, cellClass: 'readOnly', },
         ],
       },
       {
