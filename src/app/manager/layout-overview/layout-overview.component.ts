@@ -24,6 +24,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
+  generalError = null;
+  loading = true;
 
   selectedNodes = [];
   selectedRows = [];
@@ -187,6 +189,46 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
+      {
+        headerName: 'Simulations',
+        children: [
+          {
+            headerName: 'View',
+            field: 'simulations.view',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Wbs',
+            field: 'simulations.wbs',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Pathways',
+            field: 'simulations.pathways',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Basic features',
+            field: 'simulations.basic_features',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Accoustics',
+            field: 'simulations.accoustics',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+        ],
+      },
 
       ...ColumnDefinitions.metaUserAndData,
     ];
@@ -329,69 +371,74 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** LAYOUTS */
 
-    ApiFunctions.get(this.http, 'buildings', buildings => {
-      this.buildingsArray = <Building[]>buildings;
+    ManagerFunctions.requestAllData(
+      this.http,
+      (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
 
-      ApiFunctions.get(this.http, 'layouts', layouts => {
-        this.layoutsArray = <Layout[]>layouts;
+        this.loading = false;
 
-        ApiFunctions.get(this.http, 'units', units => {
-          this.unitsArray = <Unit[]>units;
+        this.buildingsArray = buildingsArray;
+        this.unitsArray = unitsArray;
+        this.layoutsArray = layoutsArray;
 
-          this.layoutsArray.forEach(layout => {
-            this.setLayoutBuildingData(layout);
-            this.analyzeModelStructure(layout);
-          });
-
-          this.buildColumDefinitions(layouts, units, buildings);
-
-          this.gridOptions = <GridOptions>{
-            rowData: this.layoutsArray,
-            columnDefs: this.columnDefs,
-
-            /** Pagination */
-            ...ColumnDefinitions.pagination,
-            ...ColumnDefinitions.columnOptions,
-
-            onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(
-                this.http,
-                params,
-                'layout_id',
-                'layouts',
-                this.gridOptions.api,
-                this.layoutReactionToEdit.bind(this)
-              );
-            },
-
-            onFilterChanged: params => {
-              const model = params.api.getFilterModel();
-              this.filterModelSet = model !== null && Object.keys(model).length > 0;
-            },
-            onSelectionChanged: () => {
-              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-              this.selectedRows = this.gridOptions.api.getSelectedRows();
-
-              if (this.selectedRows && this.selectedRows.length === 1) {
-                console.log('this.selectedRows', this.selectedRows[0]);
-              }
-            },
-            onGridReady: params => {
-              this.gridApi = params.api;
-              this.gridColumnApi = params.columnApi;
-
-              // this.gridOptions.api.sizeColumnsToFit();
-
-              this.fragment_sub = ManagerFunctions.setDefaultFilters(
-                this.route,
-                this.columnDefs,
-                this.gridApi
-              );
-            },
-          };
+        this.layoutsArray.forEach(layout => {
+          this.setLayoutBuildingData(layout);
+          this.analyzeModelStructure(layout);
         });
-      });
-    });
+
+        this.buildColumDefinitions(layoutsArray, unitsArray, buildingsArray);
+
+        this.gridOptions = <GridOptions>{
+          rowData: this.layoutsArray,
+          columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ColumnDefinitions.pagination,
+          ...ColumnDefinitions.columnOptions,
+
+          onCellValueChanged: params => {
+            ManagerFunctions.reactToEdit(
+              this.http,
+              params,
+              'layout_id',
+              'layouts',
+              this.gridOptions.api,
+              this.layoutReactionToEdit.bind(this)
+            );
+          },
+
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+
+            if (this.selectedRows && this.selectedRows.length === 1) {
+              console.log('this.selectedRows', this.selectedRows[0]);
+            }
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+
+            // this.gridOptions.api.sizeColumnsToFit();
+
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
+          },
+        };
+      },
+      error => {
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+          }`;
+      }
+    );
   }
 
   layoutReactionToEdit(nodeData, element) {
@@ -472,6 +519,20 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * startSimulations
+   */
+  startSimulations() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    const layout_ids = nodes.map(node => node.data.layout_id);
+    layout_ids.forEach(layout_id => {
+      console.log('Start Layouts simulations for ', layout_id);
+      ApiFunctions.post(this.http, 'layouts/' + layout_id, {}, result => {
+        console.log('result', result, layout_id);
+      });
+    });
   }
 
   /**

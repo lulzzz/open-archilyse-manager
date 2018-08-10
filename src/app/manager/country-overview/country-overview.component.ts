@@ -19,6 +19,9 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
    * https://www.ag-grid.com/angular-getting-started/
    */
 
+  generalError = null;
+  loading = true;
+
   selectedNodes = [];
   selectedRows = [];
 
@@ -77,6 +80,8 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
+
+        this.loading = false;
 
         this.buildColumDefinitions();
 
@@ -144,6 +149,11 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
+      },
+      error => {
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+          }`;
       }
     );
   }

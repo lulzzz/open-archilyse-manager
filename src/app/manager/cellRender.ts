@@ -50,35 +50,42 @@ export class CellRender {
     const number = params.value > 0 ? params.value : 0;
     return (
       number +
-      ` <a href='/manager/building#address.country=` +
+      ` <a href='${urlPortfolio}/building#address.country=` +
       params.data.country +
       `' > View </a>`
+    );
+  }
+
+  public static viewBuildingsSite(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return (
+      number + `<a href='${urlPortfolio}/building#site_id=` + params.data.site_id + `' > View </a>`
     );
   }
 
   public static viewUnitsCountry(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number + ` <a href='/manager/unit#address.country=` + params.data.country + `' > View </a>`
+      number + ` <a href='${urlPortfolio}/unit#address.country=` + params.data.country + `' > View </a>`
     );
   }
 
   public static viewBuildingsCity(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
+      number + ` <a href='${urlPortfolio}/building#address.city=` + params.data.city + `' > View </a>`
     );
   }
 
   public static viewUnitsCity(params) {
     const number = params.value > 0 ? params.value : 0;
-    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
+    return number + ` <a href='${urlPortfolio}/unit#address.city=` + params.data.city + `' > View </a>`;
   }
 
   public static cellPdfDownloadLink(params) {
     if (params && params.value && params.value !== '') {
       return (
-        `<a href='/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
+        `<a href='${urlPortfolio}/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
       );
     }
     return '';
@@ -98,6 +105,10 @@ export class CellRender {
       }
     }
     return result;
+  }
+
+  public static viewSimulation(params) {
+    return params.value;
   }
 
   public static viewModel(params) {

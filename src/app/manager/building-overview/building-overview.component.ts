@@ -21,6 +21,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
    * https://www.ag-grid.com/angular-getting-started/
    */
 
+  generalError = null;
+  loading = true;
+
   selectedNodes = [];
   selectedRows = [];
 
@@ -129,6 +132,32 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         ],
       },
       {
+        headerName: 'Simulations',
+        children: [
+          {
+            headerName: 'Potential_view',
+            field: 'simulations.potential_view',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Accoustics',
+            field: 'simulations.accoustics',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'DPOI',
+            field: 'simulations.dpoi',
+            cellRenderer: CellRender.viewSimulation,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+        ],
+      },
+      {
         headerName: 'Images',
         children: [
           {
@@ -171,6 +200,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
+        this.loading = false;
+
         this.buildColumDefinitions(sitesArray);
 
         buildingsArray.forEach(building => {
@@ -206,6 +237,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            console.log('model', model);
           },
           onSelectionChanged: () => {
             this.selectedNodes = this.gridOptions.api.getSelectedNodes();
@@ -224,6 +256,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
+      },
+      error => {
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+        }`;
       }
     );
   }
@@ -306,6 +343,52 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
     }
+  }
+
+  /**
+   * startSimulations
+   */
+  startSimulations() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    const buildings = nodes.map(node => node.data);
+
+    const georefbuildings = buildings.filter(building =>
+      ManagerFunctions.isReferencedBuilding(building)
+    );
+
+    if (georefbuildings.length !== buildings.length) {
+      ManagerFunctions.showWarning(
+        'Not Georeferenced buildings',
+        `There are ${buildings.length -
+          georefbuildings.length} buildings in your selection that are not georeferenced. Those buildings would be skipped.`,
+        `Skip and continue`,
+        confirmed => {
+          if (confirmed) {
+            this.startSimulationsViaBuildings(buildings);
+          }
+        }
+      );
+    } else {
+      this.startSimulationsViaBuildings(buildings);
+    }
+  }
+
+  startSimulationsViaBuildings(buildings) {
+    buildings.forEach(building => {
+      console.log('Start Building simulations for ', building.building_id);
+      ApiFunctions.post(
+        this.http,
+        'buildings/' + building.building_id + '/simulations',
+        {
+          simulation_packages: ['dpoi'],
+        },
+        result => {
+          if (ManagerFunctions.isReferencedBuilding(building)) {
+            console.log('result', result, building.building_id);
+          }
+        }
+      );
+    });
   }
 
   /**

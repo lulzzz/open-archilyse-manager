@@ -20,6 +20,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
+  generalError = null;
+  loading = true;
 
   selectedNodes = [];
   selectedRows = [];
@@ -46,24 +48,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
         },
         { headerName: 'Name', field: 'name', width: 190, editable: true },
         { headerName: 'Description', field: 'description', width: 300, editable: true },
-        /**
-        {
-          headerName: 'Buildings',
-          field: 'buildings',
-          filter: 'agNumberColumnFilter',
-          width: 100,
-          cellRenderer: this.viewBuildings,
-          editable: false,
-        },
-         */
       ],
     },
     {
       headerName: 'Count',
-      children: ColumnDefinitions.getBuildingsUnitsLayouts(
-        CellRender.viewBuildingsCountry,
-        CellRender.viewUnitsCountry
-      ),
+      children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsSite, null),
     },
     {
       headerName: 'Progress',
@@ -73,13 +62,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
-
-  viewBuildings(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + `<a href='${urlPortfolio}/building#site_id=` + params.data.site_id + `' > View </a>`
-    );
-  }
 
   addRow() {
     ApiFunctions.post(
@@ -103,6 +85,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
+
+        this.loading = false;
 
         sitesArray.forEach(site => {
           const buildingsThisSite = buildingsArray.filter(
@@ -162,6 +146,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
+      },
+      error => {
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+          }`;
       }
     );
   }

@@ -16,7 +16,6 @@ export class ManagerFunctions {
   }
 
   public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray) {
-
     const numBuildings = buildingsList.length;
     const buildingsReferenced = buildingsList.filter(building =>
       ManagerFunctions.isReferencedBuilding(building)
@@ -82,7 +81,7 @@ export class ManagerFunctions {
     return layout.model_structure && layout.model_structure.id && layout.model_structure.children;
   }
 
-  public static requestAllData(httpService, onComplete) {
+  public static requestAllData(httpService, onComplete, onError) {
     /**
     Observable.forkJoin([
 
@@ -97,10 +96,10 @@ export class ManagerFunctions {
           ApiFunctions.get(httpService, 'sites', sites => {
             const sitesArray = <Site[]>sites;
             onComplete(sitesArray, buildingsArray, unitsArray, layoutsArray);
-          });
-        });
-      });
-    });
+          }, onError);
+        }, onError);
+      }, onError);
+    }, onError);
   }
 
   public static openNewWindow(url) {
@@ -116,18 +115,23 @@ export class ManagerFunctions {
   public static setDefaultFilters(route, columnDefs, gridApi) {
     return route.fragment.subscribe(fragment => {
       const urlParams = parseParms(fragment);
-
       const model = {};
       Object.keys(urlParams).forEach(key => {
-        const found = columnDefs.find(columnDef => columnDef.field === key);
-        if (found) {
-          model[key] = {
-            filter: urlParams[key],
-            filterType: 'text',
-            type: 'equals',
-          };
-        }
+        columnDefs.forEach(group => {
+          const found = group.children.find(columnDef => columnDef.field === key);
+
+          console.log('found', found);
+          if (found) {
+            model[key] = {
+              filter: urlParams[key],
+              filterType: 'text',
+              type: 'equals',
+            };
+          }
+        });
       });
+
+      console.log('model', model);
       gridApi.setFilterModel(model);
     });
   }
@@ -171,6 +175,18 @@ export class ManagerFunctions {
           remove: selectedRows,
         });
       }
+    });
+  }
+
+  public static showWarning(titleVal, textVal, confirmButtonTextVal, onResult) {
+    swal({
+      title: titleVal,
+      text: textVal,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonTextVal,
+      customClass: 'arch',
+    }).then(result => {
+      onResult(result.value);
     });
   }
 

@@ -1,26 +1,39 @@
 <h1>
   Layout overview
 </h1>
+<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+<div *ngIf="!loading && !generalError" class="topControls">
+  <div>
+    <button class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+    <button class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
+    <button class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
+    <button class="btn blue" (click)="selectNotDigitalized($event)" >Sel. Not Digitalized</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="georeference($event)" >Georeference ({{selectedNodes.length}})</button>
+    <button class="btn green" [disabled]="selectedNodes.length<=0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn green" (click)="addRow()">Add layout</button>
+  </div>
+  <div>
+    <button class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+    <button class="btn yellow" (click)="export()" > CSV </button>
+    &nbsp;&nbsp;&nbsp;
+    <button class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
+  </div>
+  <div *ngIf="selectedNodes.length===1">
+    Floor: <input id="floor" type="text" placeholder="Floor number" />
+    Source: <input id="sourceUrl" type="text" placeholder="Url to source" />
+    <button class="btn green" (click)="changeSource(false)" >Add source</button>
+    <button class="btn green" (click)="changeSource(true)" >Clear source</button>
+  </div>
 
-<button class="btn green" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-<button class="btn green" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
-<button class="btn green" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
-<button class="btn green" [disabled]="selectedNodes.length<=0" (click)="georeference($event)" >Georeference ({{selectedNodes.length}})</button>
-<button class="btn green" (click)="selectNotDigitalized($event)" >Sel. Not Digitalized</button>
-<button class="btn green" [disabled]="selectedNodes.length<=0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
-<button class="btn green" (click)="addRow()">Add layout</button>
-<button class="btn green" (click)="export()" > CSV </button>
-<button class="btn green" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-
-<div *ngIf="selectedNodes.length===1">
-  Floor: <input id="floor" type="text" placeholder="Floor number" />
-  Source: <input id="sourceUrl" type="text" placeholder="Url to source" />
-  <button class="btn green" (click)="changeSource(false)" >Add source</button> &nbsp;
-  <button class="btn green" (click)="changeSource(true)" >Clear source</button>
 </div>
 
+
+
 <ag-grid-angular
-  *ngIf="gridOptions"
+  *ngIf="!loading && !generalError && gridOptions"
   style="width: 100%; height: 100%;"
   class="ag-theme-balham"
   [gridOptions]="gridOptions">

@@ -20,6 +20,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
+  generalError = null;
+  loading = true;
 
   selectedNodes = [];
   selectedRows = [];
@@ -182,75 +184,76 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     /** UNITS */
 
-    ApiFunctions.get(this.http, 'buildings', buildings => {
-      console.log('buildings', buildings);
-      ApiFunctions.get(this.http, 'layouts', layouts => {
-        console.log('layouts', layouts);
-        ApiFunctions.get(this.http, 'units', units => {
-          console.log('units', units);
+    ManagerFunctions.requestAllData(
+      this.http,
+      (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
+        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
-          this.buildingsArray = <Building[]>buildings;
-          const layoutsArray = <Layout[]>layouts;
-          const unitsArray = <Unit[]>units;
+        this.loading = false;
 
-          this.buildColumDefinitions(buildings);
+        this.buildingsArray = buildingsArray;
+        this.buildColumDefinitions(buildingsArray);
 
-          unitsArray.forEach(unit => {
-            const layoutsThisUnit = layoutsArray.filter(layout => layout.unit_id === unit.unit_id);
-            unit.layouts = layoutsThisUnit.length;
-            unit['progressLayout'] = layoutsThisUnit.filter(layout =>
-              ManagerFunctions.isReferencedLayout(layout)
-            ).length;
+        unitsArray.forEach(unit => {
+          const layoutsThisUnit = layoutsArray.filter(layout => layout.unit_id === unit.unit_id);
+          unit.layouts = layoutsThisUnit.length;
+          unit['progressLayout'] = layoutsThisUnit.filter(layout =>
+            ManagerFunctions.isReferencedLayout(layout)
+          ).length;
 
-            const buildingThisUnit = this.buildingsArray.find(
-              building => building.building_id === unit.building_id
-            );
+          const buildingThisUnit = this.buildingsArray.find(
+            building => building.building_id === unit.building_id
+          );
 
-            unit['building_referenced'] =
-              buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
-          });
-
-          this.gridOptions = <GridOptions>{
-            rowData: unitsArray,
-            columnDefs: this.columnDefs,
-
-            /** Pagination */
-            ...ColumnDefinitions.pagination,
-            ...ColumnDefinitions.columnOptions,
-
-            onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(
-                this.http,
-                params,
-                'unit_id',
-                'units',
-                this.gridOptions.api,
-                this.unitReactionToEdit.bind(this)
-              );
-            },
-
-            onFilterChanged: params => {
-              const model = params.api.getFilterModel();
-              this.filterModelSet = model !== null || Object.keys(model).length > 0;
-            },
-            onSelectionChanged: () => {
-              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-              this.selectedRows = this.gridOptions.api.getSelectedRows();
-            },
-            onGridReady: params => {
-              this.gridApi = params.api;
-              this.gridColumnApi = params.columnApi;
-              // this.gridOptions.api.sizeColumnsToFit();
-              this.fragment_sub = ManagerFunctions.setDefaultFilters(
-                this.route,
-                this.columnDefs,
-                this.gridApi
-              );
-            },
-          };
+          unit['building_referenced'] =
+            buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
         });
-      });
-    });
+
+        this.gridOptions = <GridOptions>{
+          rowData: unitsArray,
+          columnDefs: this.columnDefs,
+
+          /** Pagination */
+          ...ColumnDefinitions.pagination,
+          ...ColumnDefinitions.columnOptions,
+
+          onCellValueChanged: params => {
+            ManagerFunctions.reactToEdit(
+              this.http,
+              params,
+              'unit_id',
+              'units',
+              this.gridOptions.api,
+              this.unitReactionToEdit.bind(this)
+            );
+          },
+
+          onFilterChanged: params => {
+            const model = params.api.getFilterModel();
+            this.filterModelSet = model !== null || Object.keys(model).length > 0;
+          },
+          onSelectionChanged: () => {
+            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+            this.selectedRows = this.gridOptions.api.getSelectedRows();
+          },
+          onGridReady: params => {
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+            // this.gridOptions.api.sizeColumnsToFit();
+            this.fragment_sub = ManagerFunctions.setDefaultFilters(
+              this.route,
+              this.columnDefs,
+              this.gridApi
+            );
+          },
+        };
+      },
+      error => {
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+        }`;
+      }
+    );
   }
 
   delete() {

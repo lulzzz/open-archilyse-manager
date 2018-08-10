@@ -18,6 +18,8 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
+  generalError = null;
+  loading = true;
 
   selectedNodes = [];
   selectedRows = [];
@@ -78,6 +80,8 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
+
+        this.loading = false;
 
         this.buildColumDefinitions();
 
@@ -172,6 +176,11 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
             );
           },
         };
+      },
+      error => {
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+          }`;
       }
     );
   }

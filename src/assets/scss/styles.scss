@@ -97,12 +97,36 @@ app-root {
 }
 
 
+.topControls{
+  display: inline-block;
+}
+.generalError{
+
+  .title{
+    font-size: 28px;
+  }
+
+  width: 100%;
+  text-align: center;
+  color: $red;
+  font-size: 22px;
+}
+
+.loading{
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+}
+
+
 .idCell{
   background: #fffdd1;
 }
 .readOnly{
   background: #e5fff3;
 }
+
+
 
 .ag-row-selected{
   .idCell{
