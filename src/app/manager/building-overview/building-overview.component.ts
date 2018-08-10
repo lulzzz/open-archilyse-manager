@@ -76,7 +76,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Country',
             field: 'address.country',
             editable: true,
-            cellClass: 'readOnly',
           },
           { headerName: 'City', field: 'address.city', editable: true },
           { headerName: 'Street', field: 'address.street', editable: true },
@@ -107,19 +106,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        headerName: 'Progress',
-        children: [
-          {
-            headerName: 'Progress Layouts',
-            field: 'progressLayout',
-            cellRenderer: 'procentRenderer',
-            filter: 'agNumberColumnFilter',
-            cellRendererParams: { editable: false },
-            cellClass: 'readOnly',
-          },
-        ],
-      },
-      {
         headerName: 'Georeference',
         children: [
           // { headerName: 'Building_reference', field: 'building_reference', editable: true },
@@ -135,9 +121,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Simulations',
         children: [
           {
-            headerName: 'Potential_view',
+            headerName: 'Potential view',
             field: 'simulations.potential_view',
             cellRenderer: CellRender.viewSimulation,
+            width: 140,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -145,6 +132,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Accoustics',
             field: 'simulations.accoustics',
             cellRenderer: CellRender.viewSimulation,
+            width: 140,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -152,10 +140,28 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'DPOI',
             field: 'simulations.dpoi',
             cellRenderer: CellRender.viewSimulation,
+            width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
         ],
+      },
+      {
+        headerName: 'Progress',
+        children: [
+          {
+            headerName: 'Layouts',
+            field: 'progressLayout',
+            cellRenderer: 'procentRenderer',
+            filter: 'agNumberColumnFilter',
+            cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
+          },
+        ],
+      },
+      {
+        headerName: 'Layout Simulations ',
+        children: ColumnDefinitions.progressSimsLayout,
       },
       {
         headerName: 'Images',
@@ -305,7 +311,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions.api.updateRowData({
           add: [building],
         });
-      }
+      },
+      ManagerFunctions.showErroruser
     );
   }
 
@@ -404,7 +411,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           if (ManagerFunctions.isReferencedBuilding(building)) {
             console.log('result', result, building.building_id);
           }
-        }
+        },
+        ManagerFunctions.showErroruser
       );
     });
   }

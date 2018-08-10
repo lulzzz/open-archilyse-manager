@@ -196,6 +196,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'View',
             field: 'simulations.view',
             cellRenderer: CellRender.viewSimulation,
+            width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -203,12 +204,14 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Wbs',
             field: 'simulations.wbs',
             cellRenderer: CellRender.viewSimulation,
+            width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
           {
             headerName: 'Pathways',
             field: 'simulations.pathways',
+            width: 100,
             cellRenderer: CellRender.viewSimulation,
             editable: false,
             cellClass: 'readOnly',
@@ -216,6 +219,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Basic features',
             field: 'simulations.basic_features',
+            width: 100,
             cellRenderer: CellRender.viewSimulation,
             editable: false,
             cellClass: 'readOnly',
@@ -223,6 +227,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Accoustics',
             field: 'simulations.accoustics',
+            width: 100,
             cellRenderer: CellRender.viewSimulation,
             editable: false,
             cellClass: 'readOnly',
@@ -269,6 +274,14 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       }
     }
 
+    /**
+     * When changing the floors, model structure gets loading
+     */
+    node.data.model_structure = 'Loading';
+    this.gridApi.updateRowData({
+      update: [node.data],
+    });
+
     const layout_id = node.data.layout_id;
     const url = 'layouts/' + layout_id;
 
@@ -278,7 +291,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       url,
       newValue,
       this.gridOptions.api,
-      this.layoutReactionToEdit.bind(this)
+      this.layoutReactionToEdit.bind(this),
+      ManagerFunctions.showErroruser
     );
   }
 
@@ -299,7 +313,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions.api.updateRowData({
           add: [layouts],
         });
-      }
+      },
+      ManagerFunctions.showErroruser
     );
   }
 
@@ -374,7 +389,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
-
         this.loading = false;
 
         this.buildingsArray = buildingsArray;
@@ -436,7 +450,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       error => {
         this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
           error.message
-          }`;
+        }`;
       }
     );
   }
@@ -548,9 +562,15 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     const layout_ids = nodes.map(node => node.data.layout_id);
     layout_ids.forEach(layout_id => {
       console.log('Start Layouts simulations for ', layout_id);
-      ApiFunctions.post(this.http, 'layouts/' + layout_id, {}, result => {
-        console.log('result', result, layout_id);
-      });
+      ApiFunctions.post(
+        this.http,
+        'layouts/' + layout_id,
+        {},
+        result => {
+          console.log('result', result, layout_id);
+        },
+        ManagerFunctions.showErroruser
+      );
     });
   }
 

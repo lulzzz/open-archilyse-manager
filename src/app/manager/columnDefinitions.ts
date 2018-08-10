@@ -58,7 +58,7 @@ export class ColumnDefinitions {
 
   public static progressProcents = [
     {
-      headerName: 'Progress',
+      headerName: 'Buildings',
       field: 'progress',
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
@@ -66,7 +66,7 @@ export class ColumnDefinitions {
       cellClass: 'readOnly',
     },
     {
-      headerName: 'Progress Layouts',
+      headerName: 'Layouts',
       field: 'progressLayout',
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
@@ -74,7 +74,6 @@ export class ColumnDefinitions {
       cellClass: 'readOnly',
     },
   ];
-
   public static progress = [
     {
       headerName: 'Delivered',
@@ -97,59 +96,73 @@ export class ColumnDefinitions {
       width: 100,
       cellRendererParams: { editable: true },
     },
+  ];
+
+  public static progressSimsBuilding = [
     {
-      headerName: 'Georeferenced',
-      field: 'georeferenced',
+      headerName: 'Potential view',
+      field: 'simBuildings.potential_view',
       cellRenderer: 'checkboxRenderer',
       width: 140,
-      cellRendererParams: { editable: false },
-      cellClass: 'readOnly',
-    },
-    {
-      headerName: 'Data Complete',
-      field: 'data',
-      cellRenderer: 'checkboxRenderer',
-      width: 140,
-      cellRendererParams: { editable: false },
-      cellClass: 'readOnly',
-    },
-    {
-      headerName: 'DPOI',
-      field: 'DPOI',
-      cellRenderer: 'checkboxRenderer',
-      width: 100,
-      cellRendererParams: { editable: false },
-      cellClass: 'readOnly',
-    },
-    {
-      headerName: 'View & Sun',
-      field: 'view',
-      cellRenderer: 'checkboxRenderer',
-      width: 120,
       cellRendererParams: { editable: false },
       cellClass: 'readOnly',
     },
     {
       headerName: 'Acoustics',
-      field: 'acoustics',
+      field: 'simBuildings.acoustics',
       cellRenderer: 'checkboxRenderer',
       width: 100,
       cellRendererParams: { editable: false },
       cellClass: 'readOnly',
     },
     {
-      headerName: 'WBS',
-      field: 'WBS',
+      headerName: 'DPOI',
+      field: 'simBuildings.dpoi',
+      cellRenderer: 'checkboxRenderer',
+      width: 100,
+      cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
+    },
+  ];
+
+  public static progressSimsLayout = [
+    {
+      headerName: 'View',
+      field: 'simLayouts.view',
       cellRenderer: 'checkboxRenderer',
       width: 100,
       cellRendererParams: { editable: false },
       cellClass: 'readOnly',
     },
     {
-      headerName: 'BasicFeatures',
-      field: 'basicFeatures',
+      headerName: 'Wbs',
+      field: 'simLayouts.wbs',
       cellRenderer: 'checkboxRenderer',
-      width: 140,
+      width: 100,
+      cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
+    },
+    {
+      headerName: 'Pathways',
+      field: 'simLayouts.pathways',
+      cellRenderer: 'checkboxRenderer',
+      width: 100,
+      cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
+    },
+    {
+      headerName: 'Basic features',
+      field: 'simLayouts.basic_features',
+      cellRenderer: 'checkboxRenderer',
+      width: 130,
+      cellRendererParams: { editable: false },
+      cellClass: 'readOnly',
+    },
+    {
+      headerName: 'Accoustics',
+      field: 'simLayouts.accoustics',
+      cellRenderer: 'checkboxRenderer',
+      width: 110,
       cellRendererParams: { editable: false },
       cellClass: 'readOnly',
     },

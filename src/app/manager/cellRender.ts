@@ -7,8 +7,6 @@ export class CellRender {
    */
 
   public static viewFloors(params) {
-    console.log('viewFloors', params);
-
     if (params.value && params.value !== '') {
       const floors = params.value.map(floor => {
         let text = 'View source';
@@ -52,7 +50,7 @@ export class CellRender {
       number +
       ` <a href='${urlPortfolio}/building#address.country=` +
       params.data.country +
-      `' > View </a>`
+      `' > View list</a>`
     );
   }
 
@@ -66,26 +64,38 @@ export class CellRender {
   public static viewUnitsCountry(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number + ` <a href='${urlPortfolio}/unit#address.country=` + params.data.country + `' > View </a>`
+      number +
+      ` <a href='${urlPortfolio}/unit#address.country=` +
+      params.data.country +
+      `' > View </a>`
     );
   }
 
   public static viewBuildingsCity(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number + ` <a href='${urlPortfolio}/building#address.city=` + params.data.city + `' > View </a>`
+      number +
+      ` <a href='${urlPortfolio}/building#address.city=` +
+      params.data.city +
+      `' > View </a>`
     );
   }
 
   public static viewUnitsCity(params) {
     const number = params.value > 0 ? params.value : 0;
-    return number + ` <a href='${urlPortfolio}/unit#address.city=` + params.data.city + `' > View </a>`;
+    return (
+      number + ` <a href='${urlPortfolio}/unit#address.city=` + params.data.city + `' > View </a>`
+    );
   }
 
   public static cellPdfDownloadLink(params) {
     if (params && params.value && params.value !== '') {
       return (
-        `<a href='${urlPortfolio}/assets/pdf/example.pdf' download=` + params.value + `'>` + params.value + `</a>`
+        `<a href='${urlPortfolio}/assets/pdf/example.pdf' download=` +
+        params.value +
+        `'>` +
+        params.value +
+        `</a>`
       );
     }
     return '';
@@ -112,7 +122,10 @@ export class CellRender {
   }
 
   public static viewModel(params) {
-    if (ManagerFunctions.isDigitalizedLayout(params.data)) {
+    console.log('params.data', params.data);
+    if (params.value === 'Loading') {
+      return `Loading ...`;
+    } else if (ManagerFunctions.isDigitalizedLayout(params.data)) {
       return `<a href='${urlEditor}/` + params.data.layout_id + `' > View model </a>`;
     }
 

@@ -58,6 +58,14 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       headerName: 'Progress',
       children: ColumnDefinitions.progressProcents,
     },
+    {
+      headerName: 'Building Simulations ',
+      children: ColumnDefinitions.progressSimsBuilding,
+    },
+    {
+      headerName: 'Layout Simulations ',
+      children: ColumnDefinitions.progressSimsLayout,
+    },
     ...ColumnDefinitions.metaUserAndData,
   ];
 
@@ -75,7 +83,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
         this.gridOptions.api.updateRowData({
           add: [site],
         });
-      }
+      },
+      ManagerFunctions.showErroruser
     );
   }
 
@@ -150,7 +159,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       error => {
         this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
           error.message
-          }`;
+        }`;
       }
     );
   }

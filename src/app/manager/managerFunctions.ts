@@ -87,19 +87,39 @@ export class ManagerFunctions {
 
     ]).subscribe(data => {});
    */
-    ApiFunctions.get(httpService, 'layouts', layouts => {
-      const layoutsArray = <Layout[]>layouts;
-      ApiFunctions.get(httpService, 'units', units => {
-        const unitsArray = <Unit[]>units;
-        ApiFunctions.get(httpService, 'buildings', buildings => {
-          const buildingsArray = <Building[]>buildings;
-          ApiFunctions.get(httpService, 'sites', sites => {
-            const sitesArray = <Site[]>sites;
-            onComplete(sitesArray, buildingsArray, unitsArray, layoutsArray);
-          }, onError);
-        }, onError);
-      }, onError);
-    }, onError);
+    ApiFunctions.get(
+      httpService,
+      'layouts',
+      layouts => {
+        const layoutsArray = <Layout[]>layouts;
+        ApiFunctions.get(
+          httpService,
+          'units',
+          units => {
+            const unitsArray = <Unit[]>units;
+            ApiFunctions.get(
+              httpService,
+              'buildings',
+              buildings => {
+                const buildingsArray = <Building[]>buildings;
+                ApiFunctions.get(
+                  httpService,
+                  'sites',
+                  sites => {
+                    const sitesArray = <Site[]>sites;
+                    onComplete(sitesArray, buildingsArray, unitsArray, layoutsArray);
+                  },
+                  onError
+                );
+              },
+              onError
+            );
+          },
+          onError
+        );
+      },
+      onError
+    );
   }
 
   public static openNewWindow(url) {
@@ -115,6 +135,7 @@ export class ManagerFunctions {
   public static setDefaultFilters(route, columnDefs, gridApi) {
     return route.fragment.subscribe(fragment => {
       const urlParams = parseParms(fragment);
+
       const model = {};
       Object.keys(urlParams).forEach(key => {
         columnDefs.forEach(group => {
@@ -178,6 +199,12 @@ export class ManagerFunctions {
     });
   }
 
+  public static showErroruser(error) {
+    ManagerFunctions.showWarning('Unexpected error', error.message, 'Ok', () => {
+      location.reload();
+    });
+  }
+
   public static showWarning(titleVal, textVal, confirmButtonTextVal, onResult) {
     swal({
       title: titleVal,
@@ -190,7 +217,7 @@ export class ManagerFunctions {
     });
   }
 
-  public static patchElement(httpService, node, url, newValue, gridApi, extraReaction?) {
+  public static patchElement(httpService, node, url, newValue, gridApi, extraReaction?, onError?) {
     ApiFunctions.patch(httpService, url, newValue, element => {
       // Side elements updated after the request
       if (element.user_id) {
@@ -209,7 +236,7 @@ export class ManagerFunctions {
       gridApi.updateRowData({
         update: [node.data],
       });
-    });
+    }, onError);
   }
 
   public static reactToEdit(httpService, params, key, route, gridApi, extraReaction?) {

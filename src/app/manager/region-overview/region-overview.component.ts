@@ -47,15 +47,12 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
-          { headerName: 'City', field: 'city', editable: false, cellClass: 'readOnly', },
+          { headerName: 'City', field: 'city', editable: false, cellClass: 'readOnly' },
         ],
       },
       {
         headerName: 'Count',
-        children: ColumnDefinitions.getBuildingsUnitsLayouts(
-          CellRender.viewBuildingsCity,
-          CellRender.viewUnitsCity
-        ),
+        children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsCity, null),
       },
       {
         headerName: 'Progress',
@@ -64,6 +61,14 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
       {
         headerName: 'Control',
         children: ColumnDefinitions.progress,
+      },
+      {
+        headerName: 'Building Simulations ',
+        children: ColumnDefinitions.progressSimsBuilding,
+      },
+      {
+        headerName: 'Layout Simulations ',
+        children: ColumnDefinitions.progressSimsLayout,
       },
     ];
   }
@@ -180,7 +185,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
       error => {
         this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
           error.message
-          }`;
+        }`;
       }
     );
   }

@@ -52,10 +52,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Count',
-        children: ColumnDefinitions.getBuildingsUnitsLayouts(
-          CellRender.viewBuildingsCountry,
-          CellRender.viewUnitsCountry
-        ),
+        children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsCountry, null),
       },
       {
         headerName: 'Progress',
@@ -65,6 +62,14 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Control',
         children: ColumnDefinitions.progress,
       },
+      {
+        headerName: 'Building Simulations ',
+        children: ColumnDefinitions.progressSimsBuilding,
+      },
+      {
+        headerName: 'Layout Simulations ',
+        children: ColumnDefinitions.progressSimsLayout,
+      },
     ];
   }
 
@@ -72,7 +77,9 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
   viewCountry(params) {
     const country = params.value ? params.value : 'Not defined';
-    return country + ` <a href='${urlPortfolio}/region#country=` + params.value + `' > View </a>`;
+    return (
+      country + ` <a href='${urlPortfolio}/region#country=` + params.value + `' > View regions</a>`
+    );
   }
 
   ngOnInit() {
@@ -153,7 +160,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       error => {
         this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
           error.message
-          }`;
+        }`;
       }
     );
   }

@@ -130,24 +130,23 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       this.http,
       'units',
       {
+        name: '',
+        description: '',
+        building_id: '',
+        images: '',
         address: {
-          line1: 'asdf321',
-          line2: '2b',
-          line3: 'adf32314',
+          line1: '',
+          line2: '',
+          line3: '',
         },
-        building_id: '5a8fec5c4cdf4c000b04f8cf',
-        created: '2018-07-27T12:34:21.875Z',
-        description: 'Optimizing for most optimum mobility inside the space.',
-        images: 'http://s3-bucket-url.com/image/123',
-        name: 'My unit',
-        updated: '2018-07-27T12:34:21.875Z',
       },
       units => {
         console.log('units', units);
         this.gridOptions.api.updateRowData({
           add: [units],
         });
-      }
+      },
+      ManagerFunctions.showErroruser
     );
   }
 
