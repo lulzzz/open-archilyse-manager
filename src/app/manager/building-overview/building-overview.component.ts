@@ -348,6 +348,24 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   /**
    * startSimulations
    */
+  getSimulationStatus() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    const buildings = nodes.map(node => node.data);
+    buildings.forEach(building => {
+      console.log('get Building simulation status for ', building.building_id);
+      ApiFunctions.get(
+        this.http,
+        'buildings/' + building.building_id + '/simulations/status',
+        result => {
+          console.log('result ', result);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    });
+  }
+
   startSimulations() {
     const nodes = this.gridOptions.api.getSelectedNodes();
     const buildings = nodes.map(node => node.data);

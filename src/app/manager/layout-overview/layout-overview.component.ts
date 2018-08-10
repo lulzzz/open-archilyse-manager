@@ -524,6 +524,25 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   /**
    * startSimulations
    */
+
+  getSimulationStatus() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    const layouts = nodes.map(node => node.data);
+    layouts.forEach(layout => {
+      console.log('get Building simulation status for ', layout.layout_id);
+      ApiFunctions.get(
+        this.http,
+        'layouts/' + layout.layout_id + '/simulations/status',
+        result => {
+          console.log('result ', result);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    });
+  }
+
   startSimulations() {
     const nodes = this.gridOptions.api.getSelectedNodes();
     const layout_ids = nodes.map(node => node.data.layout_id);
