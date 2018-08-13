@@ -165,6 +165,48 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   }
 
   delete() {
+    console.log('this.selectedRows ', this.selectedRows);
+
+    let buildings = 0;
+    let layouts = 0;
+    let units = 0;
+
+    this.selectedRows.forEach(site => {
+      buildings += site.buildings;
+      layouts += site.layouts;
+      units += site.units;
+    });
+
+    let warning = null;
+    if (buildings > 0) {
+      let waringBuildings;
+      if (buildings > 1) {
+        waringBuildings = `There're ${buildings} buildings`;
+      } else {
+        waringBuildings = `There's a building`;
+      }
+
+      let waringUnits;
+      if (units > 1) {
+        waringUnits = `${units} units`;
+      } else if (units === 1) {
+        waringUnits = `an unit `;
+      } else {
+        waringUnits = `no units `;
+      }
+
+      let waringLayouts;
+      if (layouts > 1) {
+        waringLayouts = `${layouts} layouts`;
+      } else if (layouts === 1) {
+        waringLayouts = `a layout `;
+      } else {
+        waringLayouts = `no layouts `;
+      }
+
+      warning = `${waringBuildings}, ${waringUnits} and ${waringLayouts} associated.`;
+    }
+
     ManagerFunctions.reactToDelete(
       this.http,
       this.selectedRows,
@@ -172,7 +214,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       'site',
       'sites',
       'site_id',
-      'sites'
+      'sites',
+      warning
     );
   }
 

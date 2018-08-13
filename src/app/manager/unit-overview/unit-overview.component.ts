@@ -256,6 +256,21 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   }
 
   delete() {
+    let layouts = 0;
+
+    this.selectedRows.forEach(site => {
+      layouts += site.layouts;
+    });
+
+    let warning = null;
+    if (layouts > 0) {
+      if (layouts > 1) {
+        warning = `There're ${layouts} layout associated`;
+      } else if (layouts === 1) {
+        warning = `There's a layout associated`;
+      }
+    }
+
     ManagerFunctions.reactToDelete(
       this.http,
       this.selectedRows,
@@ -263,7 +278,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       'unit',
       'units',
       'unit_id',
-      'units'
+      'units',
+      warning
     );
   }
 

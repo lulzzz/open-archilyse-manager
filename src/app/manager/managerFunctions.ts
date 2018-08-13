@@ -78,7 +78,7 @@ export class ManagerFunctions {
   }
 
   public static isDigitalizedLayout(layout: Layout) {
-    return layout.model_structure && layout.model_structure.id && layout.model_structure.children;
+    return layout.model_structure && layout.model_structure.id;
   }
 
   public static requestAllData(httpService, onComplete, onError) {
@@ -161,7 +161,16 @@ export class ManagerFunctions {
    * REACTIONS TO EVENTS
    */
 
-  public static reactToDelete(httpService, selectedRows, gridApi, singular, plural, key, route) {
+  public static reactToDelete(
+    httpService,
+    selectedRows,
+    gridApi,
+    singular,
+    plural,
+    key,
+    route,
+    warning
+  ) {
     let titleVal;
     let textVal;
     let confirmButtonTextVal;
@@ -174,6 +183,10 @@ export class ManagerFunctions {
       titleVal = `Delete these ${selectedRows.length} ${plural}?`;
       textVal = `This action cannot be undone. Are you sure you want to delete these ${plural}?`;
       confirmButtonTextVal = 'Yes, delete them';
+    }
+
+    if (warning !== null) {
+      textVal = `${textVal} ${warning}`;
     }
 
     swal({
@@ -218,25 +231,31 @@ export class ManagerFunctions {
   }
 
   public static patchElement(httpService, node, url, newValue, gridApi, extraReaction?, onError?) {
-    ApiFunctions.patch(httpService, url, newValue, element => {
-      // Side elements updated after the request
-      if (element.user_id) {
-        node.data['user_id'] = element.user_id;
-      }
-      if (element.created) {
-        node.data['created'] = element.created;
-      }
-      if (element.update) {
-        node.data['update'] = element.update;
-      }
-      if (extraReaction) {
-        extraReaction(node.data, element);
-      }
+    ApiFunctions.patch(
+      httpService,
+      url,
+      newValue,
+      element => {
+        // Side elements updated after the request
+        if (element.user_id) {
+          node.data['user_id'] = element.user_id;
+        }
+        if (element.created) {
+          node.data['created'] = element.created;
+        }
+        if (element.update) {
+          node.data['update'] = element.update;
+        }
+        if (extraReaction) {
+          extraReaction(node.data, element);
+        }
 
-      gridApi.updateRowData({
-        update: [node.data],
-      });
-    }, onError);
+        gridApi.updateRowData({
+          update: [node.data],
+        });
+      },
+      onError
+    );
   }
 
   public static reactToEdit(httpService, params, key, route, gridApi, extraReaction?) {

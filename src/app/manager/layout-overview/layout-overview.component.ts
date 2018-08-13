@@ -134,8 +134,14 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Model_structure',
             field: 'model_structure',
             cellRenderer: CellRender.viewModel,
-            editable: true,
+            editable: false,
+            cellClass: 'readOnly',
           },
+        ],
+      },
+      {
+        headerName: 'Model Analisys',
+        children: [
           {
             headerName: 'Total area',
             field: 'total_area',
@@ -145,16 +151,24 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Other areas',
-            field: 'area',
+            headerName: 'Rooms',
+            field: 'room',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Toilets',
-            field: 'toilet',
+            headerName: 'Corridors',
+            field: 'corridor',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Bathrooms',
+            field: 'bathroom',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -169,8 +183,24 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Balcony',
+            headerName: 'Balconies',
             field: 'balcony',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Storerooms',
+            field: 'storeroom',
+            cellRenderer: CellRender.areaInfo,
+            width: 100,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Other areas',
+            field: 'notDefined',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -246,6 +276,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     if (clear) {
       newValue = {
         floors: [],
+        model_structure: {},
       };
     } else {
       const floor = document.getElementById('floor');
@@ -339,26 +370,35 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   analyzeModelStructure(layout) {
     const model = layout['model_structure'];
     const analysis = {
-      area: [],
-      toilet: [],
+      notDefined: [],
+      room: [],
       kitchen: [],
+      bathroom: [],
+      corridor: [],
       balcony: [],
+      storeroom: [],
     };
 
-    if (model && model.children) {
-      this.analyzeModelStructureRecursive(model.children, analysis);
+    if (model && model.floor && model.floor['0']) {
+      this.analyzeModelStructureRecursive(model.floor['0'], analysis);
     }
 
     layout['total_area'] = [
-      ...analysis.area,
-      ...analysis.toilet,
+      ...analysis.notDefined,
+      ...analysis.room,
       ...analysis.kitchen,
+      ...analysis.bathroom,
+      ...analysis.corridor,
       ...analysis.balcony,
+      ...analysis.storeroom,
     ];
-    layout['area'] = analysis.area;
-    layout['toilet'] = analysis.toilet;
+    layout['notDefined'] = analysis.notDefined;
+    layout['room'] = analysis.room;
     layout['kitchen'] = analysis.kitchen;
+    layout['bathroom'] = analysis.bathroom;
+    layout['corridor'] = analysis.corridor;
     layout['balcony'] = analysis.balcony;
+    layout['storeroom'] = analysis.storeroom;
   }
   calculateArea(element) {
     const currentArray = element.footprint.coordinates[0];
@@ -368,14 +408,22 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   analyzeModelStructureRecursive(elements, analysis) {
     if (elements) {
       elements.forEach(element => {
-        if (element.type === 'AreaType.KITCHEN') {
+        if (element.type === 'AreaType.KITCHEN' || element.type === 'AreaType.KITCHEN_DINING') {
           analysis.kitchen.push(this.calculateArea(element));
         } else if (element.type === 'AreaType.BATHROOM') {
-          analysis.toilet.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.NOT_DEFINED') {
-          analysis.area.push(this.calculateArea(element));
+          analysis.bathroom.push(this.calculateArea(element));
+        } else if (element.type === 'AreaType.NOT_DEFINED' || element.type === 'AreaType.SHAFT') {
+          analysis.notDefined.push(this.calculateArea(element));
         } else if (element.type === 'AreaType.BALCONY') {
           analysis.balcony.push(this.calculateArea(element));
+        } else if (element.type === 'AreaType.CORRIDOR') {
+          analysis.corridor.push(this.calculateArea(element));
+        } else if (element.type === 'AreaType.STOREROOM') {
+          analysis.storeroom.push(this.calculateArea(element));
+        } else if (element.type === 'AreaType.ROOM' || element.type === 'AreaType.DINING') {
+          analysis.room.push(this.calculateArea(element));
+        } else {
+          // console.log(element.type);
         }
 
         this.analyzeModelStructureRecursive(element.children, analysis);
@@ -480,7 +528,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       'layout',
       'layouts',
       'layout_id',
-      'layouts'
+      'layouts',
+      null
     );
   }
 

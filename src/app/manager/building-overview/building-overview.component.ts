@@ -317,6 +317,35 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   delete() {
+    let layouts = 0;
+    let units = 0;
+
+    this.selectedRows.forEach(site => {
+      layouts += site.layouts;
+      units += site.units;
+    });
+
+    let warning = null;
+    if (units > 0) {
+      let waringUnits;
+      if (units > 1) {
+        waringUnits = `There're ${units} units`;
+      } else if (units === 1) {
+        waringUnits = `There's an unit `;
+      }
+
+      let waringLayouts;
+      if (layouts > 1) {
+        waringLayouts = `${layouts} layouts`;
+      } else if (layouts === 1) {
+        waringLayouts = `a layout `;
+      } else {
+        waringLayouts = `no layouts `;
+      }
+
+      warning = `${waringUnits} and ${waringLayouts} associated.`;
+    }
+
     ManagerFunctions.reactToDelete(
       this.http,
       this.selectedRows,
@@ -324,7 +353,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       'building',
       'buildings',
       'building_id',
-      'buildings'
+      'buildings',
+      warning
     );
   }
 
