@@ -295,8 +295,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           source: sourceUrlVal,
         });
 
-        console.log('newFloors', previousFloors);
-
         newValue = {
           floors: previousFloors,
         };
@@ -379,8 +377,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       storeroom: [],
     };
 
-    if (model && model.floor && model.floor['0']) {
-      this.analyzeModelStructureRecursive(model.floor['0'], analysis);
+    if (model && model.floors) {
+      model.floors.forEach(floor => {
+        this.analyzeModelStructureRecursive(floor.children, analysis);
+      });
     }
 
     layout['total_area'] = [
