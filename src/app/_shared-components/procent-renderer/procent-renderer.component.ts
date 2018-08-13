@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-procent-renderer',
@@ -14,6 +14,9 @@ export class ProcentRendererComponent {
   agInit(params: any): void {
     this.params = params;
     this.value = parseInt(this.params.value, 10);
+
+    // We prevent not set values or negative values be be rendered incorrectly
+    if (!(this.value >= 0)) this.value = 0;
 
     this.styles = {
       width: this.value + '%',
