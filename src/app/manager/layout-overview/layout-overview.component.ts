@@ -224,7 +224,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         children: [
           {
             headerName: 'View',
-            field: 'simulations.view',
+            field: 'simulations.view.status',
             cellRenderer: CellRender.viewSimulation,
             width: 100,
             editable: false,
@@ -232,7 +232,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Wbs',
-            field: 'simulations.wbs',
+            field: 'simulations.wbs.status',
             cellRenderer: CellRender.viewSimulation,
             width: 100,
             editable: false,
@@ -240,7 +240,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Pathways',
-            field: 'simulations.pathways',
+            field: 'simulations.pathways.status',
             width: 100,
             cellRenderer: CellRender.viewSimulation,
             editable: false,
@@ -248,7 +248,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Basic features',
-            field: 'simulations.basic_features',
+            field: 'simulations.basic_features.status',
             width: 100,
             cellRenderer: CellRender.viewSimulation,
             editable: false,
@@ -256,7 +256,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Accoustics',
-            field: 'simulations.accoustics',
+            field: 'simulations.accoustics.status',
             width: 100,
             cellRenderer: CellRender.viewSimulation,
             editable: false,

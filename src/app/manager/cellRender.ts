@@ -33,6 +33,27 @@ export class CellRender {
     return ``;
   }
 
+
+  public static viewSiteOfBuilding(params) {
+    return (
+      params.value +
+      `<a href='${urlPortfolio}/site#site_id=` +
+      params.data.site_id +
+      `' > View </a>`
+    );
+  }
+
+  public static viewUnitsOfBuilding(params) {
+    const number = params.value > 0 ? params.value : 0;
+    return (
+      number +
+      `<a href='${urlPortfolio}/unit#building_id=` +
+      params.data.building_id +
+      `' > View </a>`
+    );
+  }
+
+
   public static viewDate(params) {
     if (params.value && params.value !== '') {
       const readable = new Date(params.value);
@@ -118,7 +139,10 @@ export class CellRender {
   }
 
   public static viewSimulation(params) {
-    return params.value;
+    if (params.value) {
+      return params.value;
+    }
+    return '?';
   }
 
   public static viewModel(params) {

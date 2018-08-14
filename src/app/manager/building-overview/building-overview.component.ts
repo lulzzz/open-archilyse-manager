@@ -46,7 +46,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Id',
             field: 'site_id',
             width: 230,
-            cellRenderer: this.viewSite,
+            cellRenderer: CellRender.viewSiteOfBuilding,
             cellEditor: 'agPopupSelectCellEditor',
             cellEditorParams: {
               values: sites.map(site => site.site_id),
@@ -91,7 +91,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             field: 'units',
             filter: 'agNumberColumnFilter',
             width: 90,
-            cellRenderer: this.viewUnits,
+            cellRenderer: CellRender.viewUnitsOfBuilding,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -122,7 +122,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         children: [
           {
             headerName: 'Potential view',
-            field: 'simulations.potential_view',
+            field: 'simulations.potential_view.status',
             cellRenderer: CellRender.viewSimulation,
             width: 140,
             editable: false,
@@ -130,7 +130,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Accoustics',
-            field: 'simulations.accoustics',
+            field: 'simulations.accoustics.status',
             cellRenderer: CellRender.viewSimulation,
             width: 140,
             editable: false,
@@ -138,7 +138,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'DPOI',
-            field: 'simulations.dpoi',
+            field: 'simulations.dpoi.status',
             cellRenderer: CellRender.viewSimulation,
             width: 100,
             editable: false,
@@ -179,25 +179,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
-
-  viewSite(params) {
-    return (
-      params.value +
-      `<a href='${urlPortfolio}/site#site_id=` +
-      params.data.site_id +
-      `' > View </a>`
-    );
-  }
-
-  viewUnits(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number +
-      `<a href='${urlPortfolio}/unit#building_id=` +
-      params.data.building_id +
-      `' > View </a>`
-    );
-  }
 
   ngOnInit() {
     /** BUILDINGS */
@@ -243,7 +224,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null && Object.keys(model).length > 0;
-            console.log('model', model);
           },
           onSelectionChanged: () => {
             this.selectedNodes = this.gridOptions.api.getSelectedNodes();
@@ -387,14 +367,19 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
    */
   getSimulationStatus() {
     const nodes = this.gridOptions.api.getSelectedNodes();
-    const buildings = nodes.map(node => node.data);
-    buildings.forEach(building => {
+    nodes.forEach(node => {
+      const building = node.data;
       console.log('get Building simulation status for ', building.building_id);
       ApiFunctions.get(
         this.http,
         'buildings/' + building.building_id + '/simulations/status',
         result => {
           console.log('result ', result);
+          console.log('building', building);
+          building['simulations'] = result;
+          this.gridOptions.api.updateRowData({
+            update: [building],
+          });
         },
         error => {
           console.error(error);
