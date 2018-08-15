@@ -27,6 +27,10 @@ export class DpoiOverviewComponent implements OnInit {
   selectedNodes = [];
   selectedRows = [];
 
+  created;
+  updated;
+  status;
+
   gridApi;
   gridColumnApi;
 
@@ -200,59 +204,67 @@ export class DpoiOverviewComponent implements OnInit {
         simulations => {
           this.loading = false;
 
-          const result = simulations.dpoi.result;
-          let simKeys = Object.keys(simulations.dpoi.result);
-          let simulationsArray = simKeys.map(simKey => {
-            const res = result[simKey];
-            return {
-              name: simKey,
-              bike: res.bike,
-              car: res.car,
-              flight: res.flight,
-              foot: res.foot,
-              latitude: res.latitude,
-              longitude: res.longitude,
+          if (simulations && simulations.dpoi) {
+            this.created = simulations.dpoi.created;
+            this.updated = simulations.dpoi.updated;
+            this.status = simulations.dpoi.status;
+
+            const result = simulations.dpoi.result;
+            let simKeys = Object.keys(simulations.dpoi.result);
+            let simulationsArray = simKeys.map(simKey => {
+              const res = result[simKey];
+              return {
+                name: simKey,
+                bike: res.bike,
+                car: res.car,
+                flight: res.flight,
+                foot: res.foot,
+                latitude: res.latitude,
+                longitude: res.longitude,
+              };
+            });
+
+            this.gridOptions = <GridOptions>{
+              rowData: simulationsArray,
+              columnDefs: this.columnDefs,
+
+              /** Pagination */
+              ...ColumnDefinitions.pagination,
+              ...ColumnDefinitions.columnOptions,
+
+              onCellValueChanged: params => {
+                ManagerFunctions.reactToEdit(
+                  this.http,
+                  params,
+                  'site_id',
+                  'sites',
+                  this.gridOptions.api
+                );
+              },
+
+              onFilterChanged: params => {
+                const model = params.api.getFilterModel();
+                this.filterModelSet = model !== null && Object.keys(model).length > 0;
+              },
+              onSelectionChanged: () => {
+                this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+                this.selectedRows = this.gridOptions.api.getSelectedRows();
+              },
+              onGridReady: params => {
+                this.gridApi = params.api;
+                this.gridColumnApi = params.columnApi;
+                // this.gridOptions.api.sizeColumnsToFit();
+
+                this.fragment_sub = ManagerFunctions.setDefaultFilters(
+                  this.route,
+                  this.columnDefs,
+                  this.gridApi
+                );
+              },
             };
-          });
-
-          this.gridOptions = <GridOptions>{
-            rowData: simulationsArray,
-            columnDefs: this.columnDefs,
-
-            /** Pagination */
-            ...ColumnDefinitions.pagination,
-            ...ColumnDefinitions.columnOptions,
-
-            onCellValueChanged: params => {
-              ManagerFunctions.reactToEdit(
-                this.http,
-                params,
-                'site_id',
-                'sites',
-                this.gridOptions.api
-              );
-            },
-
-            onFilterChanged: params => {
-              const model = params.api.getFilterModel();
-              this.filterModelSet = model !== null && Object.keys(model).length > 0;
-            },
-            onSelectionChanged: () => {
-              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-              this.selectedRows = this.gridOptions.api.getSelectedRows();
-            },
-            onGridReady: params => {
-              this.gridApi = params.api;
-              this.gridColumnApi = params.columnApi;
-              // this.gridOptions.api.sizeColumnsToFit();
-
-              this.fragment_sub = ManagerFunctions.setDefaultFilters(
-                this.route,
-                this.columnDefs,
-                this.gridApi
-              );
-            },
-          };
+          } else {
+            this.generalError = `<div class="title"> DPOI simulation not found </div>`;
+          }
         },
         error => {
           this.loading = false;

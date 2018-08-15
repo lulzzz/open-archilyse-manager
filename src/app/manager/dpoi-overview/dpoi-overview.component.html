@@ -7,10 +7,16 @@
   <div>
     <button class="btn green" (click)="backPage()" > Back </button>
     <button class="btn green" (click)="seeRawData()" > See Raw data </button>
+    &nbsp;&nbsp;&nbsp;
+    <span class="label">Created:</span> {{created | date:'dd.MM.yyyy h:mma'}}
+    &nbsp;&nbsp;&nbsp;
+    <span class="label">Status:</span> {{status}}
   </div>
   <div>
     <button class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
     <button class="btn yellow" (click)="export()" > CSV </button>
+    &nbsp;&nbsp;&nbsp;
+    <span class="label">Updated:</span> {{updated | date:'dd.MM.yyyy h:mma'}}
   </div>
 </div>
 
