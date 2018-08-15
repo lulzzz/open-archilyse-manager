@@ -1,0 +1,14 @@
+<h1>
+  Simulation overview
+</h1>
+<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+<div *ngIf="!loading && !generalError" class="topControls">
+  <div>
+    <button class="btn green" (click)="backPage()" > Back </button>
+  </div>
+</div>
+
+<pre [innerHTML]="code">
+
+</pre>
