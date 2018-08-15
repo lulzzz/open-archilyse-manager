@@ -4,9 +4,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
-import { Building, Site, Unit } from '../../_models';
+import { Building, Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import { urlGeoreference, urlPortfolio } from '../url';
+import { urlGeoreference } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 
@@ -49,7 +49,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.viewSiteOfBuilding,
             cellEditor: 'agPopupSelectCellEditor',
             cellEditorParams: {
-              values: sites.map(site => site.site_id),
+              values: ['', ...sites.map(site => site.site_id)],
             },
             editable: true,
           },
@@ -123,7 +123,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Potential view',
             field: 'simulations.potential_view.status',
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationBuilding,
             width: 140,
             editable: false,
             cellClass: 'readOnly',
@@ -131,7 +131,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Accoustics',
             field: 'simulations.accoustics.status',
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationBuilding,
             width: 140,
             editable: false,
             cellClass: 'readOnly',
@@ -139,8 +139,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'DPOI',
             field: 'simulations.dpoi.status',
-            cellRenderer: CellRender.viewSimulation,
-            width: 100,
+            cellRenderer: CellRender.viewSimulationDpoiBuilding,
+            width: 140,
             editable: false,
             cellClass: 'readOnly',
           },

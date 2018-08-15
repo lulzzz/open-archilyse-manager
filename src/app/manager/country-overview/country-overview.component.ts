@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
-import { urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 
@@ -44,7 +43,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Country',
             field: 'country',
-            cellRenderer: this.viewCountry,
+            cellRenderer: CellRender.viewCountryInRegion,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -74,13 +73,6 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
   }
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
-
-  viewCountry(params) {
-    const country = params.value ? params.value : 'Not defined';
-    return (
-      country + ` <a href='${urlPortfolio}/region#country=` + params.value + `' > View regions</a>`
-    );
-  }
 
   ngOnInit() {
     ManagerFunctions.requestAllData(

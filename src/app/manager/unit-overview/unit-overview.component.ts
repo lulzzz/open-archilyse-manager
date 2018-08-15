@@ -51,7 +51,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: this.viewBuilding,
             cellEditor: 'agPopupSelectCellEditor',
             cellEditorParams: {
-              values: buildings.map(building => building.building_id),
+              values: ['', ...buildings.map(building => building.building_id)],
             },
             editable: true,
           },
@@ -132,8 +132,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       {
         name: '',
         description: '',
-        building_id: '',
-        images: '',
         address: {
           line1: '',
           line2: '',
@@ -153,12 +151,15 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   viewBuilding(params) {
-    return (
-      params.value +
-      `<a href='${urlPortfolio}/building#building_id=` +
-      params.data.building_id +
-      `' > View </a>`
-    );
+    if (params.value && params.value !== '' && params.value !== 'None') {
+      return (
+        params.value +
+        `<a href='${urlPortfolio}/building#building_id=` +
+        params.data.building_id +
+        `' > View </a>`
+      );
+    }
+    return '';
   }
 
   viewLayouts(params) {

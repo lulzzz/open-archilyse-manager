@@ -1,7 +1,41 @@
 import { urlEditor, urlPortfolio } from './url';
 import { ManagerFunctions } from './managerFunctions';
+import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
+import { AuthGuard } from '../_guards/auth.guard';
 
 export class CellRender {
+  /**
+   * Distance, duration, score
+   */
+
+  public static distance(params) {
+    if (params.value && params.value !== '') {
+      return Math.floor(params.value) + ' m.';
+    }
+    return ``;
+  }
+
+  public static duration(params) {
+    if (params.value && params.value !== '') {
+      return Math.floor(params.value) + ' secs.';
+    }
+    return ``;
+  }
+
+  public static score(params) {
+    if (params.value && params.value !== '') {
+      return params.value.toFixed(6);
+    }
+    return ``;
+  }
+
+  public static latLan(params) {
+    if (params.value && params.value !== '') {
+      return params.value.toFixed(15);
+    }
+    return ``;
+  }
+
   /**
    * RENDER FUNCTIONS
    */
@@ -33,14 +67,28 @@ export class CellRender {
     return ``;
   }
 
+  public static viewCountryInRegion(params) {
+    const country = params.value ? params.value : 'Not defined';
+    return (
+      country + ` <a href='${urlPortfolio}/region#country=` + params.value + `' > View regions</a>`
+    );
+  }
+
+  public static viewCountryInCountry(params) {
+    const country = params.value ? params.value : 'Not defined';
+    return country + ` <a href='${urlPortfolio}/country#country=` + params.value + `' > View </a>`;
+  }
 
   public static viewSiteOfBuilding(params) {
-    return (
-      params.value +
-      `<a href='${urlPortfolio}/site#site_id=` +
-      params.data.site_id +
-      `' > View </a>`
-    );
+    if (params.value && params.value !== '' && params.value !== 'None') {
+      return (
+        params.value +
+        `<a href='${urlPortfolio}/site#site_id=` +
+        params.data.site_id +
+        `' > View </a>`
+      );
+    }
+    return ``;
   }
 
   public static viewUnitsOfBuilding(params) {
@@ -52,7 +100,6 @@ export class CellRender {
       `' > View </a>`
     );
   }
-
 
   public static viewDate(params) {
     if (params.value && params.value !== '') {
@@ -138,8 +185,46 @@ export class CellRender {
     return result;
   }
 
-  public static viewSimulation(params) {
+  public static viewSimulationDpoiBuilding(params) {
+    if (params.value && params.value === 'complete') {
+      console.log('params.value', params.data.building_id);
+      if (params.value === 'complete') {
+        return (
+          `<a href='${urlPortfolio}/simulation/building/` +
+          params.data.building_id +
+          `' > View raw</a> &nbsp; <a href='${urlPortfolio}/dpoi/` +
+          params.data.building_id +
+          `' > View dpoi</a> `
+        );
+      }
+      return params.value;
+    }
+    return '?';
+  }
+
+  public static viewSimulationBuilding(params) {
+    if (params.value && params.value === 'complete') {
+      console.log('params.value', params.data.building_id);
+      if (params.value === 'complete') {
+        return (
+          `<a href='${urlPortfolio}/simulation/building/` +
+          params.data.building_id +
+          `' > View raw</a>`
+        );
+      }
+      return params.value;
+    }
+    return '?';
+  }
+
+  public static viewSimulationLayout(params) {
     if (params.value) {
+      console.log('params.value', params.data.layout_id);
+      if (params.value === 'complete') {
+        return (
+          `<a href='${urlPortfolio}/simulation/layout/` + params.data.layout_id + `' > View </a>`
+        );
+      }
       return params.value;
     }
     return '?';

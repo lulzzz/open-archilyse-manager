@@ -45,7 +45,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs;
 
-  buildColumDefinitions(layouts, units, buildings) {
+  buildColumDefinitions(units) {
     this.columnDefs = [
       {
         headerName: 'Building',
@@ -55,11 +55,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             field: 'building_id',
             width: 230,
             cellRenderer: CellRender.viewBuilding,
-            cellEditor: 'agPopupSelectCellEditor',
-            cellEditorParams: {
-              values: buildings.map(building => building.building_id),
-            },
-            editable: false,
             cellClass: 'readOnly',
           },
           {
@@ -82,7 +77,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.viewUnit,
             cellEditor: 'agPopupSelectCellEditor',
             cellEditorParams: {
-              values: units.map(unit => unit.unit_id),
+              values: ['', ...units.map(unit => unit.unit_id)],
             },
             editable: true,
           },
@@ -225,7 +220,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'View',
             field: 'simulations.view.status',
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationLayout,
             width: 100,
             editable: false,
             cellClass: 'readOnly',
@@ -233,7 +228,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Wbs',
             field: 'simulations.wbs.status',
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationLayout,
             width: 100,
             editable: false,
             cellClass: 'readOnly',
@@ -242,7 +237,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Pathways',
             field: 'simulations.pathways.status',
             width: 100,
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationLayout,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -250,7 +245,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Basic features',
             field: 'simulations.basic_features.status',
             width: 100,
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationLayout,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -258,7 +253,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Accoustics',
             field: 'simulations.accoustics.status',
             width: 100,
-            cellRenderer: CellRender.viewSimulation,
+            cellRenderer: CellRender.viewSimulationLayout,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -448,7 +443,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           this.analyzeModelStructure(layout);
         });
 
-        this.buildColumDefinitions(layoutsArray, unitsArray, buildingsArray);
+        this.buildColumDefinitions(unitsArray);
 
         this.gridOptions = <GridOptions>{
           rowData: this.layoutsArray,

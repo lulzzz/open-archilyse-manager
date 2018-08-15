@@ -9,6 +9,8 @@ import { RegionOverviewComponent } from './region-overview/region-overview.compo
 import { UnitOverviewComponent } from './unit-overview/unit-overview.component';
 import { SiteOverviewComponent } from './site-overview/site-overview.component';
 import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
+import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
+import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 
 const routes: Routes = [
   {
@@ -48,6 +50,21 @@ const routes: Routes = [
       {
         path: 'layout',
         component: LayoutOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'dpoi/:buildingid',
+        component: DpoiOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'simulation/building/:buildingid',
+        component: SimulationOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'simulation/layout/:layoutid',
+        component: SimulationOverviewComponent,
         canActivate: [AuthGuard],
       },
       {

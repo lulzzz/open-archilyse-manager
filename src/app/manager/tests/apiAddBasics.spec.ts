@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { ApiFunctions } from '../apiFunctions';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Testers } from './testers';
+import { TokenInterceptor } from '../../_services/token.interceptor';
 
 function httpError(done, error) {
+  console.log('ERROR: ', error);
   expect(error.status !== 500).toBeTruthy(error.message);
   done();
 }
@@ -14,8 +16,17 @@ describe('Api Add requests', () => {
   const usersActive = false;
 
   beforeEach(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
+      providers: [
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: TokenInterceptor,
+          multi: true,
+        },
+      ],
       declarations: [],
     });
 

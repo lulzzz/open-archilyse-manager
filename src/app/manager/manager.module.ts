@@ -17,6 +17,8 @@ import { BuildingOverviewComponent } from './building-overview/building-overview
 import { SiteOverviewComponent } from './site-overview/site-overview.component';
 import { UnitOverviewComponent } from './unit-overview/unit-overview.component';
 import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
+import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
+import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 
 @NgModule({
   imports: [
@@ -43,6 +45,8 @@ import { LayoutOverviewComponent } from './layout-overview/layout-overview.compo
     SiteOverviewComponent,
     UnitOverviewComponent,
     LayoutOverviewComponent,
+    SimulationOverviewComponent,
+    DpoiOverviewComponent,
   ],
 })
 export class ManagerModule {}
