@@ -6,7 +6,7 @@
 <div *ngIf="!loading && !generalError" class="topControls">
   <div>
     <button class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-    <button class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters {{filterModelSet}}</button>
+    <button class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
     &nbsp;&nbsp;&nbsp;
     <button class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
