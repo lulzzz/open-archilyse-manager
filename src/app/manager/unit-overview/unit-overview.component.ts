@@ -196,10 +196,17 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
         unitsArray.forEach(unit => {
           const layoutsThisUnit = layoutsArray.filter(layout => layout.unit_id === unit.unit_id);
-          unit.layouts = layoutsThisUnit.length;
-          unit['progressLayout'] = layoutsThisUnit.filter(layout =>
-            ManagerFunctions.isReferencedLayout(layout)
-          ).length;
+
+          const numLayouts = layoutsThisUnit.length;
+          unit.layouts = numLayouts;
+          let progressLayout = 0;
+          if (numLayouts > 0) {
+            const numReferenced = layoutsThisUnit.filter(layout =>
+              ManagerFunctions.isReferencedLayout(layout)
+            ).length;
+            progressLayout = numReferenced * 100 / numLayouts;
+          }
+          unit['progressLayout'] = progressLayout;
 
           const buildingThisUnit = this.buildingsArray.find(
             building => building.building_id === unit.building_id
