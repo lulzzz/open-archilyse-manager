@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from '../../../../node_modules/rxjs/Subscription';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { CellRender } from '../cellRender';
@@ -14,7 +14,7 @@ import { urlPortfolio } from '../url';
   templateUrl: './dpoi-overview.component.html',
   styleUrls: ['./dpoi-overview.component.scss'],
 })
-export class DpoiOverviewComponent implements OnInit {
+export class DpoiOverviewComponent implements OnInit, OnDestroy {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -210,8 +210,8 @@ export class DpoiOverviewComponent implements OnInit {
             this.status = simulations.dpoi.status;
 
             const result = simulations.dpoi.result;
-            let simKeys = Object.keys(simulations.dpoi.result);
-            let simulationsArray = simKeys.map(simKey => {
+            const simKeys = Object.keys(simulations.dpoi.result);
+            const simulationsArray = simKeys.map(simKey => {
               const res = result[simKey];
               return {
                 name: simKey,

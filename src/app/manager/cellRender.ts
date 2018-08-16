@@ -230,7 +230,9 @@ export class CellRender {
   public static viewModel(params) {
     if (params.value === 'Loading') {
       return `Loading ...`;
-    } else if (ManagerFunctions.isDigitalizedLayout(params.data)) {
+    }
+
+    if (ManagerFunctions.isDigitalizedLayout(params.data)) {
       return `<a href='${urlEditor}/` + params.data.layout_id + `' > View model </a>`;
     }
 

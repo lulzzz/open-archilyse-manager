@@ -16,7 +16,9 @@ export class ProcentRendererComponent {
     this.value = parseInt(this.params.value, 10);
 
     // We prevent not set values or negative values be be rendered incorrectly
-    if (!(this.value >= 0)) this.value = 0;
+    if (!(this.value >= 0)) {
+      this.value = 0;
+    }
 
     this.styles = {
       width: this.value + '%',
