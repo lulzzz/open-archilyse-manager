@@ -542,7 +542,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           element.type === EditorConstants.OFFICE_MISC ||
           element.type === EditorConstants.MISC
         ) {
-          console.log(1, element.type);
         } else if (element.type === EditorConstants.DOOR) {
           analysis.num_doors += 1;
         } else if (element.type === EditorConstants.WINDOW_ENVELOPE) {
@@ -550,11 +549,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         } else if (element.type === EditorConstants.WINDOW_INTERIOR) {
           analysis.num_windowInterior += 1;
         } else if (element.type === EditorConstants.ENVELOPE) {
-          console.log(2, element.type);
         } else if (element.type === EditorConstants.RAILING) {
           analysis.num_railing += 1;
+        } else if (element.type === EditorConstants.SPACE_NOT_DEFINED) {
+        } else if (element.type === EditorConstants.SEPARATOR_NOT_DEFINED) {
         } else {
-          console.log(3, element.type);
+          console.error('Unknown', element.type);
         }
 
         this.analyzeModelStructureRecursive(element.children, analysis);
