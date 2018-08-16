@@ -27,7 +27,9 @@
       </div>
       <div class="subscript">
         <div *ngIf="password.invalid && password.touched; then warnPw else infoPw"></div>
-        <ng-template #infoPw></ng-template>
+        <ng-template #infoPw>
+          <div class="info">Your password</div>
+        </ng-template>
         <ng-template #warnPw>
           <div class="warn">This is required</div>
         </ng-template>
@@ -36,8 +38,8 @@
 
     <div *ngIf="userError$ | async" class="error">{{userErrorString}}</div>
 
-    <button type="submit" class="btn green" *ngIf="!(userLoading$ | async)" [disabled]="logInForm.invalid">Log In</button>
-    <button type="submit" class="btn green" *ngIf="userLoading$ | async" disabled>Logging In
+    <button type="submit" class="btn padding green" *ngIf="!(userLoading$ | async)" [disabled]="logInForm.invalid">Log In</button>
+    <button type="submit" class="btn padding green" *ngIf="userLoading$ | async" disabled>Logging In
       <app-icon class="options" icon="fa-circle-notch fa-spin"></app-icon>
     </button>
 

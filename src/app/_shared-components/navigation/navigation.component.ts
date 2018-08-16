@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationService } from '../../_services/navigation.service';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {UserService} from '../../_services';
 
 @Component({
   selector: 'app-navigation',
@@ -12,6 +13,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
   options = [];
   current = '';
 
+  user_sub: Subscription;
+  isUserLoggedIn: false;
+
   subscriptionNavCurrent: Subscription;
   subscriptionNavOptions: Subscription;
   subscriptionNavdiagramLinkActive: Subscription;
@@ -19,8 +23,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private userService: UserService,
     private navigationService: NavigationService
   ) {
+
+    this.user_sub = this.userService._authenticated.subscribe(_authenticated => {
+      this.isUserLoggedIn = _authenticated;
+    });
+
     /**
     router.events
       .filter(event => event instanceof NavigationEnd)
@@ -110,6 +120,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
     if (this.subscriptionNavOptions) {
       this.subscriptionNavOptions.unsubscribe();
+    }
+    if (this.user_sub) {
+      this.user_sub.unsubscribe();
     }
   }
 }

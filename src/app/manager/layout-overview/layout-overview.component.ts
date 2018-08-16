@@ -10,6 +10,7 @@ import { urlGeoreference } from '../url';
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
+import { EditorConstants } from '../EditorConstants';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -135,7 +136,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        headerName: 'Model Analisys',
+        headerName: 'Model Analisys (Areas)',
         children: [
           {
             headerName: 'Total area',
@@ -198,6 +199,81 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             field: 'notDefined',
             cellRenderer: CellRender.areaInfo,
             width: 100,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+        ],
+      },
+      {
+        headerName: 'Model Analisys (Furniture)',
+        children: [
+          {
+            headerName: 'Desks',
+            field: 'num_desks',
+            width: 80,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Seats',
+            field: 'num_seats',
+            width: 80,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Doors',
+            field: 'num_doors',
+            width: 80,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Sinks',
+            field: 'num_sink',
+            width: 80,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Toilets',
+            field: 'num_toilet',
+            width: 80,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Railings',
+            field: 'num_railing',
+            width: 90,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Stairs',
+            field: 'num_stairs',
+            width: 80,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Kitchens',
+            field: 'num_kitchens',
+            width: 90,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Windows Exterior',
+            field: 'num_windowExterior',
+            width: 120,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Windows Interior',
+            field: 'num_windowInterior',
+            width: 120,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -370,6 +446,18 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       corridor: [],
       balcony: [],
       storeroom: [],
+
+      /** num Elements */
+      num_seats: 0,
+      num_desks: 0,
+      num_doors: 0,
+      num_sink: 0,
+      num_toilet: 0,
+      num_railing: 0,
+      num_stairs: 0,
+      num_kitchens: 0,
+      num_windowExterior: 0,
+      num_windowInterior: 0,
     };
 
     if (model && model.floors) {
@@ -394,6 +482,18 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     layout['corridor'] = analysis.corridor;
     layout['balcony'] = analysis.balcony;
     layout['storeroom'] = analysis.storeroom;
+
+    /** num Elements */
+    layout['num_seats'] = analysis.num_seats;
+    layout['num_desks'] = analysis.num_desks;
+    layout['num_doors'] = analysis.num_doors;
+    layout['num_sink'] = analysis.num_sink;
+    layout['num_toilet'] = analysis.num_toilet;
+    layout['num_railing'] = analysis.num_railing;
+    layout['num_stairs'] = analysis.num_stairs;
+    layout['num_kitchens'] = analysis.num_kitchens;
+    layout['num_windowExterior'] = analysis.num_windowExterior;
+    layout['num_windowInterior'] = analysis.num_windowInterior;
   }
   calculateArea(element) {
     const currentArray = element.footprint.coordinates[0];
@@ -403,22 +503,58 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   analyzeModelStructureRecursive(elements, analysis) {
     if (elements) {
       elements.forEach(element => {
-        if (element.type === 'AreaType.KITCHEN' || element.type === 'AreaType.KITCHEN_DINING') {
+        if (
+          element.type === EditorConstants.AREA_KITCHEN ||
+          element.type === EditorConstants.AREA_KITCHEN_DINING
+        ) {
           analysis.kitchen.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.BATHROOM') {
+        } else if (element.type === EditorConstants.BATHROOM) {
           analysis.bathroom.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.NOT_DEFINED' || element.type === 'AreaType.SHAFT') {
+        } else if (
+          element.type === EditorConstants.AREA_NOT_DEFINED ||
+          element.type === EditorConstants.SHAFT
+        ) {
           analysis.notDefined.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.BALCONY') {
+        } else if (element.type === EditorConstants.BALCONY) {
           analysis.balcony.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.CORRIDOR') {
+        } else if (element.type === EditorConstants.CORRIDOR) {
           analysis.corridor.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.STOREROOM') {
+        } else if (element.type === EditorConstants.STOREROOM) {
           analysis.storeroom.push(this.calculateArea(element));
-        } else if (element.type === 'AreaType.ROOM' || element.type === 'AreaType.DINING') {
+        } else if (
+          element.type === EditorConstants.ROOM ||
+          element.type === EditorConstants.DINING
+        ) {
           analysis.room.push(this.calculateArea(element));
+        } else if (element.type === EditorConstants.TOILET) {
+          analysis.num_toilet += 1;
+        } else if (element.type === EditorConstants.STAIRS) {
+          analysis.num_stairs += 1;
+        } else if (element.type === EditorConstants.SINK) {
+          analysis.num_sink += 1;
+        } else if (element.type === EditorConstants.KITCHEN) {
+          analysis.num_kitchens += 1;
+        } else if (element.type === EditorConstants.DESK) {
+          analysis.num_desks += 1;
+        } else if (element.type === EditorConstants.CHAIR) {
+          analysis.num_seats += 1;
+        } else if (
+          element.type === EditorConstants.OFFICE_MISC ||
+          element.type === EditorConstants.MISC
+        ) {
+          console.log(1, element.type);
+        } else if (element.type === EditorConstants.DOOR) {
+          analysis.num_doors += 1;
+        } else if (element.type === EditorConstants.WINDOW_ENVELOPE) {
+          analysis.num_windowExterior += 1;
+        } else if (element.type === EditorConstants.WINDOW_INTERIOR) {
+          analysis.num_windowInterior += 1;
+        } else if (element.type === EditorConstants.ENVELOPE) {
+          console.log(2, element.type);
+        } else if (element.type === EditorConstants.RAILING) {
+          analysis.num_railing += 1;
         } else {
-          // console.log(element.type);
+          console.log(3, element.type);
         }
 
         this.analyzeModelStructureRecursive(element.children, analysis);
@@ -559,7 +695,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     } else if (nodes.length > 1) {
       const layout_ids = nodes.map(node => node.data.layout_id);
 
-      const list = layout_ids.map(layout_id => `\t` + layout_id.join + `\n`);
+      const list = layout_ids.map(layout_id => `\t` + layout_id + `\n`).join('');
       ManagerFunctions.openNewWindow(urlGeoreference + '/multiple#list=' + list);
     }
   }

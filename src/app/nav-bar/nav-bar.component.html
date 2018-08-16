@@ -8,35 +8,18 @@
     <!-- <div class="tool-name hidden-for-phone-only">Workplace Analytics</div> -->
   </a>
 
-
   <div class="nav-items" *ngIf="isUserLoggedIn && showOptions">
-
-    <a class="nav-item" routerLink="/settings" routerLinkActive="active">
-      <!-- <i class="far fa-cog"></i> -->
-      Customisation
-    </a>
-
-    <a class="nav-item" routerLink="/projects" routerLinkActive="active">
-      <!-- <i class="far fa-list"></i> -->
-      Projects
-    </a>
-
     <div class="drop-down-menu">
       <div class="trigger" (click)="toggleDropdown($event)">
         <i class="far fa-bars"></i>
       </div>
       <div class="drop-down" [ngClass]="{'active': isDropdownActive}">
         <ul class="drop-down-nav-list">
-
           <li class="drop-down-nav-item">
             <a routerLink="/logout" (click)="logOut()">Log Out</a>
           </li>
         </ul>
       </div>
-
     </div>
-
   </div>
-
-
 </div>

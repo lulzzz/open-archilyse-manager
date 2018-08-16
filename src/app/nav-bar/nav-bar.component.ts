@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { NavigationEnd, Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
+import { UserService } from '../_services';
 
 @Component({
   selector: 'nav-bar',
@@ -19,7 +20,19 @@ export class NavBarComponent implements OnInit, OnDestroy {
   showOptions = true;
   isDropdownActive = false;
 
-  constructor(private store: Store<fromStore.AppState>, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private store: Store<fromStore.AppState>,
+    private router: Router
+  ) {
+    this.route_sub = router.events.subscribe((event: RouterEvent) => {
+      this.showOptions = event.url && (event.url.startsWith('/manager') || event.url === '/');
+    });
+
+    this.userService._authenticated.subscribe(auth => {
+      this.isUserLoggedIn = auth;
+    });
+  }
 
   @HostListener('document:click', ['$event'])
   clickedOutside() {
@@ -29,9 +42,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.user_sub = this.store.select(fromStore.getUser).subscribe(user => {
-      this.isUserLoggedIn = !!user;
+    /**
+     this.user_sub = this.userService._authenticated.subscribe(_authenticated => {
+      this.isUserLoggedIn = _authenticated;
     });
+     */
   }
 
   ngOnDestroy(): void {

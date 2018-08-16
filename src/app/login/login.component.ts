@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private store: Store<fromStore.AppState>, private _router: Router) {}
 
   logInForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', Validators.required),
+    email: new FormControl('***REMOVED***', [Validators.required, Validators.email]),
+    password: new FormControl('***REMOVED***', Validators.required),
   });
 
   ngOnInit() {

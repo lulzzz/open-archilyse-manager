@@ -1,5 +1,5 @@
 import * as fromUser from '../actions/user.action';
-import { User } from '../../_models/user.interface';
+import { User } from '../../_models';
 // import { MOCK_USER } from '../../_mocks/mock-user';
 
 export interface State {
@@ -89,57 +89,6 @@ export function reducer(state = initialState, action: fromUser.UserActions): Sta
         loaded: false,
       };
     }
-    // FETCH USER
-
-    case fromUser.UserActionTypes.FETCH: {
-      return {
-        ...state,
-        refreshing: true,
-      };
-    }
-
-    case fromUser.UserActionTypes.FETCH_SUCCESS: {
-      const user = action.payload;
-      return {
-        ...state,
-        user,
-        refreshing: false,
-        refreshed: true,
-      };
-    }
-
-    case fromUser.UserActionTypes.FETCH_FAILURE: {
-      return {
-        ...state,
-        refreshing: false,
-        refreshed: false,
-      };
-    }
-
-    // UPDATE USER
-    case fromUser.UserActionTypes.UPDATE_USER: {
-      return {
-        ...state,
-        updating: true,
-      };
-    }
-
-    case fromUser.UserActionTypes.UPDATE_USER_SUCCESS: {
-      const user = action.payload;
-      return {
-        ...state,
-        user,
-        updating: false,
-        updated: true,
-      };
-    }
-    case fromUser.UserActionTypes.UPDATE_USER_FAILURE: {
-      return {
-        ...state,
-        updating: false,
-        updated: false,
-      };
-    }
 
     default: {
       return state;
@@ -159,5 +108,3 @@ export const getUserUpdating = (state: State) => state.updating;
 export const getUserUpdated = (state: State) => state.updated;
 export const getUserAuthenticating = (state: State) => state.authenticating;
 export const getUserAuthenticated = (state: State) => state.authenticated;
-export const getUserRefreshing = (state: State) => state.refreshing;
-export const getUserRefreshed = (state: State) => state.refreshed;

@@ -231,7 +231,6 @@ export class CellRender {
   }
 
   public static viewModel(params) {
-    console.log('params.data', params.data);
     if (params.value === 'Loading') {
       return `Loading ...`;
     } else if (ManagerFunctions.isDigitalizedLayout(params.data)) {

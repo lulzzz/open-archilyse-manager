@@ -1,4 +1,4 @@
-<ul class="navigation">
+<ul *ngIf="isUserLoggedIn" class="navigation">
   <li *ngFor="let option of options">
     <span *ngIf="option.value === current" >{{ option.title }}</span>
     <a *ngIf="option.value !== current && option.link" [routerLink]="option.link" [popper]="option.tooltip" >{{ option.title }}</a>
