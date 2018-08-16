@@ -1,4 +1,4 @@
-import { urlEditor, urlPortfolio } from './url';
+import { urlEditor, urlGeoreference, urlPortfolio } from './url';
 import { ManagerFunctions } from './managerFunctions';
 import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
 import { AuthGuard } from '../_guards/auth.guard';
@@ -171,15 +171,12 @@ export class CellRender {
 
   public static viewMovement(params) {
     let result = '';
-    if (params.movements) {
-      for (let i = 0; i < params.movements.length; i += 1) {
-        const movements = params.movements[i];
-        result += `<div>
-            source: ${movements.source},
-            angle: ${movements.angle}°,
-            offset (xyz): ${movements.x_off}, ${movements.y_off}, ${movements.z_off}
-            pivot (xyz): ${movements.x_pivot}, ${movements.y_pivot}, ${movements.z_pivot}
-          </div>`;
+    if (params.value) {
+      const layout_id = params.data.layout_id;
+      for (let i = 0; i < params.value.length; i += 1) {
+        const movements = params.value[i];
+        const source = movements.source ? movements.source : 'open_street_maps';
+        result += `<a href="${urlGeoreference}/building/${layout_id}?source=${source}">${source}</a>`;
       }
     }
     return result;

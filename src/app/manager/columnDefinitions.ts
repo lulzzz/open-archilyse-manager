@@ -32,14 +32,14 @@ export class ColumnDefinitions {
         {
           headerName: 'User_id',
           field: 'user_id',
-          width: 100,
+          width: 250,
           editable: false,
           cellClass: 'readOnly',
         },
         {
           headerName: 'Created',
           field: 'created',
-          width: 100,
+          width: 90,
           cellRenderer: CellRender.viewDate,
           editable: false,
           cellClass: 'readOnly',
@@ -47,7 +47,7 @@ export class ColumnDefinitions {
         {
           headerName: 'Updated',
           field: 'updated',
-          width: 100,
+          width: 90,
           cellRenderer: CellRender.viewDate,
           editable: false,
           cellClass: 'readOnly',
