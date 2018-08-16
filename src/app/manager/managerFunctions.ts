@@ -140,8 +140,6 @@ export class ManagerFunctions {
       Object.keys(urlParams).forEach(key => {
         columnDefs.forEach(group => {
           const found = group.children.find(columnDef => columnDef.field === key);
-
-          console.log('found', found);
           if (found) {
             model[key] = {
               filter: urlParams[key],
@@ -151,8 +149,6 @@ export class ManagerFunctions {
           }
         });
       });
-
-      console.log('model', model);
       gridApi.setFilterModel(model);
     });
   }
