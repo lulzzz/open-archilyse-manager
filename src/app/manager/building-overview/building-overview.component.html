@@ -10,6 +10,7 @@
     <button class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
     &nbsp;&nbsp;&nbsp;
     <button class="btn green" (click)="georeference($event)" [disabled]="selectedNodes.length<=0" >Georeference ({{selectedNodes.length}})</button>
+    <button class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
     <button class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
     <button class="btn green" (click)="addRow()">Add building</button>

@@ -164,6 +164,33 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  duplicate() {
+    this.selectedRows.forEach(selectedRow => {
+      const newRow = selectedRow;
+
+      // Id is not duplicated
+      delete newRow.site_id;
+
+      // Control fields are not duplicated
+      delete newRow.org_id;
+      delete newRow.user_id;
+      delete newRow.updated;
+      delete newRow.created;
+
+      ApiFunctions.post(
+        this.http,
+        'sites',
+        newRow,
+        site => {
+          this.gridOptions.api.updateRowData({
+            add: [site],
+          });
+        },
+        ManagerFunctions.showErroruser
+      );
+    });
+  }
+
   delete() {
     console.log('this.selectedRows ', this.selectedRows);
 

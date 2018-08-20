@@ -78,7 +78,11 @@ export class ManagerFunctions {
   }
 
   public static isDigitalizedLayout(layout: Layout) {
-    return layout.model_structure && layout.model_structure.id;
+    return (
+      layout.model_structure &&
+      layout.model_structure['floors'] &&
+      layout.model_structure['floors'].length
+    ); // At least 1 floor
   }
 
   public static requestAllData(httpService, onComplete, onError) {

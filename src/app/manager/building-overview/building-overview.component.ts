@@ -296,6 +296,38 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  duplicate() {
+    this.selectedRows.forEach(selectedRow => {
+      const newRow = selectedRow;
+
+      // Id is not duplicated
+      delete newRow.building_id;
+
+      // Calculated are not duplicated
+      delete newRow.units;
+      delete newRow.layouts;
+      delete newRow.progressLayout;
+
+      // Control fields are not duplicated
+      delete newRow.org_id;
+      delete newRow.user_id;
+      delete newRow.updated;
+      delete newRow.created;
+
+      ApiFunctions.post(
+        this.http,
+        'buildings',
+        newRow,
+        building => {
+          this.gridOptions.api.updateRowData({
+            add: [building],
+          });
+        },
+        ManagerFunctions.showErroruser
+      );
+    });
+  }
+
   delete() {
     let layouts = 0;
     let units = 0;
@@ -362,13 +394,13 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     });
 
     if (addressesCorrect < numBuildings) {
-
       const withNoAdress = numBuildings - addressesCorrect;
 
       ManagerFunctions.showWarning(
         'Buildings with no address',
-        (withNoAdress===1)? `There is a building in your selection that has not valid addresses.` :
-          `There are ${withNoAdress} buildings in your selection that have not valid addresses.`,
+        withNoAdress === 1
+          ? `There is a building in your selection that has not valid addresses.`
+          : `There are ${withNoAdress} buildings in your selection that have not valid addresses.`,
         `Continue anyway`,
         confirmed => {
           if (confirmed) {

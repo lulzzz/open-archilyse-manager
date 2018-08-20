@@ -651,6 +651,61 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  duplicate() {
+    this.selectedRows.forEach(selectedRow => {
+      const newRow = selectedRow;
+
+      // Id is not duplicated
+      delete newRow.layout_id;
+
+      // Calculated are not duplicated
+      if (newRow.model_structure) {
+        delete newRow.model_structure.id;
+        delete newRow.model_structure.type;
+      }
+
+      delete newRow.building_referenced;
+      delete newRow.building_id;
+      delete newRow.total_area;
+      delete newRow.notDefined;
+      delete newRow.room;
+      delete newRow.kitchen;
+      delete newRow.bathroom;
+      delete newRow.corridor;
+      delete newRow.balcony;
+      delete newRow.storeroom;
+
+      delete newRow.num_seats;
+      delete newRow.num_desks;
+      delete newRow.num_doors;
+      delete newRow.num_sink;
+      delete newRow.num_toilet;
+      delete newRow.num_railing;
+      delete newRow.num_stairs;
+      delete newRow.num_kitchens;
+      delete newRow.num_windowExterior;
+      delete newRow.num_windowInterior;
+
+      // Control fields are not duplicated
+      delete newRow.org_id;
+      delete newRow.user_id;
+      delete newRow.updated;
+      delete newRow.created;
+
+      ApiFunctions.post(
+        this.http,
+        'layouts',
+        newRow,
+        layout => {
+          this.gridOptions.api.updateRowData({
+            add: [layout],
+          });
+        },
+        ManagerFunctions.showErroruser
+      );
+    });
+  }
+
   delete() {
     ManagerFunctions.reactToDelete(
       this.http,
