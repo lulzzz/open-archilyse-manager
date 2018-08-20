@@ -338,13 +338,54 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  isAddressCorrect(node) {
+    return (
+      node.data &&
+      node.data.address &&
+      node.data.address.city &&
+      node.data.address.country &&
+      node.data.address.postal_code &&
+      node.data.address.street &&
+      node.data.address.street_nr
+    );
+  }
+
   georeference() {
     const nodes = this.gridOptions.api.getSelectedNodes();
 
-    if (nodes.length === 1) {
+    const numBuildings = nodes.length;
+    let addressesCorrect = 0;
+    nodes.forEach(node => {
+      if (this.isAddressCorrect(node)) {
+        addressesCorrect += 1;
+      }
+    });
+
+    if (addressesCorrect < numBuildings) {
+
+      const withNoAdress = numBuildings - addressesCorrect;
+
+      ManagerFunctions.showWarning(
+        'Buildings with no address',
+        (withNoAdress===1)? `There is a building in your selection that has not valid addresses.` :
+          `There are ${withNoAdress} buildings in your selection that have not valid addresses.`,
+        `Continue anyway`,
+        confirmed => {
+          if (confirmed) {
+            this.geoRefBuildings(numBuildings, nodes);
+          }
+        }
+      );
+    } else {
+      this.geoRefBuildings(numBuildings, nodes);
+    }
+  }
+
+  geoRefBuildings(numBuildings, nodes) {
+    if (numBuildings === 1) {
       const node = nodes[0];
       ManagerFunctions.openNewWindow(urlGeoreference + '/map/' + node.data.building_id);
-    } else if (nodes.length > 1) {
+    } else if (numBuildings > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
       const list = building_ids.join('\t\n') + '\t\n';
       ManagerFunctions.openNewWindow(urlGeoreference + '/multiple#list=' + list);
