@@ -1,4 +1,4 @@
-import { urlEditor, urlGeoreference, urlPortfolio } from './url';
+import { urlEditor, urlGeoreference, urlPortfolio, urlSimulationViewer } from './url';
 import { ManagerFunctions } from './managerFunctions';
 import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
 import { AuthGuard } from '../_guards/auth.guard';
@@ -219,7 +219,9 @@ export class CellRender {
       console.log('params.value', params.data.layout_id);
       if (params.value === 'complete') {
         return (
-          `<a href='${urlPortfolio}/simulation/layout/` + params.data.layout_id + `' > View </a>`
+          `<a href='${urlSimulationViewer}/simulation/layout/` +
+          params.data.layout_id +
+          `' > View </a>`
         );
       }
       return params.value;
