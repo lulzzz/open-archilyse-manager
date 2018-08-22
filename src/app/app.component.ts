@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
+import { urlEditor, urlEditorFloorplan, urlGeoreference, urlSimulationViewer } from './manager/url';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'app';
+  urlEditor = urlEditor;
+  urlEditorFloorplan = urlEditorFloorplan;
+  urlGeoreference = urlGeoreference;
+  urlSimViewer = urlSimulationViewer;
 }

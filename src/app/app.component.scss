@@ -89,8 +89,23 @@ app-navigation {
   font-weight: 400;
   letter-spacing: 0.02rem;
   text-transform: uppercase;
-  // position: absolute;
-  // bottom: 0;
-  // left: 0;
-  // right: 0;
+
+  .links{
+    position: absolute;
+    left: 16px;
+    bottom: 4px;
+
+    float: left;
+
+    a{
+      color: $blue-alt;
+      cursor: pointer;
+
+      &:hover{
+        color: $green-alt;
+      }
+    }
+
+  }
+
 }

@@ -191,7 +191,7 @@ export class CellRender {
     let classSpan = 'diffNeutral';
     if (value > 0.5) {
       classSpan = 'diffPositive';
-    } else if (value > 0.5) {
+    } else if (value < -0.5) {
       classSpan = 'diffNegative';
     }
     return `<span class="${classSpan}">${value}${unit}</span>`;
@@ -200,7 +200,7 @@ export class CellRender {
     let classSpan = 'diffNeutral';
     if (value > 0.5) {
       classSpan = 'diffPositive';
-    } else if (value > 0.5) {
+    } else if (value < -0.5) {
       classSpan = 'diffNegative';
     }
     return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
