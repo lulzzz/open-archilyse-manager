@@ -189,14 +189,20 @@ export class CellRender {
 
   public static compareValue(value, unit) {
     let classSpan = 'diffNeutral';
-    if (value > 0.5) classSpan = 'diffPositive';
-    else if (value > 0.5) classSpan = 'diffNegative';
+    if (value > 0.5) {
+      classSpan = 'diffPositive';
+    } else if (value > 0.5) {
+      classSpan = 'diffNegative';
+    }
     return `<span class="${classSpan}">${value}${unit}</span>`;
   }
   public static compareValueScore(value) {
     let classSpan = 'diffNeutral';
-    if (value > 0.5) classSpan = 'diffPositive';
-    else if (value > 0.5) classSpan = 'diffNegative';
+    if (value > 0.5) {
+      classSpan = 'diffPositive';
+    } else if (value > 0.5) {
+      classSpan = 'diffNegative';
+    }
     return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
   }
 
