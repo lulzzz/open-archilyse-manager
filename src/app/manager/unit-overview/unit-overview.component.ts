@@ -265,21 +265,22 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   duplicate() {
     this.selectedRows.forEach(selectedRow => {
-      const newRow = selectedRow;
+      const newRow = {};
+      Object.assign(newRow, ...selectedRow);
 
       // Id is not duplicated
-      delete newRow.unit_id;
+      delete newRow['unit_id'];
 
       // Calculated are not duplicated
-      delete newRow.building_referenced;
-      delete newRow.layouts;
-      delete newRow.progressLayout;
+      delete newRow['building_referenced'];
+      delete newRow['layouts'];
+      delete newRow['progressLayout'];
 
       // Control fields are not duplicated
-      delete newRow.org_id;
-      delete newRow.user_id;
-      delete newRow.updated;
-      delete newRow.created;
+      delete newRow['org_id'];
+      delete newRow['user_id'];
+      delete newRow['updated'];
+      delete newRow['created'];
 
       ApiFunctions.post(
         this.http,

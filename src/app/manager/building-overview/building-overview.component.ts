@@ -298,21 +298,22 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   duplicate() {
     this.selectedRows.forEach(selectedRow => {
-      const newRow = selectedRow;
+      const newRow = {};
+      Object.assign(newRow, ...selectedRow);
 
       // Id is not duplicated
-      delete newRow.building_id;
+      delete newRow['building_id'];
 
       // Calculated are not duplicated
-      delete newRow.units;
-      delete newRow.layouts;
-      delete newRow.progressLayout;
+      delete newRow['units'];
+      delete newRow['layouts'];
+      delete newRow['progressLayout'];
 
       // Control fields are not duplicated
-      delete newRow.org_id;
-      delete newRow.user_id;
-      delete newRow.updated;
-      delete newRow.created;
+      delete newRow['org_id'];
+      delete newRow['user_id'];
+      delete newRow['updated'];
+      delete newRow['created'];
 
       ApiFunctions.post(
         this.http,
