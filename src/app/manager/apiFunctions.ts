@@ -1,4 +1,4 @@
-const apiUrl = 'http://api.archilyse.com/v1/';
+const apiUrl = 'https://api.archilyse.com/v1/';
 
 export class ApiFunctions {
   public static get(httpService, url, onComplete, onError?) {

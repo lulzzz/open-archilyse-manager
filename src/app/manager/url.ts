@@ -27,5 +27,6 @@ export const urlPortfolio = 'http://localhost:4200/manager';
 /**
  export const urlEditor = 'http://localhost:4201/editor';
  export const urlGeoreference = 'http://localhost:4202/georeference';
- export const urlPortfolio = 'http://localhost:4201/manager';
+ export const urlSimulationViewer = 'http://localhost:4203/simulations';
+ export const urlPortfolio = 'http://localhost:4200/manager';
  */

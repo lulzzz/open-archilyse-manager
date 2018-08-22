@@ -1,6 +1,7 @@
 import { Movement } from './movement.interface';
 
 export interface Layout {
+  layout_id: string;
   unit_id?: string;
 
   name?: string;

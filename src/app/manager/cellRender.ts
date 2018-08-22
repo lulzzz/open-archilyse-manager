@@ -8,6 +8,222 @@ export class CellRender {
    * Distance, duration, score
    */
 
+  public static dpoiCategory(params) {
+    if (params.value) {
+      return params.value;
+    }
+    return ``;
+  }
+
+  public static dpoiName(params) {
+    if (params.value && params.value !== '') {
+      const translate = {
+        alcohol: 'Alcohol',
+        antiques: 'Antiques',
+        apartments: 'Apartments',
+        art: 'Art',
+        arts_centre: 'Arts centre',
+        atm: 'ATM',
+        bakery: 'Bakery',
+        bank: 'Bank',
+        bar: 'Bar',
+        bathroom_furnishing: 'Bathroom furnishing',
+        bbq: 'BBQ',
+        beauty: 'Beauty',
+        bed: 'Bed',
+        beverages: 'Beverages',
+        bicycle: 'Bicycle',
+        bicycle_parking: 'Bicycle_parking',
+        bicycle_rental: 'Bicycle_rental',
+        bicycle_repair_station: 'Bicycle_repair_station',
+        books: 'Books',
+        boutique: 'Boutique',
+        bus_station: 'Bus_station',
+        bus_stop: 'Bus_stop',
+        butcher: 'Butcher',
+        cafe: 'Cafe',
+        car: 'Car',
+        car_parts: 'Car parts',
+        car_repair: 'Car repair',
+        car_sharing: 'Car Sharing',
+        car_wash: 'Car wash',
+        carpet: 'Carpet',
+        cave_entrance: 'Cave entrance',
+        chapel: 'Chapel',
+        charging_station: 'Charging station',
+        chemist: 'Chemist',
+        chocolate: 'Chocolate',
+        church: 'Church',
+        cinema: 'Cinema',
+        civic: 'Civic',
+        clinic: 'Clinic',
+        clothes: 'Clothes',
+        coffee: 'Coffee',
+        college: 'College',
+        commercial: 'Commercial',
+        community_centre: 'Community centre',
+        computer: 'Computer',
+        confectionery: 'Confectionery',
+        convenience: 'Convenience',
+        cosmetics: 'Cosmetics',
+        craft: 'Craft',
+        dairy: 'Dairy',
+        dance: 'Dance',
+        deli: 'Deli',
+        dentist: 'Dentist',
+        department_store: 'Department store',
+        detached: 'Detached',
+        doctors: 'Doctors',
+        doityourself: 'Doityourself',
+        drinking_water: 'Drinking water',
+        driving_school: 'Driving school',
+        electronics: 'Electronics',
+        erotic: 'Erotic',
+        fabric: 'Fabric',
+        farm: 'Farm',
+        fashion: 'Fashion',
+        fast_food: 'Fast food',
+        firepit: 'Firepit',
+        fitness_centre: 'Fitness centre',
+        florist: 'Florist',
+        fountain: 'Fountain',
+        fuel: 'Fuel',
+        furniture: 'Furniture',
+        garden: 'Garden',
+        garden_centre: 'Garden centre',
+        gift: 'Gift',
+        golf_course: 'Golf course',
+        grassland: 'Grassland',
+        greengrocer: 'Greengrocer',
+        grit_bin: 'Grit bin',
+        hackerspace: 'Hackerspace',
+        hairdresser: 'Hairdresser',
+        halt: 'Halt',
+        hardware: 'Hardware',
+        hearing_aids: 'Hearing aids',
+        hifi: 'Hifi',
+        horse_riding: 'Horse riding',
+        hospital: 'Hospital',
+        hotel: 'Hotel',
+        house: 'House',
+        ice_rink: 'Ice rink',
+        industrial: 'Industrial',
+        interior_decoration: 'Interior decoration',
+        jewelry: 'Jewelry',
+        kindergarten: 'Kindergarten',
+        kiosk: 'Kiosk',
+        kitchen: 'Kitchen',
+        library: 'Library',
+        mall: 'Mall',
+        medical_supply: 'Medical supply',
+        miniature_golf: 'Miniature golf',
+        mobile_phone: 'Mobile phone',
+        motorcycle: 'Motorcycle',
+        motorcycle_parking: 'Motorcycle parking',
+        music: 'Music',
+        music_school: 'Music school',
+        musical_instrument: 'Musical instrument',
+        nature_reserve: 'Nature reserve',
+        nightclub: 'Nightclub',
+        nursing_home: 'Nursing home',
+        office: 'Office',
+        outdoor: 'Outdoor',
+        paint: 'Paint',
+        park: 'Park',
+        parking: 'Parking',
+        parking_entrance: 'Parking entrance',
+        parking_space: 'Parking space',
+        peak: 'Peak',
+        perfumery: 'Perfumery',
+        pharmacy: 'Pharmacy',
+        photo: 'Photo',
+        picnic_table: 'Picnic table',
+        pitch: 'Pitch',
+        platform: 'Platform',
+        playground: 'Playground',
+        pub: 'Pub',
+        residential: 'Residential',
+        restaurant: 'Restaurant',
+        retail: 'Retail',
+        saddle: 'Saddle',
+        sand: 'Sand',
+        sauna: 'Sauna',
+        school: 'School',
+        scree: 'Scree',
+        scrub: 'Scrub',
+        scuba_diving: 'Scuba diving',
+        second_hand: 'Second hand',
+        sewing: 'Sewing',
+        shoes: 'Shoes',
+        social_facility: 'Social facility',
+        sports: 'Sports',
+        sports_centre: 'Sports centre',
+        stadium: 'Stadium',
+        station: 'Station',
+        stationery: 'Stationery',
+        stop_position: 'Stop position',
+        supermarket: 'Supermarket',
+        swimming_pool: 'Swimming pool',
+        tailor: 'Tailor',
+        taxi: 'Taxi',
+        tea: 'Tea',
+        terrace: 'Terrace',
+        track: 'Track',
+        train_station: 'Train station',
+        transportation: 'Transportation',
+        tree: 'Tree',
+        university: 'University',
+        veterinary: 'Veterinary',
+        warehouse: 'Warehouse',
+        water: 'Water',
+        water_park: 'Water park',
+        wetland: 'Wetland',
+        wine: 'Wine',
+        wood: 'Wood',
+      };
+
+      return translate[params.value] ? translate[params.value] : params.value;
+    }
+    return ``;
+  }
+
+  public static compareValue(value, unit) {
+    let classSpan = 'diffNeutral';
+    if (value > 0.5) classSpan = 'diffPositive';
+    else if (value > 0.5) classSpan = 'diffNegative';
+    return `<span class="${classSpan}">${value}${unit}</span>`;
+  }
+  public static compareValueScore(value) {
+    let classSpan = 'diffNeutral';
+    if (value > 0.5) classSpan = 'diffPositive';
+    else if (value > 0.5) classSpan = 'diffNegative';
+    return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
+  }
+
+  public static distanceCompare(params) {
+    if (params.value && params.value !== '') {
+      const value = Math.floor(params.value);
+      return CellRender.compareValue(value, ' m.');
+    }
+    return ``;
+  }
+
+  public static durationCompare(params) {
+    if (params.value && params.value !== '') {
+      const value = Math.floor(params.value);
+      return CellRender.compareValue(value, ' secs.');
+    }
+    return ``;
+  }
+
+  public static scoreCompare(params) {
+    if (params.value && params.value !== '') {
+      const value = params.value;
+      return CellRender.compareValueScore(value);
+    }
+    return ``;
+  }
+
   public static distance(params) {
     if (params.value && params.value !== '') {
       return Math.floor(params.value) + ' m.';

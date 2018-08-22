@@ -53,17 +53,22 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: 'dpoi/:buildingid',
+        path: 'dpoi/:buildingId',
         component: DpoiOverviewComponent,
         canActivate: [AuthGuard],
       },
       {
-        path: 'simulation/building/:buildingid',
+        path: 'dpoi/:buildingId/:buildingIdCompare',
+        component: DpoiOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'simulation/building/:buildingId',
         component: SimulationOverviewComponent,
         canActivate: [AuthGuard],
       },
       {
-        path: 'simulation/layout/:layoutid',
+        path: 'simulation/layout/:layoutId',
         component: SimulationOverviewComponent,
         canActivate: [AuthGuard],
       },

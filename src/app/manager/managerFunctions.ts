@@ -126,9 +126,8 @@ export class ManagerFunctions {
     );
   }
 
-  public static openNewWindow(url) {
-    console.log('url', url);
-    window.open(encodeURI(url), '_blank');
+  public static openLink(url) {
+    location.assign(encodeURI(url));
   }
 
   public static clearSelection(gridApi) {

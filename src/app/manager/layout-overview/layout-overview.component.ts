@@ -746,12 +746,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       const node = nodes[0];
 
       const layout_id = node.data.layout_id;
-      ManagerFunctions.openNewWindow(urlGeoreference + '/building/' + layout_id);
+      ManagerFunctions.openLink(urlGeoreference + '/building/' + layout_id);
     } else if (nodes.length > 1) {
       const layout_ids = nodes.map(node => node.data.layout_id);
 
       const list = layout_ids.map(layout_id => `\t` + layout_id + `\n`).join('');
-      ManagerFunctions.openNewWindow(urlGeoreference + '/multiple#list=' + list);
+      ManagerFunctions.openLink(urlGeoreference + '/multiple#list=' + list);
     }
   }
 

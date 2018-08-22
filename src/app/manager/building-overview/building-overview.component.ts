@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import { urlGeoreference } from '../url';
+import { urlGeoreference, urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 
@@ -416,11 +416,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   geoRefBuildings(numBuildings, nodes) {
     if (numBuildings === 1) {
       const node = nodes[0];
-      ManagerFunctions.openNewWindow(urlGeoreference + '/map/' + node.data.building_id);
+      ManagerFunctions.openLink(urlGeoreference + '/map/' + node.data.building_id);
     } else if (numBuildings > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
       const list = building_ids.join('\t\n') + '\t\n';
-      ManagerFunctions.openNewWindow(urlGeoreference + '/multiple#list=' + list);
+      ManagerFunctions.openLink(urlGeoreference + '/multiple#list=' + list);
     }
   }
 
@@ -447,8 +447,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         this.http,
         'buildings/' + building.building_id + '/simulations/status',
         result => {
-          console.log('result ', result);
-          console.log('building', building);
           building['simulations'] = result;
           this.gridOptions.api.updateRowData({
             update: [building],
@@ -459,6 +457,25 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         }
       );
     });
+  }
+
+  compareDpoiSimulations() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    if (nodes.length === 2) {
+      if (nodes[0] && nodes[0].data && nodes[0].data.building_id) {
+        if (nodes[1] && nodes[1].data && nodes[1].data.building_id) {
+          const building_id1 = nodes[0].data.building_id;
+          const building_id2 = nodes[1].data.building_id;
+          ManagerFunctions.openLink(`${urlPortfolio}/dpoi/${building_id1}/${building_id2}`);
+        } else {
+          console.error('Second link wrong, ', nodes);
+        }
+      } else {
+        console.error('First link wrong, ', nodes);
+      }
+    } else {
+      console.error('Wrong number of links, ', nodes);
+    }
   }
 
   startSimulations() {

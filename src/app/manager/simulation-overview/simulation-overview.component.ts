@@ -20,8 +20,8 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.buildingId = this.route.snapshot.params['buildingid'];
-    this.layoutId = this.route.snapshot.params['layoutid'];
+    this.buildingId = this.route.snapshot.params['buildingId'];
+    this.layoutId = this.route.snapshot.params['layoutId'];
 
     console.log('buildingId', this.buildingId);
     console.log('layoutId', this.layoutId);
