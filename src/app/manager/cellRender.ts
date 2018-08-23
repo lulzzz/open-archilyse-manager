@@ -270,9 +270,9 @@ export class CellRender {
   }
   public static compareValueScore(value) {
     let classSpan = 'diffNeutral';
-    if (value > 0.5) {
+    if (value > 0.1) {
       classSpan = 'diffNegative';
-    } else if (value < -0.5) {
+    } else if (value < -0.1) {
       classSpan = 'diffPositive';
     }
     return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
