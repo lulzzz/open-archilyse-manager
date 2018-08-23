@@ -8,7 +8,7 @@ import { Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { CellRender } from '../cellRender';
-import { convertFileToWorkbook, getRows, makeRequest } from '../excel';
+import { convertFileToWorkbook, getRows } from '../excel';
 
 @Component({
   selector: 'app-site-overview',

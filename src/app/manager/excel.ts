@@ -1,20 +1,4 @@
-import { read, readFile } from 'xlsx';
-
-// XMLHttpRequest in promise format
-export function makeRequest(method, url, success, error) {
-  const httpRequest = new XMLHttpRequest();
-  httpRequest.open('GET', url, true);
-  httpRequest.responseType = 'arraybuffer';
-
-  httpRequest.open(method, url);
-  httpRequest.onload = function() {
-    success(httpRequest.response);
-  };
-  httpRequest.onerror = function() {
-    error(httpRequest.response);
-  };
-  httpRequest.send();
-}
+import { read } from 'xlsx';
 
 // read the raw data and convert it to a XLSX workbook
 export function convertFileToWorkbook(file, onComplete) {
@@ -59,7 +43,7 @@ export function getRows(workbook, dictionary) {
   let rowIndex = 2;
 
   // iterate over the worksheet pulling out the columns we're expecting
-  while (worksheet['A' + rowIndex] || worksheet['B' + rowIndex]) {
+  while (worksheet['A' + rowIndex] || worksheet['B' + rowIndex] || worksheet['C' + rowIndex]) {
     const row = {};
     Object.keys(columns).forEach(column => {
       const varName = dictionary[columns[column]];
