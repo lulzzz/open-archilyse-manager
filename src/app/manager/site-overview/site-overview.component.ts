@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
-import { Building, Site } from '../../_models';
+import { Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import { urlPortfolio } from '../url';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { CellRender } from '../cellRender';
+import { convertFileToWorkbook, getRows, makeRequest } from '../excel';
 
 @Component({
   selector: 'app-site-overview',
@@ -40,7 +40,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       headerName: 'Site',
       children: [
         {
-          headerName: 'Site_id',
+          headerName: 'Site Id',
           field: 'site_id',
           width: 190,
           editable: false,
@@ -125,6 +125,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           ...ColumnDefinitions.pagination,
           ...ColumnDefinitions.columnOptions,
 
+          getRowNodeId: data => data.site_id,
           onCellValueChanged: params => {
             ManagerFunctions.reactToEdit(
               this.http,
@@ -263,8 +264,51 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Export functions
+   * Import / Export functions
+   * https://stackoverflow.com/questions/11832930/html-input-file-accept-attribute-file-type-csv
    */
+  importExcel(files) {
+    if (files.length === 1) {
+      convertFileToWorkbook(files[0], result => {
+        const dictionarySites = {};
+        dictionarySites['Site Id'] = 'site_id';
+        dictionarySites['Name'] = 'name';
+        dictionarySites['Description'] = 'description';
+        const allRows = getRows(result, dictionarySites);
+
+        console.log('allRows ', allRows);
+        allRows.forEach(oneRow => {
+          if (oneRow.site_id && oneRow.site_id !== null && oneRow.site_id !== '') {
+            const site_id = oneRow.site_id;
+            delete oneRow.site_id;
+            ApiFunctions.patch(
+              this.http,
+              'sites/' + site_id,
+              oneRow,
+              site => {
+                const node = this.gridOptions.api.getRowNode(site_id);
+                node.setData(site);
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          } else {
+            ApiFunctions.post(
+              this.http,
+              'sites',
+              oneRow,
+              site => {
+                this.gridOptions.api.updateRowData({
+                  add: [site],
+                });
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          }
+        });
+      });
+    }
+  }
+
   export() {
     this.gridOptions.api.exportDataAsCsv({
       columnSeparator: ';',

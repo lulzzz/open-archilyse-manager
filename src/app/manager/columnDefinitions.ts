@@ -30,7 +30,7 @@ export class ColumnDefinitions {
       headerName: 'Log',
       children: [
         {
-          headerName: 'User_id',
+          headerName: 'User Id',
           field: 'user_id',
           width: 250,
           editable: false,

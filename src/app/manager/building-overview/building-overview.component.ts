@@ -9,6 +9,7 @@ import { ApiFunctions } from '../apiFunctions';
 import { urlGeoreference, urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
+import { convertFileToWorkbook, getRows } from '../excel';
 
 @Component({
   selector: 'app-building-overview',
@@ -43,7 +44,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Site',
         children: [
           {
-            headerName: 'Id',
+            headerName: 'Site Id',
             field: 'site_id',
             width: 230,
             cellRenderer: CellRender.viewSiteOfBuilding,
@@ -59,7 +60,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Building',
         children: [
           {
-            headerName: 'Id',
+            headerName: 'Building Id',
             field: 'building_id',
             width: 190,
             editable: false,
@@ -111,7 +112,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           // { headerName: 'Building_reference', field: 'building_reference', editable: true },
           { headerName: 'Swiss topo', field: 'building_reference.swiss_topo', editable: true },
           {
-            headerName: 'Open_street_maps',
+            headerName: 'Open Street Maps',
             field: 'building_reference.open_street_maps',
             editable: true,
           },
@@ -170,7 +171,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Images',
             field: 'images',
             cellRenderer: CellRender.viewImg,
-            editable: true,
+            editable: false,
+            cellClass: 'readOnly',
           },
         ],
       },
@@ -524,8 +526,65 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Export functions
+   * Import / Export functions
    */
+  importExcel(files) {
+    if (files.length === 1) {
+      convertFileToWorkbook(files[0], result => {
+        const dictionaryBuildings = {};
+
+        dictionaryBuildings['Site Id'] = 'site_id';
+        dictionaryBuildings['Building Id'] = 'building_id';
+        dictionaryBuildings['Name'] = 'name';
+        dictionaryBuildings['Description'] = 'description';
+
+        // address
+        dictionaryBuildings['Country'] = 'address.country';
+        dictionaryBuildings['City'] = 'address.city';
+        dictionaryBuildings['Street'] = 'address.street';
+        dictionaryBuildings['Street Nr'] = 'address.street_nr';
+        dictionaryBuildings['Postal Code'] = 'address.postal_code';
+
+        // building_reference
+        dictionaryBuildings['Swiss topo'] = 'building_reference.swiss_topo';
+        dictionaryBuildings['Open Street Maps'] = 'building_reference.open_street_maps';
+
+        // Images
+        dictionaryBuildings['Images'] = 'images';
+
+        const allRows = getRows(result, dictionaryBuildings);
+
+        allRows.forEach(oneRow => {
+          if (oneRow.building_id && oneRow.building_id !== null && oneRow.building_id !== '') {
+            const building_id = oneRow.building_id;
+            delete oneRow.building_id;
+            ApiFunctions.patch(
+              this.http,
+              'buildings/' + building_id,
+              oneRow,
+              building => {
+                const node = this.gridOptions.api.getRowNode(building_id);
+                node.setData(building);
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          } else {
+            ApiFunctions.post(
+              this.http,
+              'buildings',
+              oneRow,
+              building => {
+                this.gridOptions.api.updateRowData({
+                  add: [building],
+                });
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          }
+        });
+      });
+    }
+  }
   export() {
     this.gridOptions.api.exportDataAsCsv({
       columnSeparator: ';',

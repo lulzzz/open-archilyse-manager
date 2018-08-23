@@ -9,6 +9,7 @@ import { ApiFunctions } from '../apiFunctions';
 import { urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
+import { convertFileToWorkbook, getRows } from '../excel';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -45,7 +46,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Building',
         children: [
           {
-            headerName: 'Building_id',
+            headerName: 'Building Id',
             field: 'building_id',
             width: 230,
             cellRenderer: this.viewBuilding,
@@ -69,7 +70,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Unit',
         children: [
           {
-            headerName: 'Id',
+            headerName: 'Unit Id',
             field: 'unit_id',
             width: 190,
             editable: false,
@@ -341,8 +342,55 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Export functions
+   * Import / Export functions
    */
+  importExcel(files) {
+    if (files.length === 1) {
+      convertFileToWorkbook(files[0], result => {
+        const dictionaryUnits = {};
+        dictionaryUnits['Building id'] = 'building_id';
+        dictionaryUnits['Unit id'] = 'unit_id';
+        dictionaryUnits['Name'] = 'name';
+        dictionaryUnits['Description'] = 'description';
+
+        dictionaryUnits['Line1'] = 'address.line1';
+        dictionaryUnits['Line2'] = 'address.line2';
+        dictionaryUnits['Line3'] = 'address.line3';
+
+        const allRows = getRows(result, dictionaryUnits);
+
+        console.log('allRows ', allRows);
+        allRows.forEach(oneRow => {
+          if (oneRow.unit_id && oneRow.unit_id !== null && oneRow.unit_id !== '') {
+            const unit_id = oneRow.unit_id;
+            delete oneRow.unit_id;
+            ApiFunctions.patch(
+              this.http,
+              'units/' + unit_id,
+              oneRow,
+              unit => {
+                const node = this.gridOptions.api.getRowNode(unit_id);
+                node.setData(unit);
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          } else {
+            ApiFunctions.post(
+              this.http,
+              'units',
+              oneRow,
+              unit => {
+                this.gridOptions.api.updateRowData({
+                  add: [unit],
+                });
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          }
+        });
+      });
+    }
+  }
   export() {
     this.gridOptions.api.exportDataAsCsv({
       columnSeparator: ';',

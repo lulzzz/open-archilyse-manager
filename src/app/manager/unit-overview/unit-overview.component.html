@@ -16,6 +16,9 @@
   <div>
     <button class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
     <button class="btn yellow" (click)="export()" > CSV </button>
+    &nbsp;
+    <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+    <label for="file" class="btn yellow" >Import Excel file</label>
   </div>
 </div>
 

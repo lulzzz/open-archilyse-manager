@@ -216,6 +216,9 @@ export class ManagerFunctions {
       location.reload();
     });
   }
+  public static showErrorUserNoReload(error) {
+    ManagerFunctions.showWarning('Unexpected error', error.message, 'Ok', () => {});
+  }
 
   public static showWarning(titleVal, textVal, confirmButtonTextVal, onResult) {
     swal({

@@ -11,6 +11,7 @@ import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { EditorConstants } from '../EditorConstants';
+import { convertFileToWorkbook, getRows } from '../excel';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -52,7 +53,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Building',
         children: [
           {
-            headerName: 'Id',
+            headerName: 'Building Id',
             field: 'building_id',
             width: 230,
             cellRenderer: CellRender.viewBuilding,
@@ -72,7 +73,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Unit',
         children: [
           {
-            headerName: 'Id',
+            headerName: 'Unit Id',
             field: 'unit_id',
             width: 230,
             cellRenderer: CellRender.viewUnit,
@@ -88,7 +89,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Layout',
         children: [
           {
-            headerName: 'Id',
+            headerName: 'Layout Id',
             field: 'layout_id',
             width: 190,
             editable: false,
@@ -105,7 +106,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Images',
             field: 'images',
             cellRenderer: CellRender.viewImg,
-            editable: true,
+            editable: false,
+            cellClass: 'readOnly',
           },
         ],
       },
@@ -127,7 +129,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Model_structure',
+            headerName: 'Model structure',
             field: 'model_structure',
             cellRenderer: CellRender.viewModel,
             editable: false,
@@ -811,8 +813,56 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Export functions
+   * Import / Export functions
    */
+  importExcel(files) {
+    if (files.length === 1) {
+      convertFileToWorkbook(files[0], result => {
+        const dictionaryLayouts = {};
+
+        dictionaryLayouts['Unit id'] = 'unit_id';
+        dictionaryLayouts['Layout id'] = 'layout_id';
+        dictionaryLayouts['Name'] = 'name';
+        dictionaryLayouts['Description'] = 'description';
+
+        dictionaryLayouts['Movements'] = 'movements';
+        dictionaryLayouts['Model structure'] = 'model_structure';
+
+        const allRows = getRows(result, dictionaryLayouts);
+
+        console.log('allRows ', allRows);
+        allRows.forEach(oneRow => {
+          if (oneRow.layout_id && oneRow.layout_id !== null && oneRow.layout_id !== '') {
+            const layout_id = oneRow.layout_id;
+            delete oneRow.layout_id;
+            ApiFunctions.patch(
+              this.http,
+              'layouts/' + layout_id,
+              oneRow,
+              layout => {
+                const node = this.gridOptions.api.getRowNode(layout_id);
+                node.setData(layout);
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          } else {
+            ApiFunctions.post(
+              this.http,
+              'layouts',
+              oneRow,
+              layout => {
+                this.gridOptions.api.updateRowData({
+                  add: [layout],
+                });
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          }
+        });
+      });
+    }
+  }
+
   export() {
     this.gridOptions.api.exportDataAsCsv({
       columnSeparator: ';',
