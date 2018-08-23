@@ -386,7 +386,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  georeference() {
+  georeferenceOSM() {
+    this.georeference('open_street_maps');
+  }
+
+  georeference(src) {
     const nodes = this.gridOptions.api.getSelectedNodes();
 
     const numBuildings = nodes.length;
@@ -408,23 +412,27 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         `Continue anyway`,
         confirmed => {
           if (confirmed) {
-            this.geoRefBuildings(numBuildings, nodes);
+            this.geoRefBuildings(numBuildings, nodes, src);
           }
         }
       );
     } else {
-      this.geoRefBuildings(numBuildings, nodes);
+      this.geoRefBuildings(numBuildings, nodes, src);
     }
   }
 
-  geoRefBuildings(numBuildings, nodes) {
+  geoRefBuildings(numBuildings, nodes, src) {
     if (numBuildings === 1) {
       const node = nodes[0];
-      ManagerFunctions.openLink(urlGeoreference + '/map/' + node.data.building_id);
+      ManagerFunctions.openLink(
+        urlGeoreference + '/map/' + node.data.building_id + (src ? `#source=${src}` : '')
+      );
     } else if (numBuildings > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
       const list = building_ids.join('\t\n') + '\t\n';
-      ManagerFunctions.openLink(urlGeoreference + '/multiple#list=' + list);
+      ManagerFunctions.openLink(
+        urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
+      );
     }
   }
 

@@ -199,6 +199,8 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
       ...ColumnDefinitions.pagination,
       ...ColumnDefinitions.columnOptions,
 
+      getRowNodeId: data => data.name,
+
       onCellValueChanged: params => {
         ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites', this.gridOptions.api);
       },

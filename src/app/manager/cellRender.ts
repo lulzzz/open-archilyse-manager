@@ -252,7 +252,7 @@ export class CellRender {
       };
 
       if (!translate[params.value]) {
-        console.log('XXX', params.value);
+        console.error('Missing name', params.value);
       }
       return translate[params.value] ? translate[params.value] : params.value;
     }
@@ -338,7 +338,15 @@ export class CellRender {
       params.data.longitude &&
       params.data.longitude !== ''
     ) {
-      return `<a href="https://www.google.com/maps/@47.4000595,8.503753">view</a>`;
+      const coordinates = params.api.getRowNode('coordinates');
+
+      return `<a href="https://www.google.com/maps/place/${params.data.latitude}N+${
+        params.data.longitude
+      }E/">View</a> &nbsp; &nbsp; <a href="https://www.google.com/maps/dir/${
+        coordinates.data.latitude
+      }N+${coordinates.data.longitude}E/${params.data.latitude}N+${
+        params.data.longitude
+      }E/">View path</a>`;
     }
     return ``;
   }

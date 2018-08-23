@@ -749,19 +749,27 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  georeference() {
+  georeferenceOSM() {
+    this.georeference('open_street_maps');
+  }
+
+  georeference(src) {
     const nodes = this.gridOptions.api.getSelectedNodes();
 
     if (nodes.length === 1) {
       const node = nodes[0];
 
       const layout_id = node.data.layout_id;
-      ManagerFunctions.openLink(urlGeoreference + '/building/' + layout_id);
+      ManagerFunctions.openLink(
+        urlGeoreference + '/building/' + layout_id + (src ? `#source=${src}` : '')
+      );
     } else if (nodes.length > 1) {
       const layout_ids = nodes.map(node => node.data.layout_id);
 
       const list = layout_ids.map(layout_id => `\t` + layout_id + `\n`).join('');
-      ManagerFunctions.openLink(urlGeoreference + '/multiple#list=' + list);
+      ManagerFunctions.openLink(
+        urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
+      );
     }
   }
 

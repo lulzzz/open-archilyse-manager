@@ -120,7 +120,7 @@ function getColumnDefsCommon(distance, duration, score) {
       ],
     },
     {
-      headerName: 'Flight',
+      headerName: 'Straight',
       children: [
         {
           headerName: 'Distance',
@@ -128,24 +128,6 @@ function getColumnDefsCommon(distance, duration, score) {
           filter: 'agNumberColumnFilter',
           width: 90,
           cellRenderer: distance,
-          editable: false,
-          cellClass: 'right readOnly',
-        },
-        {
-          headerName: 'Duration',
-          field: 'flight.duration',
-          filter: 'agNumberColumnFilter',
-          width: 100,
-          cellRenderer: duration,
-          editable: false,
-          cellClass: 'right readOnly',
-        },
-        {
-          headerName: 'Score',
-          field: 'flight.score',
-          filter: 'agNumberColumnFilter',
-          width: 80,
-          cellRenderer: score,
           editable: false,
           cellClass: 'right readOnly',
         },
@@ -185,7 +167,7 @@ export const columnDefs = [
       },
       {
         headerName: 'Link',
-        width: 60,
+        width: 150,
         cellRenderer: CellRender.viewLatLan,
         editable: false,
         cellClass: 'right readOnly',

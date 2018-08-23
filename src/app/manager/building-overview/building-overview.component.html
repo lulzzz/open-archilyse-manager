@@ -9,7 +9,8 @@
     <button class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
     <button class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn green" (click)="georeference($event)" [disabled]="selectedNodes.length<=0" >Georeference ({{selectedNodes.length}})</button>
+    <button class="btn green" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
+    <button class="btn green" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
     <button class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
     <button class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
