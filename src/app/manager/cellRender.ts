@@ -262,18 +262,18 @@ export class CellRender {
   public static compareValue(value, unit) {
     let classSpan = 'diffNeutral';
     if (value > 0.5) {
-      classSpan = 'diffPositive';
-    } else if (value < -0.5) {
       classSpan = 'diffNegative';
+    } else if (value < -0.5) {
+      classSpan = 'diffPositive';
     }
     return `<span class="${classSpan}">${value}${unit}</span>`;
   }
   public static compareValueScore(value) {
     let classSpan = 'diffNeutral';
     if (value > 0.5) {
-      classSpan = 'diffPositive';
-    } else if (value < -0.5) {
       classSpan = 'diffNegative';
+    } else if (value < -0.5) {
+      classSpan = 'diffPositive';
     }
     return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
   }
@@ -342,11 +342,11 @@ export class CellRender {
 
       return `<a href="https://www.google.com/maps/place/${params.data.latitude}N+${
         params.data.longitude
-      }E/">View</a> &nbsp; &nbsp; <a href="https://www.google.com/maps/dir/${
+      }E/" target="_blank">View</a> &nbsp; &nbsp; <a href="https://www.google.com/maps/dir/${
         coordinates.data.latitude
       }N+${coordinates.data.longitude}E/${params.data.latitude}N+${
         params.data.longitude
-      }E/">View path</a>`;
+      }E/" target="_blank">View path</a>`;
     }
     return ``;
   }

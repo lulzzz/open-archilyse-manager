@@ -245,6 +245,10 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     window.location.href = `${urlPortfolio}/dpoi/${buildingId}`;
   }
 
+  switchDpoi() {
+    window.location.href = `${urlPortfolio}/dpoi/${this.buildingIdCompare}/${this.buildingId}`;
+  }
+
   getCategory(key) {
     const culture = 'Entertainment, Arts & Culture';
     const nature = 'Nature';

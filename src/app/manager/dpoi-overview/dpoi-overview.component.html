@@ -22,7 +22,7 @@
     <span *ngIf="!buildingIdCompare"><span class="label">Updated:</span> {{updated | date:'dd.MM.yyyy h:mma'}}</span>
   </div>
   <div>
-    <div class="address-help"><span [innerHTML]="addressHelp"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingId)" >View Dpoi</button></div>
+    <div class="address-help"><span [innerHTML]="addressHelp"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingId)" >View Dpoi</button> <button *ngIf="buildingIdCompare" class="btn blue" (click)="switchDpoi(buildingId)" >Switch</button></div>
     <div class="address-help"><span [innerHTML]="addressHelpCompare"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingIdCompare)" >View Dpoi</button></div>
   </div>
 

@@ -167,7 +167,7 @@ export const columnDefs = [
       },
       {
         headerName: 'Link',
-        width: 150,
+        width: 130,
         cellRenderer: CellRender.viewLatLan,
         editable: false,
         cellClass: 'right readOnly',
