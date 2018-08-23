@@ -5,21 +5,27 @@
 <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
 <div *ngIf="!loading && !generalError" class="topControls">
   <div>
+    <button class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Selection</button>
+    <button class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
+    &nbsp;&nbsp;&nbsp;
     <button class="btn green" (click)="backPage()" > Back </button>
     <button class="btn green" (click)="seeRawData()" > See Raw data </button>
     &nbsp;&nbsp;&nbsp;
-    <span *ngIf="!buildingIdCompare"><span class="label">Created:</span> {{created | date:'dd.MM.yyyy h:mma'}}</span>
-    <button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingId)" >Dpoi building 1</button>
-    &nbsp;&nbsp;&nbsp;
     <span *ngIf="!buildingIdCompare"><span class="label">Status:</span> {{status}}</span>
-    <button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingIdCompare)" >Dpoi building 2</button>
   </div>
   <div>
     <button class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
     <button class="btn yellow" (click)="export()" > CSV </button>
     &nbsp;&nbsp;&nbsp;
+    <span *ngIf="!buildingIdCompare"><span class="label">Created:</span> {{created | date:'dd.MM.yyyy h:mma'}}</span>
+    &nbsp;&nbsp;&nbsp;
     <span *ngIf="!buildingIdCompare"><span class="label">Updated:</span> {{updated | date:'dd.MM.yyyy h:mma'}}</span>
   </div>
+  <div>
+    <div class="address-help"><span [innerHTML]="addressHelp"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingId)" >View Dpoi</button></div>
+    <div class="address-help"><span [innerHTML]="addressHelpCompare"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingIdCompare)" >View Dpoi</button></div>
+  </div>
+
 </div>
 
 

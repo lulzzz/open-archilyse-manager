@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from '../../../../node_modules/rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 import { ColumnDefinitions } from '../columnDefinitions';
-import { CellRender } from '../cellRender';
-import { HttpClient } from '../../../../node_modules/@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../apiFunctions';
 import { ManagerFunctions } from '../managerFunctions';
@@ -33,6 +32,9 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   updated;
   status;
 
+  addressHelp = null;
+  addressHelpCompare = null;
+
   /** Info for the compared DPOI */
   createdCompare;
   updatedCompare;
@@ -54,6 +56,23 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     this.buildingIdCompare = this.route.snapshot.params['buildingIdCompare'];
 
     if (this.buildingId) {
+      ApiFunctions.get(this.http, `buildings/${this.buildingId}`, building => {
+        const address = building['address'];
+        const buildingName = building['name'] ? building['name'] : this.buildingId;
+        if (address) {
+          const street = address.street ? address.street : '';
+          const street_nr = address.street_nr ? address.street_nr : '';
+          const postal_code = address.postal_code ? address.postal_code : '';
+          const city = address.city ? address.city : '';
+          const country = address.country ? address.country : '';
+
+          const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
+          this.addressHelp = `Building "${buildingName}": <span class="address-text">${addressStr}</span>`;
+        } else {
+          this.addressHelp = `Address not defined for building <span class="address-text">${buildingName}</span>`;
+        }
+      });
+
       ApiFunctions.get(
         this.http,
         `buildings/${this.buildingId}/simulations`,
@@ -69,6 +88,23 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
             let simulationsArray;
 
             if (this.buildingIdCompare) {
+              ApiFunctions.get(this.http, `buildings/${this.buildingIdCompare}`, building => {
+                const address = building['address'];
+                const buildingName = building['name'] ? building['name'] : this.buildingId;
+                if (address) {
+                  const street = address.street ? address.street : '';
+                  const street_nr = address.street_nr ? address.street_nr : '';
+                  const postal_code = address.postal_code ? address.postal_code : '';
+                  const city = address.city ? address.city : '';
+                  const country = address.country ? address.country : '';
+
+                  const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
+                  this.addressHelpCompare = `Compared to "${buildingName}" : <span class="address-text">${addressStr}</span>`;
+                } else {
+                  this.addressHelpCompare = `Address not defined for building <span class="address-text">${buildingName}</span>`;
+                }
+              });
+
               ApiFunctions.get(
                 this.http,
                 `buildings/${this.buildingIdCompare}/simulations`,
@@ -225,9 +261,80 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     const hardware_category = 'Hardware';
     const money = 'Money';
     const accommodation = 'Accommodation';
+    const nightlife = 'Nightlife';
 
     const translate = {
+      baby_goods: stores,
+      bag: stores,
+      bandstand: nightlife,
+      bare_rock: vegetation,
+      beach: outdoor_category,
+      beach_resort: outdoor_category,
+      bird_hide: nature,
+      boat: transportation_category,
+      boat_rental: transportation_category,
+      boat_sharing: transportation_category,
+      brothel: accommodation,
+      bureau_de_change: money,
+      candles: furniture_category,
+      car_rental: transportation_category,
+      cathedral: religion,
+      charity: culture,
+      cheese: foods,
+      childcare: education,
+      cliff: outdoor_category,
+      collector: '',
+      common: '',
+      coordinates: '',
+      curtain: furniture_category,
+      dog_park: outdoor_category,
+      dormitory: accommodation,
+      escape_game: culture,
+      ferry_terminal: transportation_category,
+      fishing: outdoor_category,
+      food_court: foods,
+      frame: furniture_category,
+      games: culture,
+      garden_furniture: furniture_category,
+      general: '',
+      glaziery: furniture_category,
+      herbalist: healthcare,
+      houseware: furniture_category,
+      ice_cream: foods,
+      lamps: furniture_category,
+      language_school: education,
+      leather: '',
+      locksmith: '',
+      marina: '',
+      massage: outdoor_category,
+      model: culture,
+      newsagent: culture,
+      nutrition_supplements: foods,
+      pasta: foods,
+      pastry: foods,
+      public_bookcase: education,
+      radiotechnics: hardware_category,
+      rock: vegetation,
+      seafood: foods,
+      shingle: '',
+      slipway: '',
+      social_centre: education,
+      spices: '',
+      spring: nature,
+      stone: vegetation,
+      stripclub: nightlife,
+      studio: education,
+      subway_entrance: transportation_category,
+      swimming_area: outdoor_category,
+      swingerclub: nightlife,
+      tram: transportation_category,
+      variety_store: stores,
+      video: culture,
+      video_games: culture,
+
+      agrarian: nature,
       alcohol: foods,
+      amusement_arcade: culture,
       antiques: furniture_category,
       apartments: accommodation,
       art: culture,
@@ -235,7 +342,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
       atm: money,
       bakery: sustenance,
       bank: money,
-      bar: sustenance,
+      bar: nightlife,
       bathroom_furnishing: furniture_category,
       bbq: sustenance,
       beauty: clothing,
@@ -333,7 +440,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
       music_school: education,
       musical_instrument: culture,
       nature_reserve: nature,
-      nightclub: culture,
+      nightclub: nightlife,
       nursing_home: healthcare,
       office: '',
       outdoor: outdoor_category,
@@ -392,6 +499,15 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     };
 
     return translate[key] ? translate[key] : '';
+  }
+
+  clearFilters() {
+    this.filterModelSet = false;
+    this.gridApi.setFilterModel(null);
+  }
+
+  clearSelection() {
+    ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
   /**

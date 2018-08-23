@@ -225,6 +225,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           ...ColumnDefinitions.pagination,
           ...ColumnDefinitions.columnOptions,
 
+          getRowNodeId: data => data.unit_id,
           onCellValueChanged: params => {
             ManagerFunctions.reactToEdit(
               this.http,

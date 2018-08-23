@@ -423,18 +423,24 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   setLayoutBuildingData(layout) {
-    layout['building_referenced'] = false;
-    if (layout.unit_id) {
+    console.log('layout', layout);
+    if (layout.unit_id || layout.unit_id === '') {
       const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
       if (unit) {
         layout['building_id'] = unit.building_id;
         const building = this.buildingsArray.find(
           building => building.building_id === unit.building_id
         );
-        if (building) {
-          layout['building_referenced'] = ManagerFunctions.isReferencedBuilding(building);
-        }
+
+        // Has to be a building with that id and has to be georeferenced
+        layout['building_referenced'] = building && ManagerFunctions.isReferencedBuilding(building);
+      } else {
+        layout['building_id'] = '';
+        layout['building_referenced'] = false;
       }
+    } else {
+      layout['building_id'] = '';
+      layout['building_referenced'] = false;
     }
   }
 
@@ -591,6 +597,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           ...ColumnDefinitions.pagination,
           ...ColumnDefinitions.columnOptions,
 
+          getRowNodeId: data => data.layout_id,
           onCellValueChanged: params => {
             ManagerFunctions.reactToEdit(
               this.http,
@@ -648,7 +655,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     }
 
     // if the new Layout has new unit id, we update the building data.
-    if (element.unit_id) {
+    if (element.unit_id || element.unit_id === '') {
       this.setLayoutBuildingData(nodeData);
     }
   }

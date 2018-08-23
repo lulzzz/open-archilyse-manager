@@ -213,6 +213,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           ...ColumnDefinitions.pagination,
           ...ColumnDefinitions.columnOptions,
 
+          getRowNodeId: data => data.building_id,
           onCellValueChanged: params => {
             ManagerFunctions.reactToEdit(
               this.http,
@@ -517,7 +518,15 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         },
         result => {
           if (ManagerFunctions.isReferencedBuilding(building)) {
-            console.log('result', result, building.building_id);
+            if (!building['simulations']) {
+              building['simulations'] = {};
+            }
+            if (!building['simulations']['dpoi']) {
+              building['simulations']['dpoi'] = {};
+            }
+            building['simulations']['dpoi'].status = 'Pending';
+            const node = this.gridOptions.api.getRowNode(building.building_id);
+            node.setData(building);
           }
         },
         ManagerFunctions.showErroruser

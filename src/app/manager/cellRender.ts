@@ -18,12 +18,15 @@ export class CellRender {
   public static dpoiName(params) {
     if (params.value && params.value !== '') {
       const translate = {
+        agrarian: 'Agrarian',
         alcohol: 'Alcohol',
+        amusement_arcade: 'Amusement arcade',
         antiques: 'Antiques',
         apartments: 'Apartments',
         art: 'Art',
         arts_centre: 'Arts centre',
         atm: 'ATM',
+        baby_goods: 'Baby goods',
         bakery: 'Bakery',
         bank: 'Bank',
         bar: 'Bar',
@@ -180,8 +183,77 @@ export class CellRender {
         wetland: 'Wetland',
         wine: 'Wine',
         wood: 'Wood',
+        bag: 'Bag',
+        bandstand: 'Bandstand',
+        bare_rock: 'Bare rock',
+        beach: 'Beach',
+        beach_resort: 'Beach resort',
+        bird_hide: 'Bird hide',
+        boat: 'Boat',
+        boat_rental: 'Boat rental',
+        boat_sharing: 'Boat sharing',
+        brothel: 'Brothel',
+        bureau_de_change: 'Bureau de change',
+        candles: 'Candles',
+        car_rental: 'Car rental',
+        cathedral: 'Cathedral',
+        charity: 'Charity',
+        cheese: 'Cheese',
+        childcare: 'Childcare',
+        cliff: 'Cliff',
+        collector: 'Collector',
+        common: 'Common',
+        coordinates: 'Coordinates',
+        curtain: 'Curtain',
+        dog_park: 'Dog park',
+        dormitory: 'Dormitory',
+        escape_game: 'Escape game',
+        ferry_terminal: 'Ferry terminal',
+        fishing: 'Fishing',
+        food_court: 'Food court',
+        frame: 'Frame',
+        games: 'Games',
+        garden_furniture: 'Garden furniture',
+        general: 'General',
+        glaziery: 'Glaziery',
+        herbalist: 'Herbalist',
+        houseware: 'Houseware',
+        ice_cream: 'Ice cream',
+        lamps: 'Lamps',
+        language_school: 'Language school',
+        leather: 'Leather',
+        locksmith: 'Locksmith',
+        marina: 'Marina',
+        massage: 'Massage',
+        model: 'Model',
+        newsagent: 'Newsagent',
+        nutrition_supplements: 'Nutrition supplements',
+        pasta: 'Pasta',
+        pastry: 'Pastry',
+        public_bookcase: 'Public bookcase',
+        radiotechnics: 'Radiotechnics',
+        rock: 'Rock',
+        seafood: 'Seafood',
+        shingle: 'Shingle',
+        slipway: 'Slipway',
+        social_centre: 'Social centre',
+        spices: 'Spices',
+        spring: 'Spring',
+        stone: 'Stone',
+        stripclub: 'Stripclub',
+        studio: 'Studio',
+        subway_entrance: 'Subway entrance',
+        swimming_area: 'Swimming area',
+        swingerclub: 'Swingerclub',
+        tram: 'Tram',
+        variety_store: 'Variety store',
+        video: 'Video',
+        video_games: 'Video games',
       };
 
+      if (!translate[params.value]) {
+        console.log('XXX', params.value);
+      }
       return translate[params.value] ? translate[params.value] : params.value;
     }
     return ``;
@@ -254,6 +326,19 @@ export class CellRender {
   public static latLan(params) {
     if (params.value && params.value !== '') {
       return params.value.toFixed(15);
+    }
+    return ``;
+  }
+
+  public static viewLatLan(params) {
+    if (
+      params.data &&
+      params.data.latitude &&
+      params.data.latitude !== '' &&
+      params.data.longitude &&
+      params.data.longitude !== ''
+    ) {
+      return `<a href="https://www.google.com/maps/@47.4000595,8.503753">view</a>`;
     }
     return ``;
   }
@@ -405,8 +490,7 @@ export class CellRender {
   }
 
   public static viewSimulationDpoiBuilding(params) {
-    if (params.value && params.value === 'complete') {
-      console.log('params.value', params.data.building_id);
+    if (params.value) {
       if (params.value === 'complete') {
         return (
           `<a href='${urlPortfolio}/simulation/building/` +
@@ -418,12 +502,12 @@ export class CellRender {
       }
       return params.value;
     }
+
     return '?';
   }
 
   public static viewSimulationBuilding(params) {
-    if (params.value && params.value === 'complete') {
-      console.log('params.value', params.data.building_id);
+    if (params.value) {
       if (params.value === 'complete') {
         return (
           `<a href='${urlPortfolio}/simulation/building/` +
