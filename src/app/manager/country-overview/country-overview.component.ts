@@ -55,6 +55,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Progress',
+        headerTooltip: 'Procent of georeferenced buildings and layouts',
         children: ColumnDefinitions.progressProcents,
       },
       {

@@ -2,6 +2,6 @@
   <li *ngFor="let option of options">
     <span *ngIf="option.value === current" >{{ option.title }}</span>
     <a *ngIf="option.value !== current && option.link" [routerLink]="option.link" [popper]="option.tooltip" >{{ option.title }}</a>
-    <a *ngIf="option.value !== current && !option.link" (click)="changeVal(option.value)"[popper]="option.tooltip" >{{ option.title }}</a>
+    <a *ngIf="option.value !== current && !option.link" (click)="changeVal(option.value)" [popper]="option.tooltip" >{{ option.title }}</a>
   </li>
 </ul>

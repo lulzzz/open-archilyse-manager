@@ -38,6 +38,7 @@ function getColumnDefsCommon(distance, duration, score) {
         {
           headerName: 'Duration',
           field: 'foot.duration',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 100,
           cellRenderer: duration,
@@ -47,6 +48,7 @@ function getColumnDefsCommon(distance, duration, score) {
         {
           headerName: 'Score',
           field: 'foot.score',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 80,
           cellRenderer: score,
@@ -70,6 +72,7 @@ function getColumnDefsCommon(distance, duration, score) {
         {
           headerName: 'Duration',
           field: 'bike.duration',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 100,
           cellRenderer: duration,
@@ -79,6 +82,7 @@ function getColumnDefsCommon(distance, duration, score) {
         {
           headerName: 'Score',
           field: 'bike.score',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 80,
           cellRenderer: score,
@@ -102,6 +106,7 @@ function getColumnDefsCommon(distance, duration, score) {
         {
           headerName: 'Duration',
           field: 'car.duration',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 100,
           cellRenderer: duration,
@@ -111,6 +116,7 @@ function getColumnDefsCommon(distance, duration, score) {
         {
           headerName: 'Score',
           field: 'car.score',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 80,
           cellRenderer: score,
@@ -152,6 +158,7 @@ export const columnDefs = [
       {
         headerName: 'Latitude',
         field: 'latitude',
+        columnGroupShow: 'open',
         width: 150,
         cellRenderer: CellRender.latLan,
         editable: false,
@@ -160,6 +167,7 @@ export const columnDefs = [
       {
         headerName: 'Longitude',
         field: 'longitude',
+        columnGroupShow: 'open',
         width: 150,
         cellRenderer: CellRender.latLan,
         editable: false,

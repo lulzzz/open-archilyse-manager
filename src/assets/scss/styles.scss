@@ -151,6 +151,16 @@ app-root {
   text-align: right;
 }
 
+/** table header */
+.ag-header-expand-icon{
+  cursor: pointer;
+}
+
+.label-dpoi{
+  font-weight: bold;
+}
+
+
 .address-text{
   color: #000867;
 }

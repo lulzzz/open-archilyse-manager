@@ -38,24 +38,35 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   columnDefs = [
     {
       headerName: 'Site',
+      openByDefault: true,
+      headerTooltip: 'Site entity main properties',
       children: [
         {
           headerName: 'Site Id',
           field: 'site_id',
+          columnGroupShow: 'open',
           width: 190,
           editable: false,
           cellClass: 'idCell',
         },
         { headerName: 'Name', field: 'name', width: 190, editable: true },
-        { headerName: 'Description', field: 'description', width: 300, editable: true },
+        {
+          headerName: 'Description',
+          columnGroupShow: 'open',
+          field: 'description',
+          width: 300,
+          editable: true,
+        },
       ],
     },
     {
       headerName: 'Count',
+      headerTooltip: 'Number of elements assigned to this site',
       children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsSite, null),
     },
     {
       headerName: 'Progress',
+      headerTooltip: 'Procent of georeferenced buildings and layouts',
       children: ColumnDefinitions.progressProcents,
     },
     {

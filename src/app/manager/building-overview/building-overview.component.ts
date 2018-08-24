@@ -42,9 +42,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     this.columnDefs = [
       {
         headerName: 'Site',
+        headerTooltip: 'Parent site main properties',
         children: [
           {
             headerName: 'Site Id',
+            columnGroupShow: 'open',
             field: 'site_id',
             width: 230,
             cellRenderer: CellRender.viewSiteOfBuilding,
@@ -58,27 +60,42 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Building',
+        headerTooltip: 'Building entity main properties',
+        openByDefault: true,
         children: [
           {
             headerName: 'Building Id',
+            columnGroupShow: 'open',
             field: 'building_id',
             width: 190,
             editable: false,
             cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', editable: true },
-          { headerName: 'Description', field: 'description', editable: true },
+          {
+            headerName: 'Description',
+            columnGroupShow: 'open',
+            field: 'description',
+            editable: true,
+          },
         ],
       },
       {
         headerName: 'Building Address',
+        headerTooltip: 'Address properties for the current building, necessary for the DPOI simulation and georefence operations',
         children: [
           {
             headerName: 'Country',
+            columnGroupShow: 'open',
             field: 'address.country',
             editable: true,
           },
-          { headerName: 'City', field: 'address.city', editable: true },
+          {
+            headerName: 'City',
+            columnGroupShow: 'open',
+            field: 'address.city',
+            editable: true,
+          },
           { headerName: 'Street', field: 'address.street', editable: true },
           { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
           { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
@@ -99,6 +116,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Layouts',
             field: 'layouts',
+            columnGroupShow: 'open',
             filter: 'agNumberColumnFilter',
             width: 90,
             editable: false,
@@ -166,6 +184,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Images',
+        headerTooltip: 'Current Layout uploaded pictures',
         children: [
           {
             headerName: 'Images',

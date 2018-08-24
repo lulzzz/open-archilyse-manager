@@ -254,7 +254,13 @@ export class CellRender {
       if (!translate[params.value]) {
         console.error('Missing name', params.value);
       }
-      return translate[params.value] ? translate[params.value] : params.value;
+      return translate[params.value]
+        ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Key:${
+            params.value
+          }" target="_blank"><i class="fas fa-info-circle"></i></a> &nbsp; <a href="https://taginfo.openstreetmap.org/keys/${
+            params.value
+          }" target="_blank"><i class="fas fa-tag"></i></a>`
+        : params.value;
     }
     return ``;
   }

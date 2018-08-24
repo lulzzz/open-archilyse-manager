@@ -67,7 +67,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
           const country = address.country ? address.country : '';
 
           const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
-          this.addressHelp = `Building "${buildingName}": <span class="address-text">${addressStr}</span>`;
+          this.addressHelp = `<span class="label-dpoi">Building "${buildingName}":</span> <span class="address-text">${addressStr}</span>`;
         } else {
           this.addressHelp = `Address not defined for building <span class="address-text">${buildingName}</span>`;
         }
@@ -99,7 +99,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
                   const country = address.country ? address.country : '';
 
                   const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
-                  this.addressHelpCompare = `Compared to "${buildingName}" : <span class="address-text">${addressStr}</span>`;
+                  this.addressHelpCompare = `<span class="label-dpoi">Compared to "${buildingName}" :</span> <span class="address-text">${addressStr}</span>`;
                 } else {
                   this.addressHelpCompare = `Address not defined for building <span class="address-text">${buildingName}</span>`;
                 }

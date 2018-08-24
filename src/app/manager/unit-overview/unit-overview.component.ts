@@ -44,6 +44,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     this.columnDefs = [
       {
         headerName: 'Building',
+        headerTooltip: 'Parent building main properties',
         children: [
           {
             headerName: 'Building Id',
@@ -68,16 +69,24 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Unit',
+        headerTooltip: 'Unit entity main properties',
+        openByDefault: true,
         children: [
           {
             headerName: 'Unit Id',
             field: 'unit_id',
+            columnGroupShow: 'open',
             width: 190,
             editable: false,
             cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', editable: true },
-          { headerName: 'Description', field: 'description', editable: true },
+          {
+            headerName: 'Description',
+            columnGroupShow: 'open',
+            field: 'description',
+            editable: true,
+          },
         ],
       },
       {
@@ -106,12 +115,13 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Unit address',
         children: [
           { headerName: 'Line1', field: 'line1', editable: true },
-          { headerName: 'Line2', field: 'line2', editable: true },
-          { headerName: 'Line3', field: 'line3', editable: true },
+          { headerName: 'Line2', columnGroupShow: 'open', field: 'line2', editable: true },
+          { headerName: 'Line3', columnGroupShow: 'open', field: 'line3', editable: true },
         ],
       },
       {
         headerName: 'Images',
+        headerTooltip: 'Current Layout uploaded pictures',
         children: [
           {
             headerName: 'Images',
@@ -289,7 +299,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         'units',
         newRow,
         unit => {
-          console.log('unit', unit);
+          // We populate the calculated fields
+          this.unitReactionToEdit(unit, unit);
+
+          // We update the data in the table
           this.gridOptions.api.updateRowData({
             add: [unit],
           });

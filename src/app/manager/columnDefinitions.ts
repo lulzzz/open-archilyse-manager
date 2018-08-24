@@ -28,16 +28,21 @@ export class ColumnDefinitions {
   public static metaUserAndData = [
     {
       headerName: 'Log',
+      headerTooltip: 'Control values',
       children: [
         {
-          headerName: 'User Id',
-          field: 'user_id',
-          width: 250,
+          headerName: 'Updated',
+          field: 'updated',
+          headerTooltip: 'Time when the last value was changed',
+          width: 90,
+          cellRenderer: CellRender.viewDate,
           editable: false,
           cellClass: 'readOnly',
         },
         {
           headerName: 'Created',
+          columnGroupShow: 'open',
+          headerTooltip: 'Time when the element was created',
           field: 'created',
           width: 90,
           cellRenderer: CellRender.viewDate,
@@ -45,10 +50,11 @@ export class ColumnDefinitions {
           cellClass: 'readOnly',
         },
         {
-          headerName: 'Updated',
-          field: 'updated',
-          width: 90,
-          cellRenderer: CellRender.viewDate,
+          headerName: 'User Id',
+          columnGroupShow: 'open',
+          headerTooltip: 'User that changed the last value',
+          field: 'user_id',
+          width: 250,
           editable: false,
           cellClass: 'readOnly',
         },
@@ -60,6 +66,7 @@ export class ColumnDefinitions {
     {
       headerName: 'Buildings',
       field: 'progress',
+      headerTooltip: 'Procent of georeferenced buildings',
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
@@ -68,6 +75,7 @@ export class ColumnDefinitions {
     {
       headerName: 'Layouts',
       field: 'progressLayout',
+      headerTooltip: 'Procent of georeferenced layouts',
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
@@ -85,6 +93,7 @@ export class ColumnDefinitions {
     {
       headerName: 'Structured',
       field: 'structured',
+      columnGroupShow: 'open',
       cellRenderer: 'checkboxRenderer',
       width: 110,
       cellRendererParams: { editable: true },
@@ -92,6 +101,7 @@ export class ColumnDefinitions {
     {
       headerName: 'Digitized',
       field: 'digitized',
+      columnGroupShow: 'open',
       cellRenderer: 'checkboxRenderer',
       width: 100,
       cellRendererParams: { editable: true },
@@ -173,6 +183,7 @@ export class ColumnDefinitions {
       {
         headerName: 'Buildings',
         field: 'buildings',
+        headerTooltip: 'Total number of buildings assigned',
         filter: 'agNumberColumnFilter',
         width: 100,
         cellRenderer: viewBuildings,
@@ -182,6 +193,8 @@ export class ColumnDefinitions {
       {
         headerName: 'Units',
         field: 'units',
+        columnGroupShow: 'open',
+        headerTooltip: 'Total number of units assigned',
         filter: 'agNumberColumnFilter',
         width: 100,
         cellRenderer: viewUnits,
@@ -191,6 +204,8 @@ export class ColumnDefinitions {
       {
         headerName: 'Layouts',
         field: 'layouts',
+        columnGroupShow: 'open',
+        headerTooltip: 'Total number of layouts assigned',
         filter: 'agNumberColumnFilter',
         width: 100,
         editable: false,

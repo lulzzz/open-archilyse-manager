@@ -51,6 +51,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     this.columnDefs = [
       {
         headerName: 'Building',
+        headerTooltip:
+          'Parent building (Read only, calculated from the parent unit) main properties',
         children: [
           {
             headerName: 'Building Id',
@@ -71,6 +73,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Unit',
+        headerTooltip: 'Parent unit main properties',
         children: [
           {
             headerName: 'Unit Id',
@@ -87,6 +90,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Layout',
+        headerTooltip: 'Layout entity main properties',
+        openByDefault: true,
         children: [
           {
             headerName: 'Layout Id',
@@ -96,11 +101,17 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', editable: true },
-          { headerName: 'Description', field: 'description', editable: true },
+          {
+            headerName: 'Description',
+            columnGroupShow: 'open',
+            field: 'description',
+            editable: true,
+          },
         ],
       },
       {
         headerName: 'Images',
+        headerTooltip: 'Current Layout uploaded pictures',
         children: [
           {
             headerName: 'Images',
@@ -151,6 +162,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Rooms',
             field: 'room',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -159,6 +171,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Corridors',
             field: 'corridor',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -167,6 +180,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Bathrooms',
             field: 'bathroom',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -175,6 +189,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Kitchens',
             field: 'kitchen',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -183,6 +198,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Balconies',
             field: 'balcony',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -191,6 +207,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Storerooms',
             field: 'storeroom',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -199,6 +216,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Other areas',
             field: 'notDefined',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.areaInfo,
             width: 100,
             editable: false,
@@ -212,6 +230,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Desks',
             field: 'num_desks',
+            columnGroupShow: 'open',
             width: 80,
             editable: false,
             cellClass: 'readOnly',
@@ -219,6 +238,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Seats',
             field: 'num_seats',
+            columnGroupShow: 'open',
             width: 80,
             editable: false,
             cellClass: 'readOnly',
@@ -226,6 +246,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Doors',
             field: 'num_doors',
+            columnGroupShow: 'open',
             width: 80,
             editable: false,
             cellClass: 'readOnly',
@@ -233,6 +254,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Sinks',
             field: 'num_sink',
+            columnGroupShow: 'open',
             width: 80,
             editable: false,
             cellClass: 'readOnly',
@@ -240,6 +262,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Toilets',
             field: 'num_toilet',
+            columnGroupShow: 'open',
             width: 80,
             editable: false,
             cellClass: 'readOnly',
@@ -247,6 +270,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Railings',
             field: 'num_railing',
+            columnGroupShow: 'open',
             width: 90,
             editable: false,
             cellClass: 'readOnly',
@@ -254,6 +278,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Stairs',
             field: 'num_stairs',
+            columnGroupShow: 'open',
             width: 80,
             editable: false,
             cellClass: 'readOnly',
@@ -261,6 +286,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Kitchens',
             field: 'num_kitchens',
+            columnGroupShow: 'open',
             width: 90,
             editable: false,
             cellClass: 'readOnly',
@@ -275,6 +301,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Windows Interior',
             field: 'num_windowInterior',
+            columnGroupShow: 'open',
             width: 120,
             editable: false,
             cellClass: 'readOnly',
@@ -707,6 +734,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         'layouts',
         newRow,
         layout => {
+          // We populate the calculated fields
+          this.layoutReactionToEdit(layout, layout);
+
+          // We update the data in the table
           this.gridOptions.api.updateRowData({
             add: [layout],
           });
