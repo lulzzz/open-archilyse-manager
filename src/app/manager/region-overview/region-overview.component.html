@@ -5,12 +5,12 @@
 <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
 <div *ngIf="!loading && !generalError" class="topControls">
   <div>
-    <button class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-    <button class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
+    <button [popper]="'Remove the selection if any'" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+    <button [popper]="'Remove the column filters if any'" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
   </div>
   <div>
-    <button class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-    <button class="btn yellow" (click)="export()" > CSV </button>
+    <button [popper]="'Build a semicolon separated .CSV file to import in Excel with all the selected elements in this table'"  class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+    <button [popper]="'Build a semicolon separated .CSV file to import in Excel with all the elements in this table'"  class="btn yellow" (click)="export()" > CSV </button>
   </div>
 </div>
 
