@@ -9,8 +9,8 @@
     <button [popper]="'Remove the column filters if any'" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
     <button [popper]="'Select only the buildings that where not georeferenced yet.'" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn green" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
-    <button class="btn green" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
+    <button [popper]="'Batch georeference in Swiss Topo (select or confirm the building in the map for the giving address) the selected buildings.'" class="btn green" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
+    <button [popper]="'Batch georeference in Open Street Maps (select or confirm the building in the map for the giving address) the selected buildings.'"  class="btn green" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
     <button [popper]="'Create a copy of every selected building'" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
     <button [popper]="'Delete the current selected buildings'" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
@@ -23,9 +23,9 @@
     <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
     <label [popper]="'Import a .xsl or .xlsx file to add new elements or update the existing ones when the element id is provided'" for="file" class="btn yellow" >Import Excel file</label>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>
-    <button class="btn orange" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
-    <button class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
+    <button [popper]="'Request the status of the simulations from the selected buildings'" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>
+    <button [popper]="'Select two buildings to compare the dpoi simulation results from them'" class="btn orange" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
+    <button [popper]="'Order the start simulations for the selected buildings'" class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
   </div>
 </div>
 <ag-grid-angular

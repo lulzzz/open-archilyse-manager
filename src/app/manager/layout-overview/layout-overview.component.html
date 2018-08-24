@@ -7,11 +7,11 @@
   <div>
     <button [popper]="'Remove the selection if any'" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Selection</button>
     <button [popper]="'Remove the column filters if any'" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
-    <button class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
-    <button class="btn blue" (click)="selectNotDigitalized($event)" >Sel. Not Digitalized</button>
+    <button [popper]="'Select the layouts that were not georeferenced yet'" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
+    <button [popper]="'Select the layouts that were not digitalized yet'" class="btn blue" (click)="selectNotDigitalized($event)" >Sel. Not Digitalized</button>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Georef. ({{selectedNodes.length}})</button>
-    <button class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Georef. OSM ({{selectedNodes.length}})</button>
+    <button [popper]="'Batch georeference in Swiss Topo (confirm the position of the layout in the building) the selected layouts.'" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Georef. ({{selectedNodes.length}})</button>
+    <button [popper]="'Batch georeference in Open Street Maps (confirm the position of the layout in the building) the selected layouts'" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Georef. OSM ({{selectedNodes.length}})</button>
     <button [popper]="'Create a copy of every selected layout'" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="duplicate($event)" >Duplicate ({{selectedNodes.length}})</button>
     <button [popper]="'Delete the current selected layout'" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
@@ -24,8 +24,8 @@
     <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
     <label [popper]="'Import a .xsl or .xlsx file to add new elements or update the existing ones when the element id is provided'"  for="file" class="btn yellow" >Import Excel file</label>
     &nbsp;&nbsp;&nbsp;
-    <button class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length <= 0"  > Get Sim Status. ({{selectedNodes.length}})</button>
-    <button class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length <= 0"  > Start Sims. ({{selectedNodes.length}})</button>
+    <button [popper]="'Request the status of the simulations from the selected layouts'" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length <= 0"  > Get Sim Status. ({{selectedNodes.length}})</button>
+    <button [popper]="'Order the start simulations for the selected layouts'" class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length <= 0"  > Start Sims. ({{selectedNodes.length}})</button>
   </div>
   <div *ngIf="selectedNodes.length === 1">
     Floor: <input id="floor" type="text" placeholder="Floor number" />

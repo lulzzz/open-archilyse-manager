@@ -12,6 +12,7 @@ import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { EditorConstants } from '../EditorConstants';
 import { convertFileToWorkbook, getRows } from '../excel';
+import { FunctionMetadata } from '@angular/compiler-cli';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -437,8 +438,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         floors: [],
       },
       layouts => {
-        console.log('layouts', layouts);
-
         this.gridOptions.api.updateRowData({
           add: [layouts],
         });
@@ -450,7 +449,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   setLayoutBuildingData(layout) {
-    console.log('layout', layout);
     if (layout.unit_id || layout.unit_id === '') {
       const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
       if (unit) {
@@ -791,13 +789,148 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       const node = nodes[0];
 
       const layout_id = node.data.layout_id;
+
+      if (!ManagerFunctions.isDigitalizedLayout(node.data)) {
+        ManagerFunctions.showWarning(
+          'Layout with no model structure',
+          `The layout has not been digitalized, a model structure is required before georeferencing.`,
+          'Ok',
+          confirmed => {}
+        );
+        return false;
+      }
+
+      if (!node.data.unit_id || !node.data.building_id) {
+        ManagerFunctions.showWarning(
+          'Layout not linked to a unit that belongs to a building with address',
+          `The layout has not valid building with address, a georeferenced building is required before layout georeferencing.`,
+          `Ok`,
+          confirmed => {}
+        );
+        return false;
+      }
+
+      const unit_found = this.unitsArray.find(unit => unit.unit_id === node.data.unit_id);
+      const building_found = this.buildingsArray.find(
+        building => building.building_id === unit_found.building_id
+      );
+
+      if (!ManagerFunctions.isReferencedBuilding(building_found)) {
+        ManagerFunctions.showWarning(
+          'Layout not linked to a unit that belongs to a georeferenced building',
+          `The layout has not valid georeferenced building, a georeferenced building is required before layout georeferencing.`,
+          'Ok',
+          confirmed => {}
+        );
+        return false;
+      }
+
       ManagerFunctions.openLink(
         urlGeoreference + '/building/' + layout_id + (src ? `#source=${src}` : '')
       );
     } else if (nodes.length > 1) {
-      const layout_ids = nodes.map(node => node.data.layout_id);
+      const layouts_data = nodes.map(node => {
+        const layout = node.data;
+        const layout_id_found = layout.layout_id;
 
-      const list = layout_ids.map(layout_id => `\t` + layout_id + `\n`).join('');
+        let model_structure_found = ManagerFunctions.isDigitalizedLayout(layout);
+        let unit_found = null;
+        let unit_id_found = null;
+        let building_found = null;
+        let building_id_found = null;
+        let building_referenced_found = null;
+
+        if (layout.unit_id || layout.unit_id === '') {
+          unit_id_found = layout.unit_id;
+          unit_found = this.unitsArray.find(unit => unit.unit_id === unit_id_found);
+          if (unit_found) {
+            building_id_found = unit_found.building_id;
+            building_found = this.buildingsArray.find(
+              building => building.building_id === unit_found.building_id
+            );
+
+            // Has to be a building with that id and has to be georeferenced
+            building_referenced_found =
+              building_found && ManagerFunctions.isReferencedBuilding(building_found);
+          } else {
+            building_referenced_found = false;
+          }
+        } else {
+          building_referenced_found = false;
+        }
+
+        return {
+          has_model_structure: model_structure_found,
+          layout_id: layout_id_found,
+          unit: unit_found,
+          unit_id: unit_id_found,
+          building: building_found,
+          building_id: building_id_found,
+          building_referenced: building_referenced_found,
+        };
+      });
+
+      console.log('layouts_data', layouts_data);
+
+      const list = layouts_data
+        .map(layout_data => {
+          if (layout_data.has_model_structure && layout_data.building_id) {
+            if (layout_data.building_referenced) {
+              return `\t${layout_data.layout_id}\n`;
+            }
+            return `${layout_data.building_id}\t${layout_data.layout_id}\n`;
+          }
+          return ``;
+        })
+        .join('');
+
+      const withoutMS = layouts_data.reduce(
+        (accumulator, layout_data) =>
+          layout_data.has_model_structure ? accumulator : accumulator + 1,
+        0
+      );
+      const withNoAdress = layouts_data.reduce(
+        (accumulator, layout_data) =>
+          layout_data.building_referenced ? accumulator : accumulator + 1,
+        0
+      );
+
+      if (withoutMS > 0) {
+        ManagerFunctions.showWarning(
+          'Layouts with no model structure',
+          withoutMS === 1
+            ? `There is a layout in your selection that has not been digitalized.`
+            : `There are ${withoutMS} layouts in your selection that have not been digitalized.`,
+          `Continue anyway`,
+          confirmed => {
+            if (confirmed) {
+              this.georeferenceConfirmedModelStructure(withNoAdress, list, src);
+            }
+          }
+        );
+      } else {
+        this.georeferenceConfirmedModelStructure(withNoAdress, list, src);
+      }
+    }
+  }
+
+  georeferenceConfirmedModelStructure(withNoAdress, list, src) {
+    if (withNoAdress > 0) {
+      ManagerFunctions.showWarning(
+        'Layouts not linked to a unit that belongs to a georeferenced building',
+        withNoAdress === 1
+          ? `There is a layout in your selection that has not valid georeferenced building.`
+          : `There are ${withNoAdress} layouts in your selection that have not valid georeferenced buildings.`,
+        `Continue anyway`,
+        confirmed => {
+          if (confirmed) {
+            ManagerFunctions.openLink(
+              urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
+            );
+          }
+        }
+      );
+    } else {
       ManagerFunctions.openLink(
         urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
       );

@@ -78,7 +78,7 @@ export class ManagerFunctions {
   }
 
   public static isDigitalizedLayout(layout: Layout) {
-    return (
+    return !!(
       layout.model_structure &&
       layout.model_structure['floors'] &&
       layout.model_structure['floors'].length
