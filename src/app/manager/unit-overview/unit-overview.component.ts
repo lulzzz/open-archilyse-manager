@@ -65,6 +65,12 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             cellRendererParams: { editable: false },
             cellClass: 'readOnly',
           },
+          {
+            headerName: 'Name',
+            field: 'building_name',
+            columnGroupShow: 'open',
+            editable: true,
+          },
         ],
       },
       {
@@ -187,6 +193,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         building => building.building_id === nodeData.building_id
       );
 
+      nodeData['building_name'] =
+        buildingThisUnit && buildingThisUnit.name ? buildingThisUnit.name : '';
+
       nodeData['building_referenced'] =
         buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
     }
@@ -219,12 +228,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           }
           unit['progressLayout'] = progressLayout;
 
-          const buildingThisUnit = this.buildingsArray.find(
-            building => building.building_id === unit.building_id
-          );
-
-          unit['building_referenced'] =
-            buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
+          this.unitReactionToEdit(unit, unit);
         });
 
         this.gridOptions = <GridOptions>{
@@ -284,6 +288,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       delete newRow['unit_id'];
 
       // Calculated are not duplicated
+      delete newRow['building_name'];
       delete newRow['building_referenced'];
       delete newRow['layouts'];
       delete newRow['progressLayout'];

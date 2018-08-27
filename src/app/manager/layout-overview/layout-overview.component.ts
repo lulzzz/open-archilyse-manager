@@ -69,6 +69,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRendererParams: { editable: false },
             cellClass: 'readOnly',
           },
+          {
+            headerName: 'Name',
+            field: 'building_name',
+            columnGroupShow: 'open',
+            editable: true,
+          },
         ],
       },
       {
@@ -84,6 +90,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellEditorParams: {
               values: ['', ...units.map(unit => unit.unit_id)],
             },
+            editable: true,
+          },
+          {
+            headerName: 'Name',
+            field: 'unit_name',
+            columnGroupShow: 'open',
             editable: true,
           },
         ],
@@ -452,19 +464,28 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
       if (unit) {
         layout['building_id'] = unit.building_id;
+        layout['unit_name'] = unit.name ? unit.name : '';
+
         const building = this.buildingsArray.find(
           building => building.building_id === unit.building_id
         );
 
         // Has to be a building with that id and has to be georeferenced
         layout['building_referenced'] = building && ManagerFunctions.isReferencedBuilding(building);
+        layout['building_name'] = building && building.name ? building.name : '';
       } else {
         layout['building_id'] = '';
+        layout['building_name'] = '';
         layout['building_referenced'] = false;
+
+        layout['unit_name'] = '';
       }
     } else {
       layout['building_id'] = '';
+      layout['building_name'] = '';
       layout['building_referenced'] = false;
+
+      layout['unit_name'] = '';
     }
   }
 
@@ -698,7 +719,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         delete newRow['model_structure'].type;
       }
 
+      delete newRow['unit_name'];
+
+      delete newRow['building_name'];
       delete newRow['building_referenced'];
+
       delete newRow['building_id'];
       delete newRow['total_area'];
       delete newRow['notDefined'];
