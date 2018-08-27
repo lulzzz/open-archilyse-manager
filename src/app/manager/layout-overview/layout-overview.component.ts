@@ -11,8 +11,14 @@ import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { EditorConstants } from '../EditorConstants';
-import {convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows, showInfoExcel} from '../excel';
-import {OverlayService} from '../../_services/overlay.service';
+import {
+  convertFileToWorkbook,
+  exportOptions,
+  exportSelectedOptions,
+  getRows,
+  showInfoExcel,
+} from '../excel';
+import { OverlayService } from '../../_services/overlay.service';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -89,6 +95,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             width: 230,
             cellRenderer: CellRender.viewUnit,
             cellEditor: 'agPopupSelectCellEditor',
+            valueFormatter: CellRender.unitFormatter.bind(this),
             cellEditorParams: {
               values: ['', ...units.map(unit => unit.unit_id)],
             },
@@ -460,8 +467,12 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,
-              private infoDialog: OverlayService) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private infoDialog: OverlayService
+  ) {}
 
   setLayoutBuildingData(layout) {
     if (layout.unit_id || layout.unit_id === '') {

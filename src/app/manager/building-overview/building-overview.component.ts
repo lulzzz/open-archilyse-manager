@@ -9,7 +9,13 @@ import { ApiFunctions } from '../apiFunctions';
 import { urlGeoreference, urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
-import {convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows, showInfoExcel} from '../excel';
+import {
+  convertFileToWorkbook,
+  exportOptions,
+  exportSelectedOptions,
+  getRows,
+  showInfoExcel,
+} from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
 
 @Component({
@@ -31,6 +37,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   gridApi;
   gridColumnApi;
+
+  sitesArray;
 
   filterModelSet = false;
 
@@ -55,6 +63,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             cellEditorParams: {
               values: ['', ...sites.map(site => site.site_id)],
             },
+            valueFormatter: CellRender.siteFormatter.bind(this),
             editable: true,
           },
           {
@@ -215,6 +224,25 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService
   ) {}
 
+  buildingReactionToEdit(nodeData, element) {
+    // if the new Layout has new unit id, we update the building data.
+    if (element.site_id || element.site_id === '') {
+      this.setBuildingSiteData(nodeData);
+    }
+  }
+  setBuildingSiteData(building) {
+    if (building.site_id || building.site_id === '') {
+      const site = this.sitesArray.find(site => site.site_id === building.site_id);
+      if (site) {
+        building['site_name'] = site.name ? site.name : '';
+      } else {
+        building['site_name'] = '';
+      }
+    } else {
+      building['site_name'] = '';
+    }
+  }
+
   ngOnInit() {
     /** BUILDINGS */
     ManagerFunctions.requestAllData(
@@ -222,6 +250,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
+        this.sitesArray = sitesArray;
         this.loading = false;
 
         this.buildColumDefinitions(sitesArray);
@@ -236,6 +265,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           building.units = progressResult.numberOfUnits;
           building.layouts = progressResult.numberOfLayouts;
           building.progressLayout = progressResult.progressOfLayouts;
+
+          this.buildingReactionToEdit(building, building);
         });
 
         this.gridOptions = <GridOptions>{
@@ -253,7 +284,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               params,
               'building_id',
               'buildings',
-              this.gridOptions.api
+              this.gridOptions.api,
+              this.buildingReactionToEdit.bind(this)
             );
           },
 

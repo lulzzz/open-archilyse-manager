@@ -4,6 +4,36 @@ import { SimulationOverviewComponent } from './simulation-overview/simulation-ov
 import { AuthGuard } from '../_guards/auth.guard';
 
 export class CellRender {
+  public static siteFormatter(params) {
+    if (params && params.value) {
+      const site = this.sitesArray.find(site => site.site_id === params.value);
+      if (site && site.name && site.name !== '') {
+        return site.name + ' - ' + params.value;
+      }
+    }
+    return params.value;
+  }
+
+  public static buildingFormatter(params) {
+    if (params && params.value) {
+      const building = this.buildingsArray.find(building => building.building_id === params.value);
+      if (building && building.name && building.name !== '') {
+        return building.name + ' - ' + params.value;
+      }
+    }
+    return params.value;
+  }
+
+  public static unitFormatter(params) {
+    if (params && params.value) {
+      const unit = this.unitsArray.find(unit => unit.unit_id === params.value);
+      if (unit && unit.name && unit.name !== '') {
+        return unit.name + ' - ' + params.value;
+      }
+    }
+    return params.value;
+  }
+
   /**
    * Distance, duration, score
    */
