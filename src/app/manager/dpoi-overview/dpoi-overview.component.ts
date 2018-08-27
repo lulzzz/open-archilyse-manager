@@ -8,6 +8,7 @@ import { ManagerFunctions } from '../managerFunctions';
 import { GridOptions } from 'ag-grid';
 import { urlPortfolio } from '../url';
 import { columnDefs, columnDefsCompare } from './columnDefinitions';
+import { exportOptions, exportSelectedOptions } from '../excel';
 
 @Component({
   selector: 'app-dpoi-overview',
@@ -519,15 +520,11 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   /**
    * Export functions
    */
+
   export() {
-    this.gridOptions.api.exportDataAsCsv({
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
   exportSelected() {
-    this.gridOptions.api.exportDataAsCsv({
-      onlySelected: true,
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }
 }

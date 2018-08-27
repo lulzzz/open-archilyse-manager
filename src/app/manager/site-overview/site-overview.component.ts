@@ -8,7 +8,7 @@ import { Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { CellRender } from '../cellRender';
-import { convertFileToWorkbook, getRows } from '../excel';
+import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
 
 @Component({
   selector: 'app-site-overview',
@@ -321,14 +321,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   }
 
   export() {
-    this.gridOptions.api.exportDataAsCsv({
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
   exportSelected() {
-    this.gridOptions.api.exportDataAsCsv({
-      onlySelected: true,
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }
 }

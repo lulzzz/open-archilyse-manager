@@ -1,4 +1,16 @@
 import { read } from 'xlsx';
+import { ManagerFunctions } from './managerFunctions';
+
+export const exportOptions = {
+  allColumns: true,
+  columnGroups: true,
+  columnSeparator: ';',
+};
+
+export const exportSelectedOptions = {
+  ...exportOptions,
+  onlySelected: true,
+};
 
 // read the raw data and convert it to a XLSX workbook
 export function convertFileToWorkbook(file, onComplete) {
@@ -27,20 +39,20 @@ export function getRows(workbook, dictionary) {
   let charCode = 65; // "A"
   const charCodeEnd = 90; // "Z"
 
-  let cell = worksheet[String.fromCharCode(charCode) + 1];
+  let cell = worksheet[String.fromCharCode(charCode) + 2];
   while (cell && cell.w && charCode <= charCodeEnd) {
     // Only if it's in the dictionary
     if (dictionary[cell.w]) {
       columns[String.fromCharCode(charCode)] = cell.w;
     }
     charCode += 1;
-    cell = worksheet[String.fromCharCode(charCode) + 1];
+    cell = worksheet[String.fromCharCode(charCode) + 2];
   }
 
   const rowData = [];
 
-  // start at the 2nd row - the first row are the headers
-  let rowIndex = 2;
+  // start at the 3rd row - the first row are the Group headers, 2nd the headers
+  let rowIndex = 3;
 
   // iterate over the worksheet pulling out the columns we're expecting
   while (worksheet['A' + rowIndex] || worksheet['B' + rowIndex] || worksheet['C' + rowIndex]) {
@@ -49,7 +61,7 @@ export function getRows(workbook, dictionary) {
       const varName = dictionary[columns[column]];
 
       const cell = worksheet[column + rowIndex];
-      row[varName] = cell && cell.w ? cell.w : '';
+      ManagerFunctions.changeValueByColumnStr(row, varName, cell && cell.w ? cell.w : '');
     });
 
     rowData.push(row);

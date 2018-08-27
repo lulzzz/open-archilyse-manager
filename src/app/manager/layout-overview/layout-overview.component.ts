@@ -11,8 +11,7 @@ import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { EditorConstants } from '../EditorConstants';
-import { convertFileToWorkbook, getRows } from '../excel';
-import { FunctionMetadata } from '@angular/compiler-cli';
+import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -1043,14 +1042,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   export() {
-    this.gridOptions.api.exportDataAsCsv({
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
   exportSelected() {
-    this.gridOptions.api.exportDataAsCsv({
-      onlySelected: true,
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }
 }

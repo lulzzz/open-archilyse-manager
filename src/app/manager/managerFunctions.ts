@@ -260,6 +260,20 @@ export class ManagerFunctions {
     );
   }
 
+  public static changeValueByColumnStr(object, columnName, columnValue) {
+    const columnParts = columnName.split('.');
+    if (columnParts.length <= 1) {
+      object[columnName] = columnValue;
+    } else if (columnParts.length <= 2) {
+      object[columnParts[0]] = {};
+      object[columnParts[0]][columnParts[1]] = columnValue;
+    } else if (columnParts.length <= 3) {
+      object[columnParts[0]] = {};
+      object[columnParts[0]][columnParts[1]] = {};
+      object[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
+    }
+  }
+
   public static reactToEdit(httpService, params, key, route, gridApi, extraReaction?) {
     const element = params.data;
     const elementKey = element[key];
@@ -275,19 +289,7 @@ export class ManagerFunctions {
     }
 
     const newValue = {};
-
-    const columnParts = column.split('.');
-
-    if (columnParts.length <= 1) {
-      newValue[column] = columnValue;
-    } else if (columnParts.length <= 2) {
-      newValue[columnParts[0]] = {};
-      newValue[columnParts[0]][columnParts[1]] = columnValue;
-    } else if (columnParts.length <= 3) {
-      newValue[columnParts[0]] = {};
-      newValue[columnParts[0]][columnParts[1]] = {};
-      newValue[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
-    }
+    ManagerFunctions.changeValueByColumnStr(newValue, column, columnValue);
 
     const url = route + '/' + elementKey;
     ManagerFunctions.patchElement(httpService, node, url, newValue, gridApi, extraReaction);

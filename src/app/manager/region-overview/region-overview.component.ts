@@ -6,6 +6,7 @@ import { ManagerFunctions } from '../managerFunctions';
 import { HttpClient } from '@angular/common/http';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
+import { exportOptions, exportSelectedOptions } from '../excel';
 
 @Component({
   selector: 'app-region-overview',
@@ -202,15 +203,11 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
   /**
    * Export functions
    */
+
   export() {
-    this.gridOptions.api.exportDataAsCsv({
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
   exportSelected() {
-    this.gridOptions.api.exportDataAsCsv({
-      onlySelected: true,
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }
 }

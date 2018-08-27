@@ -4,12 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
-import { Building, Layout, Unit } from '../../_models';
+import { Building, Unit } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
 import { urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
-import { convertFileToWorkbook, getRows } from '../excel';
+import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -405,15 +405,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
   export() {
-    this.gridOptions.api.exportDataAsCsv({
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
   exportSelected() {
-    this.gridOptions.api.exportDataAsCsv({
-      onlySelected: true,
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }
 }

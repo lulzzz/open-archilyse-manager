@@ -9,7 +9,7 @@ import { ApiFunctions } from '../apiFunctions';
 import { urlGeoreference, urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
-import { convertFileToWorkbook, getRows } from '../excel';
+import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
 
 @Component({
   selector: 'app-building-overview',
@@ -43,10 +43,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       {
         headerName: 'Site',
         headerTooltip: 'Parent site main properties',
+        openByDefault: false,
         children: [
           {
             headerName: 'Site Id',
-            columnGroupShow: 'open',
             field: 'site_id',
             width: 230,
             cellRenderer: CellRender.viewSiteOfBuilding,
@@ -55,6 +55,13 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               values: ['', ...sites.map(site => site.site_id)],
             },
             editable: true,
+          },
+          {
+            headerName: 'Name',
+            columnGroupShow: 'open',
+            field: 'site_name',
+            editable: false,
+            cellClass: 'idCell',
           },
         ],
       },
@@ -82,7 +89,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Building Address',
-        headerTooltip: 'Address properties for the current building, necessary for the DPOI simulation and georefence operations',
+        headerTooltip:
+          'Address properties for the current building, necessary for the DPOI simulation and georefence operations',
         children: [
           {
             headerName: 'Country',
@@ -622,14 +630,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
   }
   export() {
-    this.gridOptions.api.exportDataAsCsv({
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
   exportSelected() {
-    this.gridOptions.api.exportDataAsCsv({
-      onlySelected: true,
-      columnSeparator: ';',
-    });
+    this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }
 }
