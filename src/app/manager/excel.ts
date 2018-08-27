@@ -1,6 +1,22 @@
 import { read } from 'xlsx';
 import { ManagerFunctions } from './managerFunctions';
 
+export const showInfoExcel = {
+  data: {
+    title: 'Excel instructions',
+    body:
+      'The proper structure for an excel to be imported should mirror the structure of the .csv exported. That means: <br/><ul>' +
+      '<li>All the content is in the first Excel page.</li>' +
+      '<li>First row is skipped, reserved for the group names.</li>' +
+      '<li>Second row contains the name of the columns that we use to map the values into the API</li>' +
+      '<li>Same elements that are read only in the Portfolio Manager would be skipped in the Excel.</li>' +
+      '<li>Next rows contains the values of each element, if the ID of the site, building, ' +
+      'unit or layout is set that would update the indicated element, when empty or column not set would add an element.</li>' +
+      '</ul>',
+    image: null,
+  },
+};
+
 export const exportOptions = {
   allColumns: true,
   columnGroups: true,

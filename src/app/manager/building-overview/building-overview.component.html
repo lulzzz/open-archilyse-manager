@@ -22,6 +22,9 @@
     &nbsp;
     <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
     <label  [popper]="tooltip11" for="file" class="btn yellow" >Import Excel file</label>
+    <div class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
+      <i class="fa fa-info-circle"></i>
+    </div>
     &nbsp;&nbsp;&nbsp;
     <button [popper]="tooltip12" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>
     <button [popper]="tooltip13" class="btn orange" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
@@ -36,6 +39,8 @@
 </ag-grid-angular>
 
 <!-- Tooltips -->
+
+<popper-content #infoExcelPopper >Excel import instructions</popper-content>
 
 <popper-content #tooltip1 >Remove the selection if any</popper-content>
 <popper-content #tooltip2 >Remove the column filters if any</popper-content>

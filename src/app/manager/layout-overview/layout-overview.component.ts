@@ -11,7 +11,8 @@ import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { EditorConstants } from '../EditorConstants';
-import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
+import {convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows, showInfoExcel} from '../excel';
+import {OverlayService} from '../../_services/overlay.service';
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -70,10 +71,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Name',
+            headerName: 'Building Name',
             field: 'building_name',
             columnGroupShow: 'open',
-            editable: true,
+            cellClass: 'readOnly',
+            editable: false,
           },
         ],
       },
@@ -93,10 +95,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             editable: true,
           },
           {
-            headerName: 'Name',
+            headerName: 'Unit Name',
             field: 'unit_name',
             columnGroupShow: 'open',
-            editable: true,
+            cellClass: 'readOnly',
+            editable: false,
           },
         ],
       },
@@ -457,7 +460,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,
+              private infoDialog: OverlayService) {}
 
   setLayoutBuildingData(layout) {
     if (layout.unit_id || layout.unit_id === '') {
@@ -1018,6 +1022,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   /**
    * Import / Export functions
    */
+  showInfoExcel() {
+    this.infoDialog.open(showInfoExcel);
+  }
+
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {

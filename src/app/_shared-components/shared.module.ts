@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from './icon/icon.component';
 import { RouterModule } from '@angular/router';
-import { MatInputModule, MatSlideToggleModule} from '@angular/material';
+import { MatInputModule, MatSlideToggleModule } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
 import { NgxPopperModule } from 'ngx-popper';
@@ -10,13 +10,14 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 // import { BrowserModule } from '@angular/platform-browser';
 import { NgDragDropModule } from 'ng-drag-drop';
-import {ErrorModalComponent} from './error-modal/error-modal.component';
-import {BreadcrumbComponent} from './breadcrumb/breadcrumb.component';
-import {NavigationComponent} from './navigation/navigation.component';
-import {SafeHtmlPipe} from '../_pipes/safeHtml.pipe';
-import {OrdinalPipe} from '../_pipes/ordinal.pipe';
+import { ErrorModalComponent } from './error-modal/error-modal.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { SafeHtmlPipe } from '../_pipes/safeHtml.pipe';
+import { OrdinalPipe } from '../_pipes/ordinal.pipe';
 import { MatCheckboxComponent } from './mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from './procent-renderer/procent-renderer.component';
+import { InfoBoxOverlayComponent } from './overlays/info-box-overlay/info-box-overlay.component';
 
 @NgModule({
   imports: [
@@ -38,25 +39,25 @@ import { ProcentRendererComponent } from './procent-renderer/procent-renderer.co
     NgDragDropModule.forRoot(),
   ],
   declarations: [
+    InfoBoxOverlayComponent,
     ErrorModalComponent,
     BreadcrumbComponent,
     NavigationComponent,
     SafeHtmlPipe,
     OrdinalPipe,
-    IconComponent
+    IconComponent,
   ],
   exports: [
+    InfoBoxOverlayComponent,
     ErrorModalComponent,
     BreadcrumbComponent,
     NavigationComponent,
     SafeHtmlPipe,
     OrdinalPipe,
-    IconComponent
+    IconComponent,
   ],
   providers: [],
-  entryComponents: [
-    ErrorModalComponent,
-  ],
+  entryComponents: [InfoBoxOverlayComponent, ErrorModalComponent],
   bootstrap: [],
 })
 export class SharedModule {}

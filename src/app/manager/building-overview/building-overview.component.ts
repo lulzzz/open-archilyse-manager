@@ -9,7 +9,8 @@ import { ApiFunctions } from '../apiFunctions';
 import { urlGeoreference, urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
-import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
+import {convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows, showInfoExcel} from '../excel';
+import { OverlayService } from '../../_services/overlay.service';
 
 @Component({
   selector: 'app-building-overview',
@@ -57,7 +58,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             editable: true,
           },
           {
-            headerName: 'Name',
+            headerName: 'Site Name',
             columnGroupShow: 'open',
             field: 'site_name',
             editable: false,
@@ -207,7 +208,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     ];
   }
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private infoDialog: OverlayService
+  ) {}
 
   ngOnInit() {
     /** BUILDINGS */
@@ -572,6 +578,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   /**
    * Import / Export functions
    */
+  showInfoExcel() {
+    this.infoDialog.open(showInfoExcel);
+  }
+
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {

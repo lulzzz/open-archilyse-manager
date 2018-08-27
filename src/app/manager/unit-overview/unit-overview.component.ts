@@ -9,7 +9,14 @@ import { ApiFunctions } from '../apiFunctions';
 import { urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
-import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
+import {
+  convertFileToWorkbook,
+  exportOptions,
+  exportSelectedOptions,
+  getRows,
+  showInfoExcel,
+} from '../excel';
+import { OverlayService } from '../../_services/overlay.service';
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -66,10 +73,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Name',
+            headerName: 'Building Name',
             field: 'building_name',
             columnGroupShow: 'open',
-            editable: true,
+            cellClass: 'readOnly',
+            editable: false,
           },
         ],
       },
@@ -165,7 +173,12 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private infoDialog: OverlayService
+  ) {}
 
   viewBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
@@ -363,6 +376,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   /**
    * Import / Export functions
    */
+  showInfoExcel() {
+    this.infoDialog.open(showInfoExcel);
+  }
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {

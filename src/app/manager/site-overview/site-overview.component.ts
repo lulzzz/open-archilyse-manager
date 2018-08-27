@@ -8,7 +8,14 @@ import { Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { CellRender } from '../cellRender';
-import { convertFileToWorkbook, exportOptions, exportSelectedOptions, getRows } from '../excel';
+import {
+  convertFileToWorkbook,
+  exportOptions,
+  exportSelectedOptions,
+  getRows,
+  showInfoExcel,
+} from '../excel';
+import { OverlayService } from '../../_services/overlay.service';
 
 @Component({
   selector: 'app-site-overview',
@@ -80,7 +87,12 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     ...ColumnDefinitions.metaUserAndData,
   ];
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private infoDialog: OverlayService
+  ) {}
 
   addRow() {
     ApiFunctions.post(
@@ -278,6 +290,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * Import / Export functions
    * https://stackoverflow.com/questions/11832930/html-input-file-accept-attribute-file-type-csv
    */
+  showInfoExcel() {
+    this.infoDialog.open(showInfoExcel);
+  }
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {

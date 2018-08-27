@@ -19,6 +19,7 @@ import { UnitOverviewComponent } from './unit-overview/unit-overview.component';
 import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
 import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
 import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
+import { OverlayService } from '../_services/overlay.service';
 
 @NgModule({
   imports: [
@@ -48,5 +49,6 @@ import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
     SimulationOverviewComponent,
     DpoiOverviewComponent,
   ],
+  providers: [OverlayService],
 })
 export class ManagerModule {}
