@@ -5,27 +5,27 @@
 <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
 <div *ngIf="!loading && !generalError" class="topControls">
   <div>
-    <button [popper]="'Remove the selection if any'" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-    <button [popper]="'Remove the column filters if any'" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
-    <button [popper]="'Select only the buildings that where not georeferenced yet.'" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
+    <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+    <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
+    <button [popper]="tooltip3" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
     &nbsp;&nbsp;&nbsp;
-    <button [popper]="'Batch georeference in Swiss Topo (select or confirm the building in the map for the giving address) the selected buildings.'" class="btn green" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
-    <button [popper]="'Batch georeference in Open Street Maps (select or confirm the building in the map for the giving address) the selected buildings.'"  class="btn green" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
-    <button [popper]="'Create a copy of every selected building'" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
-    <button [popper]="'Delete the current selected buildings'" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip4" class="btn green" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip5"  class="btn green" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip6" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip7" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
-    <button [popper]="'Create an empty building'" class="btn green" (click)="addRow()">Add building</button>
+    <button [popper]="tooltip8" class="btn green" (click)="addRow()">Add building</button>
   </div>
   <div>
-    <button [popper]="'Build a semicolon separated .CSV file to import in Excel with all the selected elements in this table'" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-    <button [popper]="'Build a semicolon separated .CSV file to import in Excel with all the elements in this table'" class="btn yellow" (click)="export()" > CSV </button>
+    <button [popper]="tooltip9" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+    <button [popper]="tooltip10" class="btn yellow" (click)="export()" > CSV </button>
     &nbsp;
     <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-    <label [popper]="'Import a .xsl or .xlsx file to add new elements or update the existing ones when the element id is provided'" for="file" class="btn yellow" >Import Excel file</label>
+    <label  [popper]="tooltip11" for="file" class="btn yellow" >Import Excel file</label>
     &nbsp;&nbsp;&nbsp;
-    <button [popper]="'Request the status of the simulations from the selected buildings'" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>
-    <button [popper]="'Select two buildings to compare the dpoi simulation results from them'" class="btn orange" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
-    <button [popper]="'Order the start simulations for the selected buildings'" class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip12" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip13" class="btn orange" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
+    <button [popper]="tooltip14" class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
   </div>
 </div>
 <ag-grid-angular
@@ -34,3 +34,25 @@
   class="ag-theme-balham"
   [gridOptions]="gridOptions">
 </ag-grid-angular>
+
+<!-- Tooltips -->
+
+<popper-content #tooltip1 >Remove the selection if any</popper-content>
+<popper-content #tooltip2 >Remove the column filters if any</popper-content>
+<popper-content #tooltip3 >Select only the buildings that where not georeferenced yet.</popper-content>
+
+<popper-content #tooltip4 >Batch georeference in Swiss Topo (select or confirm the building in the map for the giving address) the selected buildings.</popper-content>
+<popper-content #tooltip5 >Batch georeference in Open Street Maps (select or confirm the building in the map for the giving address) the selected buildings.</popper-content>
+<popper-content #tooltip6 >Create a copy of every selected building</popper-content>
+<popper-content #tooltip7 >Delete the current selected buildings</popper-content>
+
+<popper-content #tooltip8 >Create an empty building</popper-content>
+
+<popper-content #tooltip9 >Build a semicolon separated .CSV file to import in Excel with all the selected elements in this table</popper-content>
+<popper-content #tooltip10 >Build a semicolon separated .CSV file to import in Excel with all the elements in this table</popper-content>
+
+<popper-content #tooltip11 >Import a .xsl or .xlsx file to add new elements or update the existing ones when the element id is provided</popper-content>
+
+<popper-content #tooltip12 >Request the status of the simulations from the selected buildings.</popper-content>
+<popper-content #tooltip13 >Select two buildings to compare the dpoi simulation results from them.</popper-content>
+<popper-content #tooltip14 >Order the start simulations for the selected buildings.</popper-content>

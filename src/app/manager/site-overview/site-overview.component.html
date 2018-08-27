@@ -5,27 +5,26 @@
 <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
 <div *ngIf="!loading && !generalError" class="topControls">
   <div>
-    <button [popper]="'Remove the selection if any'" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-    <button [popper]="'Remove the column filters if any'" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
+    <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+    <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
     &nbsp;&nbsp;&nbsp;
-    <button [popper]="'Create a copy of every selected site'" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
-    <button [popper]="'Delete the current selected sites'" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
+    <button [popper]="tooltip4" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
     &nbsp;&nbsp;&nbsp;
-    <button [popper]="'Create an empty site'" class="btn green" (click)="addRow()" > Add site </button>
+    <button [popper]="tooltip5" class="btn green" (click)="addRow()" > Add site </button>
   </div>
   <div>
-    <button [popper]="'Build a semicolon separated .CSV file to import in Excel with all the selected elements in this table'"
+    <button [popper]="tooltip6"
             class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-    <button [popper]="'Build a semicolon separated .CSV file to import in Excel with all the elements in this table'"
+    <button [popper]="tooltip7"
             class="btn yellow" (click)="export()" > CSV </button>
     &nbsp;
     <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-    <label [popper]="'Import a .xsl or .xlsx file to add new elements or update the existing ones when the element id is provided'"
+    <label [popper]="tooltip8"
            for="file" class="btn yellow" >Import Excel file</label>
 
   </div>
 </div>
-
 
 <ag-grid-angular
   *ngIf="!loading && !generalError && gridOptions"
@@ -33,3 +32,16 @@
   class="ag-theme-balham"
   [gridOptions]="gridOptions">
 </ag-grid-angular>
+
+<!-- Tooltips -->
+
+<popper-content #tooltip1  >Remove the selection if any</popper-content>
+<popper-content #tooltip2  >Remove the column filters if any</popper-content>
+<popper-content #tooltip3  >Create a copy of every selected site</popper-content>
+<popper-content #tooltip4  >Delete the current selected sites</popper-content>
+<popper-content #tooltip5  >Create an empty site</popper-content>
+<popper-content #tooltip6  >Build a semicolon separated .CSV file to import in Excel with all the selected elements in this table</popper-content>
+<popper-content #tooltip7  >Build a semicolon separated .CSV file to import in Excel with all the elements in this table</popper-content>
+<popper-content #tooltip8  >Import a .xsl or .xlsx file to add new elements or update the existing ones when the element id is provided</popper-content>
+
+

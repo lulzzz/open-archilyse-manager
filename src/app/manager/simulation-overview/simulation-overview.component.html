@@ -5,10 +5,14 @@
 <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
 <div *ngIf="!loading && !generalError" class="topControls">
   <div>
-    <button class="btn green" (click)="backPage()" > Back </button>
+    <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
   </div>
 </div>
 
 <pre [innerHTML]="code">
 
 </pre>
+
+<!-- Tooltips -->
+
+<popper-content #tooltip1 >Back to the previous page</popper-content>

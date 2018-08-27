@@ -58,6 +58,7 @@
     "ngx-popper": "^2.8.2",
     "ngx-toastr": "^8.7.3",
     "ol": "^4.6.5",
+    "path": "^0.12.7",
     "point-in-polygon": "*",
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.2.2",
