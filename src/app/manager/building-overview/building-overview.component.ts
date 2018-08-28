@@ -248,7 +248,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
-        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
 
         this.sitesArray = sitesArray;
         this.loading = false;

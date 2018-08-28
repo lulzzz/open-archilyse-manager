@@ -23,9 +23,6 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
     this.buildingId = this.route.snapshot.params['buildingId'];
     this.layoutId = this.route.snapshot.params['layoutId'];
 
-    console.log('buildingId', this.buildingId);
-    console.log('layoutId', this.layoutId);
-
     if (this.buildingId) {
       ApiFunctions.get(
         this.http,
@@ -61,7 +58,6 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
   }
 
   loadSimulations(simulations) {
-    console.log('simulations', simulations);
     this.code = JSON.stringify(simulations, null, 4);
   }
 

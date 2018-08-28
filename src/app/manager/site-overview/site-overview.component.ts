@@ -116,8 +116,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
-        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
-
         this.loading = false;
 
         sitesArray.forEach(site => {
@@ -137,8 +135,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           site.progress = progressResult.progressOfBuildings;
           site.progressLayout = progressResult.progressOfLayouts;
         });
-
-        console.log('sitesArray', sitesArray);
 
         this.gridOptions = <GridOptions>{
           rowData: sitesArray,

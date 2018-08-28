@@ -6,7 +6,7 @@ import { AuthGuard } from '../_guards/auth.guard';
 export class CellRender {
   public static siteFormatter(params) {
     if (params && params.value) {
-      const site = this.sitesArray.find(site => site.site_id === params.value);
+      const site = this['sitesArray'].find(site => site.site_id === params.value);
       if (site && site.name && site.name !== '') {
         return site.name + ' - ' + params.value;
       }
@@ -16,7 +16,9 @@ export class CellRender {
 
   public static buildingFormatter(params) {
     if (params && params.value) {
-      const building = this.buildingsArray.find(building => building.building_id === params.value);
+      const building = this['buildingsArray'].find(
+        building => building.building_id === params.value
+      );
       if (building && building.name && building.name !== '') {
         return building.name + ' - ' + params.value;
       }
@@ -26,7 +28,7 @@ export class CellRender {
 
   public static unitFormatter(params) {
     if (params && params.value) {
-      const unit = this.unitsArray.find(unit => unit.unit_id === params.value);
+      const unit = this['unitsArray'].find(unit => unit.unit_id === params.value);
       if (unit && unit.name && unit.name !== '') {
         return unit.name + ' - ' + params.value;
       }

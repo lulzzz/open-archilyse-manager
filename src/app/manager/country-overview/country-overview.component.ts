@@ -80,8 +80,6 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
-        console.log('DATA', sitesArray, buildingsArray, unitsArray, layoutsArray);
-
         this.loading = false;
 
         this.buildColumDefinitions();
