@@ -4,19 +4,19 @@
 <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
 <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
 <div *ngIf="!loading && !generalError" class="topControls">
-  <div>Click on a building to view the details. &nbsp;&nbsp;&nbsp; Georeferenced buildings: {{numGeoreferencedBuildings}}</div>
+  <div>Click on a building to view the details.</div>
   <div>
     <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
-    &nbsp;&nbsp;&nbsp;
-    FILTERS:
-    &nbsp;&nbsp;
-    <label>Countries: </label>
+    &nbsp;&nbsp;&nbsp;<label>Georeferenced buildings:</label> {{numGeoreferencedBuildings}}
+  </div>
+  <div>
+    <label>Filter country: </label>
     <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
       <option value="">None</option>
       <option *ngFor="let country of countries" (value)="country">{{country}}</option>
     </select>
     &nbsp;&nbsp;
-    <label>Cities: </label>
+    <label>Filter city: </label>
     <select (change)="filterByCity($event.target.value)" [value]="filterCity">
       <option value="">None</option>
       <option *ngFor="let city of cities" (value)="city">{{city}}</option>
