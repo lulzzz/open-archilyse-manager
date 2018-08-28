@@ -21,7 +21,8 @@
       <option value="">None</option>
       <option *ngFor="let city of cities" (value)="city">{{city}}</option>
     </select>
-
+    &nbsp;&nbsp;
+    <button [popper]="listPU" class="btn blue" (click)="linkToList()">View list</button>
 
   </div>
 </div>
@@ -29,3 +30,4 @@
 <div id="map" class="map"></div>
 
 <popper-content #centerMapPU >Center the map to view all the buildings.</popper-content>
+<popper-content #listPU >Link to the current list of buildings.</popper-content>

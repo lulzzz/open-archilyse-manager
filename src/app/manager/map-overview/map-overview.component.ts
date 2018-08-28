@@ -112,6 +112,17 @@ export class MapOverviewComponent implements OnInit {
     this.setUpMap();
   }
 
+  linkToList() {
+    const filters = [];
+    if (this.filterCountry !== null) {
+      filters.push(`address.country=${this.filterCountry}`);
+    }
+    if (this.filterCity !== null) {
+      filters.push(`address.city=${this.filterCity}`);
+    }
+    window.location.href = `${urlPortfolio}/building#` + filters.join('&');
+  }
+
   ngOnInit() {
     this.start();
   }
