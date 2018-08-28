@@ -122,10 +122,10 @@ export class MapOverviewComponent implements OnInit {
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
         this.loading = false;
 
+        this.buildingsArray = buildingsArray;
+
         this.cities = buildingsArray.map(building => building.address.city).unique();
         this.countries = buildingsArray.map(building => building.address.country).unique();
-
-        this.buildingsArray = buildingsArray;
 
         this.setUpMap();
       },
