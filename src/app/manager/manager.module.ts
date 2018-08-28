@@ -20,6 +20,7 @@ import { LayoutOverviewComponent } from './layout-overview/layout-overview.compo
 import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
 import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 import { OverlayService } from '../_services/overlay.service';
+import { MapOverviewComponent } from './map-overview/map-overview.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { OverlayService } from '../_services/overlay.service';
     LayoutOverviewComponent,
     SimulationOverviewComponent,
     DpoiOverviewComponent,
+    MapOverviewComponent,
   ],
   providers: [OverlayService],
 })

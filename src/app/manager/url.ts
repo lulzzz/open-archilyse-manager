@@ -1,3 +1,5 @@
+export const apiUrl = 'https://api.archilyse.com/v0.1/';
+
 export function parseParms(str) {
   const data = {};
   if (str) {

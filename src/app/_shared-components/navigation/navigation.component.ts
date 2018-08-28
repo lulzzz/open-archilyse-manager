@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationService } from '../../_services/navigation.service';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import {UserService} from '../../_services';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UserService } from '../../_services';
 
 @Component({
   selector: 'app-navigation',
@@ -26,7 +26,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private navigationService: NavigationService
   ) {
-
     this.user_sub = this.userService._authenticated.subscribe(_authenticated => {
       this.isUserLoggedIn = _authenticated;
     });
@@ -55,6 +54,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
       });
      */
     this.options = [
+      {
+        tooltip: 'Map overview',
+        title: 'Map',
+        link: '/manager/map',
+      },
       {
         tooltip: 'Country overview',
         title: 'Country',

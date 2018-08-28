@@ -11,6 +11,7 @@ import { SiteOverviewComponent } from './site-overview/site-overview.component';
 import { LayoutOverviewComponent } from './layout-overview/layout-overview.component';
 import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
 import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
+import { MapOverviewComponent } from './map-overview/map-overview.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,11 @@ const routes: Routes = [
       {
         path: '',
         component: CountryOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'map',
+        component: MapOverviewComponent,
         canActivate: [AuthGuard],
       },
       {

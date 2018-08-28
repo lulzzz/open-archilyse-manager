@@ -186,3 +186,16 @@ app-root {
   bottom: 0;
   backdrop-filter: blur(2px);
 }
+
+
+.ag-theme-balham{
+  background: none;
+  .ag-body-viewport-wrapper{
+    background: white;
+  }
+  .ag-paging-panel{
+    background: none;
+  }
+}
+
+
