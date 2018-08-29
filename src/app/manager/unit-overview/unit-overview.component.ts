@@ -66,8 +66,16 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             editable: true,
           },
           {
-            headerName: 'Georeferenced',
-            field: 'building_referenced',
+            headerName: 'Swiss Topo',
+            field: 'building_referenced_st',
+            cellRenderer: 'checkboxRenderer',
+            width: 100,
+            cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Open Street Maps',
+            field: 'building_referenced_osm',
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
@@ -210,8 +218,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       nodeData['building_name'] =
         buildingThisUnit && buildingThisUnit.name ? buildingThisUnit.name : '';
 
-      nodeData['building_referenced'] =
-        buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
+      nodeData['building_referenced_osm'] =
+        buildingThisUnit && ManagerFunctions.isReferencedOSMBuilding(buildingThisUnit);
+      nodeData['building_referenced_st'] =
+        buildingThisUnit && ManagerFunctions.isReferencedSTBuilding(buildingThisUnit);
     }
   }
 
@@ -243,7 +253,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           this.unitReactionToEdit(unit, unit);
         });
 
-        this.gridOptions = <GridOptions>{
+        this.gridOptions = {
           rowData: unitsArray,
           columnDefs: this.columnDefs,
 
@@ -301,7 +311,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
       // Calculated are not duplicated
       delete newRow['building_name'];
-      delete newRow['building_referenced'];
+      delete newRow['building_referenced_osm'];
+      delete newRow['building_referenced_st'];
       delete newRow['layouts'];
       delete newRow['progressLayout'];
 

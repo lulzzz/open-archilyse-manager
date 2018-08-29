@@ -69,8 +69,16 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellClass: 'readOnly',
           },
           {
-            headerName: 'Georeferenced',
-            field: 'building_referenced',
+            headerName: 'Swiss Topo',
+            field: 'building_referenced_st',
+            cellRenderer: 'checkboxRenderer',
+            width: 100,
+            cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
+          },
+          {
+            headerName: 'Open Street Maps',
+            field: 'building_referenced_osm',
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
@@ -128,19 +136,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             columnGroupShow: 'open',
             field: 'description',
             editable: true,
-          },
-        ],
-      },
-      {
-        headerName: 'Images',
-        headerTooltip: 'Current Layout uploaded pictures',
-        children: [
-          {
-            headerName: 'Images',
-            field: 'images',
-            cellRenderer: CellRender.viewImg,
-            editable: false,
-            cellClass: 'readOnly',
           },
         ],
       },
@@ -355,6 +350,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Wbs',
             field: 'simulations.wbs.status',
+            columnGroupShow: 'open',
             cellRenderer: CellRender.viewSimulationLayout,
             width: 100,
             editable: false,
@@ -363,30 +359,45 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Pathways',
             field: 'simulations.pathways.status',
-            width: 100,
+            columnGroupShow: 'open',
             cellRenderer: CellRender.viewSimulationLayout,
+            width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
           {
             headerName: 'Basic features',
             field: 'simulations.basic_features.status',
-            width: 100,
+            columnGroupShow: 'open',
             cellRenderer: CellRender.viewSimulationLayout,
+            width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
           {
             headerName: 'Accoustics',
             field: 'simulations.accoustics.status',
-            width: 100,
+            columnGroupShow: 'open',
             cellRenderer: CellRender.viewSimulationLayout,
+            width: 100,
             editable: false,
             cellClass: 'readOnly',
           },
         ],
       },
-
+      {
+        headerName: 'Images',
+        headerTooltip: 'Current Layout uploaded pictures',
+        children: [
+          {
+            headerName: 'Images',
+            field: 'images',
+            cellRenderer: CellRender.viewImg,
+            editable: false,
+            cellClass: 'readOnly',
+          },
+        ],
+      },
       ...ColumnDefinitions.metaUserAndData,
     ];
   }
@@ -486,19 +497,25 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         );
 
         // Has to be a building with that id and has to be georeferenced
-        layout['building_referenced'] = building && ManagerFunctions.isReferencedBuilding(building);
+        layout['building_referenced_osm'] =
+          building && ManagerFunctions.isReferencedOSMBuilding(building);
+        layout['building_referenced_st'] =
+          building && ManagerFunctions.isReferencedSTBuilding(building);
+
         layout['building_name'] = building && building.name ? building.name : '';
       } else {
         layout['building_id'] = '';
         layout['building_name'] = '';
-        layout['building_referenced'] = false;
+        layout['building_referenced_osm'] = false;
+        layout['building_referenced_st'] = false;
 
         layout['unit_name'] = '';
       }
     } else {
       layout['building_id'] = '';
       layout['building_name'] = '';
-      layout['building_referenced'] = false;
+      layout['building_referenced_osm'] = false;
+      layout['building_referenced_st'] = false;
 
       layout['unit_name'] = '';
     }
@@ -649,7 +666,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions(unitsArray);
 
-        this.gridOptions = <GridOptions>{
+        this.gridOptions = {
+          // <GridOptions>
           rowData: this.layoutsArray,
           columnDefs: this.columnDefs,
 
@@ -737,7 +755,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       delete newRow['unit_name'];
 
       delete newRow['building_name'];
-      delete newRow['building_referenced'];
+      delete newRow['building_referenced_osm'];
+      delete newRow['building_referenced_st'];
 
       delete newRow['building_id'];
       delete newRow['total_area'];
@@ -930,7 +949,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       );
       const withNoAdress = layouts_data.reduce(
         (accumulator, layout_data) =>
-          layout_data.building_referenced ? accumulator : accumulator + 1,
+          layout_data.building_referenced_osm || layout_data.building_referenced_st
+            ? accumulator
+            : accumulator + 1,
         0
       );
 

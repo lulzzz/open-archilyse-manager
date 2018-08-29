@@ -20,6 +20,7 @@ export function parseParms(str) {
 }
 
 /** Development */
+export const urlConsole = 'http://console.archilyse.com/';
 export const urlEditor = 'http://localhost:4201/editor';
 export const urlGeoreference = 'http://localhost:4202/georeference';
 export const urlSimulationViewer = 'http://localhost:4203/simulations';
@@ -28,8 +29,10 @@ export const urlPortfolio = 'http://localhost:4200/manager';
 
 /** Production */
 /**
+ * export const urlConsole = 'http://console.archilyse.com/';
  export const urlEditor = 'http://localhost:4201/editor';
  export const urlGeoreference = 'http://localhost:4202/georeference';
  export const urlSimulationViewer = 'http://localhost:4203/simulations';
+ export const urlEditorFloorplan = 'http://localhost:4204/editor';
  export const urlPortfolio = 'http://localhost:4200/manager';
  */

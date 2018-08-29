@@ -535,37 +535,6 @@ export class CellRender {
     return result;
   }
 
-  public static viewSimulationDpoiBuilding(params) {
-    if (params.value) {
-      if (params.value === 'complete') {
-        return (
-          `<a href='${urlPortfolio}/simulation/building/` +
-          params.data.building_id +
-          `' > View raw</a> &nbsp; <a href='${urlPortfolio}/dpoi/` +
-          params.data.building_id +
-          `' > View dpoi</a> `
-        );
-      }
-      return params.value;
-    }
-
-    return '?';
-  }
-
-  public static viewSimulationBuilding(params) {
-    if (params.value) {
-      if (params.value === 'complete') {
-        return (
-          `<a href='${urlPortfolio}/simulation/building/` +
-          params.data.building_id +
-          `' > View raw</a>`
-        );
-      }
-      return params.value;
-    }
-    return '?';
-  }
-
   public static viewSimulationLayout(params) {
     if (params.value) {
       console.log('params.value', params.data.layout_id);

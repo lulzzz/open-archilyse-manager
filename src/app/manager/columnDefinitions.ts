@@ -1,6 +1,8 @@
 import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
 import { CellRender } from './cellRender';
+import { BuildingSimulationRendererComponent } from '../_shared-components/building-simulation-renderer/building-simulation-renderer.component';
+import {BuildingSimulationRendererDpoiComponent} from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dopi-renderer.component';
 
 export class ColumnDefinitions {
   /**
@@ -16,6 +18,8 @@ export class ColumnDefinitions {
     frameworkComponents: {
       checkboxRenderer: MatCheckboxComponent,
       procentRenderer: ProcentRendererComponent,
+      simulationBuildingRenderer: BuildingSimulationRendererComponent,
+      simulationBuildingDpoiRenderer: BuildingSimulationRendererDpoiComponent,
     },
 
     // rowHeight: 48, recommended row height for material design data grids,

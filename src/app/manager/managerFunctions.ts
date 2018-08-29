@@ -7,6 +7,58 @@ export class ManagerFunctions {
   /**
    * TOOLS
    */
+  public static requestBuildingSimulations(http, building, simsRequested, api) {
+    ApiFunctions.post(
+      http,
+      'buildings/' + building.building_id + '/simulations',
+      {
+        simulation_packages: simsRequested,
+      },
+      result => {
+        console.log('startSimulationsViaBuildings - result', result);
+
+        if (!building['simulations']) {
+          building['simulations'] = {};
+        }
+        simsRequested.forEach(sim => {
+          if (!building['simulations'][sim]) {
+            building['simulations'][sim] = {};
+          }
+          building['simulations'][sim].status = 'pending';
+        });
+
+        const node = api.getRowNode(building.building_id);
+        node.setData(building);
+      },
+      ManagerFunctions.showErroruser
+    );
+  }
+  public static requestBuildingSimulationsStatus(http, building, api) {
+    ApiFunctions.get(
+      http,
+      'buildings/' + building.building_id + '/simulations/status',
+      result => {
+        building['simulations'] = result;
+        const node = api.getRowNode(building.building_id);
+        node.setData(building);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+
+  public static isAddressCorrect(building) {
+    return (
+      building &&
+      building.address &&
+      building.address.city &&
+      building.address.country &&
+      // optional:: building.address.postal_code &&
+      building.address.street &&
+      building.address.street_nr
+    );
+  }
 
   public static getCountry(building) {
     return building.address && building.address.country ? building.address.country : '';
@@ -60,12 +112,26 @@ export class ManagerFunctions {
    */
   public static isReferencedBuilding(building: Building) {
     return (
+      ManagerFunctions.isReferencedOSMBuilding(building) ||
+      ManagerFunctions.isReferencedSTBuilding(building)
+    );
+  }
+
+  public static isReferencedOSMBuilding(building: Building) {
+    // Swiss open_street_maps is defined
+    return (
       building.building_reference &&
-      // Swiss topo is defined
-      ((building.building_reference.swiss_topo && building.building_reference.swiss_topo !== '') ||
-        // Swiss open_street_maps is defined
-        (building.building_reference.open_street_maps &&
-          building.building_reference.open_street_maps !== ''))
+      building.building_reference.open_street_maps &&
+      building.building_reference.open_street_maps !== ''
+    );
+  }
+
+  public static isReferencedSTBuilding(building: Building) {
+    // Swiss topo is defined
+    return (
+      building.building_reference &&
+      building.building_reference.swiss_topo &&
+      building.building_reference.swiss_topo !== ''
     );
   }
 

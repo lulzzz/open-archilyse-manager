@@ -160,7 +160,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Potential view',
             field: 'simulations.potential_view.status',
-            cellRenderer: CellRender.viewSimulationBuilding,
+            cellRenderer: 'simulationBuildingRenderer',
+            cellStyle: { padding: '0px' },
             width: 140,
             editable: false,
             cellClass: 'readOnly',
@@ -168,15 +169,20 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Accoustics',
             field: 'simulations.accoustics.status',
-            cellRenderer: CellRender.viewSimulationBuilding,
+            cellRenderer: 'simulationBuildingRenderer',
+            cellStyle: { padding: '0px' },
             width: 140,
             editable: false,
             cellClass: 'readOnly',
           },
           {
+            // cellRenderer: CellRender.viewSimulationBuilding,
+            // cellRenderer: CellRender.viewSimulationBuilding,
+            // cellRenderer: CellRender.viewSimulationDpoiBuilding,
             headerName: 'DPOI',
             field: 'simulations.dpoi.status',
-            cellRenderer: CellRender.viewSimulationDpoiBuilding,
+            cellRenderer: 'simulationBuildingDpoiRenderer',
+            cellStyle: { padding: '0px' },
             width: 140,
             editable: false,
             cellClass: 'readOnly',
@@ -248,7 +254,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
-
         this.sitesArray = sitesArray;
         this.loading = false;
 
@@ -268,7 +273,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           this.buildingReactionToEdit(building, building);
         });
 
-        this.gridOptions = <GridOptions>{
+        this.gridOptions = {
+          // <GridOptions>
           rowData: buildingsArray,
           columnDefs: this.columnDefs,
 
@@ -438,18 +444,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  isAddressCorrect(node) {
-    return (
-      node.data &&
-      node.data.address &&
-      node.data.address.city &&
-      node.data.address.country &&
-      node.data.address.postal_code &&
-      node.data.address.street &&
-      node.data.address.street_nr
-    );
-  }
-
   georeferenceOSM() {
     this.georeference('open_street_maps');
   }
@@ -460,7 +454,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     const numBuildings = nodes.length;
     let addressesCorrect = 0;
     nodes.forEach(node => {
-      if (this.isAddressCorrect(node)) {
+      if (ManagerFunctions.isAddressCorrect(node.data)) {
         addressesCorrect += 1;
       }
     });
@@ -519,19 +513,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     nodes.forEach(node => {
       const building = node.data;
       console.log('get Building simulation status for ', building.building_id);
-      ApiFunctions.get(
-        this.http,
-        'buildings/' + building.building_id + '/simulations/status',
-        result => {
-          building['simulations'] = result;
-          this.gridOptions.api.updateRowData({
-            update: [building],
-          });
-        },
-        error => {
-          console.error(error);
-        }
-      );
+      ManagerFunctions.requestBuildingSimulationsStatus(this.http, building, this.gridOptions.api);
     });
   }
 
@@ -582,26 +564,13 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   startSimulationsViaBuildings(buildings) {
     buildings.forEach(building => {
       console.log('Start Building simulations for ', building.building_id);
-      ApiFunctions.post(
+
+      const simsRequested = ['dpoi'];
+      ManagerFunctions.requestBuildingSimulations(
         this.http,
-        'buildings/' + building.building_id + '/simulations',
-        {
-          simulation_packages: ['dpoi'],
-        },
-        result => {
-          if (ManagerFunctions.isReferencedBuilding(building)) {
-            if (!building['simulations']) {
-              building['simulations'] = {};
-            }
-            if (!building['simulations']['dpoi']) {
-              building['simulations']['dpoi'] = {};
-            }
-            building['simulations']['dpoi'].status = 'Pending';
-            const node = this.gridOptions.api.getRowNode(building.building_id);
-            node.setData(building);
-          }
-        },
-        ManagerFunctions.showErroruser
+        building,
+        simsRequested,
+        this.gridOptions.api
       );
     });
   }

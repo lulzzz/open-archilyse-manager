@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { urlEditor, urlEditorFloorplan, urlGeoreference, urlSimulationViewer } from './manager/url';
+import {
+  urlConsole,
+  urlEditor,
+  urlEditorFloorplan,
+  urlGeoreference,
+  urlSimulationViewer,
+} from './manager/url';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +17,5 @@ export class AppComponent {
   urlEditorFloorplan = urlEditorFloorplan;
   urlGeoreference = urlGeoreference;
   urlSimViewer = urlSimulationViewer;
+  urlConsole = urlConsole;
 }

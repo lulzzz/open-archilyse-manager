@@ -21,13 +21,20 @@ import { SimulationOverviewComponent } from './simulation-overview/simulation-ov
 import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 import { OverlayService } from '../_services/overlay.service';
 import { MapOverviewComponent } from './map-overview/map-overview.component';
+import { BuildingSimulationRendererComponent } from '../_shared-components/building-simulation-renderer/building-simulation-renderer.component';
+import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dopi-renderer.component';
 
 @NgModule({
   imports: [
     CommonModule,
     ManagerRoutingModule,
     MatCheckboxModule,
-    AgGridModule.withComponents([MatCheckboxComponent, ProcentRendererComponent]),
+    AgGridModule.withComponents([
+      MatCheckboxComponent,
+      ProcentRendererComponent,
+      BuildingSimulationRendererComponent,
+      BuildingSimulationRendererDpoiComponent,
+    ]),
     NgxPopperModule.forRoot({
       placement: 'top',
       trigger: 'hover',
@@ -41,6 +48,8 @@ import { MapOverviewComponent } from './map-overview/map-overview.component';
     ManagerComponent,
     MatCheckboxComponent,
     ProcentRendererComponent,
+    BuildingSimulationRendererComponent,
+    BuildingSimulationRendererDpoiComponent,
     BuildingOverviewComponent,
     RegionOverviewComponent,
     CountryOverviewComponent,
