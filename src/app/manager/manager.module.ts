@@ -22,7 +22,8 @@ import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 import { OverlayService } from '../_services/overlay.service';
 import { MapOverviewComponent } from './map-overview/map-overview.component';
 import { BuildingSimulationRendererComponent } from '../_shared-components/building-simulation-renderer/building-simulation-renderer.component';
-import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dopi-renderer.component';
+import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dpoi-renderer.component';
+import {LayoutSimulationRendererComponent} from '../_shared-components/layout-simulation-renderer/layout-simulation-renderer.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/b
     AgGridModule.withComponents([
       MatCheckboxComponent,
       ProcentRendererComponent,
+      LayoutSimulationRendererComponent,
       BuildingSimulationRendererComponent,
       BuildingSimulationRendererDpoiComponent,
     ]),
@@ -48,6 +50,7 @@ import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/b
     ManagerComponent,
     MatCheckboxComponent,
     ProcentRendererComponent,
+    LayoutSimulationRendererComponent,
     BuildingSimulationRendererComponent,
     BuildingSimulationRendererDpoiComponent,
     BuildingOverviewComponent,

@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -565,7 +564,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     buildings.forEach(building => {
       console.log('Start Building simulations for ', building.building_id);
 
-      const simsRequested = ['dpoi'];
+      const simsRequested = ['potential_view', 'accoustics', 'dpoi'];
       ManagerFunctions.requestBuildingSimulations(
         this.http,
         building,

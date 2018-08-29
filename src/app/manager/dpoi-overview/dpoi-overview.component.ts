@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../apiFunctions';
 import { ManagerFunctions } from '../managerFunctions';
-import { GridOptions } from 'ag-grid';
 import { urlPortfolio } from '../url';
 import { columnDefs, columnDefsCompare } from './columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
@@ -192,7 +191,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   }
 
   prepareGrid(simulationsArray) {
-    this.gridOptions = <GridOptions>{
+    this.gridOptions = {
       rowData: simulationsArray,
       columnDefs: this.buildingIdCompare ? columnDefsCompare : columnDefs,
 

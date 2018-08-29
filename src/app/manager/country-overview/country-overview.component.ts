@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
@@ -119,7 +118,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           };
         });
 
-        this.gridOptions = <GridOptions>{
+        this.gridOptions = {
           rowData: rowsData,
           columnDefs: this.columnDefs,
 

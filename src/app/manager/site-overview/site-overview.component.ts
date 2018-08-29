@@ -136,7 +136,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           site.progressLayout = progressResult.progressOfLayouts;
         });
 
-        this.gridOptions = <GridOptions>{
+        this.gridOptions = {
           rowData: sitesArray,
           columnDefs: this.columnDefs,
 

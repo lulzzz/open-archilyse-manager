@@ -48,6 +48,48 @@ export class ManagerFunctions {
     );
   }
 
+  public static requestLayoutSimulations(http, layout, simsRequested, api) {
+    ApiFunctions.post(
+      http,
+      'layouts/' + layout.layout_id + '/simulations',
+      {
+        simulation_packages: simsRequested,
+      },
+      result => {
+        console.log('startSimulationsViaLayouts - result', result);
+
+        if (!layout['simulations']) {
+          layout['simulations'] = {};
+        }
+        simsRequested.forEach(sim => {
+          if (!layout['simulations'][sim]) {
+            layout['simulations'][sim] = {};
+          }
+          layout['simulations'][sim].status = 'pending';
+        });
+
+        const node = api.getRowNode(layout.layout_id);
+        node.setData(layout);
+      },
+      ManagerFunctions.showErroruser
+    );
+  }
+
+  public static requestLayoutSimulationsStatus(http, layout, api) {
+    ApiFunctions.get(
+      http,
+      'layouts/' + layout.layout_id + '/simulations/status',
+      result => {
+        layout['simulations'] = result;
+        const node = api.getRowNode(layout.layout_id);
+        node.setData(layout);
+      },
+      error => {
+        console.error(error);
+      }
+    );
+  }
+
   public static isAddressCorrect(building) {
     return (
       building &&

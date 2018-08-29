@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { ManagerFunctions } from '../managerFunctions';
@@ -79,7 +78,6 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
     ManagerFunctions.requestAllData(
       this.http,
       (sitesArray, buildingsArray, unitsArray, layoutsArray) => {
-
         this.loading = false;
 
         this.buildColumDefinitions();
@@ -146,7 +144,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
           };
         });
 
-        this.gridOptions = <GridOptions>{
+        this.gridOptions = {
           rowData: rowsData,
           columnDefs: this.columnDefs,
 

@@ -2,7 +2,8 @@ import { MatCheckboxComponent } from '../_shared-components/mat-checkbox/mat-che
 import { ProcentRendererComponent } from '../_shared-components/procent-renderer/procent-renderer.component';
 import { CellRender } from './cellRender';
 import { BuildingSimulationRendererComponent } from '../_shared-components/building-simulation-renderer/building-simulation-renderer.component';
-import {BuildingSimulationRendererDpoiComponent} from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dopi-renderer.component';
+import {BuildingSimulationRendererDpoiComponent} from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dpoi-renderer.component';
+import {LayoutSimulationRendererComponent} from '../_shared-components/layout-simulation-renderer/layout-simulation-renderer.component';
 
 export class ColumnDefinitions {
   /**
@@ -18,6 +19,7 @@ export class ColumnDefinitions {
     frameworkComponents: {
       checkboxRenderer: MatCheckboxComponent,
       procentRenderer: ProcentRendererComponent,
+      simulationLayoutRenderer: LayoutSimulationRendererComponent,
       simulationBuildingRenderer: BuildingSimulationRendererComponent,
       simulationBuildingDpoiRenderer: BuildingSimulationRendererDpoiComponent,
     },

@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -342,8 +341,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'View',
             field: 'simulations.view.status',
-            cellRenderer: CellRender.viewSimulationLayout,
-            width: 100,
+            cellRenderer: 'simulationLayoutRenderer',
+            cellStyle: { padding: '0px' },
+            width: 180,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -351,8 +351,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Wbs',
             field: 'simulations.wbs.status',
             columnGroupShow: 'open',
-            cellRenderer: CellRender.viewSimulationLayout,
-            width: 100,
+            cellRenderer: 'simulationLayoutRenderer',
+            cellStyle: { padding: '0px' },
+            width: 180,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -360,8 +361,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Pathways',
             field: 'simulations.pathways.status',
             columnGroupShow: 'open',
-            cellRenderer: CellRender.viewSimulationLayout,
-            width: 100,
+            cellRenderer: 'simulationLayoutRenderer',
+            cellStyle: { padding: '0px' },
+            width: 180,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -369,8 +371,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Basic features',
             field: 'simulations.basic_features.status',
             columnGroupShow: 'open',
-            cellRenderer: CellRender.viewSimulationLayout,
-            width: 100,
+            cellRenderer: 'simulationLayoutRenderer',
+            cellStyle: { padding: '0px' },
+            width: 180,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -378,8 +381,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Accoustics',
             field: 'simulations.accoustics.status',
             columnGroupShow: 'open',
-            cellRenderer: CellRender.viewSimulationLayout,
-            width: 100,
+            cellRenderer: 'simulationLayoutRenderer',
+            cellStyle: { padding: '0px' },
+            width: 180,
             editable: false,
             cellClass: 'readOnly',
           },
@@ -503,7 +507,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           building && ManagerFunctions.isReferencedSTBuilding(building);
 
         layout['building_name'] = building && building.name ? building.name : '';
+        layout['building'] = building;
       } else {
+        layout['building'] = {};
         layout['building_id'] = '';
         layout['building_name'] = '';
         layout['building_referenced_osm'] = false;
@@ -512,6 +518,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         layout['unit_name'] = '';
       }
     } else {
+      layout['building'] = {};
       layout['building_id'] = '';
       layout['building_name'] = '';
       layout['building_referenced_osm'] = false;
@@ -754,6 +761,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
       delete newRow['unit_name'];
 
+      delete newRow['building'];
       delete newRow['building_name'];
       delete newRow['building_referenced_osm'];
       delete newRow['building_referenced_st'];
@@ -1020,33 +1028,22 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     const nodes = this.gridOptions.api.getSelectedNodes();
     const layouts = nodes.map(node => node.data);
     layouts.forEach(layout => {
-      console.log('get Building simulation status for ', layout.layout_id);
-      ApiFunctions.get(
-        this.http,
-        'layouts/' + layout.layout_id + '/simulations/status',
-        result => {
-          console.log('result ', result);
-        },
-        error => {
-          console.error(error);
-        }
-      );
+      console.log('get layout simulation status for ', layout.layout_id);
+      ManagerFunctions.requestLayoutSimulationsStatus(this.http, layout, this.gridOptions.api);
     });
   }
 
   startSimulations() {
     const nodes = this.gridOptions.api.getSelectedNodes();
-    const layout_ids = nodes.map(node => node.data.layout_id);
-    layout_ids.forEach(layout_id => {
-      console.log('Start Layouts simulations for ', layout_id);
-      ApiFunctions.post(
+    const layouts = nodes.map(node => node.data);
+    const simulations = ['view', 'wbs', 'pathways', 'basic_features', 'accoustics'];
+
+    layouts.forEach(layout => {
+      ManagerFunctions.requestLayoutSimulations(
         this.http,
-        'layouts/' + layout_id,
-        {},
-        result => {
-          console.log('result', result, layout_id);
-        },
-        ManagerFunctions.showErroruser
+        layout,
+        simulations,
+        this.gridOptions.api
       );
     });
   }

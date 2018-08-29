@@ -1,0 +1,17 @@
+<div class="container" [ngStyle]="styles">
+  <span *ngIf="!unitSet" >Requires Unit <a (click)="infoUnit()"><i class="fa fa-info-circle"></i></a></span>
+  <span *ngIf="unitSet && !buildingSet" >Requires Building <a (click)="infoBuilding()"><i class="fa fa-info-circle"></i></a></span>
+  <span *ngIf="unitSet && buildingSet && !buildingAddressSet" >Requires Building Address <a (click)="infoBuildingAddress()"><i class="fa fa-info-circle"></i></a></span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && !buildingGeorefSet" >Requires Building Georef. <a (click)="infoBuildingGeoref()"><i class="fa fa-info-circle"></i></a></span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && !modelStruct" >Requires Model Structure. <a (click)="infoLayoutModelStrucutre()"><i class="fa fa-info-circle"></i></a></span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && !georeferenced" >Requires Layout Georef. <a (click)="infoLayoutGeoref()"><i class="fa fa-info-circle"></i></a></span>
+
+
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && complete">
+    <a [href]="urlRaw" > View raw </a>
+  </span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && failed" >Failed <a (click)="requestSimulation()"> Retry</a></span>
+  <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && unknown" >Unknown <a (click)="requestStatus()"><i class="fas fa-redo"></i></a></span>
+</div>

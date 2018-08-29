@@ -535,21 +535,6 @@ export class CellRender {
     return result;
   }
 
-  public static viewSimulationLayout(params) {
-    if (params.value) {
-      console.log('params.value', params.data.layout_id);
-      if (params.value === 'complete') {
-        return (
-          `<a href='${urlSimulationViewer}/simulation/layout/` +
-          params.data.layout_id +
-          `' > View </a>`
-        );
-      }
-      return params.value;
-    }
-    return '?';
-  }
-
   public static viewModel(params) {
     if (params.value === 'Loading') {
       return `Loading ...`;

@@ -7,9 +7,9 @@ import { ActivatedRoute } from '@angular/router';
 import { OverlayService } from '../../_services/overlay.service';
 
 @Component({
-  selector: 'app-building-simulation-dopi-renderer',
-  templateUrl: './building-simulation-dopi-renderer.component.html',
-  styleUrls: ['./building-simulation-dopi-renderer.component.scss'],
+  selector: 'app-building-simulation-dpoi-renderer',
+  templateUrl: './building-simulation-dpoi-renderer.component.html',
+  styleUrls: ['./building-simulation-dpoi-renderer.component.scss'],
 })
 export class BuildingSimulationRendererDpoiComponent {
   params: any;
