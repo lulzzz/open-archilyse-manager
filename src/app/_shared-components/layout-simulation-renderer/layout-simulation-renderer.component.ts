@@ -87,15 +87,15 @@ export class LayoutSimulationRendererComponent {
     if (!this.unitSet) {
       this.styles.backgroundColor = '#59f0ff';
     } else if (!this.buildingSet) {
-      this.styles.backgroundColor = '#55d8ff';
+      this.styles.backgroundColor = '#52a1ff';
     } else if (!this.buildingAddressSet) {
       this.styles.backgroundColor = '#4dc3ff';
     } else if (!this.buildingGeorefSet) {
       this.styles.backgroundColor = '#59b0ff';
-    } else if (!this.georeferenced) {
-      this.styles.backgroundColor = '#52a1ff';
     } else if (!this.modelStruct) {
-      this.styles.backgroundColor = '#4787ff';
+      this.styles.backgroundColor = '#66b9ff';
+    } else if (!this.georeferenced) {
+      this.styles.backgroundColor = '#6bdfff';
     } else if (params.value) {
       if (params.value === 'failed') {
         this.failed = true;
