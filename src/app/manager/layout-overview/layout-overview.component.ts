@@ -493,6 +493,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     if (layout.unit_id || layout.unit_id === '') {
       const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
       if (unit) {
+        layout['unit'] = unit;
+
         layout['building_id'] = unit.building_id;
         layout['unit_name'] = unit.name ? unit.name : '';
 
@@ -515,6 +517,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         layout['building_referenced_osm'] = false;
         layout['building_referenced_st'] = false;
 
+        layout['unit'] = {};
         layout['unit_name'] = '';
       }
     } else {
@@ -524,6 +527,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       layout['building_referenced_osm'] = false;
       layout['building_referenced_st'] = false;
 
+      layout['unit'] = {};
       layout['unit_name'] = '';
     }
   }
@@ -759,6 +763,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         delete newRow['model_structure'].type;
       }
 
+      delete newRow['unit'];
       delete newRow['unit_name'];
 
       delete newRow['building'];

@@ -162,6 +162,7 @@ export class ManagerFunctions {
   public static isReferencedOSMBuilding(building: Building) {
     // Swiss open_street_maps is defined
     return (
+      building &&
       building.building_reference &&
       building.building_reference.open_street_maps &&
       building.building_reference.open_street_maps !== ''
@@ -171,6 +172,7 @@ export class ManagerFunctions {
   public static isReferencedSTBuilding(building: Building) {
     // Swiss topo is defined
     return (
+      building &&
       building.building_reference &&
       building.building_reference.swiss_topo &&
       building.building_reference.swiss_topo !== ''
@@ -182,11 +184,12 @@ export class ManagerFunctions {
    * @param layout
    */
   public static isReferencedLayout(layout: Layout) {
-    return layout.movements && layout.movements.length > 0;
+    return layout && layout.movements && layout.movements.length > 0;
   }
 
   public static isDigitalizedLayout(layout: Layout) {
     return !!(
+      layout &&
       layout.model_structure &&
       layout.model_structure['floors'] &&
       layout.model_structure['floors'].length

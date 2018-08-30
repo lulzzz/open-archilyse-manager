@@ -43,6 +43,14 @@ export class BuildingSimulationRendererComponent {
 
   calculateValues(params): boolean {
     this.params = params;
+
+    if (params.colDef.field === 'simulations.potential_view.status') {
+    } else if (params.colDef.field === 'simulations.accoustics.status') {
+    } else if (params.colDef.field === 'simulations.dpoi.status') {
+    } else {
+      console.error('Column simulations', params.colDef.field);
+    }
+
     this.value = this.params.value;
     this.building = this.params.data;
     this.api = this.params.api;

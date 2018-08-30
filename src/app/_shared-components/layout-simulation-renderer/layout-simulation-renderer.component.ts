@@ -51,9 +51,26 @@ export class LayoutSimulationRendererComponent {
   }
 
   calculateValues(params): boolean {
-    console.log('calculateValues', params);
-
     this.params = params;
+
+    let requireGeorefLayout = false;
+    let requireBuilding = false;
+
+    if (params.colDef.field === 'simulations.view.status') {
+      requireBuilding = true;
+      requireGeorefLayout = true;
+    } else if (params.colDef.field === 'simulations.wbs.status') {
+      // Just the model structure
+    } else if (params.colDef.field === 'simulations.pathways.status') {
+      // Just the model structure
+    } else if (params.colDef.field === 'simulations.basic_features.status') {
+      // Just the model structure
+    } else if (params.colDef.field === 'simulations.accoustics.status') {
+      // Just the model structure
+    } else {
+      console.error('Column simulations', params.colDef.field);
+    }
+
     this.value = this.params.value;
     this.layout = this.params.data;
     this.api = this.params.api;
@@ -67,22 +84,22 @@ export class LayoutSimulationRendererComponent {
     this.georeferenced = false;
     this.modelStruct = false;
 
-    this.unitSet = !!this.layout.unit_id;
-    this.buildingSet = !!this.layout.building_id && !!this.layout.building;
-    this.buildingAddressSet = ManagerFunctions.isAddressCorrect(this.layout.building);
-    this.buildingGeorefSet = ManagerFunctions.isReferencedBuilding(this.layout.building);
-    this.georeferenced = ManagerFunctions.isReferencedLayout(this.layout);
+    this.unitSet =
+      !requireBuilding ||
+      (!!this.layout.unit_id && !!this.layout.unit && !!this.layout.unit.unit_id);
+
+    this.buildingSet =
+      !requireBuilding ||
+      (!!this.layout.building_id && !!this.layout.building && !!this.layout.building.building_id);
+    this.buildingAddressSet =
+      !requireBuilding || ManagerFunctions.isAddressCorrect(this.layout.building);
+    this.buildingGeorefSet =
+      !requireBuilding || ManagerFunctions.isReferencedBuilding(this.layout.building);
+    this.georeferenced =
+      !requireBuilding || !requireGeorefLayout || ManagerFunctions.isReferencedLayout(this.layout);
     this.modelStruct = ManagerFunctions.isDigitalizedLayout(this.layout);
 
     this.urlRaw = `${urlPortfolio}/simulation/layout/${params.data.layout_id}`;
-
-    console.log(
-      params.value,
-      this.unitSet,
-      this.buildingSet,
-      this.buildingAddressSet,
-      this.buildingGeorefSet
-    );
 
     if (!this.unitSet) {
       this.styles.backgroundColor = '#59f0ff';
