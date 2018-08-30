@@ -465,6 +465,24 @@ export class CellRender {
     return ``;
   }
 
+  public static viewGeorefBuildingST(params) {
+    if (params && params.value && params.value !== '') {
+      return `<a href='${urlGeoreference}/map/${params.data.building_id}#source=swiss_topo' >${
+        params.value
+      }</a>`;
+    }
+    return '';
+  }
+
+  public static viewGeorefBuildingOSM(params) {
+    if (params && params.value && params.value !== '') {
+      return `<a href='${urlGeoreference}/map/${
+        params.data.building_id
+      }#source=open_street_maps' >${params.value}</a>`;
+    }
+    return '';
+  }
+
   public static viewBuildingsCountry(params) {
     const number = params.value > 0 ? params.value : 0;
     return (

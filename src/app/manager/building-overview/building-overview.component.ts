@@ -145,10 +145,18 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Georeference',
         children: [
           // { headerName: 'Building_reference', field: 'building_reference', editable: true },
-          { headerName: 'Swiss topo', field: 'building_reference.swiss_topo', editable: true },
+          {
+            headerName: 'Swiss topo',
+            field: 'building_reference.swiss_topo',
+            width: 265,
+            cellRenderer: CellRender.viewGeorefBuildingST,
+            editable: true,
+          },
           {
             headerName: 'Open Street Maps',
             field: 'building_reference.open_street_maps',
+            width: 150,
+            cellRenderer: CellRender.viewGeorefBuildingOSM,
             editable: true,
           },
         ],
