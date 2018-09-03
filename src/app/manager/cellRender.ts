@@ -1,7 +1,5 @@
-import { urlEditor, urlGeoreference, urlPortfolio, urlSimulationViewer } from './url';
+import { urlEditor, urlGeoreference, urlPortfolio } from './url';
 import { ManagerFunctions } from './managerFunctions';
-import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
-import { AuthGuard } from '../_guards/auth.guard';
 
 export class CellRender {
   public static siteFormatter(params) {
@@ -286,13 +284,26 @@ export class CellRender {
       if (!translate[params.value]) {
         console.error('Missing name', params.value);
       }
-      return translate[params.value]
-        ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Key:${
-            params.value
-          }" target="_blank"><i class="fas fa-info-circle"></i></a> &nbsp; <a href="https://taginfo.openstreetmap.org/keys/${
-            params.value
-          }" target="_blank"><i class="fas fa-tag"></i></a>`
-        : params.value;
+
+      if (params.data.category && params.data.category !== '') {
+        return translate[params.value]
+          ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Tag:${
+              params.data.category_original
+            }=${
+              params.value
+            }" target="_blank"><i class="fas fa-info-circle"></i></a> &nbsp; <a href="https://taginfo.openstreetmap.org/tags/${
+              params.data.category_original
+            }=${params.value}" target="_blank"><i class="fas fa-tag"></i></a>`
+          : params.value;
+      } else {
+        return translate[params.value]
+          ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Key:${
+              params.value
+            }" target="_blank"><i class="fas fa-info-circle"></i></a> &nbsp; <a href="https://taginfo.openstreetmap.org/keys/${
+              params.value
+            }" target="_blank"><i class="fas fa-tag"></i></a>`
+          : params.value;
+      }
     }
     return ``;
   }

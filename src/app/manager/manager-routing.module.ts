@@ -12,6 +12,8 @@ import { LayoutOverviewComponent } from './layout-overview/layout-overview.compo
 import { SimulationOverviewComponent } from './simulation-overview/simulation-overview.component';
 import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 import { MapOverviewComponent } from './map-overview/map-overview.component';
+import { PotentialViewOverviewComponent } from './potential-view-overview/potential-view-overview.component';
+import { LogOverviewComponent } from './log-overview/log-overview.component';
 
 const routes: Routes = [
   {
@@ -21,6 +23,11 @@ const routes: Routes = [
       {
         path: '',
         component: CountryOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'log',
+        component: LogOverviewComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -56,6 +63,11 @@ const routes: Routes = [
       {
         path: 'layout',
         component: LayoutOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'potentialView/:buildingId',
+        component: PotentialViewOverviewComponent,
         canActivate: [AuthGuard],
       },
       {

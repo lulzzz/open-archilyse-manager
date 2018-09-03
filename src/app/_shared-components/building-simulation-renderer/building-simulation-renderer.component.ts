@@ -26,6 +26,7 @@ export class BuildingSimulationRendererComponent {
   api: any;
 
   urlRaw: any;
+  urlPotencialView: any;
 
   constructor(private http: HttpClient, private infoDialog: OverlayService) {}
 
@@ -45,6 +46,7 @@ export class BuildingSimulationRendererComponent {
     this.params = params;
 
     if (params.colDef.field === 'simulations.potential_view.status') {
+      this.urlPotencialView = `${urlPortfolio}/potentialView/${params.data.building_id}`;
     } else if (params.colDef.field === 'simulations.accoustics.status') {
     } else if (params.colDef.field === 'simulations.dpoi.status') {
     } else {

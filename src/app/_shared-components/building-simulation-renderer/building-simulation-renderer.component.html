@@ -4,7 +4,8 @@
   <span *ngIf="addressSet && !georeferenced" ><a (click)="georeference()">Req. Georeference</a> <a (click)="infoGeoreference()"><i class="fa fa-info-circle"></i></a></span>
 
   <span *ngIf="addressSet && georeferenced && complete">
-    <a [href]="urlRaw" > View raw </a>
+    <a [href]="urlRaw" > View raw </a> &nbsp;
+    <a *ngIf="urlPotencialView" [href]="urlPotencialView" > View potencial View</a>
   </span>
   <span *ngIf="addressSet && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="addressSet && georeferenced && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>

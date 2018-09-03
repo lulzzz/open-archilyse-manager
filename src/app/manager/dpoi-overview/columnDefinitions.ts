@@ -1,6 +1,6 @@
 import { CellRender } from '../cellRender';
 
-function getColumnDefsCommon(distance, duration, score) {
+function getColumnDefsCommon(distance, duration, score, nameColumns) {
   return [
     {
       headerName: 'Simulation',
@@ -21,6 +21,7 @@ function getColumnDefsCommon(distance, duration, score) {
           editable: false,
           cellClass: 'readOnly',
         },
+        ...nameColumns,
       ],
     },
     {
@@ -146,12 +147,38 @@ export const columnDefsCompare = [
   ...getColumnDefsCommon(
     CellRender.distanceCompare,
     CellRender.durationCompare,
-    CellRender.scoreCompare
+    CellRender.scoreCompare,
+    [
+      {
+        headerName: 'Place name',
+        field: 'place_name',
+        columnGroupShow: 'open',
+        width: 190,
+        editable: false,
+        cellClass: 'readOnly',
+      },
+      {
+        headerName: 'Place name compare',
+        field: 'place_name_compare',
+        columnGroupShow: 'open',
+        width: 190,
+        editable: false,
+        cellClass: 'readOnly',
+      },
+    ]
   ),
 ];
 
 export const columnDefs = [
-  ...getColumnDefsCommon(CellRender.distance, CellRender.duration, CellRender.score),
+  ...getColumnDefsCommon(CellRender.distance, CellRender.duration, CellRender.score, [
+    {
+      headerName: 'Place name',
+      field: 'place_name',
+      width: 190,
+      editable: false,
+      cellClass: 'readOnly',
+    },
+  ]),
   {
     headerName: 'Coordinates',
     children: [

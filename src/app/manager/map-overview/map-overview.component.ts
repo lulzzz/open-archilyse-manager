@@ -20,7 +20,8 @@ import OlStyleStroke from 'ol/style/stroke';
 import condition from 'ol/events/condition';
 import Select from 'ol/interaction/select';
 
-import { apiUrl, urlPortfolio } from '../url';
+import { apiUrl, parseParms, urlPortfolio } from '../url';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({
@@ -43,23 +44,6 @@ const styleOver = new OlStyle({
   }),
 });
 
-Array.prototype['contains'] = function(v) {
-  for (let i = 0; i < this.length; i += 1) {
-    if (this[i] === v) return true;
-  }
-  return false;
-};
-
-Array.prototype['unique'] = function() {
-  const arr = [];
-  for (let i = 0; i < this.length; i += 1) {
-    if (!arr.includes(this[i])) {
-      arr.push(this[i]);
-    }
-  }
-  return arr;
-};
-
 @Component({
   selector: 'app-map-overview',
   templateUrl: './map-overview.component.html',
@@ -78,8 +62,13 @@ export class MapOverviewComponent implements OnInit {
   map: OlMap = null;
   source: OlXYZ;
   layer: OlTileLayer;
-  vectorLayer: OlVectorLayer;
-  vectorSource;
+
+  detailLayer: OlVectorLayer;
+  globalLayer: OlVectorLayer;
+
+  detailSource;
+  globalSource;
+
   view: OlView;
 
   selectPointerClick;
@@ -98,7 +87,7 @@ export class MapOverviewComponent implements OnInit {
   filterCountry = null;
   filterCity = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   filterByCountry(country) {
     console.log('country', country);
@@ -135,8 +124,8 @@ export class MapOverviewComponent implements OnInit {
 
         this.buildingsArray = buildingsArray;
 
-        this.cities = buildingsArray.map(building => building.address.city).unique();
-        this.countries = buildingsArray.map(building => building.address.country).unique();
+        this.cities = [];
+        this.countries = [];
 
         this.setUpMap();
       },
@@ -146,6 +135,20 @@ export class MapOverviewComponent implements OnInit {
         }`;
       }
     );
+  }
+
+  changeMapStyle(mapStyle) {
+    this.mapStyle = mapStyle;
+
+    this.source = new OlXYZ({
+      url:
+        'https://api.tiles.mapbox.com/v4/mapbox.' +
+        this.mapStyle +
+        '/{z}/{x}/{y}.png?' +
+        'access_token=***REMOVED***',
+    });
+
+    this.layer.setSource(this.source);
   }
 
   setUpMap() {
@@ -194,8 +197,17 @@ export class MapOverviewComponent implements OnInit {
 
               if (feature) {
                 this.numGeoreferencedBuildings += 1;
+
+                if (this.cities.indexOf(building.address.city) === -1) {
+                  this.cities.push(building.address.city);
+                }
+                if (this.countries.indexOf(building.address.country) === -1) {
+                  this.countries.push(building.address.country);
+                }
+
                 if (this.map !== null) {
-                  this.vectorSource.addFeature(feature);
+                  this.detailSource.addFeature(feature);
+                  this.globalSource.addFeature(feature);
                 } else {
                   this.mapStyle = 'satellite';
 
@@ -207,12 +219,20 @@ export class MapOverviewComponent implements OnInit {
                       'access_token=***REMOVED***',
                   });
 
-                  this.vectorSource = new Vector({
+                  this.detailSource = new Vector({
+                    features: [feature],
+                  });
+                  this.globalSource = new Vector({
                     features: [feature],
                   });
 
-                  this.vectorLayer = new OlVectorLayer({
-                    source: this.vectorSource,
+                  this.detailLayer = new OlVectorLayer({
+                    source: this.detailSource,
+                    style: styleNormal,
+                  });
+
+                  this.globalLayer = new OlVectorLayer({
+                    source: this.globalSource,
                     style: styleNormal,
                   });
 
@@ -226,7 +246,7 @@ export class MapOverviewComponent implements OnInit {
 
                   this.map = new OlMap({
                     target: 'map',
-                    layers: [this.layer, this.vectorLayer],
+                    layers: [this.layer, this.detailLayer, this.globalLayer],
                     view: this.view,
                   });
 
@@ -253,6 +273,21 @@ export class MapOverviewComponent implements OnInit {
                       }`;
                     }
                   });
+
+                  this.view.on('propertychange', e => {
+                    switch (e.key) {
+                      case 'resolution':
+                        this.correctVisibility(e.oldValue);
+                        break;
+                    }
+                  });
+
+                  this.fragment_sub = this.route.fragment.subscribe(fragment => {
+                    const urlParams = parseParms(fragment);
+                    if (urlParams.hasOwnProperty('mapStyle')) {
+                      this.changeMapStyle(urlParams['mapStyle']);
+                    }
+                  });
                 }
                 this.centerMap();
               }
@@ -263,11 +298,28 @@ export class MapOverviewComponent implements OnInit {
   }
 
   centerMap() {
-    this.view.fit(this.vectorSource.getExtent(), {
+    this.view.fit(this.detailSource.getExtent(), {
       padding: paddingToBuildings,
       constrainResolution: false,
       nearest: false,
     });
+
+    this.correctVisibility(this.view.values_.resolution);
+  }
+
+  correctVisibility(resolution) {
+    if (resolution < 5) {
+      this.detailLayer.setVisible(true);
+      this.globalLayer.setVisible(false);
+    } else {
+      this.detailLayer.setVisible(false);
+      this.globalLayer.setVisible(true);
+    }
+  }
+
+  changeMap(data) {
+    const newValue = `mapStyle=${data.target.value}`;
+    this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
   }
 
   ngOnDestroy(): void {

@@ -15,6 +15,18 @@
   }
 }
 
+.apiUsage{
+  color: grey;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+
+  &:hover{
+    color: black;
+  }
+}
+
 .branding {
   display: flex;
   align-items: center;

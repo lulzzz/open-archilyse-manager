@@ -23,7 +23,17 @@
     </select>
     &nbsp;&nbsp;
     <button [popper]="listPU" class="btn blue" (click)="linkToList()">View list</button>
-
+    &nbsp;
+    <div [popper]="selectMap" class="selectMap">
+      <label >Map mode: </label>
+      <select (change)="changeMap($event)" [value]="mapStyle">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="outdoors">Outdoors</option>
+        <option value="streets">Streets</option>
+        <option value="satellite">Satellite</option>
+      </select>
+    </div>
   </div>
 </div>
 
@@ -31,3 +41,4 @@
 
 <popper-content #centerMapPU >Center the map to view all the buildings.</popper-content>
 <popper-content #listPU >Link to the current list of buildings.</popper-content>
+<popper-content #selectMap >Change the map displayed.</popper-content>

@@ -23,7 +23,9 @@ import { OverlayService } from '../_services/overlay.service';
 import { MapOverviewComponent } from './map-overview/map-overview.component';
 import { BuildingSimulationRendererComponent } from '../_shared-components/building-simulation-renderer/building-simulation-renderer.component';
 import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dpoi-renderer.component';
-import {LayoutSimulationRendererComponent} from '../_shared-components/layout-simulation-renderer/layout-simulation-renderer.component';
+import { LayoutSimulationRendererComponent } from '../_shared-components/layout-simulation-renderer/layout-simulation-renderer.component';
+import { PotentialViewOverviewComponent } from './potential-view-overview/potential-view-overview.component';
+import { LogOverviewComponent } from './log-overview/log-overview.component';
 
 @NgModule({
   imports: [
@@ -62,6 +64,8 @@ import {LayoutSimulationRendererComponent} from '../_shared-components/layout-si
     SimulationOverviewComponent,
     DpoiOverviewComponent,
     MapOverviewComponent,
+    LogOverviewComponent,
+    PotentialViewOverviewComponent,
   ],
   providers: [OverlayService],
 })

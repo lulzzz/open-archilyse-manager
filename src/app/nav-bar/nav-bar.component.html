@@ -9,6 +9,9 @@
   </a>
 
   <div class="nav-items" *ngIf="isUserLoggedIn && showOptions">
+
+    <a popper="This menu provides information about the API request used to display the data in each menu" class="apiUsage" routerLink="/manager/log">Api usage log</a>
+
     <div class="drop-down-menu">
       <div class="trigger" (click)="toggleDropdown($event)">
         <i class="far fa-bars"></i>

@@ -123,7 +123,10 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
                       const resC = resultComapre[simKey];
                       return {
                         name: simKey,
-                        category: this.getCategory(simKey),
+                        category: this.getCategory(simKey, res && res.category ? res.category : ''),
+                        category_original: res && res.category ? res.category : '',
+                        place_name: res && res.name ? res.name : '',
+                        place_name_compare: resC && resC.name ? resC.name : '',
                         bike: this.getDiffCat(res, resC, 'bike'),
                         car: this.getDiffCat(res, resC, 'car'),
                         flight: this.getDiffCat(res, resC, 'flight'),
@@ -150,7 +153,9 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
                 const res = result[simKey];
                 return {
                   name: simKey,
-                  category: this.getCategory(simKey),
+                  category: this.getCategory(simKey, res && res.category ? res.category : ''),
+                  category_original: res && res.category ? res.category : '',
+                  place_name: res && res.name ? res.name : '',
                   bike: res.bike,
                   car: res.car,
                   flight: res.flight,
@@ -201,10 +206,6 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
 
       getRowNodeId: data => data.name,
 
-      onCellValueChanged: params => {
-        ManagerFunctions.reactToEdit(this.http, params, 'site_id', 'sites', this.gridOptions.api);
-      },
-
       onFilterChanged: params => {
         const model = params.api.getFilterModel();
         this.filterModelSet = model !== null && Object.keys(model).length > 0;
@@ -249,7 +250,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     window.location.href = `${urlPortfolio}/dpoi/${this.buildingIdCompare}/${this.buildingId}`;
   }
 
-  getCategory(key) {
+  getCategory(key, category) {
     const culture = 'Entertainment, Arts & Culture';
     const nature = 'Nature';
     const outdoor_category = 'Outdoor Facilities';
@@ -268,6 +269,20 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     const money = 'Money';
     const accommodation = 'Accommodation';
     const nightlife = 'Nightlife';
+
+    if (category === '') {
+    } else if (category === 'shop') {
+    } else if (category === 'natural') {
+    } else if (category === 'leisure') {
+    } else if (category === 'railway') {
+    } else if (category === 'amenity') {
+    } else if (category === 'building') {
+    } else if (category === 'highway') {
+    } else if (category === 'tourism') {
+    } else if (category === 'public_transport') {
+    } else {
+      console.error('Category not found', category);
+    }
 
     const translate = {
       baby_goods: stores,
@@ -337,7 +352,6 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
       variety_store: stores,
       video: culture,
       video_games: culture,
-
       agrarian: nature,
       alcohol: foods,
       amusement_arcade: culture,

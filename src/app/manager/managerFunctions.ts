@@ -21,10 +21,10 @@ export class ManagerFunctions {
           building['simulations'] = {};
         }
         simsRequested.forEach(sim => {
-          if (!building['simulations'][sim]) {
-            building['simulations'][sim] = {};
+          if (!building['simulations'][sim.name]) {
+            building['simulations'][sim.name] = {};
           }
-          building['simulations'][sim].status = 'pending';
+          building['simulations'][sim.name].status = 'pending';
         });
 
         const node = api.getRowNode(building.building_id);
@@ -38,6 +38,8 @@ export class ManagerFunctions {
       http,
       'buildings/' + building.building_id + '/simulations/status',
       result => {
+        console.log('Sim status finish', result);
+
         building['simulations'] = result;
         const node = api.getRowNode(building.building_id);
         node.setData(building);

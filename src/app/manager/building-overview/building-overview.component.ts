@@ -572,7 +572,17 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     buildings.forEach(building => {
       console.log('Start Building simulations for ', building.building_id);
 
-      const simsRequested = ['potential_view', 'accoustics', 'dpoi'];
+      const simsRequested = [
+        {
+          name: 'potential_view',
+          parameters: {
+            floors: [1],
+          },
+        },
+        {
+          name: 'dpoi',
+        },
+      ]; // TODO: 'accoustics',
       ManagerFunctions.requestBuildingSimulations(
         this.http,
         building,

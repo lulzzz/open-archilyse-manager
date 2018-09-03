@@ -1,0 +1,61 @@
+<h1>
+  Potential view
+</h1>
+<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+<div *ngIf="!loading && !generalError" class="topControls">
+  <div>
+    <div [innerHTML]="address"></div>
+  </div>
+  <div>
+    <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button> &nbsp;
+    <button [popper]="viewRawPU" class="btn blue" (click)="viewRaw()">View raw</button> &nbsp; &nbsp;
+
+    <div [popper]="selectMap" class="selectMap">
+      <label >Map mode: </label>
+      <select (change)="changeMap($event)" [value]="mapStyle">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="outdoors">Outdoors</option>
+        <option value="streets">Streets</option>
+        <option value="satellite">Satellite</option>
+      </select>
+    </div>
+    &nbsp;&nbsp;
+    <div [popper]="selectSimulation" class="selectMap">
+      <label >Simulation: </label>
+      <select (change)="changeSimulation($event)" [value]="currentSimulation">
+        <option value="buildings">Buildings</option>
+        <option value="streets">Streets</option>
+      </select>
+    </div>
+    &nbsp;&nbsp;
+    <div *ngIf="floors.length>0" [popper]="selectFloor" class="selectMap">
+      <label >Floor: </label>
+      <select (change)="changeFloor($event)" [value]="currentFloor">
+        <option *ngFor="let floor of floors" [value]="floor">{{floor+1}}</option>
+      </select>
+    </div>
+  </div>
+  <div *ngIf="summary">
+    <label >Min: </label>{{summary.min.toFixed(2)}}&nbsp;&nbsp;
+    <label >Max: </label>{{summary.max.toFixed(2)}}&nbsp;&nbsp;
+    <label >Avg: </label>{{summary.average.toFixed(2)}}&nbsp;&nbsp;
+    <label >Median: </label>{{summary.median.toFixed(2)}}&nbsp;&nbsp;
+    <label >St. dev: </label>{{summary.std.toFixed(2)}}&nbsp;&nbsp;
+    <div class="sim-info" [popper]="infoSimPopper" (click)="showInfoSim()">
+      <i class="fa fa-info-circle"></i>
+    </div>
+  </div>
+</div>
+
+<div id="map" class="map"></div>
+
+<popper-content #infoSimPopper >Information about the current simulation.</popper-content>
+
+<popper-content #centerMapPU >Center the map to view the current building.</popper-content>
+<popper-content #viewRawPU >See the detail request of the potential view simulation.</popper-content>
+
+<popper-content #selectMap >Change the map displayed.</popper-content>
+<popper-content #selectSimulation >Change the simulation displayed.</popper-content>
+<popper-content #selectFloor >Change the floor displayed.</popper-content>

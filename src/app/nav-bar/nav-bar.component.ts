@@ -2,9 +2,10 @@ import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import * as fromStore from '../_store';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
 import { UserService } from '../_services';
+import { urlPortfolio } from '../manager/url';
 
 @Component({
   selector: 'nav-bar',
@@ -19,6 +20,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   showOptions = true;
   isDropdownActive = false;
+
+  urlLog = `${urlPortfolio}/log`;
 
   constructor(
     private userService: UserService,
