@@ -160,19 +160,25 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     ];
   }
 
+  /**
+   * Adds an empty unit in the API
+   */
   addRow() {
+
+    const newUnit = {
+      name: '',
+      description: '',
+      address: {
+        line1: '',
+        line2: '',
+        line3: '',
+      },
+    };
+
     ApiFunctions.post(
       this.http,
       'units',
-      {
-        name: '',
-        description: '',
-        address: {
-          line1: '',
-          line2: '',
-          line3: '',
-        },
-      },
+      newUnit,
       units => {
         console.log('units', units);
         this.gridOptions.api.updateRowData({

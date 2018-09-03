@@ -487,17 +487,22 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Adds an empty layout in the API
+   */
   addRow() {
+    const newLayout = {
+      name: '',
+      description: '',
+      images: '',
+      movements: [],
+      floors: [],
+    };
+
     ApiFunctions.post(
       this.http,
       'layouts',
-      {
-        name: '',
-        description: '',
-        images: '',
-        movements: [],
-        floors: [],
-      },
+      newLayout,
       layouts => {
         this.gridOptions.api.updateRowData({
           add: [layouts],

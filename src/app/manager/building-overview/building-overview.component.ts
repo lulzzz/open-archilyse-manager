@@ -361,27 +361,32 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Adds an empty building in the API
+   */
   addRow() {
+    const newBuilding = {
+      address: {
+        city: '', // St. Gallen
+        country: '', // Switzerland
+        postal_code: '', // 9000
+        street: '', // Ruhbergstrasse
+        street_nr: '', // 44
+      },
+
+      building_reference: {
+        open_street_maps: '',
+        swiss_topo: '',
+      },
+      description: '',
+      images: '',
+      name: '',
+    };
+
     ApiFunctions.post(
       this.http,
       'buildings',
-      {
-        address: {
-          city: '', // St. Gallen
-          country: '', // Switzerland
-          postal_code: '', // 9000
-          street: '', // Ruhbergstrasse
-          street_nr: '', // 44
-        },
-
-        building_reference: {
-          open_street_maps: '',
-          swiss_topo: '',
-        },
-        description: '',
-        images: '',
-        name: '',
-      },
+      newBuilding,
       building => {
         console.log('buildings', building);
         this.gridOptions.api.updateRowData({

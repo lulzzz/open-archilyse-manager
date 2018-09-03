@@ -102,14 +102,19 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService
   ) {}
 
+  /**
+   * Adds an empty site in the API
+   */
   addRow() {
+    const newSite = {
+      description: '',
+      name: '',
+    };
+
     ApiFunctions.post(
       this.http,
       'sites',
-      {
-        description: '',
-        name: '',
-      },
+      newSite,
       site => {
         this.gridOptions.api.updateRowData({
           add: [site],
@@ -228,7 +233,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * Deletes the selected rows in the API
    */
   delete() {
-
     let buildings = 0;
     let layouts = 0;
     let units = 0;
