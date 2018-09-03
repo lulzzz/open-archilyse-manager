@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GridOptions } from 'ag-grid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -436,6 +435,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  /**
+   * Export functions
+   */
 
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);

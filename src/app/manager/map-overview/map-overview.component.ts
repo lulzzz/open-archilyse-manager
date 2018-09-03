@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 
@@ -49,7 +49,14 @@ const styleOver = new OlStyle({
   templateUrl: './map-overview.component.html',
   styleUrls: ['./map-overview.component.scss'],
 })
-export class MapOverviewComponent implements OnInit {
+export class MapOverviewComponent implements OnInit, OnDestroy {
+  /**
+   * Loading and general error
+   */
+
+  generalError = null;
+  loading = true;
+
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -76,16 +83,16 @@ export class MapOverviewComponent implements OnInit {
 
   mapStyle;
 
-  generalError = null;
-  loading = true;
-
-  fragment_sub: Subscription;
-
   cities = [];
   countries = [];
 
   filterCountry = null;
   filterCity = null;
+
+  /**
+   * Subscriptions
+   */
+  fragment_sub: Subscription;
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
@@ -266,7 +273,7 @@ export class MapOverviewComponent implements OnInit {
 
                   this.selectPointerClick.on('select', e => {
                     if (e.selected.length > 0) {
-                      //localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
+                      // localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
                       // urlPortfolio/building#site_id=5b7d5793ed37e50009414a1a
                       window.location.href = `${urlPortfolio}/building#building_reference.open_street_maps=${
                         e.selected[0].id_

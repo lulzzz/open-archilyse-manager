@@ -14,13 +14,17 @@ export class BuildingSimulationRendererComponent {
   value: any;
   html: any;
   styles: any;
-  pending: boolean = false;
-  failed: boolean = false;
-  unknown: boolean = false;
-  complete: boolean = false;
-  georeferenced: boolean = false;
-  addressSet: boolean = false;
-  ready: boolean = false;
+
+  /**
+   * Control of errors and different states.
+   */
+  pending = false;
+  failed = false;
+  unknown = false;
+  complete = false;
+  georeferenced = false;
+  addressSet = false;
+  ready = false;
 
   building: any;
   api: any;
@@ -88,10 +92,6 @@ export class BuildingSimulationRendererComponent {
     } else {
       this.unknown = true;
     }
-    // `
-    //       Available <div class="cell-sim-request" >Request</div><div class="cell-sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
-    //         <i class="fa fa-info-circle"></i>
-    //       </div>`
 
     return true;
   }
@@ -115,7 +115,8 @@ export class BuildingSimulationRendererComponent {
       data: {
         title: 'Request simulation: Address needed',
         body:
-          'In order to request the current simulation the selected building must have a valid address. <br/>Please edit the address building details by double clicking on the cells.',
+          'In order to request the current simulation the selected building must have a valid address. <br/>' +
+          'Please edit the address building details by double clicking on the cells.',
         image: null,
       },
     });
@@ -125,7 +126,8 @@ export class BuildingSimulationRendererComponent {
       data: {
         title: 'Request simulation: Georeference needed',
         body:
-          'In order to request the current simulation the selected building must be georeferenced. <br/>Please use the georeference tool to identify the the specific building for the given address.',
+          'In order to request the current simulation the selected building must be georeferenced. <br/>' +
+          'Please use the georeference tool to identify the the specific building for the given address.',
         image: null,
       },
     });

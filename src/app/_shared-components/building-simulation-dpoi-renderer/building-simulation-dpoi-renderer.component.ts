@@ -16,12 +16,15 @@ export class BuildingSimulationRendererDpoiComponent {
   value: any;
   styles: any;
 
-  pending: boolean = false;
-  failed: boolean = false;
-  unknown: boolean = false;
-  addressSet: boolean = false;
-  complete: boolean = false;
-  ready: boolean = false;
+  /**
+   * Control of errors and different states.
+   */
+  pending = false;
+  failed = false;
+  unknown = false;
+  addressSet = false;
+  complete = false;
+  ready = false;
 
   building: any;
   api: any;
@@ -101,7 +104,8 @@ export class BuildingSimulationRendererDpoiComponent {
       data: {
         title: 'Request simulation: Address needed',
         body:
-          'In order to request the current simulation the selected building must have a valid address. <br/>Please edit the address building details by double clicking on the cells.',
+          'In order to request the current simulation the selected building must have a valid address. <br/>' +
+          'Please edit the address building details by double clicking on the cells.',
         image: null,
       },
     });

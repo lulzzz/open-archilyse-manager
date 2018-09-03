@@ -125,6 +125,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (this.subscriptionNavOptions) {
       this.subscriptionNavOptions.unsubscribe();
     }
+    if (this.subscriptionNavdiagramLinkActive) {
+      this.subscriptionNavdiagramLinkActive.unsubscribe();
+    }
     if (this.user_sub) {
       this.user_sub.unsubscribe();
     }

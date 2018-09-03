@@ -23,11 +23,17 @@ import { OverlayService } from '../../_services/overlay.service';
 })
 export class SiteOverviewComponent implements OnInit, OnDestroy {
   /**
-   * TABLE DOCUMENTATION
-   * https://www.ag-grid.com/angular-getting-started/
+   * Loading and general error
    */
+
   generalError = null;
   loading = true;
+
+  /**
+   * TABLE DOCUMENTATION
+   * https://www.ag-grid.com/angular-getting-started/
+   * ag- grid parameters:
+   */
 
   selectedNodes = [];
   selectedRows = [];
@@ -38,8 +44,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   filterModelSet = false;
 
   gridOptions;
-
-  fragment_sub: Subscription;
 
   columnDefs = [
     {
@@ -85,6 +89,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     },
     ...ColumnDefinitions.metaUserAndData,
   ];
+
+  /**
+   * Subscriptions
+   */
+  fragment_sub: Subscription;
 
   constructor(
     private http: HttpClient,
@@ -329,6 +338,10 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  /**
+   * Export functions
+   */
 
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);

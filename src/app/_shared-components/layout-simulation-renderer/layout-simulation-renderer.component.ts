@@ -18,18 +18,22 @@ export class LayoutSimulationRendererComponent {
   html: any;
   styles: any;
 
-  pending: boolean = false;
-  failed: boolean = false;
-  unknown: boolean = false;
-  complete: boolean = false;
-  georeferenced: boolean = false;
-  modelStruct: boolean = false;
-  ready: boolean = false;
+  /**
+   * Control of errors and different states.
+   */
 
-  unitSet: boolean = false;
-  buildingSet: boolean = false;
-  buildingAddressSet: boolean = false;
-  buildingGeorefSet: boolean = false;
+  pending = false;
+  failed = false;
+  unknown = false;
+  complete = false;
+  georeferenced = false;
+  modelStruct = false;
+  ready = false;
+
+  unitSet = false;
+  buildingSet = false;
+  buildingAddressSet = false;
+  buildingGeorefSet = false;
 
   layout: any;
   api: any;
@@ -75,6 +79,9 @@ export class LayoutSimulationRendererComponent {
     this.layout = this.params.data;
     this.api = this.params.api;
 
+    /**
+     * Reset values
+     */
     this.styles = {};
     this.pending = false;
     this.failed = false;
@@ -129,10 +136,6 @@ export class LayoutSimulationRendererComponent {
     } else {
       this.unknown = true;
     }
-    // `
-    //       Available <div class="cell-sim-request" >Request</div><div class="cell-sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
-    //         <i class="fa fa-info-circle"></i>
-    //       </div>`
 
     return true;
   }
@@ -156,7 +159,8 @@ export class LayoutSimulationRendererComponent {
       data: {
         title: 'Request simulation: Unit needed',
         body:
-          'In order to request the current simulation the selected layout must have a valid unit. <br/>Please edit the unit_id of this layout.',
+          'In order to request the current simulation the selected layout must have a valid unit. <br/>' +
+          'Please edit the unit_id of this layout.',
         image: null,
       },
     });
@@ -167,7 +171,8 @@ export class LayoutSimulationRendererComponent {
       data: {
         title: 'Request simulation: Building needed',
         body:
-          'In order to request the current simulation the selected layout must have a valid unit that is linked to a building. <br/>Please edit the building_id from the unit assigned to this layout.',
+          'In order to request the current simulation the selected layout must have a valid unit that is linked to a building. <br/>' +
+          'Please edit the building_id from the unit assigned to this layout.',
         image: null,
       },
     });
@@ -177,7 +182,8 @@ export class LayoutSimulationRendererComponent {
       data: {
         title: 'Request simulation: Building Address needed',
         body:
-          'In order to request the current simulation the selected layout must be linked a building with a valid address. <br/>Please edit the address building details by double clicking on the cells.',
+          'In order to request the current simulation the selected layout must be linked a building with a valid address. <br/>' +
+          'Please edit the address building details by double clicking on the cells.',
         image: null,
       },
     });
@@ -187,7 +193,8 @@ export class LayoutSimulationRendererComponent {
       data: {
         title: 'Request simulation: Georeference needed',
         body:
-          'In order to request the current simulation the selected layout must be linked to a georeferenced building. <br/>Please use the georeference tool to identify the the specific building for the given address.',
+          'In order to request the current simulation the selected layout must be linked to a georeferenced building. <br/>' +
+          'Please use the georeference tool to identify the the specific building for the given address.',
         image: null,
       },
     });
@@ -197,7 +204,8 @@ export class LayoutSimulationRendererComponent {
       data: {
         title: 'Request simulation: Georeference needed',
         body:
-          'In order to request the current simulation the selected layout must be georeferenced. <br/>Please use the georeference tool to place the model structure in the building.',
+          'In order to request the current simulation the selected layout must be georeferenced. <br/>' +
+          'Please use the georeference tool to place the model structure in the building.',
         image: null,
       },
     });
@@ -207,7 +215,8 @@ export class LayoutSimulationRendererComponent {
       data: {
         title: 'Request simulation: Model Structure needed',
         body:
-          'In order to request the current simulation the selected layout must be have a valid model structure. <br/>Please assign a model structure to the current layout.',
+          'In order to request the current simulation the selected layout must be have a valid model structure. <br/>' +
+          'Please assign a model structure to the current layout.',
         image: null,
       },
     });

@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 export const paddingToBuildings = [25, 25, 25, 25];
@@ -27,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import * as d3 from 'd3';
 import { OverlayService } from '../../_services/overlay.service';
+import { Subscription } from 'rxjs/Subscription';
 
 export const colors = [
   '#2c7bb6',
@@ -63,7 +63,9 @@ const styleOver = new OlStyle({
 
 Array.prototype['contains'] = function(v) {
   for (let i = 0; i < this.length; i += 1) {
-    if (this[i] === v) return true;
+    if (this[i] === v) {
+      return true;
+    }
   }
   return false;
 };
@@ -84,6 +86,13 @@ Array.prototype['unique'] = function() {
   styleUrls: ['./potential-view-overview.component.scss'],
 })
 export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
+  /**
+   * Loading and general error
+   */
+
+  generalError = null;
+  loading = true;
+
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
@@ -110,11 +119,6 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
   mapStyle;
 
-  generalError = null;
-  loading = true;
-
-  fragment_sub: Subscription;
-
   currentSimulation = 'buildings';
   currentFloor = 0;
   summary;
@@ -123,6 +127,11 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
   sim_result;
   numberOfFloors = 0;
   floors = [];
+
+  /**
+   * Subscriptions
+   */
+  fragment_sub: Subscription;
 
   constructor(
     private http: HttpClient,
@@ -310,7 +319,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
                               this.selectPointerClick.on('select', e => {
                                 if (e.selected.length > 0) {
-                                  //localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
+                                  // localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
                                   // urlPortfolio/building#site_id=5b7d5793ed37e50009414a1a
                                   window.location.href = `${urlPortfolio}/building#building_reference.open_street_maps=${
                                     e.selected[0].id_
@@ -371,7 +380,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     if (categorySimulations && categorySimulations.length) {
       this.numberOfFloors = categorySimulations.length;
       this.floors = [];
-      for (let i = 0; i < this.numberOfFloors; i++) {
+      for (let i = 0; i < this.numberOfFloors; i += 1) {
         this.floors.push(i);
       }
       console.log('this.floors', this.floors);
@@ -390,15 +399,15 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         // this.summary.min, this.summary.max
         const valueToColor = this.calculateDomain(colors, 0, 5);
 
-        const color = valueToColor(this.summary.average);
+        const colorAverage = valueToColor(this.summary.average);
 
         feature.setStyle(
           new OlStyle({
             fill: new OlStyleFill({
-              color: color,
+              color: colorAverage,
             }),
             stroke: new OlStyleStroke({
-              color: color,
+              color: colorAverage,
               width: 2,
             }),
           })
@@ -445,7 +454,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
     while (numberOfhexagons > maxNumberPoligons) {
       numberOfhexagons = 0;
-      let heatmapCorrected = [];
+      const heatmapCorrected = [];
       let newY = 0;
       for (let y = 1; y < currentHeatmap.length - 1; y += 3) {
         if (!heatmapCorrected[newY]) {
@@ -532,15 +541,15 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
       [finalX, finalY - radious], // 12h
     ];
 
-    const color = valueToColor(val);
+    const colorValue = valueToColor(val);
     const feature = new OlFeature({ geometry: new OlPolygon([coords]) });
     feature.setStyle(
       new OlStyle({
         fill: new OlStyleFill({
-          color: color,
+          color: colorValue,
         }),
         stroke: new OlStyleStroke({
-          color: color,
+          color: colorValue,
           width: 2,
         }),
       })

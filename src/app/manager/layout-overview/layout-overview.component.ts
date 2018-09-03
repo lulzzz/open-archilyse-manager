@@ -29,18 +29,20 @@ export const COOR_Y = 1;
 })
 export class LayoutOverviewComponent implements OnInit, OnDestroy {
   /**
-   * TABLE DOCUMENTATION
-   * https://www.ag-grid.com/angular-getting-started/
+   * Loading and general error
    */
+
   generalError = null;
   loading = true;
 
+  /**
+   * TABLE DOCUMENTATION
+   * https://www.ag-grid.com/angular-getting-started/
+   * ag- grid parameters:
+   */
+
   selectedNodes = [];
   selectedRows = [];
-
-  buildingsArray;
-  layoutsArray;
-  unitsArray;
 
   gridApi;
   gridColumnApi;
@@ -49,10 +51,32 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   gridOptions;
 
-  fragment_sub: Subscription;
-
   columnDefs;
 
+  /**
+   * Local vairables
+   */
+
+  buildingsArray;
+  layoutsArray;
+  unitsArray;
+
+  /**
+   * Subscriptions
+   */
+  fragment_sub: Subscription;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private infoDialog: OverlayService
+  ) {}
+
+  /**
+   * In order to provide dropdowns with site units we need to build it after load.
+   * @param units
+   */
   buildColumDefinitions(units) {
     this.columnDefs = [
       {
@@ -482,13 +506,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
-
   setLayoutBuildingData(layout) {
     if (layout.unit_id || layout.unit_id === '') {
       const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
@@ -532,6 +549,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Starts the recursive analysis of a model structure from a layout.
+   * Stores the data in the layout itself
+   * @param layout
+   */
   analyzeModelStructure(layout) {
     const model = layout['model_structure'];
     const analysis = {
@@ -591,11 +613,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     layout['num_windowExterior'] = analysis.num_windowExterior;
     layout['num_windowInterior'] = analysis.num_windowInterior;
   }
-  calculateArea(element) {
-    const currentArray = element.footprint.coordinates[0];
-    const currentArrayVector = currentArray.map(coor => new Vector2(coor[COOR_X], coor[COOR_Y]));
-    return Math.abs(ShapeUtils.area(currentArrayVector));
-  }
+
   analyzeModelStructureRecursive(elements, analysis) {
     if (elements) {
       elements.forEach(element => {
@@ -656,6 +674,16 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         this.analyzeModelStructureRecursive(element.children, analysis);
       });
     }
+  }
+
+  /**
+   * Given an element from the model structure calculates the area in m2
+   * @param element
+   */
+  calculateArea(element) {
+    const currentArray = element.footprint.coordinates[0];
+    const currentArrayVector = currentArray.map(coor => new Vector2(coor[COOR_X], coor[COOR_Y]));
+    return Math.abs(ShapeUtils.area(currentArrayVector));
   }
 
   ngOnInit() {
@@ -904,7 +932,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         const layout = node.data;
         const layout_id_found = layout.layout_id;
 
-        let model_structure_found = ManagerFunctions.isDigitalizedLayout(layout);
+        const model_structure_found = ManagerFunctions.isDigitalizedLayout(layout);
         let unit_found = null;
         let unit_id_found = null;
         let building_found = null;
@@ -1107,6 +1135,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  /**
+   * Export functions
+   */
 
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);

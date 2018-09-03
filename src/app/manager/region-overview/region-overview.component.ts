@@ -30,9 +30,14 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
   gridOptions;
 
+  columnDefs;
+
+  /**
+   * Subscriptions
+   */
   fragment_sub: Subscription;
 
-  columnDefs;
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   buildColumDefinitions() {
     this.columnDefs = [
@@ -71,8 +76,6 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
       },
     ];
   }
-
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     ManagerFunctions.requestAllData(

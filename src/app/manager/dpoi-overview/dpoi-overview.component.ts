@@ -15,18 +15,34 @@ import { exportOptions, exportSelectedOptions } from '../excel';
   styleUrls: ['./dpoi-overview.component.scss'],
 })
 export class DpoiOverviewComponent implements OnInit, OnDestroy {
+
+  /**
+   * Loading and general error
+   */
+
+  generalError = null;
+  loading = true;
+
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
+   * ag- grid parameters:
    */
-  generalError = null;
-  loading = true;
 
   buildingId;
   buildingIdCompare;
 
   selectedNodes = [];
   selectedRows = [];
+
+  gridApi;
+  gridColumnApi;
+  filterModelSet = false;
+  gridOptions;
+
+  /**
+   * Local variables
+   */
 
   created;
   updated;
@@ -40,13 +56,9 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   updatedCompare;
   statusCompare;
 
-  gridApi;
-  gridColumnApi;
-
-  filterModelSet = false;
-
-  gridOptions;
-
+  /**
+   * Subscriptions
+   */
   fragment_sub: Subscription;
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
@@ -181,6 +193,12 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Get the difference in a full category validating that attributes are defined
+   * @param res - Values origin
+   * @param resC - Values compare
+   * @param catStr - Category string
+   */
   getDiffCat(res, resC, catStr) {
     return {
       distance: this.getDiff(res, resC, catStr, 'distance'),
@@ -188,13 +206,23 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
       score: this.getDiff(res, resC, catStr, 'score'),
     };
   }
-
+  /**
+   * Get the difference in an attribute validating that is defined.
+   * @param res - Values origin
+   * @param resC - Values compare
+   * @param catStr - Category string
+   * @param attrStr - Attribute string
+   */
   getDiff(res, resC, catStr, attrStr) {
     const val = res && res[catStr] && res[catStr][attrStr] ? res[catStr][attrStr] : 0;
     const valC = resC && resC[catStr] && resC[catStr][attrStr] ? resC[catStr][attrStr] : 0;
     return val - valC;
   }
 
+  /**
+   * Ag-grid parameters.
+   * @param simulationsArray
+   */
   prepareGrid(simulationsArray) {
     this.gridOptions = {
       rowData: simulationsArray,
@@ -250,6 +278,11 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     window.location.href = `${urlPortfolio}/dpoi/${this.buildingIdCompare}/${this.buildingId}`;
   }
 
+  /**
+   * We translate the Open Street Maps key into categories (Human value).
+   * @param key Open Street Maps key
+   * @param category Open Street Maps category (Not used yet)
+   */
   getCategory(key, category) {
     const culture = 'Entertainment, Arts & Culture';
     const nature = 'Nature';

@@ -6,15 +6,23 @@ export class LogService {
 
   private requestLog = [];
 
-  addRequest(url, request) {
-    console.log('LogService request', request);
+  /**
+   * Every time a request is done is stored here.
+   * @param urlString
+   * @param requestObject
+   */
+  addRequest(urlString, requestObject) {
+    console.log('LogService request', requestObject);
     this.requestLog.push({
-      request: request,
-      url: url,
+      request: requestObject,
+      url: urlString,
       time: new Date().getTime(),
     });
   }
 
+  /**
+   * Gets all the requests done since the page was reloaded
+   */
   getRequestLog() {
     return this.requestLog;
   }

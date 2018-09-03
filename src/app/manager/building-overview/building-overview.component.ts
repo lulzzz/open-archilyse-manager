@@ -24,28 +24,49 @@ import { OverlayService } from '../../_services/overlay.service';
 })
 export class BuildingOverviewComponent implements OnInit, OnDestroy {
   /**
-   * TABLE DOCUMENTATION
-   * https://www.ag-grid.com/angular-getting-started/
+   * Loading and general error
    */
 
   generalError = null;
   loading = true;
 
+  /**
+   * TABLE DOCUMENTATION
+   * https://www.ag-grid.com/angular-getting-started/
+   * ag- grid parameters:
+   */
   selectedNodes = [];
   selectedRows = [];
 
   gridApi;
   gridColumnApi;
 
-  sitesArray;
-
   filterModelSet = false;
-
   gridOptions;
-
-  fragment_sub: Subscription;
   columnDefs;
 
+  /**
+   * Local variables
+   */
+
+  sitesArray;
+
+  /**
+   * Subscriptions
+   */
+  fragment_sub: Subscription;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private infoDialog: OverlayService
+  ) {}
+
+  /**
+   * In order to provide dropdowns with site lists we need to build it after load.
+   * @param sites
+   */
   buildColumDefinitions(sites) {
     this.columnDefs = [
       {
@@ -229,13 +250,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       ...ColumnDefinitions.metaUserAndData,
     ];
   }
-
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
 
   buildingReactionToEdit(nodeData, element) {
     // if the new Layout has new unit id, we update the building data.
@@ -656,6 +670,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  /**
+   * Export functions
+   */
+
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }

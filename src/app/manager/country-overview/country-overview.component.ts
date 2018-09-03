@@ -14,12 +14,17 @@ import { exportOptions, exportSelectedOptions } from '../excel';
 })
 export class CountryOverviewComponent implements OnInit, OnDestroy {
   /**
-   * TABLE DOCUMENTATION
-   * https://www.ag-grid.com/angular-getting-started/
+   * Loading and general error
    */
 
   generalError = null;
   loading = true;
+
+  /**
+   * TABLE DOCUMENTATION
+   * https://www.ag-grid.com/angular-getting-started/
+   * ag- grid parameters:
+   */
 
   selectedNodes = [];
   selectedRows = [];
@@ -31,9 +36,14 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
   gridOptions;
 
+  columnDefs;
+
+  /**
+   * Subscriptions
+   */
   fragment_sub: Subscription;
 
-  columnDefs;
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   buildColumDefinitions() {
     this.columnDefs = [
@@ -72,8 +82,6 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       },
     ];
   }
-
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     ManagerFunctions.requestAllData(

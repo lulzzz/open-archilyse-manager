@@ -9,8 +9,17 @@ import { ApiFunctions } from '../apiFunctions';
   styleUrls: ['./simulation-overview.component.scss'],
 })
 export class SimulationOverviewComponent implements OnInit, OnDestroy {
+
+  /**
+   * Loading and general error
+   */
+
   generalError = null;
   loading = true;
+
+  /**
+   * Local variables
+   */
 
   buildingId;
   layoutId;
