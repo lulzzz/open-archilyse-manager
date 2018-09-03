@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
-import { urlGeoreference, urlPortfolio } from '../../manager/url';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
 import { OverlayService } from '../../_services/overlay.service';
+import {environment} from '../../../environments/environment';
+
+const urlGeoreference = environment.urlGeoreference;
+const urlPortfolio = environment.urlPortfolio;
 
 @Component({
   selector: 'app-building-simulation-renderer',

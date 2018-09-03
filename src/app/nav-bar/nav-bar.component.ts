@@ -5,7 +5,9 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
 import { UserService } from '../_services';
-import { urlPortfolio } from '../manager/url';
+import { environment } from '../../environments/environment';
+
+const urlPortfolio = environment.urlPortfolio;
 
 @Component({
   selector: 'nav-bar',

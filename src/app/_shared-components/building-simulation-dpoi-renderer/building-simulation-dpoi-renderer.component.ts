@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { urlPortfolio } from '../../manager/url';
 import { HttpClient } from '@angular/common/http';
-import { ApiFunctions } from '../../manager/apiFunctions';
 import { ManagerFunctions } from '../../manager/managerFunctions';
-import { ActivatedRoute } from '@angular/router';
 import { OverlayService } from '../../_services/overlay.service';
+import { environment } from '../../../environments/environment';
+
+const urlPortfolio = environment.urlPortfolio;
 
 @Component({
   selector: 'app-building-simulation-dpoi-renderer',

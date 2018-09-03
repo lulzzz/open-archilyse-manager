@@ -1,5 +1,9 @@
-import { urlEditor, urlGeoreference, urlPortfolio } from './url';
 import { ManagerFunctions } from './managerFunctions';
+import { environment } from '../../environments/environment';
+
+const urlEditor = environment.urlEditor;
+const urlGeoreference = environment.urlGeoreference;
+const urlPortfolio = environment.urlPortfolio;
 
 export class CellRender {
   public static siteFormatter(params) {

@@ -5,9 +5,11 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../apiFunctions';
 import { ManagerFunctions } from '../managerFunctions';
-import { urlPortfolio } from '../url';
 import { columnDefs, columnDefsCompare } from './columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
+import {environment} from '../../../environments/environment';
+
+const urlPortfolio = environment.urlPortfolio;
 
 @Component({
   selector: 'app-dpoi-overview',

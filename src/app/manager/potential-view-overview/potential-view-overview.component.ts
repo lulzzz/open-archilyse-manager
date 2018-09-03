@@ -20,13 +20,17 @@ import OlPolygon from 'ol/geom/polygon';
 import condition from 'ol/events/condition';
 import Select from 'ol/interaction/select';
 
-import { apiUrl, parseParms, urlPortfolio } from '../url';
+import { parseParms } from '../url';
 import { ApiFunctions } from '../apiFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import * as d3 from 'd3';
 import { OverlayService } from '../../_services/overlay.service';
 import { Subscription } from 'rxjs/Subscription';
+import { environment } from '../../../environments/environment';
+
+const apiUrl = environment.apiUrl;
+const urlPortfolio = environment.urlPortfolio;
 
 export const colors = [
   '#2c7bb6',

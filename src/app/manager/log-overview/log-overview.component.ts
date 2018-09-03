@@ -4,8 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LogService } from '../../_services';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { ManagerFunctions } from '../managerFunctions';
-import { apiUrl } from '../url';
 import { Subscription } from 'rxjs/Subscription';
+import { environment } from '../../../environments/environment';
+
+const apiUrl = environment.apiUrl;
 
 @Component({
   selector: 'app-log-overview',

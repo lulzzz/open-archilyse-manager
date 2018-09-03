@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Layout, Unit } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import { urlGeoreference } from '../url';
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
@@ -18,6 +17,9 @@ import {
   showInfoExcel,
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
+import {environment} from '../../../environments/environment';
+const urlGeoreference = environment.urlGeoreference;
+
 
 export const COOR_X = 0;
 export const COOR_Y = 1;

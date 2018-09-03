@@ -5,6 +5,17 @@
 
 export const environment = {
   production: false,
+
+  apiUrl: 'https://api.archilyse.com/v0.1/',
+
+  /** Development */
+  urlConsole: 'http://console.archilyse.com/',
+  urlEditor: 'http://localhost:4201/editor',
+  urlGeoreference: 'http://localhost:4202/georeference',
+  urlSimulationViewer: 'http://localhost:4203/simulations',
+  urlEditorFloorplan: 'http://localhost:4204/editor',
+  urlPortfolio: 'http://localhost:4200/manager',
+
   firebase: {
     apiKey: '***REMOVED***',
     authDomain: 'archilyse-usermanagement.firebaseapp.com',

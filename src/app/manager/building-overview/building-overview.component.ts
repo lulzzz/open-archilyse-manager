@@ -5,7 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../managerFunctions';
 import { Building, Site } from '../../_models';
 import { ApiFunctions } from '../apiFunctions';
-import { urlGeoreference, urlPortfolio } from '../url';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import {
@@ -16,6 +15,9 @@ import {
   showInfoExcel,
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
+import { environment } from '../../../environments/environment';
+const urlGeoreference = environment.urlGeoreference;
+const urlPortfolio = environment.urlPortfolio;
 
 @Component({
   selector: 'app-building-overview',

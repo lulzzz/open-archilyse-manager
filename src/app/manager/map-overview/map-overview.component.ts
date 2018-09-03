@@ -20,8 +20,12 @@ import OlStyleStroke from 'ol/style/stroke';
 import condition from 'ol/events/condition';
 import Select from 'ol/interaction/select';
 
-import { apiUrl, parseParms, urlPortfolio } from '../url';
+import { parseParms } from '../url';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
+
+const apiUrl = environment.apiUrl;
+const urlPortfolio = environment.urlPortfolio;
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({

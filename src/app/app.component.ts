@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import {
-  urlConsole,
-  urlEditor,
-  urlEditorFloorplan,
-  urlGeoreference,
-  urlSimulationViewer,
-} from './manager/url';
+import { environment } from '../environments/environment';
+const urlEditor = environment.urlEditor;
+const urlEditorFloorplan = environment.urlEditorFloorplan;
+const urlGeoreference = environment.urlGeoreference;
+const urlSimulationViewer = environment.urlSimulationViewer;
+const urlConsole = environment.urlConsole;
 
 @Component({
   selector: 'app-root',
