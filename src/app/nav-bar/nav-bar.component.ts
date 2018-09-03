@@ -17,13 +17,14 @@ const urlPortfolio = environment.urlPortfolio;
 export class NavBarComponent implements OnInit, OnDestroy {
   isUserLoggedIn = false;
 
-  user_sub: Subscription;
-  route_sub: Subscription;
-
   showOptions = true;
   isDropdownActive = false;
 
-  urlLog = `${urlPortfolio}/log`;
+  /**
+   * Subscriptions
+   */
+  user_sub: Subscription;
+  route_sub: Subscription;
 
   constructor(
     private userService: UserService,

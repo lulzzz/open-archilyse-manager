@@ -17,9 +17,8 @@ import {
   showInfoExcel,
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
-import {environment} from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 const urlGeoreference = environment.urlGeoreference;
-
 
 export const COOR_X = 0;
 export const COOR_Y = 1;
@@ -762,6 +761,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * After editing, we need to react to the new values.
+   * New model structure -> new analisis
+   * New unit -> New building information
+   */
   layoutReactionToEdit(nodeData, element) {
     // if the new Layout has model_structure we update it.
     if (element.model_structure) {
@@ -779,6 +783,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * We duplicate the selected rows
+   * Before that we remove the not needed attributes
+   */
   duplicate() {
     this.selectedRows.forEach(selectedRow => {
       const newRow = {};
@@ -846,6 +854,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Deletes the selected rows in the API
+   */
   delete() {
     ManagerFunctions.reactToDelete(
       this.http,

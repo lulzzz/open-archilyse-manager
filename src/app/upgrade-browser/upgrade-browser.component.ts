@@ -11,6 +11,10 @@ import * as fromStore from '../_store';
 })
 export class UpgradeBrowserComponent implements OnInit, OnDestroy {
   isUserLoggedIn = false;
+
+  /**
+   * Subscriptions
+   */
   user_sub: Subscription;
 
   constructor(private store: Store<fromStore.AppState>, private _router: Router) {}

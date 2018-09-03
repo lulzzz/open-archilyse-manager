@@ -107,8 +107,6 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
           });
         });
 
-        console.log('citiesNoDuplicates ', countryCitiesNoDuplicates);
-
         const rowsData = countryCitiesNoDuplicates.map(countryCity => {
           const countryVal =
             countryCity.country && countryCity.country.length ? countryCity.country : '';

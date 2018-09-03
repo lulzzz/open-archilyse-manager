@@ -392,6 +392,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * We duplicate the selected rows
+   * Before that we remove the not needed attributes
+   */
   duplicate() {
     this.selectedRows.forEach(selectedRow => {
       const newRow = {};
@@ -425,6 +429,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Deletes the selected rows in the API
+   */
   delete() {
     let layouts = 0;
     let units = 0;

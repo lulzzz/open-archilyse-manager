@@ -192,6 +192,10 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * We duplicate the selected rows
+   * Before that we remove the not needed attributes
+   */
   duplicate() {
     this.selectedRows.forEach(selectedRow => {
       const newRow = {};
@@ -220,8 +224,10 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Deletes the selected rows in the API
+   */
   delete() {
-    console.log('this.selectedRows ', this.selectedRows);
 
     let buildings = 0;
     let layouts = 0;

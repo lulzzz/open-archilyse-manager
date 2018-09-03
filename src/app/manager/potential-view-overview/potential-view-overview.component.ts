@@ -513,6 +513,17 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
       .range(color);
   }
 
+  /**
+   * Draws an hexagon in the given x_off, y_off coordinates plus:
+   * x,y matrix coordinates considering hexagon radius and odd rows offset
+   * @param x_off
+   * @param y_off
+   * @param x
+   * @param y
+   * @param resolution is the radious of the hexagon
+   * @param valueToColor is the function used to get the color
+   * @param val is the value assigned to this hexagon.
+   */
   drawHexBlocks(
     x_off: number,
     y_off: number,
@@ -561,6 +572,9 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     this.detailSource.addFeature(feature);
   }
 
+  /**
+   * Centers the map in the screen.
+   */
   centerMap() {
     this.view.fit(this.detailSource.getExtent(), {
       padding: paddingToBuildings,
@@ -571,6 +585,10 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     this.correctVisibility(this.view.values_.resolution);
   }
 
+  /**
+   * Based in the zoom level will display the detailLayer or the globalLayer
+   * @param resolution
+   */
   correctVisibility(resolution) {
     if (resolution < 2.5) {
       this.detailLayer.setVisible(true);
@@ -600,6 +618,10 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     this.currentFloor = data.target.value;
     this.drawSimulation(this.feature);
   }
+
+  /**
+   * Displays information about the displayed simulation.
+   */
   showInfoSim() {
     if (this.currentSimulation === 'buildings') {
       this.infoDialog.open({

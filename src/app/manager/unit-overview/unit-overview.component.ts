@@ -15,7 +15,7 @@ import {
   showInfoExcel,
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
-import {environment} from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const urlPortfolio = environment.urlPortfolio;
 
@@ -302,6 +302,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * We duplicate the selected rows
+   * Before that we remove the not needed attributes
+   */
   duplicate() {
     this.selectedRows.forEach(selectedRow => {
       const newRow = {};
@@ -341,6 +345,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Deletes the selected rows in the API
+   */
   delete() {
     let layouts = 0;
 
