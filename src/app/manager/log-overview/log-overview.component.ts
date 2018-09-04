@@ -12,7 +12,7 @@ import {
   renderRequestMethod,
   renderTime,
   renderUrl,
-} from './logRenderMathods';
+} from './logRenderMethods';
 
 @Component({
   selector: 'app-log-overview',

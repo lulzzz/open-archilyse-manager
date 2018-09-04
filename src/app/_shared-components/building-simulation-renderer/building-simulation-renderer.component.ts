@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
 import { OverlayService } from '../../_services/overlay.service';
-import {environment} from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
@@ -100,7 +100,17 @@ export class BuildingSimulationRendererComponent {
   }
 
   requestSimulation() {
-    const simsRequested = ['dpoi'];
+    const simsRequested = [
+      {
+        name: 'potential_view',
+        parameters: {
+          floors: [1],
+        },
+      },
+      {
+        name: 'dpoi',
+      },
+    ]; // TODO: 'accoustics',
     ManagerFunctions.requestBuildingSimulations(this.http, this.building, simsRequested, this.api);
   }
   requestStatus() {

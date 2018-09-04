@@ -574,7 +574,7 @@ export class CellRender {
     }
 
     if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `<a href='${urlEditor}/` + params.data.layout_id + `' > View model </a>`;
+      return `<a href='${urlEditor}/` + params.data.layout_id + `' > View / edit model </a>`;
     }
 
     return `Not digitalized`;
