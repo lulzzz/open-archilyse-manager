@@ -5,7 +5,6 @@ import { LogService } from '../../_services';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { ManagerFunctions } from '../managerFunctions';
 import { Subscription } from 'rxjs/Subscription';
-import { environment } from '../../../environments/environment';
 import { renderRequestDescription, renderRequestLinkDocs } from './logLinks';
 import {
   renderRequest,
@@ -14,8 +13,6 @@ import {
   renderTime,
   renderUrl,
 } from './logRenderMathods';
-
-const apiUrl = environment.apiUrl;
 
 @Component({
   selector: 'app-log-overview',

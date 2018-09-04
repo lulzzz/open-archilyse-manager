@@ -12,7 +12,6 @@ export class LogService {
    * @param requestObject
    */
   addRequest(urlString, requestObject) {
-    console.log('LogService request', requestObject);
     this.requestLog.push({
       request: requestObject,
       url: urlString,

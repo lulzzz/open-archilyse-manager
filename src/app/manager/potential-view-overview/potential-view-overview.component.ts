@@ -3,22 +3,22 @@ import { HttpClient } from '@angular/common/http';
 
 export const paddingToBuildings = [25, 25, 25, 25];
 
-import OlMap from 'ol/map';
-import OlXYZ from 'ol/source/xyz';
-import OlTileLayer from 'ol/layer/tile';
-import OlVectorLayer from 'ol/layer/vector';
-import OlView from 'ol/view';
-import Vector from 'ol/source/vector';
-import GeoJSON from 'ol/format/geojson';
+import OlMap from 'ol/Map';
+import OlXYZ from 'ol/source/XYZ';
+import OlTileLayer from 'ol/layer/Tile';
+import OlVectorLayer from 'ol/layer/Vector';
+import OlView from 'ol/View';
+import Vector from 'ol/source/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
 
-import OlStyle from 'ol/style/style';
-import OlStyleFill from 'ol/style/fill';
-import OlStyleStroke from 'ol/style/stroke';
-import OlFeature from 'ol/feature';
-import OlPolygon from 'ol/geom/polygon';
+import OlStyle from 'ol/style/Style';
+import OlStyleFill from 'ol/style/Fill';
+import OlStyleStroke from 'ol/style/Stroke';
+import OlFeature from 'ol/Feature';
+import OlPolygon from 'ol/geom/Polygon';
 
 import condition from 'ol/events/condition';
-import Select from 'ol/interaction/select';
+import Select from 'ol/interaction/Select';
 
 import { parseParms } from '../url';
 import { ApiFunctions } from '../apiFunctions';
