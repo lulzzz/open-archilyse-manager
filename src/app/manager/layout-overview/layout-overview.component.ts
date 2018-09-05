@@ -414,6 +414,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
+      /**
       {
         headerName: 'Images',
         headerTooltip: 'Current Layout uploaded pictures',
@@ -427,6 +428,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
+       */
       ...ColumnDefinitions.metaUserAndData,
     ];
   }
@@ -487,9 +489,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   * Adds an empty layout in the API
-   */
   addRow() {
     const newLayout = {
       name: '',

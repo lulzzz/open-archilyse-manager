@@ -72,6 +72,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Control',
         children: ColumnDefinitions.progress,
       },
+      /**
       {
         headerName: 'Building Simulations ',
         children: ColumnDefinitions.progressSimsBuilding,
@@ -80,6 +81,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Layout Simulations ',
         children: ColumnDefinitions.progressSimsLayout,
       },
+      */
     ];
   }
 

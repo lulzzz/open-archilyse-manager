@@ -29,7 +29,7 @@ import {
 } from '@angular/material';
 
 // SERVICES
-import { UserService } from './_services/user.service';
+import { UserService } from './_services';
 
 // DIRECTIVES
 import { SharedDirectiveModule } from './_directives/shared-directives.module';

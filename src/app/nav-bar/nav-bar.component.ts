@@ -5,9 +5,7 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
 import { UserService } from '../_services';
-import { environment } from '../../environments/environment';
-
-const urlPortfolio = environment.urlPortfolio;
+import { NavigationService } from '../_services/navigation.service';
 
 @Component({
   selector: 'nav-bar',
@@ -20,6 +18,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   showOptions = true;
   isDropdownActive = false;
 
+  currentProfile;
   /**
    * Subscriptions
    */
@@ -27,6 +26,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   route_sub: Subscription;
 
   constructor(
+    private navigationService: NavigationService,
     private userService: UserService,
     private store: Store<fromStore.AppState>,
     private router: Router
@@ -38,6 +38,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.userService._authenticated.subscribe(auth => {
       this.isUserLoggedIn = auth;
     });
+
+    this.currentProfile = navigationService.profile.getValue();
   }
 
   @HostListener('document:click', ['$event'])
@@ -62,6 +64,17 @@ export class NavBarComponent implements OnInit, OnDestroy {
     if (this.route_sub) {
       this.route_sub.unsubscribe();
     }
+  }
+
+  changeProfile(event) {
+    console.log('changeProfile', event.target.value);
+    this.navigationService.setProfile(event.target.value);
+    this.currentProfile = event.target.value;
+
+    // Data analyst -- See & dowload ARCHILYSE data
+    // Data input -- Imputs data
+    // Asset Manager -- Review Data
+    // Software developer  --  Implements
   }
 
   toggleDropdown(event) {

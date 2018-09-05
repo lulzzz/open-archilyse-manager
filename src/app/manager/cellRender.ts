@@ -290,6 +290,13 @@ export class CellRender {
       }
 
       if (params.data.category && params.data.category !== '') {
+        console.log(
+          `https://wiki.openstreetmap.org/wiki/Tag:${params.data.category_original}=${params.value}`
+        );
+        console.log(
+          `https://taginfo.openstreetmap.org/tags/${params.data.category_original}=${params.value}`
+        );
+
         return translate[params.value]
           ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Tag:${
               params.data.category_original
@@ -300,6 +307,9 @@ export class CellRender {
             }=${params.value}" target="_blank"><i class="fas fa-tag"></i></a>`
           : params.value;
       }
+
+      console.log(`https://wiki.openstreetmap.org/wiki/Key:${params.value}`);
+      console.log(`https://taginfo.openstreetmap.org/keys/${params.value}`);
 
       return translate[params.value]
         ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Key:${

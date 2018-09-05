@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class NavigationService {
-  constructor() {}
-
   private current = new Subject<string>();
   current$ = this.current.asObservable();
 
@@ -13,6 +12,28 @@ export class NavigationService {
 
   private options = new Subject<any[]>();
   options$ = this.options.asObservable();
+
+  public profile;
+
+  constructor() {
+    const initialValue = localStorage.getItem('profile');
+    console.log('initialValue', initialValue);
+    if (initialValue) {
+      this.profile = new BehaviorSubject<string>(initialValue);
+    } else {
+      this.profile = new BehaviorSubject<string>('manager');
+    }
+  }
+
+  /**
+   * Current profile option selected
+   * @param value
+   */
+  setProfile(value) {
+    this.profile.next(value);
+    localStorage.setItem('profile', value);
+    location.reload();
+  }
 
   /**
    * Current navigation option selected

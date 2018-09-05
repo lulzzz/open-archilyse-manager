@@ -20,6 +20,7 @@ export class BuildingSimulationRendererDpoiComponent {
    * Control of errors and different states.
    */
   pending = false;
+  not_requested = false;
   failed = false;
   unknown = false;
   addressSet = false;
@@ -60,6 +61,7 @@ export class BuildingSimulationRendererDpoiComponent {
     this.api = this.params.api;
     this.styles = {};
     this.pending = false;
+    this.not_requested = false;
     this.failed = false;
     this.unknown = false;
     this.complete = false;
@@ -78,7 +80,10 @@ export class BuildingSimulationRendererDpoiComponent {
       } else if (params.value === 'complete') {
         this.complete = true;
         this.styles.backgroundColor = '#b5d686';
-      } else if (params.value === 'pending' || params.value === 'Pending') {
+      } else if (params.value === 'not_requested') {
+        this.not_requested = true;
+        this.styles.backgroundColor = '#4ebeff';
+      } else if (params.value === 'pending') {
         this.pending = true;
         this.styles.backgroundColor = '#ffc975';
       } else {

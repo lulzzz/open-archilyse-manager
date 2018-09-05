@@ -10,7 +10,17 @@
 
   <div class="nav-items" *ngIf="isUserLoggedIn && showOptions">
 
-    <a popper="This menu provides information about the API request used to display the data in each menu" class="apiUsage" routerLink="/manager/log">Api usage log</a>
+    <a *ngIf="currentProfile === 'developer'" popper="tooltip2" class="apiUsage" routerLink="/manager/log">Api usage log</a>
+
+    <div [popper]="tooltip1" class="selectProfile">
+      <label >Profile: </label>
+      <select (change)="changeProfile($event)" [value]="currentProfile">
+        <option value="analyst">Data analyst</option>
+        <option value="data">Data input</option>
+        <option value="manager">Asset Manager</option>
+        <option value="developer">Software developer</option>
+      </select>
+    </div>
 
     <div class="drop-down-menu">
       <div class="trigger" (click)="toggleDropdown($event)">
@@ -26,3 +36,6 @@
     </div>
   </div>
 </div>
+
+<popper-content #tooltip1 >Select the visualization profile</popper-content>
+<popper-content #tooltip2 >This menu provides information about the API request used to display the data in each menu</popper-content>

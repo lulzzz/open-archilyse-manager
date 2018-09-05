@@ -92,7 +92,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        component: CountryOverviewComponent,
+        component: BuildingOverviewComponent,
         redirectTo: '',
       },
     ],

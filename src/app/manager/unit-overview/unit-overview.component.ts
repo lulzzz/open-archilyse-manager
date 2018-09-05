@@ -143,6 +143,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           { headerName: 'Line3', columnGroupShow: 'open', field: 'line3', editable: true },
         ],
       },
+      /**
       {
         headerName: 'Images',
         headerTooltip: 'Current Layout uploaded pictures',
@@ -156,6 +157,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
+       */
       ...ColumnDefinitions.metaUserAndData,
     ];
   }
@@ -164,7 +166,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
    * Adds an empty unit in the API
    */
   addRow() {
-
     const newUnit = {
       name: '',
       description: '',

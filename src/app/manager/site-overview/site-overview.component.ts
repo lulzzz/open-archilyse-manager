@@ -79,6 +79,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       headerTooltip: 'Procent of georeferenced buildings and layouts',
       children: ColumnDefinitions.progressProcents,
     },
+    /**
     {
       headerName: 'Building Simulations ',
       children: ColumnDefinitions.progressSimsBuilding,
@@ -87,6 +88,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       headerName: 'Layout Simulations ',
       children: ColumnDefinitions.progressSimsLayout,
     },
+     */
     ...ColumnDefinitions.metaUserAndData,
   ];
 

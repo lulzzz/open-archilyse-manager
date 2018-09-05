@@ -15,12 +15,33 @@
   }
 }
 
+.selectProfile label{
+  font-size: 13px !important;
+}
+.selectProfile select{
+  font-size: 13px !important;
+}
+
+.selectProfile{
+  color: grey;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
+  text-transform: uppercase;
+  margin-right: 20px;
+  margin-top: -3px;
+
+  select{
+    cursor: pointer;
+  }
+}
+
 .apiUsage{
   color: grey;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02rem;
   text-transform: uppercase;
+  margin-right: 20px;
 
   &:hover{
     color: black;

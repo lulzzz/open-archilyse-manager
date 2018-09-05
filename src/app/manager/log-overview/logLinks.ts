@@ -6,68 +6,87 @@ export function renderRequestLinkDocs(params) {
   if (params.data && params.data.request && params.data.request.url && params.data.request.method) {
     const url = params.data.request.url;
     const method = params.data.request.method;
-    const baseUrl = 'https://api.archilyse.com/v0.1/ui/';
+    const baseUrl = 'https://www.archilyse.com/api/docs/';
 
     if (method === 'GET') {
+      /**
+       * Plural routes
+       */
       if (url === apiUrl + 'sites') {
-        return `<a href="${baseUrl}#!/Sites/get_sites" >View</a>`;
+        return `<a href="${baseUrl}#/reference/sites/site-collection/get-all-sites" >View</a>`;
       }
       if (url === apiUrl + 'buildings') {
-        return `<a href="${baseUrl}#!/Buildings/get_buildings" >View</a>`;
+        return `<a href="${baseUrl}#/reference/buildings/building-collection/get-all-buildings" >View</a>`;
       }
       if (url === apiUrl + 'units') {
-        return `<a href="${baseUrl}##!/Units/get_units" >View</a>`;
+        return `<a href="${baseUrl}#/reference/units/unit-collection/get-all-units" >View</a>`;
       }
       if (url === apiUrl + 'layouts') {
-        return `<a href="${baseUrl}#!/Layouts/get_layouts" >View</a>`;
+        return `<a href="${baseUrl}#/reference/layouts/layout-collection/get-all-layouts" >View</a>`;
+      }
+
+      /**
+       * Singular routes
+       */
+      if (url.startsWith(apiUrl + 'sites')) {
+        return `<a href="${baseUrl}#/reference/sites/site-collection/get-site" >View</a>`;
+      }
+      if (url.startsWith(apiUrl + 'buildings')) {
+        return `<a href="${baseUrl}#/reference/buildings/building-collection/get-building" >View</a>`;
+      }
+      if (url.startsWith(apiUrl + 'units')) {
+        return `<a href="${baseUrl}#/reference/units/unit-collection/get-unit" >View</a>`;
+      }
+      if (url.startsWith(apiUrl + 'layouts')) {
+        return `<a href="${baseUrl}#/reference/layouts/layout-collection/get-layout" >View</a>`;
       }
 
       return 'Description not yet available';
     }
     if (method === 'POST') {
       if (url === apiUrl + 'sites') {
-        return `<a href="${baseUrl}#!/Sites/post_sites" >View</a>`;
+        return `<a href="${baseUrl}#/reference/sites/site-collection/create-a-site" >View</a>`;
       }
       if (url === apiUrl + 'buildings') {
-        return `<a href="${baseUrl}#!/Buildings/post_buildings" >View</a>`;
+        return `<a href="${baseUrl}#/reference/buildings/building-collection/create-a-building" >View</a>`;
       }
       if (url === apiUrl + 'units') {
-        return `<a href="${baseUrl}##!/Units/post_units" >View</a>`;
+        return `<a href="${baseUrl}#/reference/units/unit-collection/create-a-unit" >View</a>`;
       }
       if (url === apiUrl + 'layouts') {
-        return `<a href="${baseUrl}#!/Layouts/post_layouts" >View</a>`;
+        return `<a href="${baseUrl}#/reference/layouts/layout-collection/create-a-layout" >View</a>`;
       }
 
       return 'Description not yet available';
     }
     if (method === 'DELETE') {
       if (url.startsWith(apiUrl + 'sites/')) {
-        return `<a href="${baseUrl}#!/Sites/delete_site_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/sites/site/delete-site" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'buildings')) {
-        return `<a href="${baseUrl}#!/Buildings/delete_building_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/buildings/building/delete-building" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'units')) {
-        return `<a href="${baseUrl}##!/Units/delete_unit_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/units/unit/delete-unit" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'layouts')) {
-        return `<a href="${baseUrl}#!/Layouts/delete_layout_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/layouts/layout/delete-layout" >View</a>`;
       }
 
       return 'Description not yet available';
     }
     if (method === 'PATCH') {
-      if (url.startsWith(apiUrl + 'sites/')) {
-        return `<a href="${baseUrl}#!/Sites/patch_site_by_id" >View</a>`;
+      if (url.startsWith(apiUrl + 'sites')) {
+        return `<a href="${baseUrl}#/reference/sites/site-collection/get-all-sites" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'buildings')) {
-        return `<a href="${baseUrl}#!/Buildings/patch_building_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/buildings/building-collection/get-all-buildings" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'units')) {
-        return `<a href="${baseUrl}##!/Units/patch_unit_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/units/unit-collection/get-all-units" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'layouts')) {
-        return `<a href="${baseUrl}#!/Layouts/patch_layout_by_id" >View</a>`;
+        return `<a href="${baseUrl}#/reference/layouts/layout-collection/get-all-layouts" >View</a>`;
       }
 
       return 'Description not yet available';
@@ -82,6 +101,10 @@ export function renderRequestDescription(params) {
     const method = params.data.request.method;
 
     if (method === 'GET') {
+      /**
+       * Plural routes
+       */
+
       if (url === apiUrl + 'sites') {
         return 'Requests all the sites';
       }
@@ -93,6 +116,22 @@ export function renderRequestDescription(params) {
       }
       if (url === apiUrl + 'layouts') {
         return 'Requests all the layouts';
+      }
+
+      /**
+       * Singular routes
+       */
+      if (url.startsWith(apiUrl + 'sites')) {
+        return 'Requests the specified site by the site_id ';
+      }
+      if (url.startsWith(apiUrl + 'buildings')) {
+        return 'Requests the specified building by the building_id ';
+      }
+      if (url.startsWith(apiUrl + 'units')) {
+        return 'Requests the specified unit by the unit_id ';
+      }
+      if (url.startsWith(apiUrl + 'layouts')) {
+        return 'Requests the specified layout by the layout_id ';
       }
 
       return 'Description not yet available';

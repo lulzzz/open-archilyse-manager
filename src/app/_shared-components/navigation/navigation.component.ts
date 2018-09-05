@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationService } from '../../_services/navigation.service';
 import { Subscription } from 'rxjs/Subscription';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UserService } from '../../_services';
 
 @Component({
@@ -20,14 +20,47 @@ export class NavigationComponent implements OnInit, OnDestroy {
   subscriptionNavOptions: Subscription;
   subscriptionNavdiagramLinkActive: Subscription;
 
+  currentProfile;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private userService: UserService,
     private navigationService: NavigationService
   ) {
+    this.currentProfile = navigationService.profile.getValue();
+
     this.user_sub = this.userService._authenticated.subscribe(_authenticated => {
       this.isUserLoggedIn = _authenticated;
+    });
+
+    this.router.events.subscribe(val => {
+      if (val instanceof NavigationEnd && val['urlAfterRedirects']) {
+        const url = val['urlAfterRedirects'];
+        console.log('url ', url);
+
+        if (url === '/manager/map') {
+          this.current = 'map';
+        } else if (url === '/manager/country') {
+          this.current = 'country';
+        } else if (url === '/manager/region') {
+          this.current = 'region';
+        } else if (url === '/manager/site') {
+          this.current = 'site';
+        } else if (url === '/manager') {
+          this.current = ') ';
+        } else if (url === '/manager/building') {
+          this.current = 'building';
+        } else if (url === '/manager/unit') {
+          this.current = 'unit';
+        } else if (url === '/manager/layout') {
+          this.current = 'layout';
+        } else if (url === '/manager/log') {
+          this.current = 'log';
+        } else {
+          this.current = '';
+        }
+      }
     });
 
     /**
@@ -53,41 +86,61 @@ export class NavigationComponent implements OnInit, OnDestroy {
         this.processURL(url);
       });
      */
+
+    // analyst
+    // data
+    // manager
+    // developer
+
+    let extraOptions = [];
+    if (this.currentProfile === 'analyst' || this.currentProfile === 'manager') {
+      extraOptions = [
+        {
+          tooltip: 'Country overview',
+          title: 'Country',
+          link: '/manager/country',
+          value: 'country',
+        },
+        {
+          tooltip: 'Region overview',
+          title: 'Region',
+          link: '/manager/region',
+          value: 'region',
+        },
+      ];
+    }
+
     this.options = [
       {
         tooltip: 'Map overview',
         title: 'Map',
         link: '/manager/map',
+        value: 'map',
       },
-      {
-        tooltip: 'Country overview',
-        title: 'Country',
-        link: '/manager/country',
-      },
-      {
-        tooltip: 'Region overview',
-        title: 'Region',
-        link: '/manager/region',
-      },
+      ...extraOptions,
       {
         tooltip: 'Site overview',
         title: 'Site',
         link: '/manager/site',
+        value: 'site',
       },
       {
         tooltip: 'Building overview',
         title: 'Building',
         link: '/manager/building',
+        value: 'building',
       },
       {
         tooltip: 'Unit overview',
         title: 'Unit',
         link: '/manager/unit',
+        value: 'unit',
       },
       {
         tooltip: 'Layout overview',
         title: 'Layout',
         link: '/manager/layout',
+        value: 'layout',
       },
     ];
   }

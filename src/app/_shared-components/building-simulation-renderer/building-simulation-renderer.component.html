@@ -8,6 +8,7 @@
     <a *ngIf="urlPotencialView" [href]="urlPotencialView" > View potencial View</a>
   </span>
   <span *ngIf="addressSet && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
+  <span *ngIf="addressSet && georeferenced && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="addressSet && georeferenced && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>
   <span *ngIf="addressSet && georeferenced && failed" >Failed <a (click)="requestSimulation()"> Retry</a></span>
   <span *ngIf="addressSet && georeferenced && unknown" >Unknown <a (click)="requestStatus()"><i class="fas fa-redo"></i></a></span>

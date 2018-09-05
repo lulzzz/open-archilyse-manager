@@ -17,7 +17,12 @@ import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 
-import condition from 'ol/events/condition';
+import {
+  click as conditionClick,
+  pointerMove as conditionPointerMove,
+  never as conditionNever,
+} from 'ol/events/condition';
+
 import Select from 'ol/interaction/Select';
 
 import { parseParms } from '../url';
@@ -26,6 +31,21 @@ import { environment } from '../../../environments/environment';
 
 const apiUrl = environment.apiUrl;
 const urlPortfolio = environment.urlPortfolio;
+
+/**
+ * Add the Swiss topo projection
+ */
+import { register as RegisterProjections } from 'ol/proj/proj4';
+import proj4 from 'proj4';
+
+proj4.defs(
+  'EPSG:2056',
+  '+proj=somerc ' +
+    '+lat_0=46.95240555555556 +lon_0=7.439583333333333 ' +
+    '+k_0=1 +x_0=2600000 +y_0=1200000 ' +
+    '+ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs'
+);
+RegisterProjections(proj4);
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({
@@ -263,12 +283,12 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
                   // select interaction working on "pointermove"
                   this.selectPointerClick = new Select({
-                    condition: condition.click,
+                    condition: conditionClick,
                     style: styleOver,
                   });
 
                   this.selectPointerMove = new Select({
-                    condition: condition.pointerMove,
+                    condition: conditionPointerMove,
                     style: styleOver,
                   });
 

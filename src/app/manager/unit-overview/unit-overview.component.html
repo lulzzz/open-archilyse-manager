@@ -1,39 +1,40 @@
-<h1>
-  Unit overview
-</h1>
-<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
-<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
-<div *ngIf="!loading && !generalError" class="topControls">
-  <div>
-    <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-    <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
-    &nbsp;&nbsp;&nbsp;
-    <button [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
-    <button [popper]="tooltip4" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
-    &nbsp;&nbsp;&nbsp;
-    <button [popper]="tooltip5" class="btn green" (click)="addRow()">Add unit</button>
-  </div>
-  <div>
-    <button [popper]="tooltip6"
-            class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-    <button [popper]="tooltip7"
-            class="btn yellow" (click)="export()" > CSV </button>
-    &nbsp;
-    <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-    <label  [popper]="tooltip8"
-            for="file" class="btn yellow" >Import Excel file</label>
-    <div class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
-      <i class="fa fa-info-circle"></i>
+<div class="container-lg">
+  <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+  <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+  <div *ngIf="!loading && !generalError" class="topControls">
+    <div>
+      <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
+      &nbsp;&nbsp;&nbsp;
+      <button [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
+      <button [popper]="tooltip4" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
+      &nbsp;&nbsp;&nbsp;
+      <button [popper]="tooltip5" class="btn green" (click)="addRow()">Add unit</button>
+    </div>
+    <div>
+      <button [popper]="tooltip6"
+              class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+      <button [popper]="tooltip7"
+              class="btn yellow" (click)="export()" > CSV </button>
+      &nbsp;
+      <input type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+      <label  [popper]="tooltip8"
+              for="file" class="btn yellow" >Import Excel file</label>
+      <div class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
+        <i class="fa fa-info-circle"></i>
+      </div>
     </div>
   </div>
 </div>
 
-<ag-grid-angular
-  *ngIf="!loading && !generalError && gridOptions"
-  style="width: 100%; height: 100%;"
-  class="ag-theme-balham"
-  [gridOptions]="gridOptions">
-</ag-grid-angular>
+<div class="containter-full-width full-height">
+  <ag-grid-angular
+    *ngIf="!loading && !generalError && gridOptions"
+    style="width: 100%; height: 100%;"
+    class="ag-theme-balham"
+    [gridOptions]="gridOptions">
+  </ag-grid-angular>
+</div>
 
 <!-- Tooltips -->
 

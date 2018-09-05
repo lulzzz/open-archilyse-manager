@@ -1,43 +1,43 @@
-<h1>
-  Map overview
-</h1>
-<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
-<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
-<div *ngIf="!loading && !generalError" class="topControls">
-  <div>Click on a building to view the details.</div>
-  <div>
-    <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
-    &nbsp;&nbsp;&nbsp;<label>Georeferenced buildings:</label> {{numGeoreferencedBuildings}}
-  </div>
-  <div>
-    <label>Filter country: </label>
-    <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
-      <option value="">None</option>
-      <option *ngFor="let country of countries" (value)="country">{{country}}</option>
-    </select>
-    &nbsp;&nbsp;
-    <label>Filter city: </label>
-    <select (change)="filterByCity($event.target.value)" [value]="filterCity">
-      <option value="">None</option>
-      <option *ngFor="let city of cities" (value)="city">{{city}}</option>
-    </select>
-    &nbsp;&nbsp;
-    <button [popper]="listPU" class="btn blue" (click)="linkToList()">View list</button>
-    &nbsp;
-    <div [popper]="selectMap" class="selectMap">
-      <label >Map mode: </label>
-      <select (change)="changeMap($event)" [value]="mapStyle">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-        <option value="outdoors">Outdoors</option>
-        <option value="streets">Streets</option>
-        <option value="satellite">Satellite</option>
+<div class="container-lg">
+  <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+  <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+  <div *ngIf="!loading && !generalError" class="topControls">
+    <div>Click on a building to view the details.</div>
+    <div>
+      <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
+      &nbsp;&nbsp;&nbsp;<label>Georeferenced buildings:</label> {{numGeoreferencedBuildings}}
+    </div>
+    <div>
+      <label>Filter country: </label>
+      <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
+        <option value="">None</option>
+        <option *ngFor="let country of countries" (value)="country">{{country}}</option>
       </select>
+      &nbsp;&nbsp;
+      <label>Filter city: </label>
+      <select (change)="filterByCity($event.target.value)" [value]="filterCity">
+        <option value="">None</option>
+        <option *ngFor="let city of cities" (value)="city">{{city}}</option>
+      </select>
+      &nbsp;&nbsp;
+      <button [popper]="listPU" class="btn blue" (click)="linkToList()">View list</button>
+      &nbsp;
+      <div [popper]="selectMap" class="selectMap">
+        <label >Map mode: </label>
+        <select (change)="changeMap($event)" [value]="mapStyle">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="outdoors">Outdoors</option>
+          <option value="streets">Streets</option>
+          <option value="satellite">Satellite</option>
+        </select>
+      </div>
     </div>
   </div>
 </div>
-
-<div id="map" class="map"></div>
+<div class="containter-full-width full-height">
+  <div id="map" class="map"></div>
+</div>
 
 <popper-content #centerMapPU >Center the map to view all the buildings.</popper-content>
 <popper-content #listPU >Link to the current list of buildings.</popper-content>

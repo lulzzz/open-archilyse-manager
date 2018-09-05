@@ -19,6 +19,21 @@ import { environment } from '../../../environments/environment';
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
 
+/**
+ * Add the Swiss topo projection
+ */
+import { register as RegisterProjections } from 'ol/proj/proj4';
+import proj4 from 'proj4';
+
+proj4.defs(
+  'EPSG:2056',
+  '+proj=somerc ' +
+    '+lat_0=46.95240555555556 +lon_0=7.439583333333333 ' +
+    '+k_0=1 +x_0=2600000 +y_0=1200000 ' +
+    '+ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs'
+);
+RegisterProjections(proj4);
+
 @Component({
   selector: 'app-building-overview',
   templateUrl: './building-overview.component.html',
@@ -232,6 +247,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
+      /**
       {
         headerName: 'Layout Simulations ',
         children: ColumnDefinitions.progressSimsLayout,
@@ -249,6 +265,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
+      */
       ...ColumnDefinitions.metaUserAndData,
     ];
   }

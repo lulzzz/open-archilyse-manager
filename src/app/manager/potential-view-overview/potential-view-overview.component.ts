@@ -17,7 +17,12 @@ import OlStyleStroke from 'ol/style/Stroke';
 import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
 
-import condition from 'ol/events/condition';
+import {
+  click as conditionClick,
+  pointerMove as conditionPointerMove,
+  never as conditionNever,
+} from 'ol/events/condition';
+
 import Select from 'ol/interaction/Select';
 
 import { parseParms } from '../url';
@@ -309,12 +314,12 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
                               // select interaction working on "pointermove"
                               this.selectPointerClick = new Select({
-                                condition: condition.click,
+                                condition: conditionClick,
                                 style: styleOver,
                               });
 
                               this.selectPointerMove = new Select({
-                                condition: condition.pointerMove,
+                                condition: conditionPointerMove,
                                 style: styleOver,
                               });
 
@@ -397,8 +402,8 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         const no_value_number = sim['no_value_number'];
         const height = sim['height'];
         const resolution = sim['resolution'];
-        const x_off = 952689.08554846; // starting_point[0]; // 947839.4323007881;
-        const y_off = 6003896.234569793; // starting_point[1]; // 6005873.054931145;
+        const x_off = starting_point[0]; // 947839.4323007881;
+        const y_off = starting_point[1]; // 6005873.054931145;
 
         // this.summary.min, this.summary.max
         const valueToColor = this.calculateDomain(colors, 0, 5);
@@ -426,7 +431,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         currentHeatmap.forEach((row, y) => {
           row.forEach((val, x) => {
             if (val !== no_value_number) {
-              this.drawHexBlocks(x_off, y_off, x, y, resolutionCorrected, valueToColor, val);
+              this.drawHexBlocks(x_off, y_off, x, -y, resolutionCorrected, valueToColor, val);
             }
           });
         });

@@ -29,6 +29,7 @@ export class LayoutSimulationRendererComponent {
   georeferenced = false;
   modelStruct = false;
   ready = false;
+  not_requested = false;
 
   unitSet = false;
   buildingSet = false;
@@ -127,7 +128,10 @@ export class LayoutSimulationRendererComponent {
       } else if (params.value === 'complete') {
         this.complete = true;
         this.styles.backgroundColor = '#b5d686';
-      } else if (params.value === 'pending' || params.value === 'Pending') {
+      } else if (params.value === 'not_requested') {
+        this.not_requested = true;
+        this.styles.backgroundColor = '#4ebeff';
+      } else if (params.value === 'pending') {
         this.pending = true;
         this.styles.backgroundColor = '#ffc975';
       } else {

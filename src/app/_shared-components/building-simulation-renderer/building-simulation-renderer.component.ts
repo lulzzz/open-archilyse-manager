@@ -22,6 +22,7 @@ export class BuildingSimulationRendererComponent {
    * Control of errors and different states.
    */
   pending = false;
+  not_requested = false;
   failed = false;
   unknown = false;
   complete = false;
@@ -64,6 +65,7 @@ export class BuildingSimulationRendererComponent {
     this.building = this.params.data;
     this.api = this.params.api;
     this.styles = {};
+    this.not_requested = false;
     this.pending = false;
     this.failed = false;
     this.unknown = false;
@@ -86,7 +88,10 @@ export class BuildingSimulationRendererComponent {
       } else if (params.value === 'complete') {
         this.complete = true;
         this.styles.backgroundColor = '#b5d686';
-      } else if (params.value === 'pending' || params.value === 'Pending') {
+      } else if (params.value === 'not_requested') {
+        this.not_requested = true;
+        this.styles.backgroundColor = '#4ebeff';
+      } else if (params.value === 'pending') {
         this.pending = true;
         this.styles.backgroundColor = '#ffc975';
       } else {

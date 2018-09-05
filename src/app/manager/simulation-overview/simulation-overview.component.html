@@ -1,17 +1,15 @@
-<h1>
-  Simulation overview
-</h1>
-<div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
-<div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
-<div *ngIf="!loading && !generalError" class="topControls">
-  <div>
-    <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
+<div class="container-lg">
+  <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+  <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+  <div *ngIf="!loading && !generalError" class="topControls">
+    <div>
+      <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
+    </div>
   </div>
 </div>
-
-<pre [innerHTML]="code">
-
-</pre>
+<div class="containter-full-width full-height">
+  <pre [innerHTML]="code"></pre>
+</div>
 
 <!-- Tooltips -->
 

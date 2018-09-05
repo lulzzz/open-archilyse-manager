@@ -5,6 +5,7 @@
     <a [href]="urlRaw" > View raw</a> &nbsp;
     <a [href]="urlDpoi" > View dpoi</a>
   </span>
+  <span *ngIf="addressSet && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="addressSet && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="addressSet && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>
   <span *ngIf="addressSet && failed" >Failed <a (click)="requestSimulation()"> Retry</a></span>
