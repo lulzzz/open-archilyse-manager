@@ -10,7 +10,7 @@
 
   <div class="nav-items" *ngIf="isUserLoggedIn && showOptions">
 
-    <a *ngIf="currentProfile === 'developer'" popper="tooltip2" class="apiUsage" routerLink="/manager/log">Api usage log</a>
+    <a *ngIf="currentProfile === 'developer'" [popper]="tooltip2" class="apiUsage" routerLink="/manager/log">Api usage log</a>
 
     <div [popper]="tooltip1" class="selectProfile">
       <label >Profile: </label>
@@ -23,7 +23,7 @@
     </div>
 
     <div class="drop-down-menu">
-      <div class="trigger" (click)="toggleDropdown($event)">
+      <div class="trigger" (click)="toggleDropdown($event)" [popper]="'App menu'" >
         <i class="far fa-bars"></i>
       </div>
       <div class="drop-down" [ngClass]="{'active': isDropdownActive}">
@@ -38,4 +38,4 @@
 </div>
 
 <popper-content #tooltip1 >Select the visualization profile</popper-content>
-<popper-content #tooltip2 >This menu provides information about the API request used to display the data in each menu</popper-content>
+<popper-content #tooltip2 >(Developers only) This menu provides information about the API request used to display the data in each menu</popper-content>

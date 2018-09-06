@@ -15,6 +15,7 @@ import {
   showInfoExcel,
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
+import { NavigationService } from '../../_services/navigation.service';
 
 @Component({
   selector: 'app-site-overview',
@@ -45,52 +46,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
   gridOptions;
 
-  columnDefs = [
-    {
-      headerName: 'Site',
-      openByDefault: true,
-      headerTooltip: 'Site entity main properties',
-      children: [
-        {
-          headerName: 'Site Id',
-          field: 'site_id',
-          columnGroupShow: 'open',
-          width: 190,
-          editable: false,
-          cellClass: 'idCell',
-        },
-        { headerName: 'Name', field: 'name', width: 190, editable: true },
-        {
-          headerName: 'Description',
-          columnGroupShow: 'open',
-          field: 'description',
-          width: 300,
-          editable: true,
-        },
-      ],
-    },
-    {
-      headerName: 'Count',
-      headerTooltip: 'Number of elements assigned to this site',
-      children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsSite, null),
-    },
-    {
-      headerName: 'Progress',
-      headerTooltip: 'Procent of georeferenced buildings and layouts',
-      children: ColumnDefinitions.progressProcents,
-    },
-    /**
-    {
-      headerName: 'Building Simulations ',
-      children: ColumnDefinitions.progressSimsBuilding,
-    },
-    {
-      headerName: 'Layout Simulations ',
-      children: ColumnDefinitions.progressSimsLayout,
-    },
-     */
-    ...ColumnDefinitions.metaUserAndData,
-  ];
+  columnDefs;
+  currentProfile;
 
   /**
    * Subscriptions
@@ -101,8 +58,68 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    this.currentProfile = navigationService.profile.getValue();
+
+    let analysisColumns = [];
+    if (this.currentProfile === 'analyst' || this.currentProfile === 'data') {
+      analysisColumns = [
+        {
+          headerName: 'Count',
+          hide: this.currentProfile !== 'analyst',
+          headerTooltip: 'Number of elements assigned to this site',
+          children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsSite, null),
+        },
+        {
+          headerName: 'Progress',
+          hide: this.currentProfile !== 'analyst',
+          headerTooltip: 'Procent of georeferenced buildings and layouts',
+          children: ColumnDefinitions.progressProcents,
+        },
+      ];
+    }
+
+    this.columnDefs = [
+      {
+        headerName: 'Site',
+        openByDefault: true,
+        headerTooltip: 'Site entity main properties',
+        children: [
+          {
+            headerName: 'Site Id',
+            field: 'site_id',
+            hide: this.currentProfile !== 'developer',
+            columnGroupShow: 'open',
+            width: 190,
+            editable: false,
+            cellClass: 'idCell',
+          },
+          { headerName: 'Name', field: 'name', width: 190, editable: true },
+          {
+            headerName: 'Description',
+            columnGroupShow: 'open',
+            field: 'description',
+            width: 300,
+            editable: true,
+          },
+        ],
+      },
+      ...analysisColumns,
+      /**
+       {
+      headerName: 'Building Simulations ',
+      children: ColumnDefinitions.progressSimsBuilding,
+    },
+       {
+      headerName: 'Layout Simulations ',
+      children: ColumnDefinitions.progressSimsLayout,
+    },
+       */
+      ...ColumnDefinitions.metaUserAndData,
+    ];
+  }
 
   /**
    * Adds an empty site in the API

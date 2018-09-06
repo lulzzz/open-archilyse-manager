@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../apiFunctions';
+import { OverlayService } from '../../_services/overlay.service';
+import { NavigationService } from '../../_services/navigation.service';
 
 @Component({
   selector: 'app-simulation-overview',
@@ -9,7 +11,6 @@ import { ApiFunctions } from '../apiFunctions';
   styleUrls: ['./simulation-overview.component.scss'],
 })
 export class SimulationOverviewComponent implements OnInit, OnDestroy {
-
   /**
    * Loading and general error
    */
@@ -24,9 +25,17 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
   buildingId;
   layoutId;
 
-  code;
+  json;
+  currentProfile;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private navigationService: NavigationService
+  ) {
+    this.currentProfile = navigationService.profile.getValue();
+  }
 
   ngOnInit() {
     this.buildingId = this.route.snapshot.params['buildingId'];
@@ -67,7 +76,8 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
   }
 
   loadSimulations(simulations) {
-    this.code = JSON.stringify(simulations, null, 4);
+    this.json = simulations;
+    // this.code = JSON.stringify(simulations, null, 4);
   }
 
   backPage() {

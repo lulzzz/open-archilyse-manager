@@ -55,9 +55,21 @@ button{
   pointer-events: none;
 }
 
+.icon-info{
+  color: #2f96b4;
+}
+
 .sim-info{
   cursor: pointer;
   color: #2f96b4;
   display: inline-block;
 }
 
+.floorInput{
+  margin-top: 8px;
+}
+
+.floorInput.info{
+  font-size: 14px;
+  color: #717171;
+}

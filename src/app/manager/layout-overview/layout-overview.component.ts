@@ -18,6 +18,7 @@ import {
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
 import { environment } from '../../../environments/environment';
+import { NavigationService } from '../../_services/navigation.service';
 const urlGeoreference = environment.urlGeoreference;
 
 export const COOR_X = 0;
@@ -62,6 +63,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   layoutsArray;
   unitsArray;
 
+  currentProfile;
   /**
    * Subscriptions
    */
@@ -71,14 +73,183 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    this.currentProfile = navigationService.profile.getValue();
+  }
 
   /**
    * In order to provide dropdowns with site units we need to build it after load.
    * @param units
    */
   buildColumDefinitions(units) {
+    let analysisColumns = [];
+    if (this.currentProfile === 'analyst' || this.currentProfile === 'data') {
+      analysisColumns = [
+        {
+          headerName: 'Model Analisys (Areas)',
+          children: [
+            {
+              headerName: 'Total area',
+              field: 'total_area',
+              cellRenderer: CellRender.areaInfoTotal,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Rooms',
+              field: 'room',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Corridors',
+              field: 'corridor',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Bathrooms',
+              field: 'bathroom',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Kitchens',
+              field: 'kitchen',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Balconies',
+              field: 'balcony',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Storerooms',
+              field: 'storeroom',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Other areas',
+              field: 'notDefined',
+              columnGroupShow: 'open',
+              cellRenderer: CellRender.areaInfo,
+              width: 100,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+          ],
+        },
+        {
+          headerName: 'Model Analisys (Furniture)',
+          children: [
+            {
+              headerName: 'Desks',
+              field: 'num_desks',
+              columnGroupShow: 'open',
+              width: 80,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Seats',
+              field: 'num_seats',
+              columnGroupShow: 'open',
+              width: 80,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Doors',
+              field: 'num_doors',
+              columnGroupShow: 'open',
+              width: 80,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Sinks',
+              field: 'num_sink',
+              columnGroupShow: 'open',
+              width: 80,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Toilets',
+              field: 'num_toilet',
+              columnGroupShow: 'open',
+              width: 80,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Railings',
+              field: 'num_railing',
+              columnGroupShow: 'open',
+              width: 90,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Stairs',
+              field: 'num_stairs',
+              columnGroupShow: 'open',
+              width: 80,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Kitchens',
+              field: 'num_kitchens',
+              columnGroupShow: 'open',
+              width: 90,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Windows Exterior',
+              field: 'num_windowExterior',
+              width: 120,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Windows Interior',
+              field: 'num_windowInterior',
+              columnGroupShow: 'open',
+              width: 120,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+          ],
+        },
+      ];
+    }
+
     this.columnDefs = [
       {
         headerName: 'Building',
@@ -88,13 +259,30 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Building Id',
             field: 'building_id',
+            hide: this.currentProfile !== 'developer',
             width: 230,
             cellRenderer: CellRender.viewBuilding,
             cellClass: 'readOnly',
           },
           {
+            headerName: 'Building Name',
+            field: 'building_name',
+            cellClass: 'readOnly',
+            editable: false,
+          },
+          {
+            headerName: 'Georeferenced',
+            field: 'building_referenced',
+            hide: this.currentProfile === 'developer',
+            cellRenderer: 'checkboxRenderer',
+            width: 100,
+            cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
+          },
+          {
             headerName: 'Swiss Topo',
             field: 'building_referenced_st',
+            hide: this.currentProfile !== 'developer',
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
@@ -103,17 +291,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Open Street Maps',
             field: 'building_referenced_osm',
+            hide: this.currentProfile !== 'developer',
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
             cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Building Name',
-            field: 'building_name',
-            columnGroupShow: 'open',
-            cellClass: 'readOnly',
-            editable: false,
           },
         ],
       },
@@ -151,6 +333,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Layout Id',
             field: 'layout_id',
             width: 190,
+            hide: this.currentProfile !== 'developer',
             editable: false,
             cellClass: 'idCell',
           },
@@ -189,166 +372,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
-      {
-        headerName: 'Model Analisys (Areas)',
-        children: [
-          {
-            headerName: 'Total area',
-            field: 'total_area',
-            cellRenderer: CellRender.areaInfoTotal,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Rooms',
-            field: 'room',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Corridors',
-            field: 'corridor',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Bathrooms',
-            field: 'bathroom',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Kitchens',
-            field: 'kitchen',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Balconies',
-            field: 'balcony',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Storerooms',
-            field: 'storeroom',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Other areas',
-            field: 'notDefined',
-            columnGroupShow: 'open',
-            cellRenderer: CellRender.areaInfo,
-            width: 100,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-        ],
-      },
-      {
-        headerName: 'Model Analisys (Furniture)',
-        children: [
-          {
-            headerName: 'Desks',
-            field: 'num_desks',
-            columnGroupShow: 'open',
-            width: 80,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Seats',
-            field: 'num_seats',
-            columnGroupShow: 'open',
-            width: 80,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Doors',
-            field: 'num_doors',
-            columnGroupShow: 'open',
-            width: 80,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Sinks',
-            field: 'num_sink',
-            columnGroupShow: 'open',
-            width: 80,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Toilets',
-            field: 'num_toilet',
-            columnGroupShow: 'open',
-            width: 80,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Railings',
-            field: 'num_railing',
-            columnGroupShow: 'open',
-            width: 90,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Stairs',
-            field: 'num_stairs',
-            columnGroupShow: 'open',
-            width: 80,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Kitchens',
-            field: 'num_kitchens',
-            columnGroupShow: 'open',
-            width: 90,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Windows Exterior',
-            field: 'num_windowExterior',
-            width: 120,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Windows Interior',
-            field: 'num_windowInterior',
-            columnGroupShow: 'open',
-            width: 120,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-        ],
-      },
+      ...analysisColumns,
       {
         headerName: 'Georeference',
         children: [
@@ -524,6 +548,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           building => building.building_id === unit.building_id
         );
 
+        layout['building_referenced'] = building && ManagerFunctions.isReferencedBuilding(building);
+
         // Has to be a building with that id and has to be georeferenced
         layout['building_referenced_osm'] =
           building && ManagerFunctions.isReferencedOSMBuilding(building);
@@ -538,6 +564,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         layout['building_name'] = '';
         layout['building_referenced_osm'] = false;
         layout['building_referenced_st'] = false;
+        layout['building_referenced'] = false;
 
         layout['unit'] = {};
         layout['unit_name'] = '';
@@ -812,6 +839,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       delete newRow['building_name'];
       delete newRow['building_referenced_osm'];
       delete newRow['building_referenced_st'];
+      delete newRow['building_referenced'];
 
       delete newRow['building_id'];
       delete newRow['total_area'];

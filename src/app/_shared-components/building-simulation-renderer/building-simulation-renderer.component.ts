@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
 import { OverlayService } from '../../_services/overlay.service';
 import { environment } from '../../../environments/environment';
+import { NavigationService } from '../../_services/navigation.service';
 
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
@@ -36,7 +37,15 @@ export class BuildingSimulationRendererComponent {
   urlRaw: any;
   urlPotencialView: any;
 
-  constructor(private http: HttpClient, private infoDialog: OverlayService) {}
+  currentProfile;
+
+  constructor(
+    private http: HttpClient,
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    this.currentProfile = navigationService.profile.getValue();
+  }
 
   // called on init
   agInit(params: any): void {
@@ -91,7 +100,7 @@ export class BuildingSimulationRendererComponent {
       } else if (params.value === 'not_requested') {
         this.not_requested = true;
         this.styles.backgroundColor = '#4ebeff';
-      } else if (params.value === 'pending') {
+      } else if (params.value === 'pending' || params.value === 'Pending') {
         this.pending = true;
         this.styles.backgroundColor = '#ffc975';
       } else {

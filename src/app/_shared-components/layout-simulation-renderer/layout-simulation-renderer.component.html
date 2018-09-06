@@ -8,7 +8,8 @@
 
 
   <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && complete">
-    <a [href]="urlRaw" > View raw </a>
+    <a *ngIf="currentProfile === 'developer'" [href]="urlRaw" > View raw </a>
+    <span *ngIf="currentProfile !== 'developer'" > Completed </span>
   </span>
   <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>

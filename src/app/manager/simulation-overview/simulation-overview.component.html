@@ -5,10 +5,14 @@
     <div>
       <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
     </div>
+    <div>
+      <br />
+      JSON simulation result, click on each object to expand.
+    </div>
   </div>
 </div>
 <div class="containter-full-width full-height">
-  <pre [innerHTML]="code"></pre>
+  <ngx-json-viewer [json]="json" [expanded]="false"></ngx-json-viewer>
 </div>
 
 <!-- Tooltips -->

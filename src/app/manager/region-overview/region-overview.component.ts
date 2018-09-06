@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
+import {OverlayService} from '../../_services/overlay.service';
+import {NavigationService} from '../../_services/navigation.service';
 
 @Component({
   selector: 'app-region-overview',
@@ -32,12 +34,16 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs;
 
+  currentProfile;
   /**
    * Subscriptions
    */
   fragment_sub: Subscription;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,
+              private navigationService: NavigationService) {
+    this.currentProfile = navigationService.profile.getValue();
+  }
 
   buildColumDefinitions() {
     this.columnDefs = [

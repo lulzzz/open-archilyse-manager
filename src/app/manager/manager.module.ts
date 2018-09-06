@@ -27,11 +27,14 @@ import { LayoutSimulationRendererComponent } from '../_shared-components/layout-
 import { PotentialViewOverviewComponent } from './potential-view-overview/potential-view-overview.component';
 import { LogOverviewComponent } from './log-overview/log-overview.component';
 
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+
 @NgModule({
   imports: [
     CommonModule,
     ManagerRoutingModule,
     MatCheckboxModule,
+    NgxJsonViewerModule,
     AgGridModule.withComponents([
       MatCheckboxComponent,
       ProcentRendererComponent,

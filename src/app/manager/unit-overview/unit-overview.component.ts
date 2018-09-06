@@ -16,6 +16,7 @@ import {
 } from '../excel';
 import { OverlayService } from '../../_services/overlay.service';
 import { environment } from '../../../environments/environment';
+import { NavigationService } from '../../_services/navigation.service';
 
 const urlPortfolio = environment.urlPortfolio;
 
@@ -44,9 +45,14 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   gridOptions;
 
-  fragment_sub: Subscription;
-
   columnDefs;
+
+  currentProfile;
+
+  /**
+   * Subscriptions
+   */
+  fragment_sub: Subscription;
 
   buildColumDefinitions(buildings) {
     this.columnDefs = [
@@ -100,6 +106,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Unit Id',
             field: 'unit_id',
             columnGroupShow: 'open',
+            hide: this.currentProfile !== 'developer',
             width: 190,
             editable: false,
             cellClass: 'idCell',
@@ -194,8 +201,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    this.currentProfile = navigationService.profile.getValue();
+  }
 
   viewBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {

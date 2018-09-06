@@ -16,6 +16,9 @@ export const environment = {
   urlEditorFloorplan: 'http://localhost:4204/editor',
   urlPortfolio: 'http://localhost:4200/manager',
 
+  defaultUser: '***REMOVED***',
+  defaultPass: '***REMOVED***',
+
   firebase: {
     apiKey: '***REMOVED***',
     authDomain: 'archilyse-usermanagement.firebaseapp.com',
@@ -25,3 +28,4 @@ export const environment = {
     messagingSenderId: '***REMOVED***',
   },
 };
+

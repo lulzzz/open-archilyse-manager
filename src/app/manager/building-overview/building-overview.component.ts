@@ -24,6 +24,7 @@ const urlPortfolio = environment.urlPortfolio;
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
+import { NavigationService } from '../../_services/navigation.service';
 
 proj4.defs(
   'EPSG:2056',
@@ -67,6 +68,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
    */
 
   sitesArray;
+  currentProfile;
 
   /**
    * Subscriptions
@@ -77,14 +79,63 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    this.currentProfile = navigationService.profile.getValue();
+  }
 
   /**
    * In order to provide dropdowns with site lists we need to build it after load.
    * @param sites
    */
   buildColumDefinitions(sites) {
+    let analysisColumns = [];
+    let analysisColumns2 = [];
+    if (this.currentProfile === 'analyst' || this.currentProfile === 'data') {
+      analysisColumns = [
+        {
+          headerName: 'Units',
+          children: [
+            {
+              headerName: 'Units',
+              field: 'units',
+              filter: 'agNumberColumnFilter',
+              width: 90,
+              cellRenderer: CellRender.viewUnitsOfBuilding,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Layouts',
+              field: 'layouts',
+              columnGroupShow: 'open',
+              filter: 'agNumberColumnFilter',
+              width: 90,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+          ],
+        },
+      ];
+
+      analysisColumns2 = [
+        {
+          headerName: 'Progress',
+          children: [
+            {
+              headerName: 'Layouts',
+              field: 'progressLayout',
+              cellRenderer: 'procentRenderer',
+              filter: 'agNumberColumnFilter',
+              cellRendererParams: { editable: false },
+              cellClass: 'readOnly',
+            },
+          ],
+        },
+      ];
+    }
+
     this.columnDefs = [
       {
         headerName: 'Site',
@@ -122,6 +173,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             columnGroupShow: 'open',
             field: 'building_id',
             width: 190,
+            hide: this.currentProfile !== 'developer',
             editable: false,
             cellClass: 'idCell',
           },
@@ -136,6 +188,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Building Address',
+        // The address is open for the Data Input profile.
+        openByDefault: this.currentProfile === 'data',
         headerTooltip:
           'Address properties for the current building, necessary for the DPOI simulation and georefence operations',
         children: [
@@ -156,103 +210,81 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
         ],
       },
-      {
-        headerName: 'Units',
-        children: [
-          {
-            headerName: 'Units',
-            field: 'units',
-            filter: 'agNumberColumnFilter',
-            width: 90,
-            cellRenderer: CellRender.viewUnitsOfBuilding,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Layouts',
-            field: 'layouts',
-            columnGroupShow: 'open',
-            filter: 'agNumberColumnFilter',
-            width: 90,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-        ],
-      },
-      {
-        headerName: 'Georeference',
-        children: [
-          // { headerName: 'Building_reference', field: 'building_reference', editable: true },
-          {
-            headerName: 'Swiss topo',
-            field: 'building_reference.swiss_topo',
-            width: 265,
-            cellRenderer: CellRender.viewGeorefBuildingST,
-            editable: true,
-          },
-          {
-            headerName: 'Open Street Maps',
-            field: 'building_reference.open_street_maps',
-            width: 150,
-            cellRenderer: CellRender.viewGeorefBuildingOSM,
-            editable: true,
-          },
-        ],
-      },
-      {
-        headerName: 'Simulations',
-        children: [
-          {
-            headerName: 'Potential view',
-            field: 'simulations.potential_view.status',
-            cellRenderer: 'simulationBuildingRenderer',
-            cellStyle: { padding: '0px' },
-            width: 140,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            headerName: 'Accoustics',
-            field: 'simulations.accoustics.status',
-            cellRenderer: 'simulationBuildingRenderer',
-            cellStyle: { padding: '0px' },
-            width: 140,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-          {
-            // cellRenderer: CellRender.viewSimulationBuilding,
-            // cellRenderer: CellRender.viewSimulationBuilding,
-            // cellRenderer: CellRender.viewSimulationDpoiBuilding,
-            headerName: 'DPOI',
-            field: 'simulations.dpoi.status',
-            cellRenderer: 'simulationBuildingDpoiRenderer',
-            cellStyle: { padding: '0px' },
-            width: 140,
-            editable: false,
-            cellClass: 'readOnly',
-          },
-        ],
-      },
-      {
-        headerName: 'Progress',
-        children: [
-          {
-            headerName: 'Layouts',
-            field: 'progressLayout',
-            cellRenderer: 'procentRenderer',
-            filter: 'agNumberColumnFilter',
-            cellRendererParams: { editable: false },
-            cellClass: 'readOnly',
-          },
-        ],
-      },
-      /**
-      {
+      ...analysisColumns.concat([
+        {
+          headerName: 'Georeference',
+          children: [
+            // { headerName: 'Building_reference', field: 'building_reference', editable: true },
+            {
+              headerName: 'Status',
+              field: 'building_referenced',
+              cellRenderer: 'checkboxRenderer',
+              hide: this.currentProfile === 'developer', // No developers see overview
+              width: 100,
+              cellRendererParams: { editable: false },
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Swiss topo',
+              field: 'building_reference.swiss_topo',
+              hide: this.currentProfile !== 'developer', // A developer sees the details
+              width: 265,
+              cellRenderer: CellRender.viewGeorefBuildingST,
+              editable: true,
+            },
+            {
+              headerName: 'Open Street Maps',
+              field: 'building_reference.open_street_maps',
+              hide: this.currentProfile !== 'developer', // A developer sees the details
+              width: 150,
+              cellRenderer: CellRender.viewGeorefBuildingOSM,
+              editable: true,
+            },
+          ],
+        },
+        {
+          headerName: 'Simulations',
+          children: [
+            {
+              headerName: 'Potential view',
+              field: 'simulations.potential_view.status',
+              cellRenderer: 'simulationBuildingRenderer',
+              cellStyle: { padding: '0px' },
+              width: 140,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              headerName: 'Accoustics',
+              field: 'simulations.accoustics.status',
+              cellRenderer: 'simulationBuildingRenderer',
+              cellStyle: { padding: '0px' },
+              width: 140,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+            {
+              // cellRenderer: CellRender.viewSimulationBuilding,
+              // cellRenderer: CellRender.viewSimulationBuilding,
+              // cellRenderer: CellRender.viewSimulationDpoiBuilding,
+              headerName: 'DPOI',
+              field: 'simulations.dpoi.status',
+              cellRenderer: 'simulationBuildingDpoiRenderer',
+              cellStyle: { padding: '0px' },
+              width: 140,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+          ],
+        },
+      ]),
+      ...analysisColumns2.concat([
+        /**
+         {
         headerName: 'Layout Simulations ',
         children: ColumnDefinitions.progressSimsLayout,
       },
-      {
+         {
         headerName: 'Images',
         headerTooltip: 'Current Layout uploaded pictures',
         children: [
@@ -265,8 +297,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           },
         ],
       },
-      */
-      ...ColumnDefinitions.metaUserAndData,
+         */
+        ...ColumnDefinitions.metaUserAndData,
+      ]),
     ];
   }
 
@@ -275,6 +308,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     if (element.site_id || element.site_id === '') {
       this.setBuildingSiteData(nodeData);
     }
+
+    // Update if it's referenced
+    nodeData['building_referenced'] = ManagerFunctions.isReferencedBuilding(nodeData);
   }
   setBuildingSiteData(building) {
     if (building.site_id || building.site_id === '') {
@@ -312,6 +348,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
           this.buildingReactionToEdit(building, building);
         });
+
+        console.log('buildingsArray', buildingsArray);
 
         this.gridOptions = {
           // <GridOptions>

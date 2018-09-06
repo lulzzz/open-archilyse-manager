@@ -203,4 +203,13 @@ app-root {
   }
 }
 
+.ngx-json-viewer  {
+  overflow: auto !important;
+  background: white;
+  padding: 10px 20px;
 
+  .ngx-json-viewer {
+    overflow: visible !important;
+  }
+
+}

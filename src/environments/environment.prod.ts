@@ -11,6 +11,9 @@ export const environment = {
   urlEditorFloorplan: 'https://floorplan.archilyse.com/',
   urlPortfolio: 'https://portfolio.archilyse.com/',
 
+  defaultUser: '',
+  defaultPass: '',
+
   firebase: {
     apiKey: '***REMOVED***',
     authDomain: 'archilyse-usermanagement.firebaseapp.com',

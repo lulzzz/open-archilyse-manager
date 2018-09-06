@@ -406,7 +406,8 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         const y_off = starting_point[1]; // 6005873.054931145;
 
         // this.summary.min, this.summary.max
-        const valueToColor = this.calculateDomain(colors, 0, 5);
+        // 0, 5
+        const valueToColor = this.calculateDomain(colors, this.summary.min, this.summary.max);
 
         const colorAverage = valueToColor(this.summary.average);
 
@@ -459,7 +460,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     let currentHeatmap = heatmap;
     let resolutionCorrected = resolution;
 
-    const maxNumberPoligons = 900;
+    const maxNumberPoligons = 1900;
 
     while (numberOfhexagons > maxNumberPoligons) {
       numberOfhexagons = 0;
@@ -480,7 +481,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         newY += 1;
       }
       currentHeatmap = heatmapCorrected;
-      resolutionCorrected = resolution * 3;
+      resolutionCorrected = resolutionCorrected * 3;
     }
 
     console.log('numberOfhexagons END', numberOfhexagons);
@@ -597,7 +598,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
   correctVisibility(resolution) {
     if (resolution < 2.5) {
       this.detailLayer.setVisible(true);
-      this.globalLayer.setVisible(true);
+      this.globalLayer.setVisible(false);
     } else {
       this.detailLayer.setVisible(false);
       this.globalLayer.setVisible(true);

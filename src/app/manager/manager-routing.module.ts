@@ -22,7 +22,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: CountryOverviewComponent,
+        component: BuildingOverviewComponent,
         canActivate: [AuthGuard],
       },
       {

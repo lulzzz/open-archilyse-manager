@@ -1,15 +1,10 @@
-import {
-  Component,
-  OnInit,
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../_store';
 import { Subscription } from 'rxjs/Subscription';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -31,8 +26,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private store: Store<fromStore.AppState>, private _router: Router) {}
 
   logInForm = new FormGroup({
-    email: new FormControl('***REMOVED***', [Validators.required, Validators.email]),
-    password: new FormControl('***REMOVED***', Validators.required),
+    email: new FormControl(environment.defaultUser, [Validators.required, Validators.email]),
+    password: new FormControl(environment.defaultPass, Validators.required),
   });
 
   ngOnInit() {
