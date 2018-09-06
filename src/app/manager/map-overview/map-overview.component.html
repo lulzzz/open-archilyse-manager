@@ -32,8 +32,8 @@
         </select>
       </div>
       &nbsp;&nbsp;
-      <span [popper]="enablePU"><button *ngIf="!enabledPV" class="btn blue" (click)="enablePV()">Enable potential view </button></span>
-      <span [popper]="disablePU"><button *ngIf="enabledPV" class="btn blue" (click)="disablePV()">Disable potential view</button></span>
+      <span [popper]="enablePU"><button *ngIf="!enabledPV" class="btn green" (click)="enablePV()">Enable potential view </button></span>
+      <span [popper]="disablePU"><button *ngIf="enabledPV" class="btn green" (click)="disablePV()">Disable potential view</button></span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <div *ngIf="enabledPV" [popper]="selectSimulation" class="selectMap">
         <label >Simulation: </label>
