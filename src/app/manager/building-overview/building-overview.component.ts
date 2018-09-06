@@ -82,7 +82,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
-    this.currentProfile = navigationService.profile.getValue();
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.initComponent();
+    });
   }
 
   /**
@@ -325,7 +328,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  initComponent() {
+    this.loading = true;
+    this.filterModelSet = false;
+
     /** BUILDINGS */
     ManagerFunctions.requestAllData(
       this.http,
@@ -348,8 +356,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
           this.buildingReactionToEdit(building, building);
         });
-
-        console.log('buildingsArray', buildingsArray);
 
         this.gridOptions = {
           // <GridOptions>

@@ -9,6 +9,7 @@ import { columnDefs, columnDefsCompare } from './columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
 import {environment} from '../../../environments/environment';
 import {getCategory} from './categories';
+import {NavigationService} from '../../_services/navigation.service';
 
 const urlPortfolio = environment.urlPortfolio;
 
@@ -59,14 +60,29 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   updatedCompare;
   statusCompare;
 
+  currentProfile;
   /**
    * Subscriptions
    */
   fragment_sub: Subscription;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,
+              private navigationService: NavigationService) {
+
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.initComponent();
+    });
+  }
 
   ngOnInit() {
+  }
+
+  initComponent() {
+
+    this.loading = true;
+    this.filterModelSet = false;
+
     this.buildingId = this.route.snapshot.params['buildingId'];
     this.buildingIdCompare = this.route.snapshot.params['buildingIdCompare'];
 

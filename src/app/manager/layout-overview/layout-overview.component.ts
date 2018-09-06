@@ -76,7 +76,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
-    this.currentProfile = navigationService.profile.getValue();
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.initComponent();
+    });
   }
 
   /**
@@ -718,8 +721,13 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     return Math.abs(ShapeUtils.area(currentArrayVector));
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  initComponent() {
     /** LAYOUTS */
+
+    this.loading = true;
+    this.filterModelSet = false;
 
     ManagerFunctions.requestAllData(
       this.http,

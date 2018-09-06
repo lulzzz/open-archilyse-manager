@@ -204,7 +204,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
-    this.currentProfile = navigationService.profile.getValue();
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.initComponent();
+    });
   }
 
   viewBuilding(params) {
@@ -243,7 +246,12 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  initComponent() {
+    this.loading = true;
+    this.filterModelSet = false;
+
     /** UNITS */
 
     ManagerFunctions.requestAllData(

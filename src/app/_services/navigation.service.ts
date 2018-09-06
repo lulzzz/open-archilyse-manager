@@ -14,6 +14,7 @@ export class NavigationService {
   options$ = this.options.asObservable();
 
   public profile;
+  public profile$;
 
   constructor() {
     const initialValue = localStorage.getItem('profile');
@@ -23,6 +24,7 @@ export class NavigationService {
     } else {
       this.profile = new BehaviorSubject<string>('manager');
     }
+    this.profile$ = this.profile.asObservable();
   }
 
   /**
@@ -32,7 +34,7 @@ export class NavigationService {
   setProfile(value) {
     this.profile.next(value);
     localStorage.setItem('profile', value);
-    location.reload();
+    // location.reload();
   }
 
   /**

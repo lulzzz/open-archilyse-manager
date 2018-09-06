@@ -64,6 +64,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     this.currentProfile = navigationService.profile.getValue();
 
     let analysisColumns = [];
+
     if (this.currentProfile === 'analyst' || this.currentProfile === 'data') {
       analysisColumns = [
         {
@@ -73,7 +74,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsSite, null),
         },
         {
-          headerName: 'Progress',
+          headerName: 'Progress Georeferencing',
           hide: this.currentProfile !== 'analyst',
           headerTooltip: 'Procent of georeferenced buildings and layouts',
           children: ColumnDefinitions.progressProcents,
@@ -119,6 +120,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
        */
       ...ColumnDefinitions.metaUserAndData,
     ];
+
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.initComponent();
+    });
   }
 
   /**
@@ -143,7 +149,12 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  initComponent() {
+    this.loading = true;
+    this.filterModelSet = false;
+
     /** SITES */
     ManagerFunctions.requestAllData(
       this.http,
