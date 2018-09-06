@@ -37,6 +37,12 @@ const urlPortfolio = environment.urlPortfolio;
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
+import {
+  calculateDomain,
+  drawHexBlocks,
+  reduceHeatmap,
+} from '../potential-view-overview/hexagonFunctions';
+import { colors } from '../potential-view-overview/potential-view-overview.component';
 
 proj4.defs(
   'EPSG:2056',
@@ -49,20 +55,20 @@ RegisterProjections(proj4);
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(255, 0, 0, 0.7)',
+    color: 'rgba(210, 210, 210, 0.7)',
   }),
   stroke: new OlStyleStroke({
-    color: 'rgba(255, 0, 0, 1)',
+    color: 'rgba(170, 170, 170, 1)',
     width: 2,
   }),
 });
 
 const styleOver = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(255, 0, 0, 0.5)',
+    color: 'rgba(150, 150, 150, 0.5)',
   }),
   stroke: new OlStyleStroke({
-    color: 'rgba(255, 0, 0, 0.5)',
+    color: 'rgba(110, 110, 110, 0.5)',
     width: 3,
     lineCap: 'round',
   }),
@@ -113,6 +119,14 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   filterCountry = null;
   filterCity = null;
 
+  currentSimulation = 'buildings';
+  currentFloor = 0;
+  numberOfFloors = 1;
+
+  floors = [0];
+
+  enabledPV = false;
+
   /**
    * Subscriptions
    */
@@ -121,13 +135,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
   filterByCountry(country) {
-    console.log('country', country);
     this.filterCountry = country;
     this.setUpMap();
   }
 
   filterByCity(city) {
-    console.log('city', city);
     this.filterCity = city;
     this.setUpMap();
   }
@@ -227,104 +239,200 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
               const feature = features.find(feature => feature.id_ === referenced);
 
               if (feature) {
-                this.numGeoreferencedBuildings += 1;
+                this.http
+                  .get(apiUrl + 'buildings/' + building.building_id + '/simulations', {
+                    params: {
+                      simulation_packages: ['potential_view'],
+                    },
+                  })
+                  .subscribe(simulations => {
+                    this.numGeoreferencedBuildings += 1;
 
-                if (this.cities.indexOf(building.address.city) === -1) {
-                  this.cities.push(building.address.city);
-                }
-                if (this.countries.indexOf(building.address.country) === -1) {
-                  this.countries.push(building.address.country);
-                }
-
-                if (this.map !== null) {
-                  this.detailSource.addFeature(feature);
-                  this.globalSource.addFeature(feature);
-                } else {
-                  this.mapStyle = 'satellite';
-
-                  this.source = new OlXYZ({
-                    url:
-                      'https://api.tiles.mapbox.com/v4/mapbox.' +
-                      this.mapStyle +
-                      '/{z}/{x}/{y}.png?' +
-                      'access_token=***REMOVED***',
-                  });
-
-                  this.detailSource = new Vector({
-                    features: [feature],
-                  });
-                  this.globalSource = new Vector({
-                    features: [feature],
-                  });
-
-                  this.detailLayer = new OlVectorLayer({
-                    source: this.detailSource,
-                    style: styleNormal,
-                  });
-
-                  this.globalLayer = new OlVectorLayer({
-                    source: this.globalSource,
-                    style: styleNormal,
-                  });
-
-                  this.layer = new OlTileLayer({
-                    source: this.source,
-                  });
-
-                  this.view = new OlView({
-                    projection: surroundings['geojson']['crs'].properties.name,
-                  });
-
-                  this.map = new OlMap({
-                    target: 'map',
-                    layers: [this.layer, this.detailLayer, this.globalLayer],
-                    view: this.view,
-                  });
-
-                  // select interaction working on "pointermove"
-                  this.selectPointerClick = new Select({
-                    condition: conditionClick,
-                    style: styleOver,
-                  });
-
-                  this.selectPointerMove = new Select({
-                    condition: conditionPointerMove,
-                    style: styleOver,
-                  });
-
-                  this.map.addInteraction(this.selectPointerMove);
-                  this.map.addInteraction(this.selectPointerClick);
-
-                  this.selectPointerClick.on('select', e => {
-                    if (e.selected.length > 0) {
-                      // localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
-                      // urlPortfolio/building#site_id=5b7d5793ed37e50009414a1a
-                      window.location.href = `${urlPortfolio}/building#building_reference.open_street_maps=${
-                        e.selected[0].id_
-                      }`;
+                    if (this.cities.indexOf(building.address.city) === -1) {
+                      this.cities.push(building.address.city);
                     }
-                  });
-
-                  this.view.on('propertychange', e => {
-                    switch (e.key) {
-                      case 'resolution':
-                        this.correctVisibility(e.oldValue);
-                        break;
+                    if (this.countries.indexOf(building.address.country) === -1) {
+                      this.countries.push(building.address.country);
                     }
-                  });
 
-                  this.fragment_sub = this.route.fragment.subscribe(fragment => {
-                    const urlParams = parseParms(fragment);
-                    if (urlParams.hasOwnProperty('mapStyle')) {
-                      this.changeMapStyle(urlParams['mapStyle']);
+                    if (this.map === null) {
+                      this.mapStyle = 'satellite';
+
+                      this.source = new OlXYZ({
+                        url:
+                          'https://api.tiles.mapbox.com/v4/mapbox.' +
+                          this.mapStyle +
+                          '/{z}/{x}/{y}.png?' +
+                          'access_token=***REMOVED***',
+                      });
+
+                      this.detailSource = new Vector({
+                        features: [],
+                      });
+                      this.globalSource = new Vector({
+                        features: [],
+                      });
+
+                      this.detailLayer = new OlVectorLayer({
+                        source: this.detailSource,
+                        style: styleNormal,
+                      });
+
+                      this.globalLayer = new OlVectorLayer({
+                        source: this.globalSource,
+                        style: styleNormal,
+                      });
+
+                      this.layer = new OlTileLayer({
+                        source: this.source,
+                      });
+
+                      this.view = new OlView({
+                        projection: surroundings['geojson']['crs'].properties.name,
+                      });
+
+                      this.map = new OlMap({
+                        target: 'map',
+                        layers: [this.layer, this.detailLayer, this.globalLayer],
+                        view: this.view,
+                      });
+
+                      // select interaction working on "pointermove"
+                      this.selectPointerClick = new Select({
+                        condition: conditionClick,
+                        style: styleOver,
+                      });
+
+                      this.selectPointerMove = new Select({
+                        condition: conditionPointerMove,
+                        style: styleOver,
+                      });
+
+                      this.map.addInteraction(this.selectPointerMove);
+                      this.map.addInteraction(this.selectPointerClick);
+
+                      this.selectPointerClick.on('select', e => {
+                        if (e.selected.length > 0 && e.selected[0].id_) {
+                          // localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
+                          // urlPortfolio/building#site_id=5b7d5793ed37e50009414a1a
+                          window.location.href = `${urlPortfolio}/building#building_reference.${map_source}=${
+                            e.selected[0].id_
+                          }`;
+                        }
+                      });
+
+                      this.view.on('propertychange', e => {
+                        switch (e.key) {
+                          case 'resolution':
+                            this.correctVisibility(e.oldValue);
+                            break;
+                        }
+                      });
+
+                      this.fragment_sub = this.route.fragment.subscribe(fragment => {
+                        const urlParams = parseParms(fragment);
+                        if (urlParams.hasOwnProperty('mapStyle')) {
+                          this.changeMapStyle(urlParams['mapStyle']);
+                        }
+                      });
                     }
+
+                    if (
+                      simulations &&
+                      simulations['potential_view'] &&
+                      simulations['potential_view'].result
+                    ) {
+                      this.drawSimulation(feature, simulations['potential_view'].result);
+                    } else {
+                      this.detailSource.addFeature(feature);
+                    }
+                    this.globalSource.addFeature(feature);
+
+                    this.centerMap();
                   });
-                }
-                this.centerMap();
               }
             }
           });
       }
+    });
+  }
+
+  drawSimulation(feature, sim_result) {
+    const categorySimulations = sim_result.filter(sim => sim.category === this.currentSimulation);
+    if (categorySimulations && categorySimulations.length) {
+      // Always the hier number of floors
+      const nOf = categorySimulations.length;
+      if (nOf > this.numberOfFloors) {
+        this.numberOfFloors = nOf;
+        this.floors = [];
+        for (let i = 0; i < this.numberOfFloors; i += 1) {
+          this.floors.push(i);
+        }
+      }
+
+      let currentF = this.currentFloor;
+      if (currentF >= nOf) {
+        currentF = nOf - 1;
+      }
+
+      const sim = categorySimulations[currentF];
+
+      const starting_point = sim['starting_point'];
+      const heatmap = sim['heatmap'];
+      const no_value_number = sim['no_value_number'];
+      const height = sim['height'];
+      const resolution = sim['resolution'];
+      const x_off = starting_point[0]; // 947839.4323007881;
+      const y_off = starting_point[1]; // 6005873.054931145;
+
+      // this.summary.min, this.summary.max
+      // 0, 5
+      const valueToColor = calculateDomain(colors, 0, 5);
+
+      const colorAverage = valueToColor(sim.summary.average);
+
+      feature.setStyle(
+        new OlStyle({
+          fill: new OlStyleFill({
+            color: colorAverage,
+          }),
+          stroke: new OlStyleStroke({
+            color: colorAverage,
+            width: 2,
+          }),
+        })
+      );
+
+      const result = reduceHeatmap(heatmap, resolution, no_value_number);
+      const currentHeatmap = result.heatmap;
+      const resolutionCorrected = result.resolution;
+
+      currentHeatmap.forEach((row, y) => {
+        row.forEach((val, x) => {
+          if (val !== no_value_number) {
+            drawHexBlocks(
+              this.detailSource,
+              x_off,
+              y_off,
+              x,
+              -y,
+              resolutionCorrected,
+              valueToColor,
+              val
+            );
+          }
+        });
+      });
+    } else {
+      this.loading = false;
+      this.generalError = `Selected simulation not found`;
+    }
+  }
+
+  removeOldFeatures() {
+    const features = this.detailSource.getFeatures();
+    features.forEach(feature => {
+      this.detailSource.removeFeature(feature);
     });
   }
 
@@ -339,7 +447,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   }
 
   correctVisibility(resolution) {
-    if (resolution < 5) {
+    if (resolution < 1.5 && this.enabledPV) {
       this.detailLayer.setVisible(true);
       this.globalLayer.setVisible(false);
     } else {
@@ -348,11 +456,37 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  changeSimulation(data) {
+    this.currentSimulation = data.target.value;
+    this.setUpMap();
+  }
+  changeFloor(data) {
+    this.currentFloor = data.target.value;
+    this.setUpMap();
+  }
+
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
     this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
   }
 
+  /**
+   * Enable and disable potential view
+   */
+  enablePV() {
+    this.enabledPV = true;
+    this.correctVisibility(this.view.values_.resolution);
+  }
+  disablePV() {
+    this.enabledPV = false;
+
+    this.detailLayer.setVisible(false);
+    this.globalLayer.setVisible(true);
+  }
+
+  /**
+   * Unsubscribe
+   */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
