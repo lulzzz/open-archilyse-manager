@@ -61,7 +61,38 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
-    this.currentProfile = navigationService.profile.getValue();
+
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.initComponent();
+    });
+  }
+
+  /**
+   * Adds an empty site in the API
+   */
+  addRow() {
+    const newSite = {
+      description: '',
+      name: '',
+    };
+
+    ApiFunctions.post(
+      this.http,
+      'sites',
+      newSite,
+      site => {
+        this.gridOptions.api.updateRowData({
+          add: [site],
+        });
+      },
+      ManagerFunctions.showErroruser
+    );
+  }
+
+  ngOnInit() {}
+
+  setUpColumns(){
 
     let analysisColumns = [];
 
@@ -120,36 +151,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
        */
       ...ColumnDefinitions.metaUserAndData,
     ];
-
-    navigationService.profile$.subscribe(newProfile => {
-      this.currentProfile = newProfile;
-      this.initComponent();
-    });
   }
-
-  /**
-   * Adds an empty site in the API
-   */
-  addRow() {
-    const newSite = {
-      description: '',
-      name: '',
-    };
-
-    ApiFunctions.post(
-      this.http,
-      'sites',
-      newSite,
-      site => {
-        this.gridOptions.api.updateRowData({
-          add: [site],
-        });
-      },
-      ManagerFunctions.showErroruser
-    );
-  }
-
-  ngOnInit() {}
 
   initComponent() {
     this.loading = true;
@@ -178,6 +180,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           site.progress = progressResult.progressOfBuildings;
           site.progressLayout = progressResult.progressOfLayouts;
         });
+
+        this.setUpColumns();
 
         this.gridOptions = {
           rowData: sitesArray,

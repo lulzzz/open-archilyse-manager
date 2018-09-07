@@ -689,8 +689,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   }
 
   importExcel(files) {
+    console.log('files', files);
+
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {
+        console.log('result', result);
+
         const dictionaryBuildings = {};
 
         dictionaryBuildings['Site Id'] = 'site_id';
@@ -714,6 +718,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
         const allRows = getRows(result, dictionaryBuildings);
 
+        console.log('allRows', allRows);
+
         allRows.forEach(oneRow => {
           if (oneRow.building_id && oneRow.building_id !== null && oneRow.building_id !== '') {
             const building_id = oneRow.building_id;
@@ -734,6 +740,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               'buildings',
               oneRow,
               building => {
+                console.log('building', building);
+
                 this.gridOptions.api.updateRowData({
                   add: [building],
                 });

@@ -73,8 +73,18 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             editable: true,
           },
           {
+            headerName: 'Georeferenced',
+            field: 'building_referenced',
+            hide: this.currentProfile === 'developer',
+            cellRenderer: 'checkboxRenderer',
+            width: 100,
+            cellRendererParams: { editable: false },
+            cellClass: 'readOnly',
+          },
+          {
             headerName: 'Swiss Topo',
             field: 'building_referenced_st',
+            hide: this.currentProfile !== 'developer',
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
@@ -83,6 +93,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Open Street Maps',
             field: 'building_referenced_osm',
+            hide: this.currentProfile !== 'developer',
             cellRenderer: 'checkboxRenderer',
             width: 100,
             cellRendererParams: { editable: false },
@@ -144,6 +155,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Unit address',
+        openByDefault: this.currentProfile === 'data',
         children: [
           { headerName: 'Line1', field: 'line1', editable: true },
           { headerName: 'Line2', columnGroupShow: 'open', field: 'line2', editable: true },
@@ -239,6 +251,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       nodeData['building_name'] =
         buildingThisUnit && buildingThisUnit.name ? buildingThisUnit.name : '';
 
+      nodeData['building_referenced'] =
+        buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
       nodeData['building_referenced_osm'] =
         buildingThisUnit && ManagerFunctions.isReferencedOSMBuilding(buildingThisUnit);
       nodeData['building_referenced_st'] =

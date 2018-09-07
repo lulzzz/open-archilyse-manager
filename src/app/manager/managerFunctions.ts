@@ -378,11 +378,17 @@ export class ManagerFunctions {
     if (columnParts.length <= 1) {
       object[columnName] = columnValue;
     } else if (columnParts.length <= 2) {
-      object[columnParts[0]] = {};
+      if (!object[columnParts[0]]) {
+        object[columnParts[0]] = {};
+      }
       object[columnParts[0]][columnParts[1]] = columnValue;
     } else if (columnParts.length <= 3) {
-      object[columnParts[0]] = {};
-      object[columnParts[0]][columnParts[1]] = {};
+      if (!object[columnParts[0]]) {
+        object[columnParts[0]] = {};
+      }
+      if (!object[columnParts[0]][columnParts[1]]) {
+        object[columnParts[0]][columnParts[1]] = {};
+      }
       object[columnParts[0]][columnParts[1]][columnParts[2]] = columnValue;
     }
   }
