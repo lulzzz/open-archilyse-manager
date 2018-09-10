@@ -407,7 +407,14 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
         // this.summary.min, this.summary.max
         // 0, 5
-        const valueToColor = calculateDomain(colors, this.summary.min, this.summary.max);
+        // this.summary.min, this.summary.max
+        const valueToColor = calculateDomain(
+          colors,
+          this.summary.min,
+          this.summary.max
+          // 0,
+          // 1.2 // this.summary.max > 1.2 ? this.summary.max : 1.2
+        );
 
         const colorAverage = valueToColor(this.summary.average);
 

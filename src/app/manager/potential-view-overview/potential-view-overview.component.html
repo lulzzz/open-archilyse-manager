@@ -23,6 +23,7 @@
       <div [popper]="selectSimulation" class="selectMap">
         <label >Simulation: </label>
         <select (change)="changeSimulation($event)" [value]="currentSimulation">
+          <option value="grounds">Grounds</option>
           <option value="buildings">Buildings</option>
           <option value="streets">Streets</option>
           <option value="railroads">Railroads</option>
