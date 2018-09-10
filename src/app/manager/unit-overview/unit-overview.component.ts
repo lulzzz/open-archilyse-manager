@@ -374,6 +374,13 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       delete newRow['updated'];
       delete newRow['created'];
 
+      if (
+        newRow['building_id'] &&
+        (newRow['building_id'] === '' || newRow['building_id'] === 'None')
+      ) {
+        delete newRow['building_id'];
+      }
+
       ApiFunctions.post(
         this.http,
         'units',

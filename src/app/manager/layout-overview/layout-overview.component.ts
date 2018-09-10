@@ -879,6 +879,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       delete newRow['updated'];
       delete newRow['created'];
 
+      if (newRow['unit_id'] && (newRow['unit_id'] === '' || newRow['unit_id'] === 'None')) {
+        delete newRow['unit_id'];
+      }
+
       ApiFunctions.post(
         this.http,
         'layouts',

@@ -475,6 +475,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       delete newRow['units'];
       delete newRow['layouts'];
       delete newRow['progressLayout'];
+      delete newRow['building_referenced'];
 
       // Control fields are not duplicated
       delete newRow['org_id'];
@@ -482,12 +483,16 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       delete newRow['updated'];
       delete newRow['created'];
 
+      if (newRow['site_id'] && (newRow['site_id'] === '' || newRow['site_id'] === 'None')) {
+        delete newRow['site_id'];
+      }
+      delete newRow['site_name'];
+
       ApiFunctions.post(
         this.http,
         'buildings',
         newRow,
         building => {
-
           this.buildingReactionToEdit(building, building);
           this.gridOptions.api.updateRowData({
             add: [building],
