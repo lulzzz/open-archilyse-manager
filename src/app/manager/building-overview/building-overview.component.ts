@@ -487,6 +487,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         'buildings',
         newRow,
         building => {
+
+          this.buildingReactionToEdit(building, building);
           this.gridOptions.api.updateRowData({
             add: [building],
           });
@@ -666,7 +668,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         {
           name: 'potential_view',
           parameters: {
-            floors: [1],
+            floors: [1, 2, 3],
           },
         },
         {
@@ -735,6 +737,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               oneRow,
               building => {
                 const node = this.gridOptions.api.getRowNode(building_id);
+                this.buildingReactionToEdit(building, building);
                 node.setData(building);
               },
               ManagerFunctions.showErrorUserNoReload
@@ -747,8 +750,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               'buildings',
               oneRow,
               building => {
-                console.log('building', building);
-
+                this.buildingReactionToEdit(building, building);
                 this.gridOptions.api.updateRowData({
                   add: [building],
                 });

@@ -476,6 +476,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
               oneRow,
               unit => {
                 const node = this.gridOptions.api.getRowNode(unit_id);
+                this.unitReactionToEdit(unit, unit);
                 node.setData(unit);
               },
               ManagerFunctions.showErrorUserNoReload
@@ -488,6 +489,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
               'units',
               oneRow,
               unit => {
+                this.unitReactionToEdit(unit, unit);
                 this.gridOptions.api.updateRowData({
                   add: [unit],
                 });
