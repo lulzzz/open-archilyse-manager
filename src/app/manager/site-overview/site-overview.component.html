@@ -6,7 +6,7 @@
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
       &nbsp;&nbsp;&nbsp;
-      <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
       <button [popper]="tooltip4" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
       &nbsp;&nbsp;&nbsp;
       <button [popper]="tooltip5" class="btn green" (click)="addRow()" > Add site </button>
@@ -17,10 +17,10 @@
       <button [popper]="tooltip7"
               class="btn yellow" (click)="export()" > CSV </button>
       &nbsp;
-      <input *ngIf="currentProfile === 'data'" #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-      <label *ngIf="currentProfile === 'data'" [popper]="tooltip8"
+      <input *ngIf="currentProfile === 'data' || currentProfile === 'developer'" #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+      <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip8"
              for="file" class="btn yellow" >Import Excel file</label>
-      <div *ngIf="currentProfile === 'data'" class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
+      <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'" class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
         <i class="fa fa-info-circle"></i>
       </div>
 
