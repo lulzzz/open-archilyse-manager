@@ -8,8 +8,8 @@
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip4" class="btn blue" (click)="selectNotDigitalized($event)" >Sel. Not Digitalized</button>
       &nbsp;&nbsp;&nbsp;
-      <button *ngIf="currentProfile === 'data'" [popper]="tooltip5" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Georef. ({{selectedNodes.length}})</button>
-      <button *ngIf="currentProfile === 'data'" [popper]="tooltip6" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Georef. OSM ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Georef. ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Georef. OSM ({{selectedNodes.length}})</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip7" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="duplicate($event)" >Duplicate ({{selectedNodes.length}})</button>
       <button [popper]="tooltip8" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
       &nbsp;&nbsp;&nbsp;
@@ -19,7 +19,7 @@
       <button [popper]="tooltip10" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
       <button [popper]="tooltip11" class="btn yellow" (click)="export()" > CSV </button>
       &nbsp;
-      <input *ngIf="currentProfile === 'data'" type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+      <input *ngIf="currentProfile === 'data'" #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
       <label *ngIf="currentProfile === 'data'" [popper]="tooltip12"  for="file" class="btn yellow" >Import Excel file</label>
       <div *ngIf="currentProfile === 'data'" class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
         <i class="fa fa-info-circle"></i>

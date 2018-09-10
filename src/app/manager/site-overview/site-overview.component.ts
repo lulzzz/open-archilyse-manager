@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -47,6 +47,12 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
   gridOptions;
 
   columnDefs;
+
+
+  /**
+   * Local variables
+   */
+  @ViewChild('importFile') importField: ElementRef;
   currentProfile;
 
   /**
@@ -350,11 +356,17 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
         dictionarySites['Description'] = 'description';
         const allRows = getRows(result, dictionarySites);
 
+        let addedRows = 0;
+        let updatedRows = 0;
+
         console.log('allRows ', allRows);
         allRows.forEach(oneRow => {
           if (oneRow.site_id && oneRow.site_id !== null && oneRow.site_id !== '') {
             const site_id = oneRow.site_id;
             delete oneRow.site_id;
+
+            updatedRows += 1;
+
             ApiFunctions.patch(
               this.http,
               'sites/' + site_id,
@@ -366,6 +378,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
               ManagerFunctions.showErrorUserNoReload
             );
           } else {
+
+            addedRows += 1;
+
             ApiFunctions.post(
               this.http,
               'sites',
@@ -379,8 +394,25 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             );
           }
         });
+
+        ManagerFunctions.showWarning(
+          'Import completed',
+          `Sites added: ${addedRows}, updated: ${updatedRows}.`,
+          'Ok',
+          () => {}
+        );
       });
+    } else if (files.length > 1) {
+      ManagerFunctions.showWarning(
+        'Import error',
+        'Please select only once file to import.',
+        'Ok',
+        () => {}
+      );
     }
+
+    // We reset the input
+    this.importField.nativeElement.value = '';
   }
 
   /**

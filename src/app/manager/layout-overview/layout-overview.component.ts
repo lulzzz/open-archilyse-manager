@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -19,6 +19,8 @@ import {
 import { OverlayService } from '../../_services/overlay.service';
 import { environment } from '../../../environments/environment';
 import { NavigationService } from '../../_services/navigation.service';
+import { ViewChild } from '@angular/core';
+
 const urlGeoreference = environment.urlGeoreference;
 
 export const COOR_X = 0;
@@ -58,6 +60,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   /**
    * Local vairables
    */
+  @ViewChild('importFile') importField: ElementRef;
 
   buildingsArray;
   layoutsArray;
@@ -1146,37 +1149,47 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       convertFileToWorkbook(files[0], result => {
         const dictionaryLayouts = {};
 
-        dictionaryLayouts['Unit id'] = 'unit_id';
-        dictionaryLayouts['Layout id'] = 'layout_id';
+        dictionaryLayouts['Unit Id'] = 'unit_id';
+        dictionaryLayouts['Layout Id'] = 'layout_id';
         dictionaryLayouts['Name'] = 'name';
         dictionaryLayouts['Description'] = 'description';
 
         dictionaryLayouts['Movements'] = 'movements';
-        dictionaryLayouts['Model structure'] = 'model_structure';
+
+        // Model structure is not imported.
+        // dictionaryLayouts['Model structure'] = 'model_structure';
 
         const allRows = getRows(result, dictionaryLayouts);
 
-        console.log('allRows ', allRows);
+        console.log('allRows', allRows);
+
+        let addedRows = 0;
+        let updatedRows = 0;
+
         allRows.forEach(oneRow => {
           if (oneRow.layout_id && oneRow.layout_id !== null && oneRow.layout_id !== '') {
             const layout_id = oneRow.layout_id;
             delete oneRow.layout_id;
+            updatedRows += 1;
             ApiFunctions.patch(
               this.http,
               'layouts/' + layout_id,
               oneRow,
               layout => {
                 const node = this.gridOptions.api.getRowNode(layout_id);
+                this.layoutReactionToEdit(layout, layout);
                 node.setData(layout);
               },
               ManagerFunctions.showErrorUserNoReload
             );
           } else {
+            addedRows += 1;
             ApiFunctions.post(
               this.http,
               'layouts',
               oneRow,
               layout => {
+                this.layoutReactionToEdit(layout, layout);
                 this.gridOptions.api.updateRowData({
                   add: [layout],
                 });
@@ -1185,8 +1198,25 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             );
           }
         });
+
+        ManagerFunctions.showWarning(
+          'Import completed',
+          `Layouts added: ${addedRows}, updated: ${updatedRows}.`,
+          'Ok',
+          () => {}
+        );
       });
+    } else if (files.length > 1) {
+      ManagerFunctions.showWarning(
+        'Import error',
+        'Please select only once file to import.',
+        'Ok',
+        () => {}
+      );
     }
+
+    // We reset the input
+    this.importField.nativeElement.value = '';
   }
 
   /**

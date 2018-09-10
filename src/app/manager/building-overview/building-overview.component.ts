@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -66,6 +66,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   /**
    * Local variables
    */
+  @ViewChild('importFile') importField: ElementRef;
 
   sitesArray;
   currentProfile;
@@ -718,12 +719,16 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
         const allRows = getRows(result, dictionaryBuildings);
 
-        console.log('allRows', allRows);
+        let addedRows = 0;
+        let updatedRows = 0;
 
         allRows.forEach(oneRow => {
           if (oneRow.building_id && oneRow.building_id !== null && oneRow.building_id !== '') {
             const building_id = oneRow.building_id;
             delete oneRow.building_id;
+
+            updatedRows += 1;
+
             ApiFunctions.patch(
               this.http,
               'buildings/' + building_id,
@@ -735,6 +740,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               ManagerFunctions.showErrorUserNoReload
             );
           } else {
+            addedRows += 1;
+
             ApiFunctions.post(
               this.http,
               'buildings',
@@ -750,8 +757,25 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             );
           }
         });
+
+        ManagerFunctions.showWarning(
+          'Import completed',
+          `Buildings added: ${addedRows}, updated: ${updatedRows}.`,
+          'Ok',
+          () => {}
+        );
       });
+    } else if (files.length > 1) {
+      ManagerFunctions.showWarning(
+        'Import error',
+        'Please select only once file to import.',
+        'Ok',
+        () => {}
+      );
     }
+
+    // We reset the input
+    this.importField.nativeElement.value = '';
   }
 
   /**

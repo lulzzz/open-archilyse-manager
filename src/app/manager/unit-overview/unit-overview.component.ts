@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -27,16 +27,18 @@ const urlPortfolio = environment.urlPortfolio;
 })
 export class UnitOverviewComponent implements OnInit, OnDestroy {
   /**
-   * TABLE DOCUMENTATION
-   * https://www.ag-grid.com/angular-getting-started/
+   * Loading and general error
    */
   generalError = null;
   loading = true;
 
+  /**
+   * TABLE DOCUMENTATION
+   * https://www.ag-grid.com/angular-getting-started/
+   */
+
   selectedNodes = [];
   selectedRows = [];
-
-  buildingsArray;
 
   gridApi;
   gridColumnApi;
@@ -47,6 +49,12 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs;
 
+  /**
+   * Local variables
+   */
+  @ViewChild('importFile') importField: ElementRef;
+
+  buildingsArray;
   currentProfile;
 
   /**
@@ -451,11 +459,17 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
         const allRows = getRows(result, dictionaryUnits);
 
+        let addedRows = 0;
+        let updatedRows = 0;
+
         console.log('allRows ', allRows);
         allRows.forEach(oneRow => {
           if (oneRow.unit_id && oneRow.unit_id !== null && oneRow.unit_id !== '') {
             const unit_id = oneRow.unit_id;
             delete oneRow.unit_id;
+
+            updatedRows += 1;
+
             ApiFunctions.patch(
               this.http,
               'units/' + unit_id,
@@ -467,6 +481,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
               ManagerFunctions.showErrorUserNoReload
             );
           } else {
+            addedRows += 1;
+
             ApiFunctions.post(
               this.http,
               'units',
@@ -480,8 +496,25 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             );
           }
         });
+
+        ManagerFunctions.showWarning(
+          'Import completed',
+          `Units added: ${addedRows}, updated: ${updatedRows}.`,
+          'Ok',
+          () => {}
+        );
       });
+    } else if (files.length > 1) {
+      ManagerFunctions.showWarning(
+        'Import error',
+        'Please select only once file to import.',
+        'Ok',
+        () => {}
+      );
     }
+
+    // We reset the input
+    this.importField.nativeElement.value = '';
   }
 
   /**

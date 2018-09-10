@@ -17,8 +17,8 @@
       <button [popper]="tooltip7"
               class="btn yellow" (click)="export()" > CSV </button>
       &nbsp;
-      <input *ngIf="currentProfile === 'data'" type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-      <label *ngIf="currentProfile === 'data'"  [popper]="tooltip8"
+      <input *ngIf="currentProfile === 'data'" #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+      <label *ngIf="currentProfile === 'data'" [popper]="tooltip8"
               for="file" class="btn yellow" >Import Excel file</label>
       <div *ngIf="currentProfile === 'data'" class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
         <i class="fa fa-info-circle"></i>
