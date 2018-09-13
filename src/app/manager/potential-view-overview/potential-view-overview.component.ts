@@ -14,8 +14,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
-import OlFeature from 'ol/Feature';
-import OlPolygon from 'ol/geom/Polygon';
+import KML from 'ol/format/KML';
+import { get as getProjection } from 'ol/proj';
 
 import {
   click as conditionClick,
@@ -48,6 +48,19 @@ export const colors = [
   '#e76818',
   '#d7191c',
 ];
+
+const saveData = (() => {
+  let a = document.createElement('a');
+  document.body.appendChild(a);
+  return (fileName, data) => {
+    const blob = new Blob([data], { type: 'octet/stream' });
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+})();
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({
@@ -130,6 +143,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
   currentSimulation = 'buildings';
   currentFloor = 0;
+  height;
   summary;
 
   feature;
@@ -253,6 +267,10 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                         if (simulations['potential_view']['status'] === 'complete') {
                           if (simulations['potential_view']['result']) {
                             this.sim_result = simulations['potential_view']['result'];
+
+                            this.sim_result.sort((a, b) => a.height - b.height);
+
+                            console.log('this.sim_result', this.sim_result);
 
                             if (this.map === null) {
                               this.mapStyle = 'satellite';
@@ -386,6 +404,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     const categorySimulations = this.sim_result.filter(
       sim => sim.category === this.currentSimulation
     );
+
     if (categorySimulations && categorySimulations.length) {
       this.numberOfFloors = categorySimulations.length;
       this.floors = [];
@@ -396,6 +415,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
       if (this.currentFloor < this.numberOfFloors) {
         const sim = categorySimulations[this.currentFloor];
 
+        this.height = sim.height;
         this.summary = sim.summary;
         const starting_point = sim['starting_point'];
         const heatmap = sim['heatmap'];
@@ -467,6 +487,132 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     features.forEach(feature => {
       this.detailSource.removeFeature(feature);
     });
+  }
+
+  download(filename, text) {
+    console.log(text);
+    /*
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+    */
+  }
+
+  /**
+   * Exports a kml File.
+   */
+  exportKML() {
+    const introduction = `<?xml version="1.0" encoding="UTF-8"?>
+        <kml xmlns="http://www.opengis.net/kml/2.2">
+          <Document>
+            <name>Building ${this.building.name} Id#${this.building.building_id}</name>
+            <open>1</open>
+            <description> ${this.address} </description>`;
+
+    const originalSimulation = this.currentSimulation;
+    const originalFloor = this.currentFloor;
+
+    let content = '';
+    const simulationsToExport = ['buildings', 'trees'];
+    for (let i = 0; i < simulationsToExport.length; i++) {
+      this.currentSimulation = simulationsToExport[i];
+      let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
+
+      // Only the original simulation is visible by default
+      if (this.currentSimulation !== originalSimulation) {
+        contentFolder += `<visibility>0</visibility>`;
+      }
+      for (let j = 0; j < this.floors.length; j++) {
+        this.currentFloor = this.floors[j];
+        this.drawSimulation(this.feature);
+        const result = this.exportSimulationKML();
+        if (j == 0) {
+          if (i == 0) {
+            content += result.camera;
+          }
+          contentFolder += result.camera;
+        }
+        contentFolder += result.data;
+      }
+      contentFolder += `</Folder>`;
+      content += contentFolder;
+    }
+
+    const end = `
+        </Document>
+    </kml>`;
+
+    saveData('Archilyse.kml', introduction + content + end);
+
+    // Revert to the original simulation:
+    this.currentSimulation = originalSimulation;
+    this.currentFloor = originalFloor;
+    this.drawSimulation(this.feature);
+  }
+
+  exportSimulationKML() {
+    const format = new KML();
+    const features = this.detailSource.getFeatures();
+
+    const result = format.writeFeaturesNode(features, {
+      featureProjection: this.view.getProjection(),
+      dataProjection: getProjection('EPSG:4326'),
+    });
+
+    const documents = result.childNodes[0];
+    const featureLists = documents.childNodes;
+    const height = this.height;
+    const heightStrSpace = `,${height} `;
+    const heightStr = `,${height}`;
+
+    let center = null;
+
+    const placemarks = [];
+    featureLists.forEach(feature => {
+      const featureXML = feature.childNodes;
+      const style = featureXML[0];
+      const polygon = featureXML[1];
+
+      const XXX = polygon.childNodes[0];
+      const YYY = XXX.childNodes[0];
+      const coordinateTag = YYY.childNodes[0];
+      const coordinates = coordinateTag.childNodes[0];
+      const coords = coordinates.nodeValue.split(' ');
+      const coordinatesStr = coords.join(heightStrSpace) + heightStr;
+
+      const exagonColor = style.childNodes[0].childNodes[0].childNodes[0].data;
+
+      if (center === null) {
+        center = coords[0].split(',');
+      }
+
+      // Documentation:
+      // https://developers.google.com/kml/documentation/kmlreference#polystyle
+      placemarks.push(`
+        <Placemark>
+          <Style><LineStyle><color>${exagonColor}</color></LineStyle><PolyStyle><color>${exagonColor}</color><fill>1</fill></PolyStyle></Style>
+          <Polygon><altitudeMode>relativeToGround</altitudeMode><outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+        </Placemark>`);
+    });
+
+    const lookAt = `<LookAt>
+            <longitude>${center[0]}</longitude><latitude>${center[1]}</latitude>
+            <altitude>${this.height}</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
+          </LookAt>`;
+
+    return {
+      camera: lookAt,
+      data: `<Folder><name>${this.currentSimulation} simulation height ${this.height}</name>
+          <description> Analyzes the building visibility </description>${lookAt}${placemarks}
+         </Folder>`,
+    };
   }
 
   /**

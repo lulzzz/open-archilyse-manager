@@ -552,6 +552,37 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     this.georeference('open_street_maps');
   }
 
+  georeferenceAuto() {
+    const nodes = this.gridOptions.api.getSelectedNodes();
+    nodes.forEach(node => {
+      if (ManagerFunctions.isAddressCorrect(node.data)) {
+        // For each building
+        const building = node.data;
+        const buildingId = building['building_id'];
+        ApiFunctions.get(this.http, 'buildings/' + buildingId + '/surroundings', surroundings => {
+          console.log('surroundings', surroundings);
+          if (surroundings['top_shot_id']) {
+            ApiFunctions.patch(
+              this.http,
+              'buildings/' + buildingId,
+              {
+                building_reference: {
+                  swiss_topo: surroundings['top_shot_id'],
+                },
+              },
+              building => {
+                const node = this.gridOptions.api.getRowNode(buildingId);
+                this.buildingReactionToEdit(building, building);
+                node.setData(building);
+              },
+              ManagerFunctions.showErrorUserNoReload
+            );
+          }
+        });
+      }
+    });
+  }
+
   georeference(src) {
     const nodes = this.gridOptions.api.getSelectedNodes();
 
@@ -673,7 +704,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         {
           name: 'potential_view',
           parameters: {
-            floors: [1, 2, 3],
+            floors: [0, 1, 2],
           },
         },
         {

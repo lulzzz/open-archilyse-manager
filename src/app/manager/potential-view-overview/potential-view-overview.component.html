@@ -6,6 +6,7 @@
       <div [innerHTML]="address"></div>
     </div>
     <div>
+      <button [popper]="exportKmlPU" class="btn yellow" (click)="exportKML()">Export KML</button> &nbsp; &nbsp;
       <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button> &nbsp;
       <button [popper]="viewRawPU" class="btn blue" (click)="viewRaw()">View raw</button> &nbsp; &nbsp;
 
@@ -26,12 +27,13 @@
           <option value="grounds">Grounds</option>
           <option value="buildings">Buildings</option>
           <option value="streets">Streets</option>
-          <option value="railroads">Railroads</option>
-          <option value="parks">Parks</option>
+          <!-- <option value="railroads">Railroads</option> -->
+          <!-- <option value="parks">Parks</option> -->
           <option value="trees">Trees</option>
-          <option value="lakes">Lakes</option>
+          <!-- <option value="lakes">Lakes</option> -->
           <option value="mountains">Mountains</option>
-          <option value="rivers">Rivers</option>
+          <!-- <option value="rivers">Rivers</option> -->
+          <!-- <option value="sky">Sky</option> -->
         </select>
       </div>
       &nbsp;&nbsp;
@@ -51,6 +53,11 @@
       <div class="sim-info" [popper]="infoSimPopper" (click)="showInfoSim()">
         <i class="fa fa-info-circle"></i>
       </div>
+      &nbsp;&nbsp;
+      &nbsp;&nbsp;
+      &nbsp;&nbsp;
+      &nbsp;&nbsp;
+      <label >Height: </label>{{height.toFixed(2)}} m.&nbsp;&nbsp;
     </div>
   </div>
 </div>
@@ -60,6 +67,7 @@
 
 <popper-content #infoSimPopper >Information about the current simulation.</popper-content>
 
+<popper-content #exportKmlPU >Creates a .KML file to display the data in other systems, like Google Earth.</popper-content>
 <popper-content #centerMapPU >Center the map to view the current building.</popper-content>
 <popper-content #viewRawPU >See the detail request of the potential view simulation.</popper-content>
 

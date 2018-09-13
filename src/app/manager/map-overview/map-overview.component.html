@@ -38,14 +38,16 @@
       <div *ngIf="enabledPV" [popper]="selectSimulation" class="selectMap">
         <label >Simulation: </label>
         <select (change)="changeSimulation($event)" [value]="currentSimulation">
+          <option value="grounds">Grounds</option>
           <option value="buildings">Buildings</option>
           <option value="streets">Streets</option>
-          <option value="railroads">Railroads</option>
-          <option value="parks">Parks</option>
+          <!-- <option value="railroads">Railroads</option> -->
+          <!-- <option value="parks">Parks</option> -->
           <option value="trees">Trees</option>
-          <option value="lakes">Lakes</option>
+          <!-- <option value="lakes">Lakes</option> -->
           <option value="mountains">Mountains</option>
-          <option value="rivers">Rivers</option>
+          <!-- <option value="rivers">Rivers</option> -->
+          <!-- <option value="sky">Sky</option> -->
         </select>
       </div>
       &nbsp;&nbsp;

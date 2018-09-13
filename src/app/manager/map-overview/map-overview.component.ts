@@ -387,7 +387,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
       // this.summary.min, this.summary.max
       // 0, 5
-      const valueToColor = calculateDomain(colors, 0, 5);
+      const valueToColor = calculateDomain(colors, 0, 2);
 
       const colorAverage = valueToColor(sim.summary.average);
 
