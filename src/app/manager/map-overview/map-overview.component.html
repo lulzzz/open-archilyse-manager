@@ -18,7 +18,7 @@
         <option *ngFor="let city of cities" (value)="city">{{city}}</option>
       </select>
       &nbsp;&nbsp;
-      <button [popper]="listPU" class="btn orange" (click)="linkToList()">View list</button>
+      <button [popper]="listPU" class="btn orange" (click)="linkToList()">View list filtered</button>
     </div>
     <div class="mapOptions">
       <div [popper]="selectMap" class="selectMap">

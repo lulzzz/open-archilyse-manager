@@ -44,7 +44,6 @@ import {
   reduceHeatmap,
 } from '../potential-view-overview/hexagonFunctions';
 import { colors } from '../potential-view-overview/potential-view-overview.component';
-import { Building } from '../../_models';
 
 proj4.defs(
   'EPSG:2056',
@@ -97,6 +96,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   buildingsArray;
 
   numGeoreferencedBuildings = 0;
+  simulations;
+  features;
 
   map: OlMap = null;
   source: OlXYZ;
@@ -201,10 +202,10 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   }
 
   setUpMap() {
-    console.log('setUpMap', this.buildingsArray);
-
     this.map = null;
     this.numGeoreferencedBuildings = 0;
+    this.simulations = [];
+    this.features = [];
 
     // Empty map div
     document.getElementById('map').innerHTML = '';
@@ -270,6 +271,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
               },
             })
             .subscribe(simulations => {
+              this.simulations[building.building_id] = simulations;
+              this.features[building.building_id] = feature;
+
               this.numGeoreferencedBuildings += 1;
 
               if (this.cities.indexOf(building.address.city) === -1) {
@@ -359,20 +363,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 });
               }
 
-              console.log('simulations', building.building_id, simulations);
-
-              if (
-                simulations &&
-                simulations['potential_view'] &&
-                simulations['potential_view'].result
-              ) {
-                console.log('SIM ', simulations['potential_view'].result);
-                this.drawSimulation(feature, simulations['potential_view'].result);
-              } else {
-                console.log(`Didn't have sim `, building);
-                this.detailSource.addFeature(feature);
-              }
-              this.globalSource.addFeature(feature);
+              this.drawSimulations(building, simulations, feature);
 
               this.centerMap();
             });
@@ -385,7 +376,33 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  drawSimulation(feature, sim_result) {
+  redrawSimulations() {
+    this.buildingsArray.forEach(building => {
+      if (
+        this.features[building.building_id] &&
+        this.simulations[building.building_id] &&
+        this.simulations[building.building_id]['potential_view'] &&
+        this.simulations[building.building_id]['potential_view'].result
+      ) {
+        this.drawSimulation(
+          building,
+          this.features[building.building_id],
+          this.simulations[building.building_id]['potential_view'].result
+        );
+      }
+    });
+  }
+
+  drawSimulations(building, simulations, feature) {
+    if (simulations && simulations['potential_view'] && simulations['potential_view'].result) {
+      this.drawSimulation(building, feature, simulations['potential_view'].result);
+    } else {
+      this.detailSource.addFeature(feature);
+    }
+    this.globalSource.addFeature(feature);
+  }
+
+  drawSimulation(building, feature, sim_result) {
     const categorySimulations = sim_result.filter(sim => sim.category === this.currentSimulation);
     if (categorySimulations && categorySimulations.length) {
       // Always the hier number of floors
@@ -440,6 +457,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
         row.forEach((val, x) => {
           if (val !== no_value_number) {
             drawHexBlocks(
+              building.building_id,
               this.detailSource,
               x_off,
               y_off,
@@ -492,11 +510,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
   changeSimulation(data) {
     this.currentSimulation = data.target.value;
-    this.setUpMap();
+    this.redrawSimulations();
   }
   changeFloor(data) {
     this.currentFloor = data.target.value;
-    this.setUpMap();
+    this.redrawSimulations();
   }
 
   changeMap(data) {

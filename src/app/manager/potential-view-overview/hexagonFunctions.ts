@@ -9,6 +9,8 @@ import OlPolygon from 'ol/geom/Polygon';
 /**
  * Draws an hexagon in the given x_off, y_off coordinates plus:
  * x,y matrix coordinates considering hexagon radius and odd rows offset
+ * @param building_id
+ * @param source
  * @param x_off
  * @param y_off
  * @param x
@@ -18,6 +20,7 @@ import OlPolygon from 'ol/geom/Polygon';
  * @param val is the value assigned to this hexagon.
  */
 export function drawHexBlocks(
+  building_id,
   source,
   x_off: number,
   y_off: number,
@@ -27,34 +30,42 @@ export function drawHexBlocks(
   valueToColor,
   val
 ) {
-  const sin30 = 0.5; // 0.5 = sin 30 deg
-  const cos30 = 0.866; // 0.866 = cos 30 deg
+  const featureId = x + '#' + y + '||' + building_id;
+  let feature = source.getFeatureById(featureId);
 
-  const radious = resolution / 2;
+  if (!feature) {
+    const sin30 = 0.5; // 0.5 = sin 30 deg
+    const cos30 = 0.866; // 0.866 = cos 30 deg
 
-  const deltaY = radious * sin30;
-  const deltaX = radious * cos30;
+    const radious = resolution / 2;
 
-  // If on an odd row, offset it so that the hexagons tessallate
-  const offset = y % 2 ? radious : 0;
-  const finalX = x_off + x * resolution + offset;
-  const finalY = y_off + y * resolution * cos30;
+    const deltaY = radious * sin30;
+    const deltaX = radious * cos30;
 
-  const coords = [
-    [finalX, finalY - radious], // 12h
-    [finalX - deltaX, finalY - deltaY], // 10h
-    [finalX - deltaX, finalY + deltaY], //  8h
-    [finalX, finalY + radious], //  6h
-    [finalX + deltaX, finalY + deltaY], //  4h
-    [finalX + deltaX, finalY - deltaY], //  2h
-    [finalX, finalY - radious], // 12h
-  ];
+    // If on an odd row, offset it so that the hexagons tessallate
+    const offset = y % 2 ? radious : 0;
+    const finalX = x_off + x * resolution + offset;
+    const finalY = y_off + y * resolution * cos30;
+
+    const coords = [
+      [finalX, finalY - radious], // 12h
+      [finalX - deltaX, finalY - deltaY], // 10h
+      [finalX - deltaX, finalY + deltaY], //  8h
+      [finalX, finalY + radious], //  6h
+      [finalX + deltaX, finalY + deltaY], //  4h
+      [finalX + deltaX, finalY - deltaY], //  2h
+      [finalX, finalY - radious], // 12h
+    ];
+
+    feature = new OlFeature({ geometry: new OlPolygon([coords]) });
+
+    // To recover the value
+    feature.setId(featureId);
+
+    source.addFeature(feature);
+  }
 
   const colorValue = valueToColor(val);
-  const feature = new OlFeature({ geometry: new OlPolygon([coords]) });
-  // To recover the value
-  feature.setId(x + '#' + y);
-
   feature.setStyle(
     new OlStyle({
       fill: new OlStyleFill({
@@ -66,7 +77,6 @@ export function drawHexBlocks(
       }),
     })
   );
-  source.addFeature(feature);
 }
 
 /**
@@ -127,9 +137,6 @@ export function reduceHeatmap(heatmap, resolution, no_value_number) {
     currentHeatmap = heatmapCorrected;
     resolutionCorrected = resolutionCorrected * 3;
   }
-
-  console.log('numberOfhexagons END', numberOfhexagons, numberOfhexagonsStart);
-  console.log('resolutionCorrected', resolutionCorrected);
 
   return {
     heatmap: currentHeatmap,
