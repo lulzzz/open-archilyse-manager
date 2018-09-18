@@ -452,6 +452,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
           row.forEach((val, x) => {
             if (val !== no_value_number) {
               drawHexBlocks(
+                this.buildingId,
                 this.detailSource,
                 x_off,
                 y_off,

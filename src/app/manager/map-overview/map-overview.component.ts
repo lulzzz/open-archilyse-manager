@@ -341,9 +341,19 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
                 this.selectPointerClick.on('select', e => {
                   if (e.selected.length > 0 && e.selected[0].id_) {
-                    window.location.href = `${urlPortfolio}/building#building_id=${
-                      e.selected[0].id_
-                    }`;
+                    const featureId = e.selected[0].id_;
+                    if (featureId.includes('#') && featureId.includes('||')) {
+                      // It's an hexagon
+
+                      const postion = featureId.indexOf('||') + 2;
+                      const buildingId = featureId.substr(postion, featureId.length - postion);
+                      window.location.href = `${urlPortfolio}/building#building_id=${buildingId}`;
+                    } else {
+                      // It's a building
+                      window.location.href = `${urlPortfolio}/building#building_id=${
+                        e.selected[0].id_
+                      }`;
+                    }
                   }
                 });
 
