@@ -1,4 +1,7 @@
-
+/**
+ * Display the time in a human way
+ * @param params
+ */
 export function renderTime(params) {
   if (params.value) {
     const newDate = new Date();
@@ -8,6 +11,10 @@ export function renderTime(params) {
   return ``;
 }
 
+/**
+ *
+ * @param params
+ */
 export function renderUrl(params) {
   if (params.value) {
     return `<a href="${params.value}" >${params.value}</a>`;
@@ -15,6 +22,10 @@ export function renderUrl(params) {
   return ``;
 }
 
+/**
+ * The URL from the request
+ * @param params
+ */
 export function renderRequest(params) {
   if (params.value && params.value.url) {
     return params.value.url;
@@ -22,6 +33,10 @@ export function renderRequest(params) {
   return ``;
 }
 
+/**
+ * PUT / PATCH / GET / POST ...
+ * @param params
+ */
 export function renderRequestMethod(params) {
   if (params.data && params.data.request && params.data.request.method) {
     return params.data.request.method;
@@ -29,6 +44,10 @@ export function renderRequestMethod(params) {
   return ``;
 }
 
+/**
+ * Parameters in a JSON format
+ * @param params
+ */
 export function renderRequestBody(params) {
   if (params.data && params.data.request && params.data.request.body) {
     return JSON.stringify(params.data.request.body);

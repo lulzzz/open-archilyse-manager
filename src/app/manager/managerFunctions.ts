@@ -17,15 +17,17 @@ export class ManagerFunctions {
       result => {
         console.log('startSimulationsViaBuildings - result', result);
 
-        if (!building['simulations']) {
-          building['simulations'] = {};
+        if (!building['simulation_statuses']) {
+          building['simulation_statuses'] = {};
         }
         simsRequested.forEach(sim => {
-          if (!building['simulations'][sim.name]) {
-            building['simulations'][sim.name] = {};
+          if (!building['simulation_statuses'][sim.name]) {
+            building['simulation_statuses'][sim.name] = {};
           }
-          building['simulations'][sim.name].status = 'pending';
+          building['simulation_statuses'][sim.name].status = 'pending';
         });
+
+        console.log('building', building);
 
         const node = api.getRowNode(building.building_id);
         node.setData(building);
@@ -39,8 +41,7 @@ export class ManagerFunctions {
       'buildings/' + building.building_id + '/simulations/status',
       result => {
         console.log('Sim status finish', result);
-
-        building['simulations'] = result;
+        building['simulation_statuses'] = result;
         const node = api.getRowNode(building.building_id);
         node.setData(building);
       },
@@ -60,14 +61,14 @@ export class ManagerFunctions {
       result => {
         console.log('startSimulationsViaLayouts - result', result);
 
-        if (!layout['simulations']) {
-          layout['simulations'] = {};
+        if (!layout['simulation_statuses']) {
+          layout['simulation_statuses'] = {};
         }
         simsRequested.forEach(sim => {
-          if (!layout['simulations'][sim]) {
-            layout['simulations'][sim] = {};
+          if (!layout['simulation_statuses'][sim]) {
+            layout['simulation_statuses'][sim] = {};
           }
-          layout['simulations'][sim].status = 'pending';
+          layout['simulation_statuses'][sim].status = 'pending';
         });
 
         const node = api.getRowNode(layout.layout_id);
@@ -82,7 +83,7 @@ export class ManagerFunctions {
       http,
       'layouts/' + layout.layout_id + '/simulations/status',
       result => {
-        layout['simulations'] = result;
+        layout['simulation_statuses'] = result;
         const node = api.getRowNode(layout.layout_id);
         node.setData(layout);
       },
@@ -154,31 +155,37 @@ export class ManagerFunctions {
    * We check that the building has the building reference in swiss_topo or open_street_maps
    * @param building
    */
-  public static isReferencedBuilding(building: Building) {
+  public static isReferencedBuilding(building: Building): boolean {
     return (
       ManagerFunctions.isReferencedOSMBuilding(building) ||
       ManagerFunctions.isReferencedSTBuilding(building)
     );
   }
 
-  public static isReferencedOSMBuilding(building: Building) {
+  public static isReferencedOSMBuilding(building: Building): boolean {
     // Swiss open_street_maps is defined
-    return (
-      building &&
-      building.building_reference &&
-      building.building_reference.open_street_maps &&
-      building.building_reference.open_street_maps !== ''
-    );
+    if (building && building.building_references) {
+      const ref = building.building_references.find(
+        ref => ref.source === 'open_street_maps' && ref.id !== null && ref.id !== ''
+      );
+
+      return ref && ref.id !== '';
+    }
+
+    return false;
   }
 
-  public static isReferencedSTBuilding(building: Building) {
+  public static isReferencedSTBuilding(building: Building): boolean {
     // Swiss topo is defined
-    return (
-      building &&
-      building.building_reference &&
-      building.building_reference.swiss_topo &&
-      building.building_reference.swiss_topo !== ''
-    );
+    if (building && building.building_references) {
+      const ref = building.building_references.find(
+        ref => ref.source === 'swiss_topo' && ref.id !== null && ref.id !== ''
+      );
+
+      return ref && ref.id !== '';
+    }
+
+    return false;
   }
 
   /**
@@ -405,6 +412,12 @@ export class ManagerFunctions {
     // TODO: API should understand null
     if (columnValue === null) {
       columnValue = '';
+    }
+
+    if (column === 'height') {
+      columnValue = parseFloat(columnValue);
+    } else if (column === 'number_of_floors') {
+      columnValue = parseInt(columnValue);
     }
 
     const newValue = {};

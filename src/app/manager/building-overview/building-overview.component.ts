@@ -230,19 +230,43 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             },
             {
               headerName: 'Swiss topo',
-              field: 'building_reference.swiss_topo',
+              field: 'building_referenced_st',
               hide: this.currentProfile !== 'developer', // A developer sees the details
               width: 265,
               cellRenderer: CellRender.viewGeorefBuildingST,
-              editable: true,
+              editable: false,
+              cellClass: 'readOnly',
             },
             {
               headerName: 'Open Street Maps',
-              field: 'building_reference.open_street_maps',
+              field: 'building_referenced_osm',
               hide: this.currentProfile !== 'developer', // A developer sees the details
               width: 150,
               cellRenderer: CellRender.viewGeorefBuildingOSM,
+              editable: false,
+              cellClass: 'readOnly',
+            },
+          ],
+        },
+        {
+          headerName: 'Building data',
+          children: [
+            {
+              headerName: 'Height',
+              field: 'height',
+              width: 80,
               editable: true,
+              cellRenderer: CellRender.viewHeight,
+              filter: 'agNumberColumnFilter',
+              cellClass: 'right',
+            },
+            {
+              headerName: 'Floors',
+              field: 'number_of_floors',
+              width: 80,
+              editable: true,
+              filter: 'agNumberColumnFilter',
+              cellClass: 'right',
             },
           ],
         },
@@ -251,28 +275,30 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           children: [
             {
               headerName: 'Potential view',
-              field: 'simulations.potential_view.status',
+              field: 'simulation_statuses.potential_view.status',
               cellRenderer: 'simulationBuildingRenderer',
               cellStyle: { padding: '0px' },
               width: 140,
               editable: false,
               cellClass: 'readOnly',
             },
+            /** No yet provided
             {
               headerName: 'Accoustics',
-              field: 'simulations.accoustics.status',
+              field: 'simulation_statuses.accoustics.status',
               cellRenderer: 'simulationBuildingRenderer',
               cellStyle: { padding: '0px' },
               width: 140,
               editable: false,
               cellClass: 'readOnly',
             },
+             */
             {
               // cellRenderer: CellRender.viewSimulationBuilding,
               // cellRenderer: CellRender.viewSimulationBuilding,
               // cellRenderer: CellRender.viewSimulationDpoiBuilding,
               headerName: 'DPOI',
-              field: 'simulations.dpoi.status',
+              field: 'simulation_statuses.dpoi.status',
               cellRenderer: 'simulationBuildingDpoiRenderer',
               cellStyle: { padding: '0px' },
               width: 140,
@@ -314,7 +340,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
 
     // Update if it's referenced
-    nodeData['building_referenced'] = ManagerFunctions.isReferencedBuilding(nodeData);
+    nodeData['building_referenced_st'] = ManagerFunctions.isReferencedSTBuilding(nodeData);
+    nodeData['building_referenced_osm'] = ManagerFunctions.isReferencedOSMBuilding(nodeData);
+    nodeData['building_referenced'] =
+      nodeData['building_referenced_st'] || nodeData['building_referenced_osm'];
   }
   setBuildingSiteData(building) {
     if (building.site_id || building.site_id === '') {
@@ -435,11 +464,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         street: '', // Ruhbergstrasse
         street_nr: '', // 44
       },
-
-      building_reference: {
-        open_street_maps: '',
-        swiss_topo: '',
-      },
+      building_references: [],
       description: '',
       images: '',
       name: '',
@@ -471,11 +496,17 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       // Id is not duplicated
       delete newRow['building_id'];
 
+      // Simulations & footprints
+      delete newRow['footprints'];
+      delete newRow['simulation_statuses'];
+
       // Calculated are not duplicated
       delete newRow['units'];
       delete newRow['layouts'];
       delete newRow['progressLayout'];
       delete newRow['building_referenced'];
+      delete newRow['building_referenced_st'];
+      delete newRow['building_referenced_osm'];
 
       // Control fields are not duplicated
       delete newRow['org_id'];
@@ -566,9 +597,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               this.http,
               'buildings/' + buildingId,
               {
-                building_reference: {
-                  swiss_topo: surroundings['top_shot_id'],
-                },
+                building_references: [
+                  {
+                    id: surroundings['top_shot_id'],
+                    source: 'swiss_topo',
+                  },
+                ],
               },
               building => {
                 const node = this.gridOptions.api.getRowNode(buildingId);
@@ -700,11 +734,18 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     buildings.forEach(building => {
       console.log('Start Building simulations for ', building.building_id);
 
+      // We request all the floors
+      const numberOfFloors = building.number_of_floors ? building.number_of_floors : 1;
+      let floors = [];
+      for (let i = 0; i < numberOfFloors; i++) {
+        floors.push(i);
+      }
+
       const simsRequested = [
         {
           name: 'potential_view',
           parameters: {
-            floors: [0, 1, 2],
+            floors: floors,
           },
         },
         {

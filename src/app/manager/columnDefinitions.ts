@@ -64,6 +64,15 @@ export class ColumnDefinitions {
           editable: false,
           cellClass: 'readOnly',
         },
+        {
+          headerName: 'Organization Id',
+          columnGroupShow: 'open',
+          headerTooltip: 'Organization from the user that changed the last value',
+          field: 'org_id',
+          width: 250,
+          editable: false,
+          cellClass: 'readOnly',
+        },
       ],
     },
   ];

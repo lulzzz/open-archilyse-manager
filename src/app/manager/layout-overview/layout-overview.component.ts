@@ -917,6 +917,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Select the nodes (rows) that are not Georeferenced
+   */
   selectNotGeoreferenced() {
     this.gridOptions.api.selectAll();
     const nodes = this.gridOptions.api.getSelectedNodes();
@@ -927,6 +930,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Select the nodes (rows) that are not Digitalized
+   */
   selectNotDigitalized() {
     this.gridOptions.api.selectAll();
     const nodes = this.gridOptions.api.getSelectedNodes();

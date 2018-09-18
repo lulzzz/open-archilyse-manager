@@ -9,7 +9,8 @@ import OlTileLayer from 'ol/layer/Tile';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlView from 'ol/View';
 import Vector from 'ol/source/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
+import OlFeature from 'ol/Feature';
+import OlPolygon from 'ol/geom/Polygon';
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -230,170 +231,156 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     let referenced = null;
     let map_source = null;
     let map_source_str = '';
-    if (this.building['building_reference']['swiss_topo']) {
-      map_source = 'swiss_topo';
-      map_source_str = 'Swiss Topo';
-      referenced = this.building['building_reference']['swiss_topo'];
-    } else if (this.building['building_reference']['open_street_maps']) {
-      map_source = 'open_street_maps';
-      map_source_str = 'Open Street Maps';
-      referenced = this.building['building_reference']['open_street_maps'];
+
+    if (this.building['building_references']) {
+      const st = this.building['building_references'].find(br => br.source === 'swiss_topo');
+      const osm = this.building['building_references'].find(br => br.source === 'open_street_maps');
+
+      if (st && st.id) {
+        map_source = 'swiss_topo';
+        map_source_str = 'Swiss Topo';
+        referenced = st.id;
+      } else if (osm && osm.id) {
+        map_source = 'open_street_maps';
+        map_source_str = 'Open Street Maps';
+        referenced = osm.id;
+      }
     }
 
     if (referenced !== null) {
-      this.http
-        .get(apiUrl + 'buildings/' + this.buildingId + '/surroundings', {
-          params: {
-            source: map_source,
-          },
-        })
-        .subscribe(
-          surroundings => {
-            const features = new GeoJSON().readFeatures(surroundings['geojson']);
-            if (features.length > 0) {
-              this.feature = features.find(feature => feature.id_ === referenced);
-              if (this.feature) {
-                this.http
-                  .get(apiUrl + 'buildings/' + this.buildingId + '/simulations', {
-                    params: {
-                      simulation_packages: ['potential_view'],
-                    },
-                  })
-                  .subscribe(
-                    simulations => {
-                      console.log('simulations', simulations['potential_view']);
+      let epsg;
+      if (this.building.footprints) {
+        const footprint = this.building.footprints.find(fp => fp.source === map_source);
+        if (footprint) {
+          epsg = footprint.epsg;
 
-                      if (simulations && simulations['potential_view']) {
-                        if (simulations['potential_view']['status'] === 'complete') {
-                          if (simulations['potential_view']['result']) {
-                            this.sim_result = simulations['potential_view']['result'];
+          this.feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
+          // To recover the value
+          this.feature.setId(this.building.building_id);
+        }
+      }
 
-                            this.sim_result.sort((a, b) => a.height - b.height);
+      if (this.feature) {
+        this.http
+          .get(apiUrl + 'buildings/' + this.buildingId + '/simulations', {
+            params: {
+              simulation_packages: ['potential_view'],
+            },
+          })
+          .subscribe(
+            simulations => {
+              console.log('simulations', simulations['potential_view']);
 
-                            console.log('this.sim_result', this.sim_result);
+              if (simulations && simulations['potential_view']) {
+                if (simulations['potential_view']['status'] === 'complete') {
+                  if (simulations['potential_view']['result']) {
+                    this.sim_result = simulations['potential_view']['result'];
 
-                            if (this.map === null) {
-                              this.mapStyle = 'satellite';
+                    this.sim_result.sort((a, b) => a.height - b.height);
 
-                              this.source = new OlXYZ({
-                                url:
-                                  'https://api.tiles.mapbox.com/v4/mapbox.' +
-                                  this.mapStyle +
-                                  '/{z}/{x}/{y}.png?' +
-                                  'access_token=***REMOVED***',
-                              });
+                    console.log('this.sim_result', this.sim_result);
 
-                              this.detailSource = new Vector({
-                                features: [],
-                              });
+                    if (this.map === null) {
+                      this.mapStyle = 'satellite';
 
-                              this.globalSource = new Vector({
-                                features: [],
-                              });
+                      this.source = new OlXYZ({
+                        url:
+                          'https://api.tiles.mapbox.com/v4/mapbox.' +
+                          this.mapStyle +
+                          '/{z}/{x}/{y}.png?' +
+                          'access_token=***REMOVED***',
+                      });
 
-                              this.detailLayer = new OlVectorLayer({
-                                source: this.detailSource,
-                                style: styleNormal,
-                              });
+                      this.detailSource = new Vector({
+                        features: [],
+                      });
 
-                              this.globalLayer = new OlVectorLayer({
-                                source: this.globalSource,
-                                style: styleNormal,
-                              });
+                      this.globalSource = new Vector({
+                        features: [],
+                      });
 
-                              this.layer = new OlTileLayer({
-                                source: this.source,
-                              });
+                      this.detailLayer = new OlVectorLayer({
+                        source: this.detailSource,
+                        style: styleNormal,
+                      });
 
-                              this.view = new OlView({
-                                projection: surroundings['geojson']['crs'].properties.name,
-                              });
+                      this.globalLayer = new OlVectorLayer({
+                        source: this.globalSource,
+                        style: styleNormal,
+                      });
 
-                              this.map = new OlMap({
-                                target: 'map',
-                                layers: [this.layer, this.globalLayer, this.detailLayer],
-                                view: this.view,
-                              });
+                      this.layer = new OlTileLayer({
+                        source: this.source,
+                      });
 
-                              this.view.on('propertychange', e => {
-                                switch (e.key) {
-                                  case 'resolution':
-                                    this.correctVisibility(e.oldValue);
-                                    break;
-                                }
-                              });
+                      this.view = new OlView({
+                        projection: 'EPSG:' + epsg,
+                      });
 
-                              this.fragment_sub = this.route.fragment.subscribe(fragment => {
-                                const urlParams = parseParms(fragment);
-                                if (urlParams.hasOwnProperty('mapStyle')) {
-                                  this.changeMapStyle(urlParams['mapStyle']);
-                                }
-                              });
+                      this.map = new OlMap({
+                        target: 'map',
+                        layers: [this.layer, this.globalLayer, this.detailLayer],
+                        view: this.view,
+                      });
 
-                              // select interaction working on "pointermove"
-                              this.selectPointerClick = new Select({
-                                condition: conditionClick,
-                                style: styleOver,
-                              });
-
-                              this.selectPointerMove = new Select({
-                                condition: conditionPointerMove,
-                                style: styleOver,
-                              });
-
-                              this.map.addInteraction(this.selectPointerMove);
-                              this.map.addInteraction(this.selectPointerClick);
-
-                              this.selectPointerClick.on('select', e => {
-                                if (e.selected.length > 0) {
-                                  // localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
-                                  // urlPortfolio/building#site_id=5b7d5793ed37e50009414a1a
-                                  window.location.href = `${urlPortfolio}/building#building_reference.open_street_maps=${
-                                    e.selected[0].id_
-                                  }`;
-                                }
-                              });
-                            }
-
-                            this.globalSource.addFeature(this.feature);
-                            this.drawSimulation(this.feature);
-
-                            this.loading = false;
-                            this.centerMap();
-                          } else {
-                            this.loading = false;
-                            this.generalError = `Potential view is empty for the given building`;
-                          }
-                        } else {
-                          this.loading = false;
-                          this.generalError = `Potential view is not yet ready for the given building`;
+                      this.view.on('propertychange', e => {
+                        switch (e.key) {
+                          case 'resolution':
+                            this.correctVisibility(e.oldValue);
+                            break;
                         }
-                      } else {
-                        this.loading = false;
-                        this.generalError = `Potential view not available for the given building`;
-                      }
-                    },
-                    error => {
-                      this.loading = false;
-                      this.generalError = `Potential view not available for the given building`;
-                      console.error(error);
+                      });
+
+                      this.fragment_sub = this.route.fragment.subscribe(fragment => {
+                        const urlParams = parseParms(fragment);
+                        if (urlParams.hasOwnProperty('mapStyle')) {
+                          this.changeMapStyle(urlParams['mapStyle']);
+                        }
+                      });
+
+                      // select interaction working on "pointermove"
+                      this.selectPointerClick = new Select({
+                        condition: conditionClick,
+                        style: styleOver,
+                      });
+
+                      this.map.addInteraction(this.selectPointerClick);
+
+                      this.selectPointerClick.on('select', e => {
+                        if (e.selected.length > 0) {
+                          console.log('e.selected', e.selected);
+                        }
+                      });
                     }
-                  );
+
+                    this.globalSource.addFeature(this.feature);
+                    this.drawSimulation(this.feature);
+
+                    this.loading = false;
+                    this.centerMap();
+                  } else {
+                    this.loading = false;
+                    this.generalError = `Potential view is empty for the given building`;
+                  }
+                } else {
+                  this.loading = false;
+                  this.generalError = `Potential view is not yet ready for the given building`;
+                }
               } else {
                 this.loading = false;
-                this.generalError = `Perimeter not found for the given building in ${map_source_str}`;
+                this.generalError = `Potential view not available for the given building`;
               }
-            } else {
+            },
+            error => {
               this.loading = false;
-              this.generalError = `Surroundings not found for the given building in ${map_source_str}`;
+              this.generalError = `Potential view not available for the given building`;
+              console.error(error);
             }
-          },
-          error => {
-            this.loading = false;
-            this.generalError = `Surroundings not found for the given building in ${map_source_str}`;
-            console.error(error);
-          }
-        );
+          );
+      } else {
+        this.loading = false;
+        this.generalError = `Perimeter not found for the given building in ${map_source_str}`;
+      }
     } else {
       this.loading = false;
       this.generalError = `Building not georeferenced in ${map_source_str}`;
@@ -430,11 +417,16 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         // this.summary.min, this.summary.max
         const valueToColor = calculateDomain(
           colors,
+          0,
+          this.summary.max > 1.5 ? this.summary.max : 1.5
+        );
+        /*
           this.summary.min,
           this.summary.max
           // 0,
           // 1.2 // this.summary.max > 1.2 ? this.summary.max : 1.2
         );
+        */
 
         const colorAverage = valueToColor(this.summary.average);
 
@@ -489,22 +481,6 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  download(filename, text) {
-    console.log(text);
-    /*
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
-
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
-    */
-  }
-
   /**
    * Exports a kml File.
    */
@@ -520,7 +496,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     const originalFloor = this.currentFloor;
 
     let content = '';
-    const simulationsToExport = ['buildings', 'trees'];
+    const simulationsToExport = ['buildings']; // , 'rivers', 'trees'
     for (let i = 0; i < simulationsToExport.length; i++) {
       this.currentSimulation = simulationsToExport[i];
       let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
@@ -633,7 +609,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
    * @param resolution
    */
   correctVisibility(resolution) {
-    if (resolution < 2.5) {
+    if (resolution < 1.5) {
       this.detailLayer.setVisible(true);
       this.globalLayer.setVisible(false);
     } else {

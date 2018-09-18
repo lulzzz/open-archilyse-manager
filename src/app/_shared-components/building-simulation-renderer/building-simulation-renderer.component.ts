@@ -62,10 +62,10 @@ export class BuildingSimulationRendererComponent {
   calculateValues(params): boolean {
     this.params = params;
 
-    if (params.colDef.field === 'simulations.potential_view.status') {
+    if (params.colDef.field === 'simulation_statuses.potential_view.status') {
       this.urlPotencialView = `${urlPortfolio}/potentialView/${params.data.building_id}`;
-    } else if (params.colDef.field === 'simulations.accoustics.status') {
-    } else if (params.colDef.field === 'simulations.dpoi.status') {
+    } else if (params.colDef.field === 'simulation_statuses.accoustics.status') {
+    } else if (params.colDef.field === 'simulation_statuses.dpoi.status') {
     } else {
       console.error('Column simulations', params.colDef.field);
     }
@@ -91,16 +91,17 @@ export class BuildingSimulationRendererComponent {
     } else if (!this.georeferenced) {
       this.styles.backgroundColor = '#5cc8ff';
     } else if (params.value) {
-      if (params.value === 'failed') {
+      const status = params.value;
+      if (status === 'failed') {
         this.failed = true;
         this.styles.backgroundColor = '#ff8582';
-      } else if (params.value === 'complete') {
+      } else if (status === 'complete') {
         this.complete = true;
         this.styles.backgroundColor = '#b5d686';
-      } else if (params.value === 'not_requested') {
+      } else if (status === 'not_requested') {
         this.not_requested = true;
         this.styles.backgroundColor = '#4ebeff';
-      } else if (params.value === 'pending' || params.value === 'Pending') {
+      } else if (status === 'pending' || status === 'Pending') {
         this.pending = true;
         this.styles.backgroundColor = '#ffc975';
       } else {
@@ -114,11 +115,20 @@ export class BuildingSimulationRendererComponent {
   }
 
   requestSimulation() {
+    console.log('this.building', this.building);
+
+    // We request all the floors
+    const numberOfFloors = this.building.number_of_floors ? this.building.number_of_floors : 1;
+    let floors = [];
+    for (let i = 0; i < numberOfFloors; i++) {
+      floors.push(i);
+    }
+
     const simsRequested = [
       {
         name: 'potential_view',
         parameters: {
-          floors: [1],
+          floors: floors,
         },
       },
       {

@@ -82,7 +82,7 @@ describe('Api Add requests', () => {
         street: testStreet,
         street_nr: testStreet_nr,
       },
-      building_reference: {},
+      building_references: [],
     };
     ApiFunctions.post(
       http,

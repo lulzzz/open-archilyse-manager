@@ -37,47 +37,45 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
     this.currentProfile = navigationService.profile.getValue();
   }
 
+  getSimulations(url) {
+    ApiFunctions.get(
+      this.http,
+      url,
+      simulations => {
+        this.loading = false;
+        this.loadSimulations(simulations);
+      },
+      error => {
+        this.loading = false;
+        this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
+          error.message
+        }`;
+      }
+    );
+  }
+
   ngOnInit() {
     this.buildingId = this.route.snapshot.params['buildingId'];
     this.layoutId = this.route.snapshot.params['layoutId'];
 
+    // If building Id is defined we request the simulations.
     if (this.buildingId) {
-      ApiFunctions.get(
-        this.http,
-        `buildings/${this.buildingId}/simulations`,
-        simulations => {
-          this.loading = false;
-          this.loadSimulations(simulations);
-        },
-        error => {
-          this.loading = false;
-          this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
-            error.message
-          }`;
-        }
-      );
+      this.getSimulations(`buildings/${this.buildingId}/simulations`);
     }
+
+    // If layout Id is defined we request the simulations.
     if (this.layoutId) {
-      ApiFunctions.get(
-        this.http,
-        `layouts/${this.layoutId}/simulations`,
-        simulations => {
-          this.loading = false;
-          this.loadSimulations(simulations);
-        },
-        error => {
-          this.loading = false;
-          this.generalError = `<div class="title">Unknown error requesting the API data: </div> ${
-            error.message
-          }`;
-        }
-      );
+      this.getSimulations(`layouts/${this.layoutId}/simulations`);
     }
   }
 
+  /**
+   * We use "ngx-json-viewer" to display the results:
+   * https://www.npmjs.com/package/ngx-json-viewer
+   * @param simulations
+   */
   loadSimulations(simulations) {
     this.json = simulations;
-    // this.code = JSON.stringify(simulations, null, 4);
   }
 
   backPage() {

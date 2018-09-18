@@ -6,7 +6,7 @@ export interface Building {
   site_id?: string;
 
   address?: AddressReference;
-  building_reference?: BuildingReference;
+  building_references?: BuildingReference[];
 
   /** Calculated values */
   units?: number;
@@ -18,8 +18,8 @@ export interface Building {
 }
 
 export interface BuildingReference {
-  swiss_topo?: string;
-  open_street_maps?: string;
+  id: string;
+  source: string;
 }
 
 export interface AddressReference {

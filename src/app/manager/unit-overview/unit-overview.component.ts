@@ -165,9 +165,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Unit address',
         openByDefault: this.currentProfile === 'data',
         children: [
-          { headerName: 'Line1', field: 'line1', editable: true },
-          { headerName: 'Line2', columnGroupShow: 'open', field: 'line2', editable: true },
-          { headerName: 'Line3', columnGroupShow: 'open', field: 'line3', editable: true },
+          { headerName: 'Line1', field: 'address.line1', editable: true },
+          { headerName: 'Line2', field: 'address.line2', editable: true, columnGroupShow: 'open' },
+          { headerName: 'Line3', field: 'address.line3', editable: true, columnGroupShow: 'open' },
         ],
       },
       /**
@@ -363,6 +363,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
       // Calculated are not duplicated
       delete newRow['building_name'];
+      delete newRow['building_referenced'];
       delete newRow['building_referenced_osm'];
       delete newRow['building_referenced_st'];
       delete newRow['layouts'];

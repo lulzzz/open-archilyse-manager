@@ -11,7 +11,8 @@ import OlTileLayer from 'ol/layer/Tile';
 import OlVectorLayer from 'ol/layer/Vector';
 import OlView from 'ol/View';
 import Vector from 'ol/source/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
+import OlFeature from 'ol/Feature';
+import OlPolygon from 'ol/geom/Polygon';
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -43,6 +44,7 @@ import {
   reduceHeatmap,
 } from '../potential-view-overview/hexagonFunctions';
 import { colors } from '../potential-view-overview/potential-view-overview.component';
+import { Building } from '../../_models';
 
 proj4.defs(
   'EPSG:2056',
@@ -180,6 +182,10 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * We can show any mapbox.com style
+   * @param mapStyle
+   */
   changeMapStyle(mapStyle) {
     this.mapStyle = mapStyle;
 
@@ -195,6 +201,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   }
 
   setUpMap() {
+    console.log('setUpMap', this.buildingsArray);
+
     this.map = null;
     this.numGeoreferencedBuildings = 0;
 
@@ -212,147 +220,167 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
       if (this.filterCity !== null && building.address.city !== this.filterCity) {
         return false;
       }
-      if (!building['building_reference']) {
+      if (!building['building_references']) {
         return false;
       }
 
       let referenced = null;
       let map_source = null;
-      if (building['building_reference']['swiss_topo']) {
-        map_source = 'swiss_topo';
-        referenced = building['building_reference']['swiss_topo'];
-      } else if (building['building_reference']['open_street_maps']) {
-        map_source = 'open_street_maps';
-        referenced = building['building_reference']['open_street_maps'];
+
+      if (building && building.building_references) {
+        let ref = building.building_references.find(
+          ref => ref.source === 'open_street_maps' && ref.id !== null && ref.id !== ''
+        );
+        if (ref && ref.id !== '') {
+          map_source = 'open_street_maps';
+          referenced = ref.id;
+        } else {
+          ref = building.building_references.find(
+            ref => ref.source === 'swiss_topo' && ref.id !== null && ref.id !== ''
+          );
+
+          // Swiss topo is defined
+          if (ref && ref.id !== '') {
+            map_source = 'swiss_topo';
+            referenced = ref.id;
+          }
+        }
       }
 
       if (referenced !== null) {
-        this.http
-          .get(apiUrl + 'buildings/' + building.building_id + '/surroundings', {
-            params: {
-              source: map_source,
-            },
-          })
-          .subscribe(surroundings => {
-            const features = new GeoJSON().readFeatures(surroundings['geojson']);
-            if (features.length > 0) {
-              const feature = features.find(feature => feature.id_ === referenced);
+        let feature;
+        let epsg;
+        if (building.footprints) {
+          const footprint = building.footprints.find(fp => fp.source === map_source);
+          if (footprint) {
+            epsg = footprint.epsg;
 
-              if (feature) {
-                this.http
-                  .get(apiUrl + 'buildings/' + building.building_id + '/simulations', {
-                    params: {
-                      simulation_packages: ['potential_view'],
-                    },
-                  })
-                  .subscribe(simulations => {
-                    this.numGeoreferencedBuildings += 1;
+            feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
+            // To recover the value
+            feature.setId(building.building_id);
+          }
+        }
 
-                    if (this.cities.indexOf(building.address.city) === -1) {
-                      this.cities.push(building.address.city);
-                    }
-                    if (this.countries.indexOf(building.address.country) === -1) {
-                      this.countries.push(building.address.country);
-                    }
+        // footprints
+        if (feature) {
+          this.http
+            .get(apiUrl + 'buildings/' + building.building_id + '/simulations', {
+              params: {
+                simulation_packages: ['potential_view'],
+              },
+            })
+            .subscribe(simulations => {
+              this.numGeoreferencedBuildings += 1;
 
-                    if (this.map === null) {
-                      this.mapStyle = 'satellite';
-
-                      this.source = new OlXYZ({
-                        url:
-                          'https://api.tiles.mapbox.com/v4/mapbox.' +
-                          this.mapStyle +
-                          '/{z}/{x}/{y}.png?' +
-                          'access_token=***REMOVED***',
-                      });
-
-                      this.detailSource = new Vector({
-                        features: [],
-                      });
-                      this.globalSource = new Vector({
-                        features: [],
-                      });
-
-                      this.detailLayer = new OlVectorLayer({
-                        source: this.detailSource,
-                        style: styleNormal,
-                      });
-
-                      this.globalLayer = new OlVectorLayer({
-                        source: this.globalSource,
-                        style: styleNormal,
-                      });
-
-                      this.layer = new OlTileLayer({
-                        source: this.source,
-                      });
-
-                      this.view = new OlView({
-                        projection: surroundings['geojson']['crs'].properties.name,
-                      });
-
-                      this.map = new OlMap({
-                        target: 'map',
-                        layers: [this.layer, this.detailLayer, this.globalLayer],
-                        view: this.view,
-                      });
-
-                      // select interaction working on "pointermove"
-                      this.selectPointerClick = new Select({
-                        condition: conditionClick,
-                        style: styleOver,
-                      });
-
-                      this.selectPointerMove = new Select({
-                        condition: conditionPointerMove,
-                        style: styleOver,
-                      });
-
-                      this.map.addInteraction(this.selectPointerMove);
-                      this.map.addInteraction(this.selectPointerClick);
-
-                      this.selectPointerClick.on('select', e => {
-                        if (e.selected.length > 0 && e.selected[0].id_) {
-                          // localhost:4200/manager/building#site_id=5b7d5793ed37e50009414a1a
-                          // urlPortfolio/building#site_id=5b7d5793ed37e50009414a1a
-                          window.location.href = `${urlPortfolio}/building#building_reference.${map_source}=${
-                            e.selected[0].id_
-                          }`;
-                        }
-                      });
-
-                      this.view.on('propertychange', e => {
-                        switch (e.key) {
-                          case 'resolution':
-                            this.correctVisibility(e.oldValue);
-                            break;
-                        }
-                      });
-
-                      this.fragment_sub = this.route.fragment.subscribe(fragment => {
-                        const urlParams = parseParms(fragment);
-                        if (urlParams.hasOwnProperty('mapStyle')) {
-                          this.changeMapStyle(urlParams['mapStyle']);
-                        }
-                      });
-                    }
-
-                    if (
-                      simulations &&
-                      simulations['potential_view'] &&
-                      simulations['potential_view'].result
-                    ) {
-                      this.drawSimulation(feature, simulations['potential_view'].result);
-                    } else {
-                      this.detailSource.addFeature(feature);
-                    }
-                    this.globalSource.addFeature(feature);
-
-                    this.centerMap();
-                  });
+              if (this.cities.indexOf(building.address.city) === -1) {
+                this.cities.push(building.address.city);
               }
-            }
-          });
+              if (this.countries.indexOf(building.address.country) === -1) {
+                this.countries.push(building.address.country);
+              }
+
+              if (this.map === null) {
+                this.mapStyle = 'satellite';
+
+                this.source = new OlXYZ({
+                  url:
+                    'https://api.tiles.mapbox.com/v4/mapbox.' +
+                    this.mapStyle +
+                    '/{z}/{x}/{y}.png?' +
+                    'access_token=***REMOVED***',
+                });
+
+                this.detailSource = new Vector({
+                  features: [],
+                });
+                this.globalSource = new Vector({
+                  features: [],
+                });
+
+                this.detailLayer = new OlVectorLayer({
+                  source: this.detailSource,
+                  style: styleNormal,
+                });
+
+                this.globalLayer = new OlVectorLayer({
+                  source: this.globalSource,
+                  style: styleNormal,
+                });
+
+                this.layer = new OlTileLayer({
+                  source: this.source,
+                });
+
+                this.view = new OlView({
+                  projection: 'EPSG:' + epsg,
+                });
+
+                this.map = new OlMap({
+                  target: 'map',
+                  layers: [this.layer, this.detailLayer, this.globalLayer],
+                  view: this.view,
+                });
+
+                // select interaction working on "pointermove"
+                this.selectPointerClick = new Select({
+                  condition: conditionClick,
+                  style: styleOver,
+                });
+
+                this.selectPointerMove = new Select({
+                  condition: conditionPointerMove,
+                  style: styleOver,
+                });
+
+                this.map.addInteraction(this.selectPointerMove);
+                this.map.addInteraction(this.selectPointerClick);
+
+                this.selectPointerClick.on('select', e => {
+                  if (e.selected.length > 0 && e.selected[0].id_) {
+                    window.location.href = `${urlPortfolio}/building#building_id=${
+                      e.selected[0].id_
+                    }`;
+                  }
+                });
+
+                this.view.on('propertychange', e => {
+                  switch (e.key) {
+                    case 'resolution':
+                      this.correctVisibility(e.oldValue);
+                      break;
+                  }
+                });
+
+                this.fragment_sub = this.route.fragment.subscribe(fragment => {
+                  const urlParams = parseParms(fragment);
+                  if (urlParams.hasOwnProperty('mapStyle')) {
+                    this.changeMapStyle(urlParams['mapStyle']);
+                  }
+                });
+              }
+
+              console.log('simulations', building.building_id, simulations);
+
+              if (
+                simulations &&
+                simulations['potential_view'] &&
+                simulations['potential_view'].result
+              ) {
+                console.log('SIM ', simulations['potential_view'].result);
+                this.drawSimulation(feature, simulations['potential_view'].result);
+              } else {
+                console.log("Didn't have sim ", building);
+                this.detailSource.addFeature(feature);
+              }
+              this.globalSource.addFeature(feature);
+
+              this.centerMap();
+            });
+        } else {
+          console.log('Building not footprint', building);
+        }
+      } else {
+        console.log('Building not referenced', building);
       }
     });
   }
@@ -387,7 +415,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
       // this.summary.min, this.summary.max
       // 0, 5
-      const valueToColor = calculateDomain(colors, 0, 2);
+      // sim.summary.min, sim.summary.max
+      const valueToColor = calculateDomain(colors, 0, 1.5);
 
       const colorAverage = valueToColor(sim.summary.average);
 
@@ -446,6 +475,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     this.correctVisibility(this.view.values_.resolution);
   }
 
+  /**
+   * IF the resolution is low (<1.5) and the Potential View is enabled THEN:
+   * We display the details
+   * @param resolution
+   */
   correctVisibility(resolution) {
     if (resolution < 1.5 && this.enabledPV) {
       this.detailLayer.setVisible(true);

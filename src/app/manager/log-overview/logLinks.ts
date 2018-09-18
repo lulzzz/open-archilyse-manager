@@ -2,6 +2,10 @@ import { environment } from '../../../environments/environment';
 
 const apiUrl = environment.apiUrl;
 
+/**
+ * Returns out of the log data the URLS from the documentation.
+ * @param params
+ */
 export function renderRequestLinkDocs(params) {
   if (params.data && params.data.request && params.data.request.url && params.data.request.method) {
     const url = params.data.request.url;

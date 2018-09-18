@@ -5,6 +5,9 @@ const urlEditor = environment.urlEditor;
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
 
+/**
+ * ag-grid Class with methods to render different values.
+ */
 export class CellRender {
   public static siteFormatter(params) {
     if (params && params.value) {
@@ -49,6 +52,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Human names for DPOI
+   * @param params
+   */
   public static dpoiName(params) {
     if (params.value && params.value !== '') {
       const translate = {
@@ -365,6 +372,13 @@ export class CellRender {
     return ``;
   }
 
+  public static viewHeight(params) {
+    if (params.value && params.value !== '') {
+      return Math.floor(params.value) + ' m.';
+    }
+    return ``;
+  }
+
   public static distance(params) {
     if (params.value && params.value !== '') {
       return Math.floor(params.value) + ' m.';
@@ -491,19 +505,25 @@ export class CellRender {
   }
 
   public static viewGeorefBuildingST(params) {
-    if (params && params.value && params.value !== '') {
-      return `<a href='${urlGeoreference}/map/${params.data.building_id}#source=swiss_topo' >${
-        params.value
-      }</a>`;
+    if (params && params.data && params.data.building_references) {
+      const found = params.data.building_references.find(br => br.source === 'swiss_topo');
+      if (found && found.id) {
+        return `<a href='${urlGeoreference}/map/${params.data.building_id}#source=swiss_topo' >${
+          found.id
+        }</a>`;
+      }
     }
     return '';
   }
 
   public static viewGeorefBuildingOSM(params) {
     if (params && params.value && params.value !== '') {
-      return `<a href='${urlGeoreference}/map/${
-        params.data.building_id
-      }#source=open_street_maps' >${params.value}</a>`;
+      const found = params.data.building_references.find(br => br.source === 'open_street_maps');
+      if (found && found.id) {
+        return `<a href='${urlGeoreference}/map/${
+          params.data.building_id
+        }#source=open_street_maps' >${found.id}</a>`;
+      }
     }
     return '';
   }

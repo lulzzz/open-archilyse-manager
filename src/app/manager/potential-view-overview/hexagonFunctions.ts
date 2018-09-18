@@ -18,16 +18,15 @@ import OlPolygon from 'ol/geom/Polygon';
  * @param val is the value assigned to this hexagon.
  */
 export function drawHexBlocks(
-    source,
-    x_off: number,
-    y_off: number,
-    x: number,
-    y: number,
-    resolution: number,
-    valueToColor,
-    val
-  ) {
-
+  source,
+  x_off: number,
+  y_off: number,
+  x: number,
+  y: number,
+  resolution: number,
+  valueToColor,
+  val
+) {
   const sin30 = 0.5; // 0.5 = sin 30 deg
   const cos30 = 0.866; // 0.866 = cos 30 deg
 
@@ -53,6 +52,9 @@ export function drawHexBlocks(
 
   const colorValue = valueToColor(val);
   const feature = new OlFeature({ geometry: new OlPolygon([coords]) });
+  // To recover the value
+  feature.setId(x + '#' + y);
+
   feature.setStyle(
     new OlStyle({
       fill: new OlStyleFill({
@@ -67,7 +69,13 @@ export function drawHexBlocks(
   source.addFeature(feature);
 }
 
-export function reduceHeatmap(heatmap, resolution, no_value_number) {
+/**
+ * Counts the number of hexagon in a matrix
+ * Excludes the specified as 'no_value_number' especified as -666
+ * @param heatmap
+ * @param no_value_number
+ */
+export function countHexagons(heatmap, no_value_number) {
   let numberOfhexagons = 0;
   heatmap.forEach((row, y) => {
     row.forEach((val, x) => {
@@ -76,23 +84,39 @@ export function reduceHeatmap(heatmap, resolution, no_value_number) {
       }
     });
   });
+  return numberOfhexagons;
+}
 
+/**
+ * From a given matrix of hexagons returns an equivalent matrix with les than X number of hexagons.
+ * Right now the constant is 1900.
+ *
+ * @param heatmap
+ * @param resolution
+ * @param no_value_number
+ */
+export function reduceHeatmap(heatmap, resolution, no_value_number) {
+  const maxNumberPoligons = 1900;
+
+  const numberOfhexagonsStart = this.countHexagons(heatmap, no_value_number);
+  let numberOfhexagons = numberOfhexagonsStart;
   let currentHeatmap = heatmap;
   let resolutionCorrected = resolution;
-
-  const maxNumberPoligons = 1900;
 
   while (numberOfhexagons > maxNumberPoligons) {
     numberOfhexagons = 0;
     const heatmapCorrected = [];
     let newY = 0;
     for (let y = 1; y < currentHeatmap.length - 1; y += 3) {
+      // Of the row doesn't exist we create it empty
       if (!heatmapCorrected[newY]) {
         heatmapCorrected[newY] = [];
       }
       let newX = 0;
       for (let x = 1; x < currentHeatmap[y].length - 1; x += 3) {
+        // We copy the value
         heatmapCorrected[newY][newX] = currentHeatmap[y][x];
+
         if (currentHeatmap[y][x] !== no_value_number) {
           numberOfhexagons += 1;
         }
@@ -104,7 +128,7 @@ export function reduceHeatmap(heatmap, resolution, no_value_number) {
     resolutionCorrected = resolutionCorrected * 3;
   }
 
-  console.log('numberOfhexagons END', numberOfhexagons);
+  console.log('numberOfhexagons END', numberOfhexagons, numberOfhexagonsStart);
   console.log('resolutionCorrected', resolutionCorrected);
 
   return {
