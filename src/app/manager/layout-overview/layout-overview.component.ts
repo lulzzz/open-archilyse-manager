@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +19,6 @@ import {
 import { OverlayService } from '../../_services/overlay.service';
 import { environment } from '../../../environments/environment';
 import { NavigationService } from '../../_services/navigation.service';
-import { ViewChild } from '@angular/core';
 
 const urlGeoreference = environment.urlGeoreference;
 

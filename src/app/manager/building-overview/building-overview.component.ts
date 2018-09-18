@@ -736,16 +736,16 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
       // We request all the floors
       const numberOfFloors = building.number_of_floors ? building.number_of_floors : 1;
-      let floors = [];
-      for (let i = 0; i < numberOfFloors; i++) {
-        floors.push(i);
+      const floorArray = [];
+      for (let i = 0; i < numberOfFloors; i += 1) {
+        floorArray.push(i);
       }
 
       const simsRequested = [
         {
           name: 'potential_view',
           parameters: {
-            floors: floors,
+            floors: floorArray,
           },
         },
         {

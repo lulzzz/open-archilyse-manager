@@ -369,7 +369,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 console.log('SIM ', simulations['potential_view'].result);
                 this.drawSimulation(feature, simulations['potential_view'].result);
               } else {
-                console.log("Didn't have sim ", building);
+                console.log(`Didn't have sim `, building);
                 this.detailSource.addFeature(feature);
               }
               this.globalSource.addFeature(feature);

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -48,7 +48,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs;
 
-
   /**
    * Local variables
    */
@@ -67,7 +66,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
-
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
       this.initComponent();
@@ -98,8 +96,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {}
 
-  setUpColumns(){
-
+  setUpColumns() {
     let analysisColumns = [];
 
     if (this.currentProfile === 'analyst' || this.currentProfile === 'data') {
@@ -378,7 +375,6 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
               ManagerFunctions.showErrorUserNoReload
             );
           } else {
-
             addedRows += 1;
 
             ApiFunctions.post(

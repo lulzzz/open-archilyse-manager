@@ -417,7 +417,7 @@ export class ManagerFunctions {
     if (column === 'height') {
       columnValue = parseFloat(columnValue);
     } else if (column === 'number_of_floors') {
-      columnValue = parseInt(columnValue);
+      columnValue = parseInt(columnValue, 10);
     }
 
     const newValue = {};

@@ -51,7 +51,7 @@ export const colors = [
 ];
 
 const saveData = (() => {
-  let a = document.createElement('a');
+  const a = document.createElement('a');
   document.body.appendChild(a);
   return (fileName, data) => {
     const blob = new Blob([data], { type: 'octet/stream' });
@@ -497,7 +497,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
     let content = '';
     const simulationsToExport = ['buildings']; // , 'rivers', 'trees'
-    for (let i = 0; i < simulationsToExport.length; i++) {
+    for (let i = 0; i < simulationsToExport.length; i += 1) {
       this.currentSimulation = simulationsToExport[i];
       let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
 
@@ -505,12 +505,12 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
       if (this.currentSimulation !== originalSimulation) {
         contentFolder += `<visibility>0</visibility>`;
       }
-      for (let j = 0; j < this.floors.length; j++) {
+      for (let j = 0; j < this.floors.length; j += 1) {
         this.currentFloor = this.floors[j];
         this.drawSimulation(this.feature);
         const result = this.exportSimulationKML();
-        if (j == 0) {
-          if (i == 0) {
+        if (j === 0) {
+          if (i === 0) {
             content += result.camera;
           }
           contentFolder += result.camera;

@@ -29,7 +29,7 @@ import {
 } from '@angular/material';
 
 // SERVICES
-import { UserService } from './_services';
+import { UserService, LogService, TokenInterceptor, NavigationService } from './_services';
 
 // DIRECTIVES
 import { SharedDirectiveModule } from './_directives/shared-directives.module';
@@ -58,13 +58,10 @@ import { ErrorComponent } from './error/error.component';
 import { logout } from './_store/reducers/user.reducer';
 import { ToastComponent } from './toast/toast.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
-import { TokenInterceptor } from './_services/token.interceptor';
-import { NavigationService } from './_services/navigation.service';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
-import { LogService } from './_services';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true,
