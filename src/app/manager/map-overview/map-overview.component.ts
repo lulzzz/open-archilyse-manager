@@ -137,27 +137,6 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
 
-  filterByCountry(country) {
-    this.filterCountry = country;
-    this.setUpMap();
-  }
-
-  filterByCity(city) {
-    this.filterCity = city;
-    this.setUpMap();
-  }
-
-  linkToList() {
-    const filters = [];
-    if (this.filterCountry !== null) {
-      filters.push(`address.country=${this.filterCountry}`);
-    }
-    if (this.filterCity !== null) {
-      filters.push(`address.city=${this.filterCity}`);
-    }
-    window.location.href = `${urlPortfolio}/building#` + filters.join('&');
-  }
-
   ngOnInit() {
     this.start();
   }
@@ -212,16 +191,18 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
     this.buildingsArray.forEach(building => {
       /** Filtering */
-      if (!building || !building.address) {
-        return false;
-      }
-      if (this.filterCountry !== null && building.address.country !== this.filterCountry) {
-        return false;
-      }
-      if (this.filterCity !== null && building.address.city !== this.filterCity) {
-        return false;
-      }
-      if (!building['building_references']) {
+      if (
+        // If the building is not defined
+        !building ||
+        // If the building has no address
+        !building.address ||
+        // If the building has no a country different than the selected
+        (this.filterCountry !== null && building.address.country !== this.filterCountry) ||
+        // If the building has no a city different than the selected
+        (this.filterCity !== null && building.address.city !== this.filterCity) ||
+        // If the building has no building_references
+        !building['building_references']
+      ) {
         return false;
       }
 
@@ -271,7 +252,17 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
               },
             })
             .subscribe(simulations => {
+              if (
+                simulations &&
+                simulations['potential_view'] &&
+                simulations['potential_view'].result
+              ) {
+                // We order the potential view by height (If defined)
+                simulations['potential_view'].result.sort((a, b) => a.height - b.height);
+              }
+
               this.simulations[building.building_id] = simulations;
+
               this.features[building.building_id] = feature;
 
               this.numGeoreferencedBuildings += 1;
@@ -297,6 +288,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 this.detailSource = new Vector({
                   features: [],
                 });
+
                 this.globalSource = new Vector({
                   features: [],
                 });
@@ -374,7 +366,6 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
               }
 
               this.drawSimulations(building, simulations, feature);
-
               this.centerMap();
             });
         } else {
@@ -493,6 +484,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Center the map in the displayed buildings
+   */
   centerMap() {
     this.view.fit(this.detailSource.getExtent(), {
       padding: paddingToBuildings,
@@ -518,6 +512,10 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Change the fimulation or the floor
+   */
+
   changeSimulation(data) {
     this.currentSimulation = data.target.value;
     this.redrawSimulations();
@@ -527,9 +525,41 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     this.redrawSimulations();
   }
 
+  /**
+   * Change the map style from mapbox
+   */
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
     this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+  }
+
+  /**
+   * Link to the current building
+   */
+
+  linkToList() {
+    const filters = [];
+    if (this.filterCountry !== null) {
+      filters.push(`address.country=${this.filterCountry}`);
+    }
+    if (this.filterCity !== null) {
+      filters.push(`address.city=${this.filterCity}`);
+    }
+    window.location.href = `${urlPortfolio}/building#` + filters.join('&');
+  }
+
+  /**
+   * Change filters
+   */
+
+  filterByCountry(country) {
+    this.filterCountry = country;
+    this.setUpMap();
+  }
+
+  filterByCity(city) {
+    this.filterCity = city;
+    this.setUpMap();
   }
 
   /**

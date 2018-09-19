@@ -278,8 +278,6 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
                     this.sim_result.sort((a, b) => a.height - b.height);
 
-                    console.log('this.sim_result', this.sim_result);
-
                     if (this.map === null) {
                       this.mapStyle = 'satellite';
 
@@ -347,8 +345,48 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                       this.map.addInteraction(this.selectPointerClick);
 
                       this.selectPointerClick.on('select', e => {
-                        if (e.selected.length > 0) {
-                          console.log('e.selected', e.selected);
+                        if (e.selected.length > 0 && e.selected[0].id_) {
+                          const featureId = e.selected[0].id_;
+                          if (featureId.includes('#') && featureId.includes('||')) {
+                            // It's an hexagon
+
+                            const postion = featureId.indexOf('||');
+                            const buildingId = featureId.substr(
+                              postion + 2,
+                              featureId.length - postion
+                            );
+                            const coords = featureId.substr(0, postion).split('#');
+
+                            const xx = Math.abs(coords[0]);
+                            const yy = Math.abs(coords[1]);
+
+                            const thisHeightSims = this.sim_result.filter(
+                              sim => sim.height === this.height
+                            );
+
+                            let totalValue = 0;
+                            const simValues = thisHeightSims.map(sim => {
+                              const value = sim.heatmap[yy][xx];
+                              totalValue += value;
+                              return {
+                                category: sim.category,
+                                value: value,
+                              };
+                            });
+
+                            console.log('simValues', simValues);
+                            console.log('totalValue', totalValue);
+
+                            // window.location.href = `${urlPortfolio}/building#building_id=${buildingId}`;
+                          } else {
+                            console.log('BUILDING', e.selected[0].id_);
+                            /**
+                            // It's a building
+                            window.location.href = `${urlPortfolio}/building#building_id=${
+                              e.selected[0].id_
+                              }`;
+                            */
+                          }
                         }
                       });
                     }
