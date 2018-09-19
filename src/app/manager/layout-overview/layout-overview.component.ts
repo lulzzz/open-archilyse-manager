@@ -101,7 +101,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfoTotal,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Rooms',
@@ -110,7 +110,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Corridors',
@@ -119,7 +119,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Bathrooms',
@@ -128,7 +128,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Kitchens',
@@ -137,7 +137,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Balconies',
@@ -146,7 +146,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Storerooms',
@@ -155,7 +155,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Other areas',
@@ -164,7 +164,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellRenderer: CellRender.areaInfo,
               width: 100,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
           ],
         },
@@ -177,7 +177,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 80,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Seats',
@@ -185,7 +185,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 80,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Doors',
@@ -193,7 +193,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 80,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Sinks',
@@ -201,7 +201,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 80,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Toilets',
@@ -209,7 +209,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 80,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Railings',
@@ -217,7 +217,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 90,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Stairs',
@@ -225,7 +225,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 80,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Kitchens',
@@ -233,22 +233,22 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               columnGroupShow: 'open',
               width: 90,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Windows Exterior',
               field: 'num_windowExterior',
-              width: 120,
+              width: 150,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
             {
               headerName: 'Windows Interior',
               field: 'num_windowInterior',
               columnGroupShow: 'open',
-              width: 120,
+              width: 145,
               editable: false,
-              cellClass: 'readOnly',
+              cellClass: 'readOnly right',
             },
           ],
         },

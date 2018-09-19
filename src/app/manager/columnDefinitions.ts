@@ -85,6 +85,7 @@ export class ColumnDefinitions {
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
+      cellStyle: { padding: '0px' },
       cellClass: 'readOnly',
     },
     {
@@ -94,6 +95,7 @@ export class ColumnDefinitions {
       cellRenderer: 'procentRenderer',
       filter: 'agNumberColumnFilter',
       cellRendererParams: { editable: false },
+      cellStyle: { padding: '0px' },
       cellClass: 'readOnly',
     },
   ];

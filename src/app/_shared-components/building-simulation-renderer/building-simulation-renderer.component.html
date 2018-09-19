@@ -5,7 +5,7 @@
 
   <span *ngIf="addressSet && georeferenced && complete">
     <a *ngIf="currentProfile === 'developer'" [href]="urlRaw" > View raw </a> &nbsp;
-    <a *ngIf="urlPotencialView" [href]="urlPotencialView" > View potencial View</a>
+    <a *ngIf="urlPotencialView" [href]="urlPotencialView" > View render </a>
   </span>
   <span *ngIf="addressSet && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="addressSet && georeferenced && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
