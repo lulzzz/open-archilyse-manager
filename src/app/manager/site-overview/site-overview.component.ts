@@ -86,8 +86,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       'sites',
       newSite,
       site => {
+        // We move to the first page.
+        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [site],
+          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
       },
       ManagerFunctions.showErroruser

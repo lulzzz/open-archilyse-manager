@@ -476,9 +476,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       'buildings',
       newBuilding,
       building => {
-        console.log('buildings', building);
+        // We move to the first page.
+        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [building],
+          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
       },
       ManagerFunctions.showErroruser

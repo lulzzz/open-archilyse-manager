@@ -209,9 +209,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       'units',
       newUnit,
       units => {
-        console.log('units', units);
+        // We move to the first page.
+        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [units],
+          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
       },
       ManagerFunctions.showErroruser

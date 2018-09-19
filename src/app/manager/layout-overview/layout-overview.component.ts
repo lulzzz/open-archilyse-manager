@@ -532,8 +532,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       'layouts',
       newLayout,
       layouts => {
+        // We move to the first page.
+        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [layouts],
+          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
       },
       ManagerFunctions.showErroruser
