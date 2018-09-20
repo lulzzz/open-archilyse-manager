@@ -209,12 +209,12 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       'units',
       newUnit,
       units => {
-        // We move to the first page.
-        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [units],
-          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
+
+        // We move to the last page. (After adding, because can be in a new page)
+        this.gridOptions.api.paginationGoToLastPage();
       },
       ManagerFunctions.showErroruser
     );
@@ -397,6 +397,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           this.gridOptions.api.updateRowData({
             add: [unit],
           });
+
+          // We move to the last page. (After adding, because can be in a new page)
+          this.gridOptions.api.paginationGoToLastPage();
         },
         ManagerFunctions.showErroruser
       );
@@ -504,6 +507,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
                 this.gridOptions.api.updateRowData({
                   add: [unit],
                 });
+                // We move to the last page. (After adding, because can be in a new page)
+                this.gridOptions.api.paginationGoToLastPage();
               },
               ManagerFunctions.showErrorUserNoReload
             );

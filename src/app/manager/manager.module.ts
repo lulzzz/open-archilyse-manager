@@ -28,6 +28,7 @@ import { PotentialViewOverviewComponent } from './potential-view-overview/potent
 import { LogOverviewComponent } from './log-overview/log-overview.component';
 
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     MapOverviewComponent,
     LogOverviewComponent,
     PotentialViewOverviewComponent,
+    ViewSimOverviewComponent
   ],
   providers: [OverlayService],
 })

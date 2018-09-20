@@ -86,12 +86,12 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
       'sites',
       newSite,
       site => {
-        // We move to the first page.
-        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [site],
-          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
+
+        // We move to the last page. (After adding, because can be in a new page)
+        this.gridOptions.api.paginationGoToLastPage();
       },
       ManagerFunctions.showErroruser
     );
@@ -263,6 +263,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           this.gridOptions.api.updateRowData({
             add: [site],
           });
+
+          // We move to the last page. (After adding, because can be in a new page)
+          this.gridOptions.api.paginationGoToLastPage();
         },
         ManagerFunctions.showErroruser
       );
@@ -388,6 +391,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
                 this.gridOptions.api.updateRowData({
                   add: [site],
                 });
+
+                // We move to the last page. (After adding, because can be in a new page)
+                this.gridOptions.api.paginationGoToLastPage();
               },
               ManagerFunctions.showErrorUserNoReload
             );

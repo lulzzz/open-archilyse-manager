@@ -10,7 +10,7 @@
       <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn green" (click)="georeferenceAuto()" [disabled]="selectedNodes.length<=0" >Georef. Auto({{selectedNodes.length}})</button>
       <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn green" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
       <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5"  class="btn green" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
-      <button *ngIf="currentProfile === 'data'" [popper]="tooltip6" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Copy ({{selectedNodes.length}})</button>
       <button [popper]="tooltip7" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
       &nbsp;&nbsp;&nbsp;
       <button [popper]="tooltip8" class="btn green" (click)="addRow()">Add building</button>

@@ -34,6 +34,7 @@ import { OverlayService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../environments/environment';
 import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
+import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
 
 const apiUrl = environment.apiUrl;
 const urlPortfolio = environment.urlPortfolio;
@@ -104,11 +105,11 @@ Array.prototype['unique'] = function() {
 };
 
 @Component({
-  selector: 'app-potential-view-overview',
-  templateUrl: './potential-view-overview.component.html',
-  styleUrls: ['./potential-view-overview.component.scss'],
+  selector: 'app-view-sim-overview',
+  templateUrl: './view-sim-overview.component.html',
+  styleUrls: ['./view-sim-overview.component.scss'],
 })
-export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
+export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   /**
    * Loading and general error
    */
@@ -121,8 +122,13 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
    * https://www.ag-grid.com/angular-getting-started/
    */
 
+  unitId;
+  unit;
   buildingId;
   building;
+
+  layoutId;
+  layout;
   address;
 
   map: OlMap = null;
@@ -136,6 +142,8 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
   globalSource;
 
   view: OlView;
+
+  referenceSource: 'swiss_topo';
 
   selectPointerClick;
   selectPointerMove;
@@ -183,31 +191,84 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
   }
 
   start() {
-    this.buildingId = this.route.snapshot.params['buildingId'];
+    this.layoutId = this.route.snapshot.params['layoutId'];
 
-    if (this.buildingId) {
+    if (this.layoutId) {
+      ApiFunctions.get(
+        this.http,
+        `layouts/${this.layoutId}`,
+        layout => {
+          if (layout) {
+            // Save the layout
+            this.layout = layout;
+            console.log('layout', layout);
+
+            this.startWithLayout();
+          } else {
+            this.loading = false;
+            this.generalError = `Layout ${getLayoutLink(this.layoutId)} not found.`;
+          }
+        },
+        error => {
+          this.loading = false;
+          this.generalError = `Layout ${getLayoutLink(this.layoutId)} not found.`;
+          console.error(error);
+        }
+      );
+    } else {
+      this.loading = false;
+      this.generalError = `Layout id not provided`;
+    }
+  }
+
+  startWithLayout() {
+    if (this.layout.unit_id) {
+      this.unitId = this.layout.unit_id;
+
+      ApiFunctions.get(
+        this.http,
+        `units/${this.unitId}`,
+        unit => {
+          if (unit) {
+            // Save the unit
+            this.unit = unit;
+            console.log('unit', unit);
+
+            this.startWithUnit();
+          } else {
+            this.loading = false;
+            this.generalError = `Unit not found for ${this.unitId}`;
+          }
+        },
+        error => {
+          this.loading = false;
+          this.generalError = `Unit ${getUnitLink(
+            this.unitId
+          )} not found for layout ${getLayoutLink(this.layoutId, this.layout)}.`;
+          console.error(error);
+        }
+      );
+    } else {
+      this.loading = false;
+      this.generalError = `Layout ${getLayoutLink(this.layoutId, this.layout)} has not unit id.`;
+    }
+  }
+
+  startWithUnit() {
+    if (this.unit.building_id) {
+      this.buildingId = this.unit.building_id;
+
       ApiFunctions.get(
         this.http,
         `buildings/${this.buildingId}`,
         building => {
           if (building) {
+            // Save the building
             this.building = building;
-            const address = building['address'];
-            const buildingName = building['name'] ? building['name'] : this.buildingId;
-            if (address) {
-              const street = address.street ? address.street : '';
-              const street_nr = address.street_nr ? address.street_nr : '';
-              const postal_code = address.postal_code ? address.postal_code : '';
-              const city = address.city ? address.city : '';
-              const country = address.country ? address.country : '';
+            console.log('building', building);
+            console.log('building.perimeter', building.perimeter);
 
-              const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
-              this.address = `<span class="label-dpoi">Building "${buildingName}":</span> <span class="address-text">${addressStr}</span>`;
-              this.setUpMap();
-            } else {
-              this.loading = false;
-              this.generalError = `Address not defined for building <span class="address-text">${buildingName}</span>`;
-            }
+            this.startWithBuilding();
           } else {
             this.loading = false;
             this.generalError = `Building not found for ${this.buildingId}`;
@@ -221,8 +282,33 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
       );
     } else {
       this.loading = false;
-      this.generalError = `Building id not provided`;
+      this.generalError = `Unit ${getUnitLink(this.unitId, this.unit)} has not building id.`;
     }
+  }
+
+  startWithBuilding() {
+    let buildingRefId = null;
+    if (this.building['building_references']) {
+      const br = this.building['building_references'].find(
+        br => br.source === this.referenceSource
+      );
+      if (br && br.id) {
+        buildingRefId = br.id;
+      }
+    }
+
+    if (buildingRefId !== null) {
+    } else {
+      this.loading = false;
+      this.generalError = `Building ${getBuildingLink(
+        this.buildingId,
+        this.building
+      )} was not referenced`;
+    }
+
+    const layoutName = this.layout['name'] ? this.layout['name'] : this.layoutId;
+    this.address = `<span class="label-dpoi">Layout "${layoutName}"</span>`;
+    this.setUpMap();
   }
 
   setUpMap() {
@@ -265,19 +351,19 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
       if (this.feature) {
         this.http
-          .get(apiUrl + 'buildings/' + this.buildingId + '/simulations', {
+          .get(apiUrl + 'layouts/' + this.layoutId + '/simulations', {
             params: {
-              simulation_packages: ['potential_view'],
+              simulation_packages: ['view'],
             },
           })
           .subscribe(
             simulations => {
-              console.log('simulations', simulations['potential_view']);
+              console.log('simulations', simulations['view']);
 
-              if (simulations && simulations['potential_view']) {
-                if (simulations['potential_view']['status'] === 'complete') {
-                  if (simulations['potential_view']['result']) {
-                    this.sim_result = simulations['potential_view']['result'];
+              if (simulations && simulations['view']) {
+                if (simulations['view']['status'] === 'complete') {
+                  if (simulations['view']['result']) {
+                    this.sim_result = simulations['view']['result'];
 
                     this.sim_result.sort((a, b) => a.height - b.height);
 
@@ -354,7 +440,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                             // It's an hexagon
 
                             const postion = featureId.indexOf('||');
-                            const buildingId = featureId.substr(
+                            const layoutId = featureId.substr(
                               postion + 2,
                               featureId.length - postion
                             );
@@ -380,7 +466,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                             console.log('simValues', simValues);
                             console.log('totalValue', totalValue);
 
-                            // window.location.href = `${urlPortfolio}/building#building_id=${buildingId}`;
+                            // window.location.href = `${urlPortfolio}/building#building_id=${layoutId}`;
                           } else {
                             console.log('BUILDING', e.selected[0].id_);
                             /**
@@ -401,20 +487,20 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                     this.centerMap();
                   } else {
                     this.loading = false;
-                    this.generalError = `Potential view is empty for the given building`;
+                    this.generalError = `View is empty for the given layout`;
                   }
                 } else {
                   this.loading = false;
-                  this.generalError = `Potential view is not yet ready for the given building`;
+                  this.generalError = `View is not yet ready for the given layout`;
                 }
               } else {
                 this.loading = false;
-                this.generalError = `Potential view not available for the given building`;
+                this.generalError = `View not available for the given layout`;
               }
             },
             error => {
               this.loading = false;
-              this.generalError = `Potential view not available for the given building`;
+              this.generalError = `View not available for the given layout`;
               console.error(error);
             }
           );
@@ -461,13 +547,6 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
           0,
           this.summary.max > 1.5 ? this.summary.max : 1.5
         );
-        /*
-          this.summary.min,
-          this.summary.max
-          // 0,
-          // 1.2 // this.summary.max > 1.2 ? this.summary.max : 1.2
-        );
-        */
 
         const colorAverage = valueToColor(this.summary.average);
 
@@ -493,7 +572,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
           row.forEach((val, x) => {
             if (val !== no_value_number) {
               drawHexBlocks(
-                this.buildingId,
+                this.layoutId,
                 this.detailSource,
                 x_off,
                 y_off,
@@ -538,18 +617,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     const originalFloor = this.currentFloor;
 
     let content = '';
-    const simulationsToExport = [
-      'buildings',
-      'grounds',
-      'streets',
-      'railroads',
-      'parks',
-      'trees',
-      'lakes',
-      'mountains',
-      'rivers',
-    ]; // , 'rivers', 'trees'
-
+    const simulationsToExport = ['buildings']; // , 'rivers', 'trees'
     for (let i = 0; i < simulationsToExport.length; i += 1) {
       this.currentSimulation = simulationsToExport[i];
       let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
@@ -662,13 +730,16 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
    * @param resolution
    */
   correctVisibility(resolution) {
+
     const referenceResolution = 1.5;
+
     this.detailLayer.setVisible(resolution < referenceResolution);
     this.globalLayer.setVisible(resolution >= referenceResolution);
+
   }
 
   viewRaw() {
-    window.location.href = `${urlPortfolio}/simulation/building/${this.buildingId}`;
+    window.location.href = `${urlPortfolio}/simulation/layout/${this.layoutId}`;
   }
 
   changeMap(data) {

@@ -6,7 +6,7 @@
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
       &nbsp;&nbsp;&nbsp;
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Duplicate ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip3" class="btn green" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Copy ({{selectedNodes.length}})</button>
       <button [popper]="tooltip4" class="btn green" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
       &nbsp;&nbsp;&nbsp;
       <button [popper]="tooltip5" class="btn green" (click)="addRow()" > Add site </button>

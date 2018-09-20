@@ -437,7 +437,7 @@ export class CellRender {
       const floors = params.value.map(floor => {
         let text = 'View source';
         if (floor.source.indexOf('archilogic.com') >= 0) {
-          text = 'View in Archilogic';
+          text = `View floor ${floor.floor_nr} in Archilogic`;
         }
         return (
           `${params.value.length > 1 ? ' ' + floor.floor_nr + ' ' : ''}<a href='` +

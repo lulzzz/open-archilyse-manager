@@ -340,9 +340,22 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       this.setBuildingSiteData(nodeData);
     }
 
+    if (element.height) {
+      nodeData['height'] = element.height;
+    }
+    if (element.number_of_floors) {
+      nodeData['number_of_floors'] = element.number_of_floors;
+    }
+    if (element.footprints) {
+      nodeData['footprints'] = element.footprints;
+    }
+    if (element.building_references) {
+      nodeData['building_references'] = element.building_references;
+    }
+
     // Update if it's referenced
-    nodeData['building_referenced_st'] = ManagerFunctions.isReferencedSTBuilding(nodeData);
-    nodeData['building_referenced_osm'] = ManagerFunctions.isReferencedOSMBuilding(nodeData);
+    nodeData['building_referenced_st'] = ManagerFunctions.isReferencedSTBuilding(element);
+    nodeData['building_referenced_osm'] = ManagerFunctions.isReferencedOSMBuilding(element);
     nodeData['building_referenced'] =
       nodeData['building_referenced_st'] || nodeData['building_referenced_osm'];
   }
@@ -459,11 +472,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   addRow() {
     const newBuilding = {
       address: {
-        city: '', // St. Gallen
-        country: '', // Switzerland
-        postal_code: '', // 9000
-        street: '', // Ruhbergstrasse
-        street_nr: '', // 44
+        city: '',
+        country: '',
+        postal_code: '',
+        street: '',
+        street_nr: '',
       },
       building_references: [],
       description: '',
@@ -476,12 +489,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       'buildings',
       newBuilding,
       building => {
-        // We move to the first page.
-        this.gridOptions.api.paginationGoToFirstPage();
         this.gridOptions.api.updateRowData({
           add: [building],
-          addIndex: 0, // The site is added in the first line (When pagination won't be displayed)
         });
+        // We move to the last page. (After adding, because can be in a new page)
+        this.gridOptions.api.paginationGoToLastPage();
       },
       ManagerFunctions.showErroruser
     );
@@ -531,6 +543,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           this.gridOptions.api.updateRowData({
             add: [building],
           });
+
+          // We move to the last page. (After adding, because can be in a new page)
+          this.gridOptions.api.paginationGoToLastPage();
         },
         ManagerFunctions.showErroruser
       );
@@ -834,6 +849,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
                 this.gridOptions.api.updateRowData({
                   add: [building],
                 });
+
+                // We move to the last page. (After adding, because can be in a new page)
+                this.gridOptions.api.paginationGoToLastPage();
               },
               ManagerFunctions.showErrorUserNoReload
             );

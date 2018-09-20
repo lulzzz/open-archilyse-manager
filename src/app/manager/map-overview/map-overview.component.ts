@@ -42,7 +42,7 @@ import {
   calculateDomain,
   drawHexBlocks,
   reduceHeatmap,
-} from '../potential-view-overview/hexagonFunctions';
+} from '../hexagonFunctions';
 import { colors } from '../potential-view-overview/potential-view-overview.component';
 
 proj4.defs(

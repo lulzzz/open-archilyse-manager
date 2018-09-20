@@ -14,6 +14,7 @@ import { DpoiOverviewComponent } from './dpoi-overview/dpoi-overview.component';
 import { MapOverviewComponent } from './map-overview/map-overview.component';
 import { PotentialViewOverviewComponent } from './potential-view-overview/potential-view-overview.component';
 import { LogOverviewComponent } from './log-overview/log-overview.component';
+import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.component';
 
 const routes: Routes = [
   {
@@ -68,6 +69,11 @@ const routes: Routes = [
       {
         path: 'potentialView/:buildingId',
         component: PotentialViewOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'viewSim/:layoutId',
+        component: ViewSimOverviewComponent,
         canActivate: [AuthGuard],
       },
       {
