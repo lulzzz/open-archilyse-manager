@@ -14,8 +14,7 @@ import {
   getRows,
   showInfoExcel,
 } from '../excel';
-import { OverlayService } from '../../_services/overlay.service';
-import { NavigationService } from '../../_services/navigation.service';
+import { OverlayService, NavigationService } from '../../_services';
 
 @Component({
   selector: 'app-site-overview',

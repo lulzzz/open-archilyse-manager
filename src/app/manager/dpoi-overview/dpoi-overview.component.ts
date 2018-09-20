@@ -7,11 +7,37 @@ import { ApiFunctions } from '../apiFunctions';
 import { ManagerFunctions } from '../managerFunctions';
 import { columnDefs, columnDefsCompare } from './columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
-import {environment} from '../../../environments/environment';
-import {getCategory} from './categories';
-import {NavigationService} from '../../_services/navigation.service';
+import { environment } from '../../../environments/environment';
+import { getCategory } from './categories';
+import { NavigationService } from '../../_services';
 
 const urlPortfolio = environment.urlPortfolio;
+
+/**
+ * Get the difference in a full category validating that attributes are defined
+ * @param res - Values origin
+ * @param resC - Values compare
+ * @param catStr - Category string
+ */
+function getDiffCat(res, resC, catStr) {
+  return {
+    distance: getDiff(res, resC, catStr, 'distance'),
+    duration: getDiff(res, resC, catStr, 'duration'),
+    score: getDiff(res, resC, catStr, 'score'),
+  };
+}
+/**
+ * Get the difference in an attribute validating that is defined.
+ * @param res - Values origin
+ * @param resC - Values compare
+ * @param catStr - Category string
+ * @param attrStr - Attribute string
+ */
+function getDiff(res, resC, catStr, attrStr) {
+  const val = res && res[catStr] && res[catStr][attrStr] ? res[catStr][attrStr] : 0;
+  const valC = resC && resC[catStr] && resC[catStr][attrStr] ? resC[catStr][attrStr] : 0;
+  return val - valC;
+}
 
 @Component({
   selector: 'app-dpoi-overview',
@@ -19,7 +45,6 @@ const urlPortfolio = environment.urlPortfolio;
   styleUrls: ['./dpoi-overview.component.scss'],
 })
 export class DpoiOverviewComponent implements OnInit, OnDestroy {
-
   /**
    * Loading and general error
    */
@@ -66,20 +91,21 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
    */
   fragment_sub: Subscription;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute,
-              private navigationService: NavigationService) {
-
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private navigationService: NavigationService
+  ) {
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
       this.initComponent();
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   initComponent() {
-
     this.loading = true;
     this.filterModelSet = false;
 
@@ -158,10 +184,10 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
                         category_original: res && res.category ? res.category : '',
                         place_name: res && res.name ? res.name : '',
                         place_name_compare: resC && resC.name ? resC.name : '',
-                        bike: this.getDiffCat(res, resC, 'bike'),
-                        car: this.getDiffCat(res, resC, 'car'),
-                        flight: this.getDiffCat(res, resC, 'flight'),
-                        foot: this.getDiffCat(res, resC, 'foot'),
+                        bike: getDiffCat(res, resC, 'bike'),
+                        car: getDiffCat(res, resC, 'car'),
+                        flight: getDiffCat(res, resC, 'flight'),
+                        foot: getDiffCat(res, resC, 'foot'),
                       };
                     });
 
@@ -210,32 +236,6 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
         }
       );
     }
-  }
-
-  /**
-   * Get the difference in a full category validating that attributes are defined
-   * @param res - Values origin
-   * @param resC - Values compare
-   * @param catStr - Category string
-   */
-  getDiffCat(res, resC, catStr) {
-    return {
-      distance: this.getDiff(res, resC, catStr, 'distance'),
-      duration: this.getDiff(res, resC, catStr, 'duration'),
-      score: this.getDiff(res, resC, catStr, 'score'),
-    };
-  }
-  /**
-   * Get the difference in an attribute validating that is defined.
-   * @param res - Values origin
-   * @param resC - Values compare
-   * @param catStr - Category string
-   * @param attrStr - Attribute string
-   */
-  getDiff(res, resC, catStr, attrStr) {
-    const val = res && res[catStr] && res[catStr][attrStr] ? res[catStr][attrStr] : 0;
-    const valC = resC && resC[catStr] && resC[catStr][attrStr] ? resC[catStr][attrStr] : 0;
-    return val - valC;
   }
 
   /**

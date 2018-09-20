@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { CellRender } from '../cellRender';
 import { ColumnDefinitions } from '../columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
-import { NavigationService } from '../../_services/navigation.service';
+import { NavigationService } from '../../_services';
 
 @Component({
   selector: 'app-country-overview',

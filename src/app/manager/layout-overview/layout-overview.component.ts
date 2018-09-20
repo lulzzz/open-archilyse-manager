@@ -16,9 +16,8 @@ import {
   getRows,
   showInfoExcel,
 } from '../excel';
-import { OverlayService } from '../../_services/overlay.service';
+import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
-import { NavigationService } from '../../_services/navigation.service';
 
 const urlGeoreference = environment.urlGeoreference;
 
@@ -532,9 +531,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       'layouts',
       newLayout,
       layouts => {
-
         this.gridOptions.api.updateRowData({
-          add: [layouts]
+          add: [layouts],
         });
 
         // We move to the last page. (After adding, because can be in a new page)

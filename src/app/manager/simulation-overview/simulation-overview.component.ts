@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../apiFunctions';
-import { OverlayService } from '../../_services/overlay.service';
-import { NavigationService } from '../../_services/navigation.service';
+import { NavigationService } from '../../_services';
 
 @Component({
   selector: 'app-simulation-overview',

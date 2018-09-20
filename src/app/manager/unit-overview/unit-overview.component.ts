@@ -14,9 +14,8 @@ import {
   getRows,
   showInfoExcel,
 } from '../excel';
-import { OverlayService } from '../../_services/overlay.service';
+import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
-import { NavigationService } from '../../_services/navigation.service';
 
 const urlPortfolio = environment.urlPortfolio;
 

@@ -14,7 +14,7 @@ import {
   getRows,
   showInfoExcel,
 } from '../excel';
-import { OverlayService } from '../../_services/overlay.service';
+import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
@@ -24,7 +24,6 @@ const urlPortfolio = environment.urlPortfolio;
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
-import { NavigationService } from '../../_services/navigation.service';
 
 proj4.defs(
   'EPSG:2056',
