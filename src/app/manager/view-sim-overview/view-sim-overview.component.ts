@@ -35,6 +35,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../environments/environment';
 import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
 import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
+import { sim_result_mock } from './mock';
 
 const apiUrl = environment.apiUrl;
 const urlPortfolio = environment.urlPortfolio;
@@ -124,7 +125,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
 
   view: OlView;
 
-  referenceSource: 'swiss_topo';
+  referenceSource = 'swiss_topo';
 
   selectPointerClick;
   selectPointerMove;
@@ -269,6 +270,10 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
 
   startWithBuilding() {
     let buildingRefId = null;
+
+    console.log('this.building', this.building);
+    console.log('this.referenceSource', this.referenceSource);
+
     if (this.building['building_references']) {
       const br = this.building['building_references'].find(
         br => br.source === this.referenceSource
@@ -331,160 +336,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
       }
 
       if (this.feature) {
-        this.http
-          .get(apiUrl + 'layouts/' + this.layoutId + '/simulations', {
-            params: {
-              simulation_packages: ['view'],
-            },
-          })
-          .subscribe(
-            simulations => {
-              console.log('simulations', simulations['view']);
-
-              if (simulations && simulations['view']) {
-                if (simulations['view']['status'] === 'complete') {
-                  if (simulations['view']['result']) {
-                    this.sim_result = simulations['view']['result'];
-
-                    this.sim_result.sort((a, b) => a.height - b.height);
-
-                    if (this.map === null) {
-                      this.mapStyle = 'satellite';
-
-                      this.source = new OlXYZ({
-                        url:
-                          'https://api.tiles.mapbox.com/v4/mapbox.' +
-                          this.mapStyle +
-                          '/{z}/{x}/{y}.png?' +
-                          'access_token=***REMOVED***',
-                      });
-
-                      this.detailSource = new Vector({
-                        features: [],
-                      });
-
-                      this.globalSource = new Vector({
-                        features: [],
-                      });
-
-                      this.detailLayer = new OlVectorLayer({
-                        source: this.detailSource,
-                        style: styleNormal,
-                      });
-
-                      this.globalLayer = new OlVectorLayer({
-                        source: this.globalSource,
-                        style: styleNormal,
-                      });
-
-                      this.layer = new OlTileLayer({
-                        source: this.source,
-                      });
-
-                      this.view = new OlView({
-                        projection: 'EPSG:' + epsg,
-                      });
-
-                      this.map = new OlMap({
-                        target: 'map',
-                        layers: [this.layer, this.globalLayer, this.detailLayer],
-                        view: this.view,
-                      });
-
-                      this.view.on('propertychange', e => {
-                        switch (e.key) {
-                          case 'resolution':
-                            this.correctVisibility(e.oldValue);
-                            break;
-                        }
-                      });
-
-                      this.fragment_sub = this.route.fragment.subscribe(fragment => {
-                        const urlParams = parseParms(fragment);
-                        if (urlParams.hasOwnProperty('mapStyle')) {
-                          this.changeMapStyle(urlParams['mapStyle']);
-                        }
-                      });
-
-                      // select interaction working on "pointermove"
-                      this.selectPointerClick = new Select({
-                        condition: conditionClick,
-                        style: styleOver,
-                      });
-
-                      this.map.addInteraction(this.selectPointerClick);
-
-                      this.selectPointerClick.on('select', e => {
-                        if (e.selected.length > 0 && e.selected[0].id_) {
-                          const featureId = e.selected[0].id_;
-                          if (featureId.includes('#') && featureId.includes('||')) {
-                            // It's an hexagon
-
-                            const postion = featureId.indexOf('||');
-                            const layoutId = featureId.substr(
-                              postion + 2,
-                              featureId.length - postion
-                            );
-                            const coords = featureId.substr(0, postion).split('#');
-
-                            const xx = Math.abs(coords[0]);
-                            const yy = Math.abs(coords[1]);
-
-                            const thisHeightSims = this.sim_result.filter(
-                              sim => sim.height === this.height
-                            );
-
-                            let totalValue = 0;
-                            const simValues = thisHeightSims.map(sim => {
-                              const value = sim.heatmap[yy][xx];
-                              totalValue += value;
-                              return {
-                                category: sim.category,
-                                value: value,
-                              };
-                            });
-
-                            console.log('simValues', simValues);
-                            console.log('totalValue', totalValue);
-
-                            // window.location.href = `${urlPortfolio}/building#building_id=${layoutId}`;
-                          } else {
-                            console.log('BUILDING', e.selected[0].id_);
-                            /**
-                            // It's a building
-                            window.location.href = `${urlPortfolio}/building#building_id=${
-                              e.selected[0].id_
-                              }`;
-                            */
-                          }
-                        }
-                      });
-                    }
-
-                    this.globalSource.addFeature(this.feature);
-                    this.drawSimulation(this.feature);
-
-                    this.loading = false;
-                    this.centerMap();
-                  } else {
-                    this.loading = false;
-                    this.generalError = `View is empty for the given layout`;
-                  }
-                } else {
-                  this.loading = false;
-                  this.generalError = `View is not yet ready for the given layout`;
-                }
-              } else {
-                this.loading = false;
-                this.generalError = `View not available for the given layout`;
-              }
-            },
-            error => {
-              this.loading = false;
-              this.generalError = `View not available for the given layout`;
-              console.error(error);
-            }
-          );
+        this.setUpMapWithFeature(epsg);
       } else {
         this.loading = false;
         this.generalError = `Perimeter not found for the given building in ${map_source_str}`;
@@ -492,6 +344,180 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     } else {
       this.loading = false;
       this.generalError = `Building not georeferenced in ${map_source_str}`;
+    }
+  }
+
+  setUpMapWithFeature(epsg) {
+    const debug = true;
+    if (debug) {
+      console.log('sim_result_mock', sim_result_mock);
+      this.sim_result = sim_result_mock;
+
+      this.sim_result.sort((a, b) => a.height - b.height);
+
+      this.setUpMapWithSimulations(epsg);
+
+      this.globalSource.addFeature(this.feature);
+      this.drawSimulation(this.feature);
+
+      this.loading = false;
+      this.centerMap();
+
+      return false;
+    }
+
+    this.http
+      .get(apiUrl + 'layouts/' + this.layoutId + '/simulations', {
+        params: {
+          simulation_packages: ['view'],
+        },
+      })
+      .subscribe(
+        simulations => {
+          console.log('simulations', simulations['view']);
+
+          if (simulations && simulations['view']) {
+            if (simulations['view']['status'] === 'complete') {
+              if (simulations['view']['result']) {
+                this.sim_result = simulations['view']['result'];
+
+                this.sim_result.sort((a, b) => a.height - b.height);
+
+                this.setUpMapWithSimulations(epsg);
+
+                this.globalSource.addFeature(this.feature);
+                this.drawSimulation(this.feature);
+
+                this.loading = false;
+                this.centerMap();
+              } else {
+                this.loading = false;
+                this.generalError = `View is empty for the given layout`;
+              }
+            } else {
+              this.loading = false;
+              this.generalError = `View is not yet ready for the given layout`;
+            }
+          } else {
+            this.loading = false;
+            this.generalError = `View not available for the given layout`;
+          }
+        },
+        error => {
+          this.loading = false;
+          this.generalError = `View not available for the given layout`;
+          console.error(error);
+        }
+      );
+  }
+
+  setUpMapWithSimulations(epsg) {
+    if (this.map === null) {
+      this.mapStyle = 'satellite';
+
+      this.source = new OlXYZ({
+        url:
+          'https://api.tiles.mapbox.com/v4/mapbox.' +
+          this.mapStyle +
+          '/{z}/{x}/{y}.png?' +
+          'access_token=***REMOVED***',
+      });
+
+      this.detailSource = new Vector({
+        features: [],
+      });
+
+      this.globalSource = new Vector({
+        features: [],
+      });
+
+      this.detailLayer = new OlVectorLayer({
+        source: this.detailSource,
+        style: styleNormal,
+      });
+
+      this.globalLayer = new OlVectorLayer({
+        source: this.globalSource,
+        style: styleNormal,
+      });
+
+      this.layer = new OlTileLayer({
+        source: this.source,
+      });
+
+      this.view = new OlView({
+        projection: 'EPSG:' + epsg,
+      });
+
+      this.map = new OlMap({
+        target: 'map',
+        layers: [this.layer, this.globalLayer, this.detailLayer],
+        view: this.view,
+      });
+
+      this.view.on('propertychange', e => {
+        switch (e.key) {
+          case 'resolution':
+            this.correctVisibility(e.oldValue);
+            break;
+        }
+      });
+
+      this.fragment_sub = this.route.fragment.subscribe(fragment => {
+        const urlParams = parseParms(fragment);
+        if (urlParams.hasOwnProperty('mapStyle')) {
+          this.changeMapStyle(urlParams['mapStyle']);
+        }
+      });
+
+      // select interaction working on "pointermove"
+      this.selectPointerClick = new Select({
+        condition: conditionClick,
+        style: styleOver,
+      });
+
+      this.map.addInteraction(this.selectPointerClick);
+
+      this.selectPointerClick.on('select', e => {
+        if (e.selected.length > 0 && e.selected[0].id_) {
+          const featureId = e.selected[0].id_;
+          if (featureId.includes('#') && featureId.includes('||')) {
+            // It's an hexagon
+
+            const postion = featureId.indexOf('||');
+            const layoutId = featureId.substr(postion + 2, featureId.length - postion);
+            const coords = featureId.substr(0, postion).split('#');
+
+            const xx = Math.abs(coords[0]);
+            const yy = Math.abs(coords[1]);
+
+            const thisHeightSims = this.sim_result.filter(sim => sim.height === this.height);
+
+            let totalValue = 0;
+            const simValues = thisHeightSims.map(sim => {
+              const value = sim.heatmap[yy][xx];
+              totalValue += value;
+              return {
+                category: sim.category,
+                value: value,
+              };
+            });
+
+            console.log('simValues', simValues);
+            console.log('totalValue', totalValue);
+
+            // window.location.href = `${urlPortfolio}/building#building_id=${layoutId}`;
+          } else {
+            console.log('BUILDING', e.selected[0].id_);
+            /**
+            // It's a building
+            window.location.href = `${urlPortfolio}/building#building_id=${
+              e.selected[0].id_
+              }`;
+            */
+          }
+        }
+      });
     }
   }
 
@@ -590,7 +616,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     const introduction = `<?xml version="1.0" encoding="UTF-8"?>
         <kml xmlns="http://www.opengis.net/kml/2.2">
           <Document>
-            <name>Building ${this.building.name} Id#${this.building.building_id}</name>
+            <name>Layout ${this.layout.name} Id#${this.layout.layout_id}</name>
             <open>1</open>
             <description> ${this.address} </description>`;
 
@@ -598,10 +624,13 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     const originalFloor = this.currentFloor;
 
     let content = '';
-    const simulationsToExport = ['buildings']; // , 'rivers', 'trees'
+    const simulationsToExport = ['buildings', 'rivers', 'trees'];
     for (let i = 0; i < simulationsToExport.length; i += 1) {
       this.currentSimulation = simulationsToExport[i];
-      let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
+
+      // There's no need from extra folder
+      // let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
+      let contentFolder = ``;
 
       // Only the original simulation is visible by default
       if (this.currentSimulation !== originalSimulation) {
@@ -619,7 +648,9 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
         }
         contentFolder += result.data;
       }
-      contentFolder += `</Folder>`;
+
+      // contentFolder += `</Folder>`;
+
       content += contentFolder;
     }
 
@@ -687,8 +718,10 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
 
     return {
       camera: lookAt,
-      data: `<Folder><name>${this.currentSimulation} simulation height ${this.height}</name>
-          <description> Analyzes the building visibility </description>${lookAt}${placemarks}
+      data: `<Folder><name>${this.currentSimulation} simulation</name>
+          <description> Analyzes the ${
+            this.currentSimulation
+          } visibility </description>${lookAt}${placemarks}
          </Folder>`,
     };
   }
@@ -711,12 +744,10 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
    * @param resolution
    */
   correctVisibility(resolution) {
-
     const referenceResolution = 1.5;
 
     this.detailLayer.setVisible(resolution < referenceResolution);
     this.globalLayer.setVisible(resolution >= referenceResolution);
-
   }
 
   viewRaw() {

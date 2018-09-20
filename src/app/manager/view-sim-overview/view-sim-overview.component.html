@@ -36,13 +36,6 @@
           <!-- <option value="sky">Sky</option> -->
         </select>
       </div>
-      &nbsp;&nbsp;
-      <div *ngIf="floors.length>0" [popper]="selectFloor" class="selectMap">
-        <label >Floor: </label>
-        <select (change)="changeFloor($event)" [value]="currentFloor">
-          <option *ngFor="let floor of floors" [value]="floor">{{floor+1}}</option>
-        </select>
-      </div>
     </div>
     <div *ngIf="summary">
       <label >Min: </label>{{summary.min.toFixed(2)}}&nbsp;&nbsp;

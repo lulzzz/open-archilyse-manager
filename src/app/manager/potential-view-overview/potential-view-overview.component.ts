@@ -620,7 +620,9 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     return {
       camera: lookAt,
       data: `<Folder><name>${this.currentSimulation} simulation height ${this.height}</name>
-          <description> Analyzes the building visibility </description>${lookAt}${placemarks}
+          <description> Analyzes the ${
+            this.currentSimulation
+          } visibility </description>${lookAt}${placemarks}
          </Folder>`,
     };
   }
