@@ -591,7 +591,7 @@ export class CellRender {
       const layout_id = params.data.layout_id;
       for (let i = 0; i < params.value.length; i += 1) {
         const movements = params.value[i];
-        const source = movements.source ? movements.source : 'open_street_maps';
+        const source = movements.source ? movements.source : 'swiss_topo'; // 'open_street_maps';
         result += `<a href="${urlGeoreference}/building/${layout_id}?source=${source}">${source}</a>`;
       }
     }

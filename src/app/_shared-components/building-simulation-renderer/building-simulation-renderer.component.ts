@@ -124,6 +124,7 @@ export class BuildingSimulationRendererComponent {
       floorArray.push(i);
     }
 
+    // Only
     const simsRequested = [
       {
         name: 'potential_view',
@@ -131,10 +132,7 @@ export class BuildingSimulationRendererComponent {
           floors: floorArray,
         },
       },
-      {
-        name: 'dpoi',
-      },
-    ]; // TODO: 'accoustics',
+    ];
     ManagerFunctions.requestBuildingSimulations(this.http, this.building, simsRequested, this.api);
   }
   requestStatus() {

@@ -135,6 +135,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   currentSimulation = 'buildings';
   currentFloor = 0;
   height;
+  absolute_height;
   summary;
 
   feature;
@@ -537,6 +538,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
         const sim = categorySimulations[this.currentFloor];
 
         this.height = sim.height;
+        this.absolute_height = sim.absolute_height;
         this.summary = sim.summary;
         const starting_point = sim['starting_point'];
         const heatmap = sim['heatmap'];
@@ -678,8 +680,9 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     const documents = result.childNodes[0];
     const featureLists = documents.childNodes;
     const height = this.height;
-    const heightStrSpace = `,${height} `;
-    const heightStr = `,${height}`;
+    const absolute_height = this.absolute_height;
+    const heightStrSpace = `,${absolute_height} `;
+    const heightStr = `,${absolute_height}`;
 
     let center = null;
 
@@ -707,13 +710,15 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
       placemarks.push(`
         <Placemark>
           <Style><LineStyle><color>${exagonColor}</color></LineStyle><PolyStyle><color>${exagonColor}</color><fill>1</fill></PolyStyle></Style>
-          <Polygon><altitudeMode>relativeToGround</altitudeMode><outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
+          <Polygon><altitudeMode>absolute</altitudeMode><outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
         </Placemark>`);
     });
 
     const lookAt = `<LookAt>
             <longitude>${center[0]}</longitude><latitude>${center[1]}</latitude>
-            <altitude>${this.height}</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
+            <altitude>${
+              this.absolute_height
+            }</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
           </LookAt>`;
 
     return {
