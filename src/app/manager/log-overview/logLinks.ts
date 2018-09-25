@@ -17,80 +17,80 @@ export function renderRequestLinkDocs(params) {
        * Plural routes
        */
       if (url === apiUrl + 'sites') {
-        return `<a href="${baseUrl}#/reference/sites/site-collection/get-all-sites" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/sites/site-collection/get-all-sites" >View</a>`;
       }
       if (url === apiUrl + 'buildings') {
-        return `<a href="${baseUrl}#/reference/buildings/building-collection/get-all-buildings" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/buildings/building-collection/get-all-buildings" >View</a>`;
       }
       if (url === apiUrl + 'units') {
-        return `<a href="${baseUrl}#/reference/units/unit-collection/get-all-units" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/units/unit-collection/get-all-units" >View</a>`;
       }
       if (url === apiUrl + 'layouts') {
-        return `<a href="${baseUrl}#/reference/layouts/layout-collection/get-all-layouts" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/layouts/layout-collection/get-all-layouts" >View</a>`;
       }
 
       /**
        * Singular routes
        */
       if (url.startsWith(apiUrl + 'sites')) {
-        return `<a href="${baseUrl}#/reference/sites/site-collection/get-site" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/sites/site-collection/get-site" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'buildings')) {
-        return `<a href="${baseUrl}#/reference/buildings/building-collection/get-building" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/buildings/building-collection/get-building" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'units')) {
-        return `<a href="${baseUrl}#/reference/units/unit-collection/get-unit" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/units/unit-collection/get-unit" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'layouts')) {
-        return `<a href="${baseUrl}#/reference/layouts/layout-collection/get-layout" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/layouts/layout-collection/get-layout" >View</a>`;
       }
 
       return 'Description not yet available';
     }
     if (method === 'POST') {
       if (url === apiUrl + 'sites') {
-        return `<a href="${baseUrl}#/reference/sites/site-collection/create-a-site" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/sites/site-collection/create-a-site" >View</a>`;
       }
       if (url === apiUrl + 'buildings') {
-        return `<a href="${baseUrl}#/reference/buildings/building-collection/create-a-building" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/buildings/building-collection/create-a-building" >View</a>`;
       }
       if (url === apiUrl + 'units') {
-        return `<a href="${baseUrl}#/reference/units/unit-collection/create-a-unit" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/units/unit-collection/create-a-unit" >View</a>`;
       }
       if (url === apiUrl + 'layouts') {
-        return `<a href="${baseUrl}#/reference/layouts/layout-collection/create-a-layout" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/layouts/layout-collection/create-a-layout" >View</a>`;
       }
 
       return 'Description not yet available';
     }
     if (method === 'DELETE') {
       if (url.startsWith(apiUrl + 'sites/')) {
-        return `<a href="${baseUrl}#/reference/sites/site/delete-site" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/sites/site/delete-site" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'buildings')) {
-        return `<a href="${baseUrl}#/reference/buildings/building/delete-building" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/buildings/building/delete-building" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'units')) {
-        return `<a href="${baseUrl}#/reference/units/unit/delete-unit" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/units/unit/delete-unit" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'layouts')) {
-        return `<a href="${baseUrl}#/reference/layouts/layout/delete-layout" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/layouts/layout/delete-layout" >View</a>`;
       }
 
       return 'Description not yet available';
     }
     if (method === 'PATCH') {
       if (url.startsWith(apiUrl + 'sites')) {
-        return `<a href="${baseUrl}#/reference/sites/site-collection/get-all-sites" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/sites/site-collection/get-all-sites" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'buildings')) {
-        return `<a href="${baseUrl}#/reference/buildings/building-collection/get-all-buildings" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/buildings/building-collection/get-all-buildings" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'units')) {
-        return `<a href="${baseUrl}#/reference/units/unit-collection/get-all-units" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/units/unit-collection/get-all-units" >View</a>`;
       }
       if (url.startsWith(apiUrl + 'layouts')) {
-        return `<a href="${baseUrl}#/reference/layouts/layout-collection/get-all-layouts" >View</a>`;
+        return `<a  target="_blank" href="${baseUrl}#/reference/layouts/layout-collection/get-all-layouts" >View</a>`;
       }
 
       return 'Description not yet available';
