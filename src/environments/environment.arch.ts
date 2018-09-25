@@ -4,12 +4,12 @@ export const environment = {
   apiUrl: 'https://api.archilyse.com/v0.1/',
 
   /** Development */
-  urlConsole: 'https://console.archilyse.com/',
-  urlEditor: 'https://editor.archilyse.com/',
-  urlGeoreference: 'https://georeference.archilyse.com/',
-  urlSimulationViewer: 'https://simulation.archilyse.com/',
-  urlEditorFloorplan: 'https://floorplan.archilyse.com/',
-  urlPortfolio: 'https://portfolio.archilyse.com/',
+  urlConsole: 'https://console.archilyse.com',
+  urlEditor: 'https://editor.archilyse.com',
+  urlGeoreference: 'https://georeference.archilyse.com',
+  urlSimulationViewer: 'https://viewer.archilyse.com',
+  urlEditorFloorplan: 'https://floorplan.archilyse.com',
+  urlPortfolio: 'https://portfolio.archilyse.com',
 
   defaultUser: '',
   defaultPass: '',
