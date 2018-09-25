@@ -4,8 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
-import { UserService } from '../_services';
-import { NavigationService } from '../_services/navigation.service';
+import { UserService, NavigationService } from '../_services';
 
 @Component({
   selector: 'nav-bar',
