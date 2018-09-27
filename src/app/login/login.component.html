@@ -1,6 +1,6 @@
 <div class="contents">
-  <h2>LOG IN</h2>
-
+  <br/>
+  <br/>
   <form [formGroup]="logInForm" (ngSubmit)="logIn()" novalidate>
 
     <div class="input">
@@ -38,8 +38,8 @@
 
     <div *ngIf="userError$ | async" class="error">{{userErrorString}}</div>
 
-    <button type="submit" class="btn padding green" *ngIf="!(userLoading$ | async)" [disabled]="logInForm.invalid">Log In</button>
-    <button type="submit" class="btn padding green" *ngIf="userLoading$ | async" disabled>Logging In
+    <button type="submit" class="btn padding blue" *ngIf="!(userLoading$ | async)" [disabled]="logInForm.invalid">Log In</button>
+    <button type="submit" class="btn padding blue" *ngIf="userLoading$ | async" disabled>Logging In
       <app-icon class="options" icon="fa-circle-notch fa-spin"></app-icon>
     </button>
 

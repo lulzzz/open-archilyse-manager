@@ -93,7 +93,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     } else if (url === '/manager/site') {
       this.current = 'site';
     } else if (url === '/manager') {
-      this.current = ') ';
+      this.current = 'building';
     } else if (url === '/manager/building') {
       this.current = 'building';
     } else if (url === '/manager/unit') {

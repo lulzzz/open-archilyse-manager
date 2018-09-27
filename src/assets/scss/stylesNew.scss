@@ -135,6 +135,16 @@ $icon-color: #ffa000;
     font: 14px 'Rubik', sans-serif;
   }
 
+  .ag-header-row{
+    /** border-bottom: none; */
+    border-bottom: 1px solid $new_background_blue;
+  }
+  .ag-header-cell-resize::after{
+    border-right: 1px solid $new_background_blue;
+    height: 100%;
+    margin-top: 0px;
+  }
+
   .ag-header-container{
     // First header row
     .ag-header-row:nth-child(1) {

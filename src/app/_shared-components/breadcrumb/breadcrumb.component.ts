@@ -39,6 +39,8 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Georeference Tool, batch tool' }];
         } else if (url === '/georeference') {
           this.breadcrumb = [{ title: 'Georeference Tool' }];
+        } else if (url === '/login') {
+          this.breadcrumb = [{ title: 'Log In' }];
         } else if (url.startsWith('/manager/potentialView')) {
           this.breadcrumb = [{ title: 'Potential View' }];
         } else if (url.startsWith('/manager/simulation/building')) {
