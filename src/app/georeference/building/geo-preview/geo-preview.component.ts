@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { hideLegend } from '../../../_shared-components/floorplan-heatmap/legend';
 
 @Component({
   selector: 'app-geo-preview',

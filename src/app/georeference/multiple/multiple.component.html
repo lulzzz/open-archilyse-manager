@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <button [popper]="tooltip3" type="submit" class="btn green submitButton" [disabled]="geoForm.invalid || error !== null">Batch Start</button>
+    <button [popper]="tooltip3" type="submit" class="btn blue submitButton" [disabled]="geoForm.invalid || error !== null">Batch Start</button>
 
     <div class="selectSource">
       <label [popper]="tooltip4" >Source: </label>
@@ -34,8 +34,8 @@
   </form>
 
   <div class="buttonsContainer">
-    <button [popper]="tooltip1" class="btn batch" (click)="normal()">Normal Input</button> &nbsp;&nbsp;&nbsp;
-    <button [popper]="tooltip2" class="btn portfolio" (click)="portfolio()">Back to portfolio</button>
+    <button [popper]="tooltip1" class="btn blue batch" (click)="normal()">Normal Input</button> &nbsp;&nbsp;&nbsp;
+    <button [popper]="tooltip2" class="btn lightblue portfolio" (click)="portfolio()">Back to portfolio</button>
   </div>
 
 </div>

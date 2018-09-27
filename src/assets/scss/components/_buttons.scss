@@ -64,6 +64,17 @@
     }
   }
 
+
+  &.lightblue {
+    background-color: $new_table_header_blue;
+    border-color: $new_table_header_blue;
+    color: $white;
+    &:hover {
+      background-color: $blue-alt;
+      border-color: $blue-alt;
+    }
+  }
+
   &.yellow {
     background-color: $yellow;
     border-color: $yellow;

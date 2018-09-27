@@ -32,7 +32,7 @@
     Georeferenced feature for the building not found
   </div>
 </div>
-<div class="container-lg">
+<div class="containter-full-width">
   <div *ngIf="error || !features || features.length<=0" class="footer">
     <div class="left">
       <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
@@ -50,7 +50,7 @@
         </select>
       </div>
 
-      <button [popper]="confirm" class="btn green rounded" type="button" (click)="nextBuilding()">
+      <button [popper]="confirm" class="btn blue" type="button" (click)="nextBuilding()">
         Next
       </button>
     </div>
@@ -78,17 +78,17 @@
         </div>
       </div>
       &nbsp;
-      <button [popper]="confirm" class="btn green rounded" type="button" (click)="confirmCoordinates()">
+      <button [popper]="confirm" class="btn lightblue" type="button" (click)="confirmCoordinates()">
         Confirm position
       </button>
       &nbsp;
-      <button [popper]="confirm" class="btn green rounded" type="button" (click)="nextBuilding()">
+      <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
         {{hasNextBatch?'Skip and next':'Skip and finish'}}
       </button>
     </div>
     <div class="right">
       Select the correct position.&nbsp;
-      <button [disabled]="showPreview" [popper]="confirm" class="btn rounded" type="button" (click)="openPreviews()">
+      <button [disabled]="showPreview" [popper]="confirm" class="btn blue" type="button" (click)="openPreviews()">
         Show positions
       </button>
     </div>

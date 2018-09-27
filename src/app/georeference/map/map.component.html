@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="container-lg">
+<div class="containter-full-width">
   <div *ngIf="!features || features.length<=0" class="footer">
     <div class="left">
       <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
@@ -31,7 +31,7 @@
         </select>
       </div>
       &nbsp;
-      <button [popper]="confirm" class="btn green rounded" type="button" (click)="nextBuilding()">
+      <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
         Continue
       </button>
     </div>
@@ -87,13 +87,13 @@
         </div>
       </div>
       &nbsp;&nbsp;&nbsp;
-      <button [popper]="centerMapPU" class="btn rounded" type="button" (click)="centerMap()">
+      <button [popper]="centerMapPU" class="btn lightblue" type="button" (click)="centerMap()">
         Center View
       </button>
       &nbsp;&nbsp;&nbsp;
-      <button [popper]="skip" class="btn rounded" type="button" (click)="nextBuilding()">{{hasNextBatch?'Skip and next':'Skip and finish'}}</button>
+      <button [popper]="skip" class="btn lightblue" type="button" (click)="nextBuilding()">{{hasNextBatch?'Skip and next':'Skip and finish'}}</button>
       &nbsp;&nbsp;&nbsp;
-      <button [popper]="confirm" class="btn green rounded" type="button" [disabled]="buildingReferenceId=== null" (click)="confirmBuilding()">
+      <button [popper]="confirm" class="btn blue" type="button" [disabled]="buildingReferenceId=== null" (click)="confirmBuilding()">
         {{buildingReferenceIdPreselected!==null && buildingReferenceIdPreselected!==this.buildingReferenceId?'Confirm change':'Confirm'}}
       </button>
     </div>
