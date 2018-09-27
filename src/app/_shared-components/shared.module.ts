@@ -26,6 +26,7 @@ import { CreateLayoutComponent } from './create-layout/create-layout.component';
 import { EditLayoutComponent } from './edit-layout/edit-layout.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import { UniqueIdService } from '../_services';
+import { FloorplanComponent } from './floorplan/floorplan.component';
 
 @NgModule({
   imports: [
@@ -61,6 +62,7 @@ import { UniqueIdService } from '../_services';
     IconComponent,
     DragItemComponent,
     EditorPropertiesSidebarComponent,
+    FloorplanComponent,
   ],
   exports: [
     InfoBoxOverlayComponent,
