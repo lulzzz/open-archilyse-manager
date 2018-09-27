@@ -18,11 +18,7 @@ import OlStyleStroke from 'ol/style/Stroke';
 import KML from 'ol/format/KML';
 import { get as getProjection } from 'ol/proj';
 
-import {
-  click as conditionClick,
-  pointerMove as conditionPointerMove,
-  never as conditionNever,
-} from 'ol/events/condition';
+import { click as conditionClick } from 'ol/events/condition';
 
 import Select from 'ol/interaction/Select';
 

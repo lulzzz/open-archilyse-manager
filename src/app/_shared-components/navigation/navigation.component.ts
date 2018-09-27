@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationService } from '../../_services/navigation.service';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { UserService } from '../../_services';
+import { NavigationService, UserService } from '../../_services';
 
 @Component({
   selector: 'app-navigation',
@@ -10,6 +9,7 @@ import { UserService } from '../../_services';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent implements OnInit, OnDestroy {
+  optionsAvailable = [];
   options = [];
   current = '';
 
@@ -59,6 +59,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
           this.current = 'log';
         } else {
           this.current = '';
+        }
+
+        if (url === '/error' || url === '/login' || url === '/logout') {
+          this.options = [];
+        } else {
+          this.options = this.optionsAvailable;
         }
       }
     });
@@ -110,7 +116,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       ];
     }
 
-    this.options = [
+    this.optionsAvailable = [
       {
         tooltip: 'Map overview',
         title: 'Map',
@@ -143,6 +149,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
         value: 'layout',
       },
     ];
+
+    this.options = this.optionsAvailable;
   }
 
   processURL(url) {

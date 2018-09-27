@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
-import { OverlayService } from '../../_services/overlay.service';
+import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
-import { NavigationService } from '../../_services/navigation.service';
 
 const urlPortfolio = environment.urlPortfolio;
 
@@ -112,7 +111,7 @@ export class BuildingSimulationRendererDpoiComponent {
     const simsRequested = [
       {
         name: 'dpoi',
-      }
+      },
     ];
     ManagerFunctions.requestBuildingSimulations(this.http, this.building, simsRequested, this.api);
   }

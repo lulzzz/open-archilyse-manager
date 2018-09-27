@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DiagramService, ElementEvent } from '../../../../_services/diagram.service';
+import { DiagramService, ElementEvent } from '../../../../_services';
 
 @Component({
   selector: 'app-drag-item',

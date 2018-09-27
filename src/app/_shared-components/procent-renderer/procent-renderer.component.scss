@@ -1,3 +1,5 @@
+@import 'colors';
+
 .div-percent-bar {
   display: inline-block;
   height: 100%;
@@ -8,13 +10,12 @@
 .div-percent-value {
   position: absolute;
   padding-left: 4px;
-  font-weight: bold;
   font-size: 13px;
   z-index: 10;
 }
 
 .div-outer-div {
   display: inline-block;
-  height: 100%;
+  height: 20px;
   width: 100%;
 }

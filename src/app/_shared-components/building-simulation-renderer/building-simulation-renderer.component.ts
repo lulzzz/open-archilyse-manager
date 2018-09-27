@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
-import { OverlayService } from '../../_services/overlay.service';
+import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
-import { NavigationService } from '../../_services/navigation.service';
 
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;

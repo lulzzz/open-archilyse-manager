@@ -22,9 +22,16 @@ export class ProcentRendererComponent {
 
     this.styles = {
       width: this.value + '%',
-      backgroundColor: '#81d688',
+      backgroundColor: '#2e67b1',
     };
 
+    if (this.value <= 0) {
+      this.styles.color = '#2c353e';
+    } else {
+      this.styles.color = '#ffffff';
+    }
+
+    /**
     if (this.value < 20) {
       this.styles.backgroundColor = '#ff8582';
     } else if (this.params.value < 60) {
@@ -32,5 +39,6 @@ export class ProcentRendererComponent {
     } else if (this.params.value < 80) {
       this.styles.backgroundColor = '#b5d686';
     }
+    */
   }
 }

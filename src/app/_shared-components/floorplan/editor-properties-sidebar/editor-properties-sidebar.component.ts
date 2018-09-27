@@ -24,7 +24,7 @@ import {
 } from '../constants';
 import { COOR_X, COOR_Y } from '../simData';
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
-import { EditorService } from '../../../_services/editor.service';
+import { EditorService } from '../../../_services';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({

@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../_store';
-import { filter, take, tap } from 'rxjs/operators';
 import { Layout } from '../../_models';
 import { slideInOut } from '../../_animations/slideInOut.animation';
 

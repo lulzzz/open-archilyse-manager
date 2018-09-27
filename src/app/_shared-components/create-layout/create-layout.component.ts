@@ -11,9 +11,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Unit } from '../../_models';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../../_store';
-import { filter, take, first } from 'rxjs/operators';
 import { slideInOut } from '../../_animations/slideInOut.animation';
-import { OverlayService } from '../../_services/overlay.service';
+import { OverlayService } from '../../_services';
 
 @Component({
   selector: 'create-layout',

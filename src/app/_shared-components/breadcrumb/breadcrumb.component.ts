@@ -1,6 +1,5 @@
-import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { Router, NavigationEnd, GuardsCheckEnd } from '@angular/router';
-import { RouterEvent } from '@angular/router/src/events';
+import { Component, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
