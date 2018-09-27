@@ -44,6 +44,8 @@ export class LayoutSimulationRendererComponent {
 
   currentProfile;
 
+  urlView: any;
+
   constructor(
     private http: HttpClient,
     private infoDialog: OverlayService,
@@ -70,16 +72,17 @@ export class LayoutSimulationRendererComponent {
     let requireGeorefLayout = false;
     let requireBuilding = false;
 
-    if (params.colDef.field === 'simulations.view.status') {
+    if (params.colDef.field === 'simulation_statuses.view.status') {
       requireBuilding = true;
       requireGeorefLayout = true;
-    } else if (params.colDef.field === 'simulations.wbs.status') {
+      this.urlView = `${urlPortfolio}/viewSim/${params.data.layout_id}`;
+    } else if (params.colDef.field === 'simulation_statuses.wbs.status') {
       // Just the model structure
-    } else if (params.colDef.field === 'simulations.pathways.status') {
+    } else if (params.colDef.field === 'simulation_statuses.pathways.status') {
       // Just the model structure
-    } else if (params.colDef.field === 'simulations.basic_features.status') {
+    } else if (params.colDef.field === 'simulation_statuses.basic_features.status') {
       // Just the model structure
-    } else if (params.colDef.field === 'simulations.accoustics.status') {
+    } else if (params.colDef.field === 'simulation_statuses.accoustics.status') {
       // Just the model structure
     } else {
       console.error('Column simulations', params.colDef.field);
@@ -114,6 +117,7 @@ export class LayoutSimulationRendererComponent {
       !requireBuilding || ManagerFunctions.isReferencedBuilding(this.layout.building);
     this.georeferenced =
       !requireBuilding || !requireGeorefLayout || ManagerFunctions.isReferencedLayout(this.layout);
+
     this.modelStruct = ManagerFunctions.isDigitalizedLayout(this.layout);
 
     this.urlRaw = `${urlPortfolio}/simulation/layout/${params.data.layout_id}`;
@@ -154,7 +158,12 @@ export class LayoutSimulationRendererComponent {
   }
 
   requestSimulation() {
-    const simsRequested = ['view', 'wbs', 'pathways', 'basic_features', 'accoustics'];
+    // const simsRequested = ['view']; // , 'wbs', 'pathways', 'basic_features', 'accoustics'
+    const simsRequested = [
+      {
+        name: 'view',
+      },
+    ];
     ManagerFunctions.requestLayoutSimulations(this.http, this.layout, simsRequested, this.api);
   }
   requestStatus() {

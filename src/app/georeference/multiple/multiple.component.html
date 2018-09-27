@@ -1,0 +1,48 @@
+<div class="contents">
+  <h2>Georeference Tool, batch tool</h2>
+
+  <form [formGroup]="geoForm" (ngSubmit)="start()" novalidate>
+
+    <div class="input">
+      <textarea rows="10" matInput placeholder="Building Id and Layout Id list" formControlName="list" (keydown)="onKeydown($event)" (ngModelChange)="reviewText($event)"></textarea>
+
+      <div *ngIf="numberOfLines > 0">Number of lines {{numberOfLines}}</div>
+      <div *ngIf="error !== null" class="error" [innerHTML]="error"></div>
+
+      <div class="subscript">
+        <div *ngIf="list.invalid && list.touched; then warn else info"></div>
+        <ng-template #info>
+          <div class="info">The building Id and layout Id list. <br/> Each line should contain a building Id (first) and a layout Id (after) separated by a "Tabulation" or a ";"</div>
+          <div class="info">To skip a building Id or a layout Id in a line leave it empty</div>
+        </ng-template>
+        <ng-template #warn>
+          <div class="warn">A valid building Id and layout Id list is required</div>
+        </ng-template>
+      </div>
+    </div>
+
+    <button [popper]="tooltip3" type="submit" class="btn green submitButton" [disabled]="geoForm.invalid || error !== null">Batch Start</button>
+
+    <div class="selectSource">
+      <label [popper]="tooltip4" >Source: </label>
+      <select [popper]="tooltip4" (change)="selectSource($event.target.value)" formControlName="source">
+        <option value="">Default (S.Topo)</option>
+        <option value="open_street_maps">Open Street Maps</option>
+        <option value="swiss_topo">Swiss Topo</option>
+      </select>
+    </div>
+  </form>
+
+  <div class="buttonsContainer">
+    <button [popper]="tooltip1" class="btn batch" (click)="normal()">Normal Input</button> &nbsp;&nbsp;&nbsp;
+    <button [popper]="tooltip2" class="btn portfolio" (click)="portfolio()">Back to portfolio</button>
+  </div>
+
+</div>
+
+<!-- Tooltips -->
+
+<popper-content #tooltip1 >Perform only one georeference operation.</popper-content>
+<popper-content #tooltip2 >Back to the portfolio manager.</popper-content>
+<popper-content #tooltip3 >Start georeferencing one by one all the provided building_ids and or layout_ids.</popper-content>
+<popper-content #tooltip4 >Select the source of the georeferenced data.</popper-content>

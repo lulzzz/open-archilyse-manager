@@ -1,0 +1,102 @@
+<div class="containter-full-width relative-pos">
+  <app-geo-editor
+    *ngIf="buildingPerimeter && buildingPerimeter !== null && modelStructure !== null && allPossibleCoords !==null"
+    [buildingPerimeter]="buildingPerimeter"
+    [buildingPerimeterScale]="buildingPerimeterScale"
+    [modelStructure]="modelStructure"
+    [coords]="coords"
+    [previousCoords]="previousCoords"
+    [allPossibleCoords]="allPossibleCoords"
+    [referenceX]="referenceX"
+    [referenceY]="referenceY"
+    (previews)="processPreviews($event)"
+    (manualPreset)="manualPreset($event)"
+
+  ></app-geo-editor>
+  <app-geo-preview *ngIf="showPreview" (close)="closePreviews()" (preset)="preset($event)" [previewImages]="previewImages" [currentPreset]="currentPreset" ></app-geo-preview>
+  <div id="map" class="map-panel">
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Loading
+  </div>
+  <div *ngIf="error" class="noFeaturesFound" [innerHTML]="error"> </div>
+  <div *ngIf="!loading && !error && (!features || features.length<=0)" class="noFeaturesFound">
+    <div>The data for the current building address is not available.</div>
+    <div><b>Building:</b> {{(building)?building.name:''}}</div>
+    <div><b>Building address:</b> {{buildingAddress}}</div>
+    <div><b>Unit:</b> {{(unit)?unit.name:''}}</div>
+    <div><b>Layout:</b> {{(layout)?layout.name:''}}</div>
+  </div>
+  <div *ngIf="!error && (features && features.length>0 && !currentFeature)" class="noFeaturesFound">
+    Georeferenced feature for the building not found
+  </div>
+</div>
+<div class="container-lg">
+  <div *ngIf="error || !features || features.length<=0" class="footer">
+    <div class="left">
+      <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+        To georeference {{nextBatch.length}} buildings left.
+      </div>
+    </div>
+    <div class="right">
+
+      <div *ngIf="layout" [popper]="selectSource" class="selectSourceInline">
+        <label>Source: </label>
+        <select (change)="selectApiSource($event.target.value)" [value]="(referenceSource)?referenceSource:''">
+          <option value="">Default (S.Topo)</option>
+          <option value="open_street_maps">Open Street Maps</option>
+          <option value="swiss_topo">Swiss Topo</option>
+        </select>
+      </div>
+
+      <button [popper]="confirm" class="btn green rounded" type="button" (click)="nextBuilding()">
+        Next
+      </button>
+    </div>
+  </div>
+  <div *ngIf="!error && features && features.length>0" class="footer">
+    <div class="left">
+      <div class="selectors">
+        <div [popper]="selectMap" class="selectMap">
+          <label >Map mode: </label>
+          <select (change)="changeMap($event)" [value]="mapStyle">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="outdoors">Outdoors</option>
+            <option value="streets">Streets</option>
+            <option value="satellite">Satellite</option>
+          </select>
+        </div>
+        <div [popper]="selectSource" class="selectSource">
+          <label>Source: </label>
+          <select (change)="selectApiSource($event.target.value)" [value]="(referenceSource)?referenceSource:''">
+            <option value="">Default (S.Topo)</option>
+            <option value="open_street_maps">Open Street Maps</option>
+            <option value="swiss_topo">Swiss Topo</option>
+          </select>
+        </div>
+      </div>
+      &nbsp;
+      <button [popper]="confirm" class="btn green rounded" type="button" (click)="confirmCoordinates()">
+        Confirm position
+      </button>
+      &nbsp;
+      <button [popper]="confirm" class="btn green rounded" type="button" (click)="nextBuilding()">
+        {{hasNextBatch?'Skip and next':'Skip and finish'}}
+      </button>
+    </div>
+    <div class="right">
+      Select the correct position.&nbsp;
+      <button [disabled]="showPreview" [popper]="confirm" class="btn rounded" type="button" (click)="openPreviews()">
+        Show positions
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<popper-content #selectMap >Change the map displayed.</popper-content>
+<popper-content #selectSource >Change the source in the API georeferencing.</popper-content>
+
+<popper-content #confirm>Confirm the selected building</popper-content>

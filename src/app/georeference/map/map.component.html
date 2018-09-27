@@ -1,0 +1,119 @@
+<div class="containter-full-width">
+  <div id="mapHelp" class="map-help" [innerHTML]="mapHelp">
+  </div>
+  <div id="map" class="map-panel">
+
+  </div>
+  <div *ngIf="error" class="noFeaturesFound" [innerHTML]="error"> </div>
+  <div *ngIf="!error && !loading && (!features || features.length<=0)" class="noFeaturesFound">
+    The data for this address is not yet available
+  </div>
+  <div *ngIf="loading" class="loading">
+    Loading
+  </div>
+</div>
+
+<div class="container-lg">
+  <div *ngIf="!features || features.length<=0" class="footer">
+    <div class="left">
+      <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+        To georeference {{nextBatch.length}} buildings left.
+      </div>
+    </div>
+    <div class="right">
+      <!-- We only display the source if the building exists -->
+      <div *ngIf="building" [popper]="selectSource" class="selectSource">
+        <label>Source: </label>
+        <select (change)="selectApiSource($event.target.value)" [value]="referenceSource?referenceSource:''" >
+          <option value="">Default (S.Topo)</option>
+          <option value="open_street_maps">Open Street Maps</option>
+          <option value="swiss_topo">Swiss Topo</option>
+        </select>
+      </div>
+      &nbsp;
+      <button [popper]="confirm" class="btn green rounded" type="button" (click)="nextBuilding()">
+        Continue
+      </button>
+    </div>
+  </div>
+  <div *ngIf="features && features.length>0" class="footer">
+    <div class="left">
+      <div class="legend">
+        <div>
+          Please select the building and or confirm it.
+        </div>
+        <div>
+          <span [popper]="very_probable"><i class="fa fa-circle veryProbable"></i> High probable building</span> &nbsp;&nbsp;
+          <span [popper]="probable"><i class="fa fa-circle probable"></i> Less probable buildings</span>
+        </div>
+        <div>
+          <span [popper]="selected"><i class="fa fa-circle selected"></i> Selected building</span>
+          <span *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
+             &nbsp;&nbsp; <i class="fa fa-circle before"></i> Previously selected building
+            <!--
+            [ {{this.buildingReferenceIdPreselectedUser}}
+              {{this.buildingReferenceIdPreselectedDate}} ] -->
+          </span>
+        </div>
+        <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+          To georeference {{nextBatch.length}} buildings left.
+        </div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div [popper]="hide" [ngClass]="{'hideOption': true, 'on': displayVectors}" (click)="toggleView()">
+        <span *ngIf="displayVectors"><i class="fas fa-2x fa-eye-slash"></i></span>
+        <span *ngIf="!displayVectors"><i class="fas fa-2x fa-eye"></i></span>
+      </div>
+      <div class="selectors">
+        <div [popper]="selectMap" class="selectMap">
+          <label >Map mode: </label>
+          <select (change)="changeMap($event)" [value]="mapStyle">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="outdoors">Outdoors</option>
+            <option value="streets">Streets</option>
+            <option value="satellite">Satellite</option>
+          </select>
+        </div>
+        <div [popper]="selectSource" class="selectSource">
+          <label>Source: </label>
+          <select (change)="selectApiSource($event.target.value)" [value]="referenceSource?referenceSource:''">
+            <option value="">Default (S.Topo)</option>
+            <option value="open_street_maps">Open Street Maps</option>
+            <option value="swiss_topo">Swiss Topo</option>
+          </select>
+        </div>
+      </div>
+      &nbsp;&nbsp;&nbsp;
+      <button [popper]="centerMapPU" class="btn rounded" type="button" (click)="centerMap()">
+        Center View
+      </button>
+      &nbsp;&nbsp;&nbsp;
+      <button [popper]="skip" class="btn rounded" type="button" (click)="nextBuilding()">{{hasNextBatch?'Skip and next':'Skip and finish'}}</button>
+      &nbsp;&nbsp;&nbsp;
+      <button [popper]="confirm" class="btn green rounded" type="button" [disabled]="buildingReferenceId=== null" (click)="confirmBuilding()">
+        {{buildingReferenceIdPreselected!==null && buildingReferenceIdPreselected!==this.buildingReferenceId?'Confirm change':'Confirm'}}
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<popper-content #hide >Mouse over to hide options and see only the map.</popper-content>
+<popper-content #selectMap >Change the map displayed.</popper-content>
+<popper-content #selectSource >Change the source in the API georeferencing.</popper-content>
+
+<popper-content #centerMapPU >Center the map in the provided surroundings.</popper-content>
+
+<popper-content #skip>Skip this building and continue</popper-content>
+
+<popper-content #confirm>Confirm the selected building</popper-content>
+<popper-content #center>Center the map to the preselected buildings</popper-content>
+
+<popper-content #very_probable>Indentified by Archilyse API as the most suitable building for the given address.</popper-content>
+<popper-content #probable>Indentified by Archilyse API as suitable buildings for the given address.</popper-content>
+
+<popper-content #selected>Currect selected building by the user for the given address.</popper-content>
+<popper-content #prev_selected>Previusly selected building by the user for the given address.</popper-content>

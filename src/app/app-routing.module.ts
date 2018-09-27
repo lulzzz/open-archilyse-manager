@@ -6,6 +6,8 @@ import { UpgradeBrowserComponent } from './upgrade-browser/upgrade-browser.compo
 import { ErrorComponent } from './error/error.component';
 
 import { AuthGuard } from './_guards/auth.guard';
+import {IntroEditorComponent} from './editor/intro.component';
+import {EditorComponent} from './editor/editor.component';
 
 const routes: Routes = [
   {
@@ -35,9 +37,26 @@ const routes: Routes = [
     redirectTo: 'login',
   },
   {
+    path: 'editor',
+    pathMatch: 'full',
+    component: IntroEditorComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'editor/:layoutId',
+    pathMatch: 'full',
+    component: EditorComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'manager',
     pathMatch: 'prefix',
     loadChildren: 'app/manager/manager.module#ManagerModule',
+  },
+  {
+    path: 'georeference',
+    pathMatch: 'prefix',
+    loadChildren: 'app/georeference/georeference.module#GeoreferenceModule',
   },
   {
     path: '**',

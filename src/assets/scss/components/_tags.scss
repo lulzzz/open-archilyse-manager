@@ -11,7 +11,6 @@
     letter-spacing: 0.05rem !important;
     color: #444 !important;
     border: 1px solid #e9ecef;
-    border-radius: 4px !important;
     transition: all 0.3s !important;
     padding: 0 8px !important;
     height: 32px !important;
@@ -64,7 +63,6 @@ tag:hover {
     .color {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
       margin-right: 10px;
     }
     .delete-tag {
@@ -88,7 +86,6 @@ tag:hover {
     max-width: 90px;
     white-space: nowrap;
     border: 1px solid #e9ecef;
-    border-radius: 4px;
     padding: 0 8px;
     margin-right: 4px;
     overflow: hidden;

@@ -1,0 +1,132 @@
+@import 'colors';
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100px;
+  z-index: 100;
+  opacity: 0.98;
+
+  .elementTitle {
+    font-weight: 600;
+    font-size: 16px;
+    height: 24px;
+  }
+
+  .subtitle {
+    display: inline-block;
+    color: #6f7479;
+  }
+
+  .close{
+    cursor: pointer;
+  }
+}
+
+.description{
+  margin-bottom: 10px;
+}
+
+.valueRow{
+  margin-bottom: 10px;
+}
+
+.valueColumn{
+  .unit{
+      display: inline-block;
+      min-width: 30px;
+      text-align: left;
+      margin-left: 10px;
+  }
+}
+
+input {
+  background: rgba(255,255,255,0.8);
+  text-align: right;
+  width: 75px;
+  padding: 0;
+}
+input[type='range'] {
+  cursor: pointer;
+  position: relative;
+  width: 130px !important;
+}
+
+.controls{
+  border-bottom: 1px solid $grey;
+}
+
+.sidebar{
+  top: 0;
+  z-index: 9000;
+}
+
+.controls{
+
+  text-align: right;
+
+  app-icon {
+    font-size: 22px;
+    line-height: 40px;
+    display: inline-block;
+    cursor: pointer;
+    &:hover{
+        color: $green;
+    }
+  }
+}
+
+.expandable-panel-title {
+
+  clear: both;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 20px;
+
+  app-icon {
+    margin-left: -10px;
+    transition: transform 300ms ease;
+  }
+}
+
+input[type='checkbox'] {
+  visibility: hidden;
+  display: none;
+}
+
+input[type='checkbox']:checked {
+  & ~ .expandable-panel-title {
+    & app-icon {
+      transform: rotate(-90deg);
+    }
+  }
+  & ~ .expandable-panel-content {
+    height: 0 !important;
+    overflow: hidden;
+  }
+}
+
+.elem-list {
+  clear: both;
+  list-style-type: none;
+  transition: height 300ms ease;
+  margin: 0;
+  padding: 0;
+
+  li {
+
+    box-sizing: border-box;
+    padding: 10px;
+
+    width:  104px;
+    height: 120px;
+
+    margin: 10px 0 10px 10px;
+    float: left;
+
+  }
+
+}

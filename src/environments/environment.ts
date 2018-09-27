@@ -10,11 +10,12 @@ export const environment = {
 
   /** Development */
   urlConsole: 'http://console.archilyse.com/',
-  urlEditor: 'http://localhost:4201/editor',
-  urlGeoreference: 'http://localhost:4202/georeference',
-  urlSimulationViewer: 'http://localhost:4203/simulations',
-  urlEditorFloorplan: 'http://localhost:4204/editor',
+  urlEditor: 'http://localhost:4200/editor',
+  urlGeoreference: 'http://localhost:4200/georeference',
   urlPortfolio: 'http://localhost:4200/manager',
+  urlEditorFloorplan: 'http://localhost:4200/editor',
+
+  urlSimulationViewer: 'http://localhost:4203/simulations',
 
   defaultUser: '***REMOVED***',
   defaultPass: '***REMOVED***',
@@ -28,4 +29,3 @@ export const environment = {
     messagingSenderId: '***REMOVED***',
   },
 };
-

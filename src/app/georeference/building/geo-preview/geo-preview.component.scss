@@ -1,0 +1,105 @@
+@import 'colors';
+:host {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  z-index: 100;
+  opacity: 0.98;
+
+  .close{
+    cursor: pointer;
+  }
+
+  .title {
+    font-weight: 600;
+    font-size: 16px;
+    height: 24px;
+  }
+
+  .subtitle {
+    display: inline-block;
+    color: #6f7479;
+  }
+}
+
+.preview {
+
+  border: 3px solid grey;
+  cursor: pointer;
+  display: inline-block;
+
+  padding-top: 5px;
+  padding-left: 5px;
+
+  margin-bottom: 8px;
+  margin-right: 8px;
+
+  position: relative;
+
+  .number{
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    border-radius: 16px;
+    border: 1px solid grey;
+    background: grey;
+    font-size: 12px;
+
+    div {
+      position:relative; left: 0; top: 0; min-width: 16px; height: 16px; color: white; text-align:center; padding: 0 4px;
+    }
+  }
+
+  &:hover{
+    border: 3px solid $dark;
+
+    .number{
+      border: 1px solid $dark;
+      background: $dark;
+    }
+
+  }
+
+  &.preselected{
+    border: 3px solid $blue;
+    cursor: default;
+
+    .number{
+      border: 1px solid $blue;
+      background: $blue;
+
+      div {
+        position:relative; left: 0; top: 0; min-width: 72px; height: 16px; color: white; text-align:center;
+      }
+    }
+  }
+
+  &.selected{
+    border: 3px solid $green-beauty;
+    cursor: default;
+
+    .number{
+      border: 1px solid $green-beauty;
+      background: $green-beauty;
+    }
+  }
+
+  .previewPicture{
+
+    background: no-repeat center;
+    background-size: contain;
+    /** background-size: cover; */
+
+    /** If we need to flip the background
+    -moz-transform: scaleX(-1) scaleY(-1);
+    -o-transform: scaleX(-1) scaleY(-1);
+    -webkit-transform: scaleX(-1) scaleY(-1);
+    transform: scaleX(-1) scaleY(-1);
+    filter: FlipH FlipV;
+    -ms-filter: "FlipH FlipV";
+    */
+  }
+}
+

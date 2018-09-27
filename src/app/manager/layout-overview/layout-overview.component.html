@@ -1,42 +1,47 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
+    <div class="buttonRow">
+      <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">
+        <span class="label">Floor: </span><input id="floor" type="text" placeholder="Floor number" />
+        <span class="label">Source: </span><input id="sourceUrl" type="text" placeholder="Url to source" />
+        <button class="btn blue" (click)="changeSource(false)" >Add source</button>
+        <button class="btn blue" (click)="changeSource(true)" >Clear source</button>
+      </div>
+      <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length !== 1" class="floorInput info">
+        <i class="fa fa-info-circle icon-info"></i> Select only one layout to add a floorplan source.
+      </div>
+    </div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Sel.</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. not Georef.</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip4" class="btn blue" (click)="selectNotDigitalized($event)" >Sel. not Digital</button>
       &nbsp;&nbsp;&nbsp;
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeferenceAuto()"  >Geo. Auto({{selectedNodes.length}})</button>
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Geo. ({{selectedNodes.length}})</button>
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Geo. OSM ({{selectedNodes.length}})</button>
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip7" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="duplicate($event)" >Copy ({{selectedNodes.length}})</button>
-      <button [popper]="tooltip8" class="btn green" [disabled]="selectedNodes.length <= 0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeferenceAuto()"  >Geo. Auto({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Geo. ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Geo. OSM ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip7" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="duplicate($event)" >Copy ({{selectedNodes.length}})</button>
+      <button [popper]="tooltip8" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="delete($event)" >Delete ({{selectedNodes.length}})</button>
       &nbsp;&nbsp;&nbsp;
-      <button [popper]="tooltip9" class="btn green" (click)="addRow()">Add layout</button>
-    </div>
-    <div>
-      <button [popper]="tooltip10" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-      <button [popper]="tooltip11" class="btn yellow" (click)="export()" > CSV </button>
-      &nbsp;
-      <input *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-      <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip12"  for="file" class="btn yellow" >Import Excel file</label>
-      <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
-        <i class="fa fa-info-circle"></i>
+      <button [popper]="tooltip9" class="btn blue" (click)="addRow()">Add layout</button>
+      &nbsp;&nbsp;&nbsp;
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" class="btn blue" (click)="getSimulationStatus()" [disabled]="selectedNodes.length <= 0"  > Get Sim Status. ({{selectedNodes.length}})</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" class="btn blue" (click)="startSimulations()" [disabled]="selectedNodes.length <= 0"  > Start Sims. ({{selectedNodes.length}})</button>
+
+      <div style="float: right">
+        <input *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+        <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip12"  for="file" class="btn blue" >Import Excel file</label>
+        <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
+          <i class="fa fa-info-circle"></i>
+        </div>
+        &nbsp;
+        <button [popper]="tooltip10" class="btn blue" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+        <button [popper]="tooltip11" class="btn blue" (click)="export()" > CSV </button>
       </div>
-      &nbsp;&nbsp;&nbsp;
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length <= 0"  > Get Sim Status. ({{selectedNodes.length}})</button>
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length <= 0"  > Start Sims. ({{selectedNodes.length}})</button>
-    </div>
-    <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">
-      Floor: <input id="floor" type="text" placeholder="Floor number" />
-      Source: <input id="sourceUrl" type="text" placeholder="Url to source" />
-      <button class="btn green" (click)="changeSource(false)" >Add source</button>
-      <button class="btn green" (click)="changeSource(true)" >Clear source</button>
-    </div>
-    <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length !== 1" class="floorInput info">
-      <i class="fa fa-info-circle icon-info"></i> Select only one layout to add a floorplan source.
+
     </div>
   </div>
 </div>
@@ -44,10 +49,12 @@
   <ag-grid-angular
     *ngIf="!loading && !generalError && gridOptions"
     style="width: 100%; height: 100%;"
-    class="ag-theme-balham"
+    class="ag-theme-material"
     [gridOptions]="gridOptions">
   </ag-grid-angular>
 </div>
+
+
 
 <!-- Tooltips -->
 

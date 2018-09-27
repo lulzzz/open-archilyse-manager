@@ -1,15 +1,12 @@
 @import 'colors';
 
 .btn {
-  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
-  border-radius: 4px;
+  padding: 10px 14px;
   border: 2px solid transparentize($text, 0.8);
   font-size: 13px;
-  line-height: 16px;
   font-weight: 600;
   color: $text;
   cursor: pointer;
@@ -22,10 +19,6 @@
   &[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-
-  &.rounded {
-    border-radius: 20px;
   }
 
   &.icon {

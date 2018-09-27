@@ -1,11 +1,12 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>Click on a building to view the details.</div>
-    <div>
+    <div class="buttonRow"><label>Click on a building to view the details.</label></div>
+    <div class="buttonRow">
       <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
-      &nbsp;&nbsp;&nbsp;<label>Georeferenced buildings:</label> {{numGeoreferencedBuildings}}
+      &nbsp;&nbsp;&nbsp;<label>Georeferenced buildings:</label> <span class="whiteText">{{numGeoreferencedBuildings}}</span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Filter country: </label>
       <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
         <option value=""> - </option>
@@ -19,8 +20,7 @@
       </select>
       &nbsp;&nbsp;
       <button [popper]="listPU" class="btn orange" (click)="linkToList()">View list filtered</button>
-    </div>
-    <div class="mapOptions">
+      &nbsp;&nbsp;
       <div [popper]="selectMap" class="selectMap">
         <label >Map mode: </label>
         <select (change)="changeMap($event)" [value]="mapStyle">

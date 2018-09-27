@@ -1,7 +1,9 @@
+@import 'colors';
+
 :host {
   display: inline-block;
   width: 100%;
-  height: calc(100vh - 210px);
+  height: calc(100vh - 222px);
 }
 
 h1{
@@ -14,12 +16,14 @@ button{
   display: inline-block;
 }
 
+.label{
+  color: $new_text_grey;
+}
 
 #floor,
 #sourceUrl{
-  border-radius: 5px;
   background: white;
-  padding: 0 4px;
+  padding: 10px 14px;
   margin-right: 30px;
 }
 
@@ -71,5 +75,5 @@ button{
 
 .floorInput.info{
   font-size: 14px;
-  color: #717171;
+  color: white;
 }

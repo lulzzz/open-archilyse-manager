@@ -1,0 +1,9 @@
+<div>
+  <div class="imgContainer" draggable
+       (ondragstart)="onDragStart($event)"
+       (onDrag)="onDrag($event)"
+       (onDragEnd)="onDragEnd($event)">
+    <img class="dragImg" [src]="src" />
+  </div>
+  {{text}}
+</div>

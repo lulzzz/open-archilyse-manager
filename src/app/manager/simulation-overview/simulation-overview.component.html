@@ -2,11 +2,10 @@
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
     </div>
-    <div>
-      <br />
+    <div class="buttonRow">
       JSON simulation result, click on each object to expand.
     </div>
   </div>

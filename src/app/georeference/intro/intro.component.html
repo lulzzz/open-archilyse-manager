@@ -1,0 +1,74 @@
+<div class="contents">
+  <h2>Georeference Tool</h2>
+
+  <div>
+
+    <div [popper]="tooltip5"  class="selectSource">
+      <label >Georeference source: </label>
+      <select (change)="selectSource($event.target.value)" [value]="referenceSource" >
+        <option value="">Default (S.Topo)</option>
+        <option value="open_street_maps">Open Street Maps</option>
+        <option value="swiss_topo">Swiss Topo</option>
+      </select>
+    </div>
+
+    <div class="buildingForm">
+      <form [formGroup]="buildingForm" (ngSubmit)="startBuilding()" novalidate>
+
+        <div class="input">
+          <div class="input-label-wrapper">
+            <input type="text" id="building" formControlName="building" [ngClass]="{'shift': buildingForm.value.building.length }">
+            <label for="building">Building Id</label>
+          </div>
+          <div class="subscript">
+            <div *ngIf="building.invalid && building.touched; then warn else info"></div>
+            <ng-template #info>
+              <div class="info">The building</div>
+            </ng-template>
+            <ng-template #warn>
+              <div class="warn">A valid buildingId is required</div>
+            </ng-template>
+          </div>
+        </div>
+        <button [popper]="tooltip3" type="submit" class="btn green" [disabled]="buildingForm.invalid">Georeference Building</button>
+      </form>
+    </div>
+
+    <div class="layoutForm">
+      <form [formGroup]="layoutForm" (ngSubmit)="startLayout()" novalidate>
+        <div class="input">
+          <div class="input-label-wrapper">
+            <input type="text" id="layout" formControlName="layout" [ngClass]="{'shift': layoutForm.value.layout.length }" pattern="[0-9a-fA-F]{24}">
+            <label for="layout">Layout Id</label>
+          </div>
+          <div class="subscript">
+            <div *ngIf="layout.invalid && layout.touched; then warnPw else infoPw"></div>
+            <ng-template #infoPw>
+              <div class="info">The layout</div>
+            </ng-template>
+            <ng-template #warnPw>
+              <div class="warn">A valid Layout Id is required</div>
+            </ng-template>
+          </div>
+        </div>
+        <button [popper]="tooltip4" type="submit" class="btn green" [disabled]="layoutForm.invalid">Georeference Layout</button>
+      </form>
+    </div>
+  </div>
+  <div class="buttonsContainer">
+    <button [popper]="tooltip1" class="btn batch" (click)="batch()">Batch upload</button> &nbsp;&nbsp;&nbsp;
+    <button [popper]="tooltip2" class="btn portfolio" (click)="portfolio()">Back to portfolio</button>
+  </div>
+
+</div>
+
+<!-- Tooltips -->
+
+<popper-content #tooltip1 >Perform a secuence of georeference operations.</popper-content>
+<popper-content #tooltip2 >Back to the portfolio manager.</popper-content>
+
+<popper-content #tooltip3 >Georeference the provided building_id.</popper-content>
+<popper-content #tooltip4 >Georeference the provided layout_id.</popper-content>
+
+<popper-content #tooltip5 >Select the source of the georeferenced data.</popper-content>
+

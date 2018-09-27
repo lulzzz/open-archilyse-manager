@@ -1,8 +1,9 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
       &nbsp;&nbsp;&nbsp;
@@ -10,16 +11,16 @@
       <button class="btn green" (click)="seeRawData()" > See Raw data </button>
       &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Status:</span> {{status}}</span>
-    </div>
-    <div>
-      <button [popper]="tooltip3" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-      <button [popper]="tooltip4" class="btn yellow" (click)="export()" > CSV </button>
       &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Created:</span> {{created | date:'dd.MM.yyyy h:mma'}}</span>
       &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Updated:</span> {{updated | date:'dd.MM.yyyy h:mma'}}</span>
+      <div style="float: right">
+        <button [popper]="tooltip3" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+        <button [popper]="tooltip4" class="btn yellow" (click)="export()" > CSV </button>
+      </div>
     </div>
-    <div>
+    <div class="buttonRow">
       <div class="address-help"><span [innerHTML]="addressHelp"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingId)" >View Dpoi</button> <button *ngIf="buildingIdCompare" class="btn blue" (click)="switchDpoi(buildingId)" >Switch</button></div>
       <div class="address-help"><span [innerHTML]="addressHelpCompare"></span><button *ngIf="buildingIdCompare" class="btn blue" (click)="viewDpoi(buildingIdCompare)" >View Dpoi</button></div>
     </div>
@@ -29,7 +30,7 @@
   <ag-grid-angular
     *ngIf="!loading && !generalError && gridOptions"
     style="width: 100%; height: 100%;"
-    class="ag-theme-balham"
+    class="ag-theme-material"
     [gridOptions]="gridOptions">
   </ag-grid-angular>
 </div>

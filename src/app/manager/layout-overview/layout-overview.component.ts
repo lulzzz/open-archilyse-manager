@@ -393,7 +393,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         children: [
           {
             headerName: 'View',
-            field: 'simulations.view.status',
+            field: 'simulation_statuses.view.status',
             cellRenderer: 'simulationLayoutRenderer',
             cellStyle: { padding: '0px' },
             width: 180,
@@ -402,7 +402,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Wbs',
-            field: 'simulations.wbs.status',
+            field: 'simulation_statuses.wbs.status',
             columnGroupShow: 'open',
             cellRenderer: 'simulationLayoutRenderer',
             cellStyle: { padding: '0px' },
@@ -412,7 +412,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Pathways',
-            field: 'simulations.pathways.status',
+            field: 'simulation_statuses.pathways.status',
             columnGroupShow: 'open',
             cellRenderer: 'simulationLayoutRenderer',
             cellStyle: { padding: '0px' },
@@ -422,7 +422,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Basic features',
-            field: 'simulations.basic_features.status',
+            field: 'simulation_statuses.basic_features.status',
             columnGroupShow: 'open',
             cellRenderer: 'simulationLayoutRenderer',
             cellStyle: { padding: '0px' },
@@ -432,7 +432,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           },
           {
             headerName: 'Accoustics',
-            field: 'simulations.accoustics.status',
+            field: 'simulation_statuses.accoustics.status',
             columnGroupShow: 'open',
             cellRenderer: 'simulationLayoutRenderer',
             cellStyle: { padding: '0px' },

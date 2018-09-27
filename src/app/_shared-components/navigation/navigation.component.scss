@@ -4,10 +4,9 @@
 :host {
   justify-self: end;
   align-self: center;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.02rem;
-  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 14px;
+  color: white;
 
   @include for-tablet-landscape-down {
     font-size: 10px;
@@ -23,7 +22,7 @@
   /* Display list items side by side */
   ul.navigation li {
     // padding: 0 8px;
-    margin-left: 8px;
+    margin-left: 20px;
     display: inline;
     user-select: none;
     position: relative;
@@ -34,36 +33,36 @@
       // min-height: 4px;
       height: 2px;
       // width: 100%;
-      border-radius: 4px;
-      background: $green;
+      background: white;
       position: absolute;
       // left: calc(50% - 2px);
-      left: 12px;
-      right: 0px;
-      bottom: -4px;
+      left: -3px;
+      right: 0;
+      bottom: -8px;
       transform: scaleX(1);
       transition: transform 300ms ease;
     }
+    /**
     &:before {
       padding: 8px 2px 8px 4px;
-      color: $dark;
+      color: white;
       content: '|';
-      opacity: 0.2;
     }
     &:first-of-type {
       span::after {
-        left: 0px;
+        left: 0;
       }
       &:before {
         content: '';
       }
     }
+    */
   }
 
   /* Add a color to all links inside the list */
   ul.navigation li a {
-    color: $dark;
-    opacity: 0.6;
+    color: $new_text_grey;
+
     text-decoration: none;
     transform: opacity 100ms ease;
     user-select: unset;
@@ -71,12 +70,12 @@
 
     &::after {
       transform: scaleX(0.2);
+      color: white;
     }
   }
 
   /* Add a color on mouse-over */
   ul.navigation li a:hover {
-    color: $dark;
     opacity: 1;
   }
 }

@@ -1,14 +1,16 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
-    </div>
-    <div>
-      <button [popper]="tooltip3"  class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-      <button [popper]="tooltip4"  class="btn yellow" (click)="export()" > CSV </button>
+
+      <div style="float: right">
+        <button [popper]="tooltip3"  class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+        <button [popper]="tooltip4"  class="btn yellow" (click)="export()" > CSV </button>
+      </div>
     </div>
   </div>
 </div>
@@ -16,7 +18,7 @@
   <ag-grid-angular
     *ngIf="!loading && !generalError && gridOptions"
     style="width: 100%; height: 100%;"
-    class="ag-theme-balham"
+    class="ag-theme-material"
     [gridOptions]="gridOptions">
   </ag-grid-angular>
 </div>

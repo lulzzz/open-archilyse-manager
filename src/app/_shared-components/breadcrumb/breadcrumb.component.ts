@@ -42,6 +42,8 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Raw simulation View' }];
         } else if (url.startsWith('/manager/dpoi')) {
           this.breadcrumb = [{ title: 'Dpoi simulation View' }];
+        } else if (url.startsWith('/manager/viewSim')) {
+          this.breadcrumb = [{ title: 'Real view simulation' }];
         } else {
           this.breadcrumb = [];
         }

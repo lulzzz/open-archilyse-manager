@@ -1,0 +1,75 @@
+@import 'colors';
+@import 'media';
+
+.buildingForm,
+.layoutForm{
+  display: inline-block;
+  margin: 0 20px 0 0;
+  width: 270px;
+
+  button{
+    width: 180px;
+    float: left;
+  }
+}
+
+.error {
+  color: red;
+  margin-bottom: 16px;
+}
+
+.contents {
+  margin: 0 auto;
+  max-width: 600px;
+  // padding-top: 128px;
+  display: flex;
+  flex-direction: column;
+}
+
+button[type='submit'] {
+  margin-top: 1em;
+  width: 100%;
+  justify-content: center;
+}
+
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    line-height: 32px;
+  }
+}
+
+hr {
+  margin: 24px 0;
+}
+
+.buttonsContainer{
+  margin: 50px 0 0 0;
+
+  .portfolio,
+  .batch{
+    display: inline-block;
+    width: 160px;
+  }
+}
+
+.selectSource{
+  display: inline-block;
+  margin: 13px 0 13px 0;
+
+  label {
+    color: $new_text_grey;
+  }
+
+  select{
+    background: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-left: 12px;
+    cursor: pointer;
+  }
+}
+
+

@@ -349,7 +349,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   }
 
   setUpMapWithFeature(epsg) {
-    const debug = true;
+    const debug = false;
     if (debug) {
       console.log('sim_result_mock', sim_result_mock);
       this.sim_result = sim_result_mock;

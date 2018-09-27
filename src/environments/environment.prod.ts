@@ -5,11 +5,12 @@ export const environment = {
 
   /** Development */
   urlConsole: 'https://console.archilyse.com',
-  urlEditor: 'https://editor.archilyse.com',
-  urlGeoreference: 'https://georeference.archilyse.com',
-  urlSimulationViewer: 'https://viewer.archilyse.com',
-  urlEditorFloorplan: 'https://floorplan.archilyse.com',
+  urlEditor: 'https://portfolio.archilyse.com',
+  urlGeoreference: 'https://portfolio.archilyse.com',
   urlPortfolio: 'https://portfolio.archilyse.com',
+
+  urlSimulationViewer: 'https://simulation-viewer.archilyse.com',
+  urlEditorFloorplan: 'https://floorplan.archilyse.com',
 
   defaultUser: '',
   defaultPass: '',

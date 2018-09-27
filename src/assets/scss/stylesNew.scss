@@ -1,0 +1,178 @@
+@import 'colors';
+
+// Customize the look and feel of the grid with Sass variables
+// Up-to-date list of variables is available in the source code:
+// https://github.com/ag-grid/ag-grid/blob/latest/src/styles/theme-fresh.scss
+
+// opacity values used for black values, taken from material spec
+$foreground-opacity: 0.87 !default;
+$secondary-foreground-color-opacity: 0.54 !default;
+$disabled-foreground-color-opacity: 0.38 !default;
+
+
+$icons-path: "~ag-grid/src/styles/icons/";
+$ag-mat-icons-path: "~ag-grid/src/styles/material-icons/";
+
+// changes the border color
+$border-color: $new_background_progress_bar;
+
+// Changes the font size
+$font-size: 14px;
+
+// Changes the font family
+$font-family: 'Rubik', sans-serif !default; // legacy: font
+$font-size: 14px !default;
+$font-weight: 300 !default;
+
+$secondary-font-family: "Roboto", sans-serif !default; //font-secondary
+$secondary-font-size: 14px !default; // font-secondary-size
+$secondary-font-weight: 400 !default; // font-secondary-weight
+
+
+// Sizing
+$grid-size: 8px !default;
+$icon-size: 18px !default;
+$header-height: $grid-size * 7 !default;
+$row-height: $grid-size * 6 !default;
+$toolpanel-indent-size: $grid-size + $icon-size !default;
+$row-group-indent-size: $grid-size * 3 + $icon-size !default;
+$cell-horizontal-padding: $grid-size * 2 !default;
+$virtual-item-height: $grid-size * 5;
+$header-icon-size: 14px !default;
+
+// Colors
+$foreground-color: rgba($new_text_dark, $foreground-opacity) !default; // foreground
+$secondary-foreground-color: rgba($new_text_dark, $secondary-foreground-color-opacity) !default; // foreground-secondary
+$disabled-foreground-color: rgba($new_text_dark, $disabled-foreground-color-opacity) !default; // foreground-disabled
+
+/*
+$border-color: $mat-grey-300 !default;
+
+$primary-color: $mat-indigo-500 !default;
+
+$accent-color: $mat-pink-A200 !default;
+$icon-color: #333 !default;
+
+$background-color: $mat-grey-0 !default;
+
+$editor-background-color: $mat-grey-100 !default;
+
+$panel-background-color: $mat-grey-200 !default;
+
+$tool-panel-background-color: $mat-grey-50 !default;
+
+$chip-background-color: $mat-grey-300 !default;
+
+$range-selection-background-color: $mat-indigo-50 !default;
+$range-selection-highlight-color: $mat-pink-50 !default;
+
+$hover-color: $mat-grey-200 !default;
+
+$selected-color: $mat-grey-100 !default;
+
+$cell-data-changed-color: $mat-pink-50 !default;
+
+
+*/
+
+
+
+
+
+
+
+
+
+// Reverts the cell horizontal padding change between ag-fresh and ag-theme-fresh
+// $cell-horizontal-padding: 2px;
+
+// changes the default icon color
+$icon-color: #303f9f;
+// changes the selected checkbox color
+$accent-color: #ffa000;
+
+
+$icon-color: #ffa000;
+
+@import "~ag-grid/src/styles/ag-grid.scss";
+@import "~ag-grid/src/styles/ag-theme-material.scss";
+
+.top_inner_background{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  z-index: -1;
+
+  width: 100%;
+  height: 322px;
+  background: $new_background_blue;
+}
+
+.top_background{
+  // background: $new_background_blue;
+}
+
+.buttonRow{
+    min-height: 40px;
+}
+.fullWidth{
+    width: 100%;
+}
+
+.ag-theme-material {
+
+  background: none;
+  font: 14px 'Rubik', sans-serif;
+
+  .ag-root{
+    background: white;
+  }
+
+  .ag-header{
+    background: $new_table_header_blue;
+    font: 14px 'Rubik', sans-serif;
+  }
+
+  .ag-header-container{
+    // First header row
+    .ag-header-row:nth-child(1) {
+      font-weight: 400;
+      color: white;
+    }
+
+    // Second header row
+    .ag-header-row:nth-child(2) {
+      font-weight: 300;
+      color: $new_light_blue;
+    }
+  }
+
+  /**
+  .ag-body{
+    background: #FFFFFF;
+  }
+
+  .ag-row{
+    background: #FFFFFF;
+  }
+
+  .ag-row-odd{
+    background: #F7F7F7;
+  }
+  .ag-row-even{
+
+  }
+  .ag-row-no-focus{
+
+  }
+  .ag-row-focus{
+
+  }
+  */
+
+  .ag-paging-panel {
+    height: 35px;
+  }
+}

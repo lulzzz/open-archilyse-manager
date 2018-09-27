@@ -1,0 +1,28 @@
+<div class="contents">
+  <h2>Editor Tool</h2>
+
+  <form [formGroup]="editorForm" (ngSubmit)="start()" novalidate>
+    <div class="input">
+      <div class="input-label-wrapper">
+        <input type="text" id="layout" formControlName="layout" [ngClass]="{'shift': editorForm.value.layout.length }" pattern="[0-9a-fA-F]{24}">
+        <label for="layout">Layout Id</label>
+      </div>
+      <div class="subscript">
+        <div *ngIf="layout.invalid && layout.touched; then warnPw else infoPw"></div>
+        <ng-template #infoPw></ng-template>
+        <ng-template #warnPw>
+          <div class="warn">A valid Layout Id is required</div>
+        </ng-template>
+      </div>
+    </div>
+    <div [popper]="tooltip1" >
+      <button type="submit" class="btn green" [disabled]="editorForm.invalid">Edit layout</button>
+    </div>
+    <button [popper]="tooltip2" class="btn portfolio" (click)="portfolio()">Back to portfolio</button>
+  </form>
+
+</div>
+
+<!-- Tooltips -->
+<popper-content #tooltip1 >Edit or copy the model structure from the provided layout_id.</popper-content>
+<popper-content #tooltip2 >Back to the portfolio manager.</popper-content>

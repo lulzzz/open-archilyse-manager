@@ -1,0 +1,50 @@
+<div class="backdrop" (click)="close.emit()"></div>
+<div class="sidebar"
+    (mousemove)="mousemoveListener($event)"
+    (mouseout)="mouseoutListener($event)"
+    (mousedown)="mousedownListener($event)"
+    (click)="onClick($event)" >
+
+  <div class="header">
+    <div class="title">Elements</div>
+    <div class="close" (click)="close.emit()">
+      <app-icon icon="fa-times"></app-icon>
+    </div>
+  </div>
+  <div class="content" perfectScrollbar>
+
+    <div class="description">
+      Drag and drop into the map to add a new element
+    </div>
+
+    <div class="expandable-panel">
+      <input id="panel-1" type="checkbox" >
+      <label for="panel-1" class="expandable-panel-title">
+        <app-icon icon="fa-angle-down"></app-icon>
+        <div class="elementTitle" >OFFICE ELEMENTS</div>
+      </label>
+      <ul class="expandable-panel-content elem-list">
+        <li><app-drag-item src="/assets/images/logo.png" text="Chair"></app-drag-item></li>
+        <li><app-drag-item src="https://picsum.photos/80/80" text="Desk"></app-drag-item></li>
+      </ul>
+    </div>
+
+    <div class="expandable-panel">
+      <input id="panel-2" type="checkbox" >
+      <label for="panel-2" class="expandable-panel-title">
+        <app-icon icon="fa-angle-down"></app-icon>
+        <div class="elementTitle" >STRUCTURAL ELEMENTS</div>
+      </label>
+      <ul class="expandable-panel-content elem-list">
+        <li><app-drag-item src="/assets/images/logo.png" text="Wall"></app-drag-item></li>
+        <li><app-drag-item src="https://picsum.photos/80/80" text="Door"></app-drag-item></li>
+        <li><app-drag-item src="https://picsum.photos/80/80" text="Window"></app-drag-item></li>
+        <li><app-drag-item src="https://picsum.photos/80/80" text="Example 1"></app-drag-item></li>
+        <li><app-drag-item src="https://picsum.photos/80/80" text="Example 2"></app-drag-item></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer">
+  </div>
+</div>
+

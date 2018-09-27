@@ -1,0 +1,51 @@
+<div class="backdrop" (click)="close.emit()"></div>
+<div class="sidebar"
+     (mousemove)="mousemoveListener($event)"
+     (mouseout)="mouseoutListener($event)"
+     (mousedown)="mousedownListener($event)"
+     (click)="onClick($event)" >
+
+  <div class="header">
+    <div class="title" [innerHTML]="title">Element properties</div>
+    <div class="close" (click)="close.emit()">
+      <app-icon icon="fa-times"></app-icon>
+    </div>
+  </div>
+  <div class="content" perfectScrollbar>
+    <div  *ngIf="controls"  class="controls">
+      <app-icon *ngFor="let control of controls" [popper]="control.popper" icon="{{control.icon}}" (click)="control.onClick($event)"></app-icon>
+    </div>
+    <div class="data" [innerHTML]="content">
+
+    </div>
+    <div *ngFor="let attributeGroup of attributeGroups" class="expandable-panel">
+      <input id="{{attributeGroup.key}}" type="checkbox" >
+      <label for="{{attributeGroup.key}}" class="expandable-panel-title">
+        <app-icon icon="fa-angle-down"></app-icon>
+        <div class="elementTitle" >{{attributeGroup.title}}</div>
+      </label>
+
+      <div *ngFor="let attribute of attributeGroup.attributes" class="expandable-panel-content attribute" >
+        <div class="valueRow">
+          <span class="valueTitle">{{attribute.name}}:</span>
+          <span class="valueColumn">
+
+          <input type="range"
+                 [min]="attribute.min" [max]="attribute.max"
+                 [step]="attribute.step" [value]="attribute.value"
+                 (input)="onInputRange($event, attribute.key)" (change)="onChangeRange($event, attribute.key)">
+
+          <input [type]="attribute.type" [min]="attribute.min" [max]="attribute.max"
+                 [step]="attribute.step" [value]="attribute.value"
+                 (change)="onAttributeChange($event, attribute.key)"
+                 (keyup)="onAttributeChange($event, attribute.key)" /><div class="unit">{{attribute.unit}}</div></span>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+  <div class="footer" [innerHTML]="footer">
+  </div>
+</div>

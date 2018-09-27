@@ -1,12 +1,12 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
-      <div [innerHTML]="address"></div>
+    <div class="buttonRow">
+      <div class="whiteText" [innerHTML]="address"></div>
     </div>
-    <div>
-      <button [popper]="exportKmlPU" class="btn yellow" (click)="exportKML()">Export KML</button> &nbsp; &nbsp;
+    <div class="buttonRow">
       <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button> &nbsp;
       <button [popper]="viewRawPU" class="btn blue" (click)="viewRaw()">View raw</button> &nbsp; &nbsp;
 
@@ -37,12 +37,12 @@
         </select>
       </div>
     </div>
-    <div *ngIf="summary">
-      <label >Min: </label>{{summary.min.toFixed(2)}}&nbsp;&nbsp;
-      <label >Max: </label>{{summary.max.toFixed(2)}}&nbsp;&nbsp;
-      <label >Avg: </label>{{summary.average.toFixed(2)}}&nbsp;&nbsp;
-      <label >Median: </label>{{summary.median.toFixed(2)}}&nbsp;&nbsp;
-      <label >St. dev: </label>{{summary.std.toFixed(2)}}&nbsp;&nbsp;
+    <div *ngIf="summary" class="buttonRow">
+      <label >Min: </label><span class="whiteText">{{summary.min.toFixed(2)}}</span>&nbsp;&nbsp;
+      <label >Max: </label><span class="whiteText">{{summary.max.toFixed(2)}}</span>&nbsp;&nbsp;
+      <label >Avg: </label><span class="whiteText">{{summary.average.toFixed(2)}}</span>&nbsp;&nbsp;
+      <label >Median: </label><span class="whiteText">{{summary.median.toFixed(2)}}</span>&nbsp;&nbsp;
+      <label >St. dev: </label><span class="whiteText">{{summary.std.toFixed(2)}}</span>&nbsp;&nbsp;
       <div class="sim-info" [popper]="infoSimPopper" (click)="showInfoSim()">
         <i class="fa fa-info-circle"></i>
       </div>
@@ -50,8 +50,12 @@
       &nbsp;&nbsp;
       &nbsp;&nbsp;
       &nbsp;&nbsp;
-      <label >Height: </label>{{height.toFixed(2)}} m.&nbsp;&nbsp;
-      <span *ngIf="building && building.height"><label >Building height: </label>{{building.height.toFixed(2)}} m.&nbsp;&nbsp;</span>
+      <label >Height: </label><span class="whiteText">{{height.toFixed(2)}} m.&nbsp;&nbsp;</span>
+      <span *ngIf="building && building.height"><label >Building height: </label><span class="whiteText">{{building.height.toFixed(2)}} m.&nbsp;&nbsp;</span></span>
+
+      <div style="float: right">
+        <button [popper]="exportKmlPU" class="btn yellow" (click)="exportKML()">Export KML</button> &nbsp; &nbsp;
+      </div>
     </div>
   </div>
 </div>

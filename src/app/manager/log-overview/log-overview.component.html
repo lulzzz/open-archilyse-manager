@@ -1,11 +1,12 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
     </div>
-    <div>
+    <div class="buttonRow">
       Here you'll find an explained list of all the request done from the portfolio manager to the Archilyse API. <br/>
       This way the operations done by this application could be easily replicated.
     </div>
@@ -15,7 +16,7 @@
   <ag-grid-angular
     *ngIf="!loading && !generalError && gridOptions"
     style="width: 100%; height: 100%;"
-    class="ag-theme-balham"
+    class="ag-theme-material"
     [gridOptions]="gridOptions">
   </ag-grid-angular>
 </div>

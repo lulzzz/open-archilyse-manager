@@ -14,8 +14,8 @@
 
 .sub-nav-wrapper {
   height: 40px;
-  border-top: 1px solid $grey;
   border-bottom: 1px solid $grey;
+  background: $new_background_blue;
 }
 
 .sub-nav {
@@ -60,12 +60,13 @@ app-navigation {
   bottom: 0;
   left: 0;
   right: 0;
+
   // background-color: #ffe066;
-  background-color: #fff;
+  background-color: #cbdcf1;
   // background-image: linear-gradient(-135deg, #e7ffd7 0%, #a8f7fb 100%);
-  background-image: linear-gradient(-135deg, #eff0f5 0%, #f4f1eb 100%);
+  background-image: linear-gradient(135deg, #cbdcf1 0%, #d4eef6 50%, #d6eed0 100%);
   &.dusty {
-    background-image: linear-gradient(-180deg, #dee2ed 0%, #f0ebd7 100%);
+    background-image: linear-gradient(135deg, #cbdcf1 0%, #d4eef6 50%, #d6eed0 100%);
   }
 
   .dark-section {
@@ -83,15 +84,25 @@ app-navigation {
 .footer {
   margin-top: 4px;
   text-align: center;
-  color: #252c3a;
+  color: #2e67b1;
   position: relative;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.02rem;
   text-transform: uppercase;
 
+  .coplyright{
+    position: absolute;
+    bottom: 21px;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+    text-align: center;
+  }
+
   .links{
     position: absolute;
+    font-size: 10px;
     left: 16px;
     bottom: 4px;
 

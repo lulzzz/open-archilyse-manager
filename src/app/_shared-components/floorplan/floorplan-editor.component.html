@@ -1,0 +1,9 @@
+<div id="floorplan" >
+  <div id="floorplanGraph"></div>
+  <div id="floorplanLegend"></div>
+  <app-editor-sidebar *ngIf="isSidebarVisible" (close)="closeSidebar()"></app-editor-sidebar>
+  <app-editor-properties-sidebar *ngIf="isSidebarPropertiesVisible"
+                                 [sidebarProperties]="sidebarProperties"
+                                 [sidebarPropertiesData]="sidebarPropertiesData"
+                                 (close)="closeSidebarProperties()"></app-editor-properties-sidebar>
+</div>

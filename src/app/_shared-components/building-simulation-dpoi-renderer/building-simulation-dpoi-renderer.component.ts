@@ -109,7 +109,11 @@ export class BuildingSimulationRendererDpoiComponent {
   }
 
   requestSimulation() {
-    const simsRequested = ['dpoi'];
+    const simsRequested = [
+      {
+        name: 'dpoi',
+      }
+    ];
     ManagerFunctions.requestBuildingSimulations(this.http, this.building, simsRequested, this.api);
   }
 

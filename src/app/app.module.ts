@@ -29,7 +29,16 @@ import {
 } from '@angular/material';
 
 // SERVICES
-import { UserService, LogService, TokenInterceptor, NavigationService } from './_services';
+import {
+  UserService,
+  LogService,
+  TokenInterceptor,
+  NavigationService,
+  BatchService,
+  OverlayService,
+  EditorService,
+  DiagramService,
+} from './_services';
 
 // DIRECTIVES
 import { SharedDirectiveModule } from './_directives/shared-directives.module';
@@ -62,6 +71,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
+import { EditorComponent } from './editor/editor.component';
+import { IntroEditorComponent } from './editor/intro.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true,
@@ -74,6 +85,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ErrorComponent,
     NavBarComponent,
     ToastComponent,
+    EditorComponent,
+    IntroEditorComponent,
   ],
   entryComponents: [ToastComponent],
   imports: [
@@ -142,10 +155,14 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       useClass: TokenInterceptor,
       multi: true,
     },
+    OverlayService,
+    EditorService,
+    DiagramService,
     UserService,
     LogService,
     NavigationService,
     AngularFireAuth,
+    BatchService,
   ],
   bootstrap: [AppComponent],
 })

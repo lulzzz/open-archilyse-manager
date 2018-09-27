@@ -1,0 +1,73 @@
+<div class="backdrop" (click)="close.emit()"></div>
+<div class="sidebar" @slideInOut (swiperight)="close.emit()">
+  <div class="header">
+    <div class="title">Create New Layout</div>
+    <div class="close" (click)="close.emit()">
+      <app-icon icon="fa-times"></app-icon>
+    </div>
+  </div>
+
+  <div class="description">
+    <p>Provide a layout to calculate it's various properties.</p>
+  </div>
+
+  <div class="content" perfectScrollbar>
+
+    <form [formGroup]="newLayoutForm" (submit)="submit()" novalidate>
+      <mat-form-field class="input form-full-width">
+        <input matInput placeholder="Layout Title" formControlName="title">
+        <mat-error *ngIf="newLayoutForm.get('title').hasError('maxlength')">150 characters max</mat-error>
+        <mat-error *ngIf="newLayoutForm.get('title').hasError('required')">required</mat-error>
+      </mat-form-field>
+
+      <div *ngIf="!fromEditor">
+        <ng-container *ngIf="balance > 0; else elseTemplate">
+          <p>You can create a new layout by uploading a floorplan. The floorplan must be a file formatted as .png, .jpeg or .pdf.
+            This will consume one credit</p>
+          <p>Alternatively, you can provide an Archilogic ID. This consumes zero credits.</p>
+
+
+          <mat-slide-toggle #toggle class="example-margin" (change)="toggleFileUpload($event)" [(checked)]="useArchilogicId">
+            Use Archoligic ID
+          </mat-slide-toggle>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <p>You have insufficient credits to upload a flooplan.</p>
+          <p>However, you can still provide an Archilogic ID. This consumes zero credits.</p>
+
+        </ng-template>
+
+        <mat-form-field class="input form-full-width" *ngIf="useArchilogicId">
+          <input matInput placeholder="Archilogic ID" formControlName="archilogic_id" (change)="onIdChange($event)">
+          <mat-error *ngIf="newLayoutForm.get('archilogic_id').hasError('maxlength')">the ID should be 36 characters long</mat-error>
+          <mat-error *ngIf="newLayoutForm.get('archilogic_id').hasError('required')">required</mat-error>
+          <mat-error *ngIf="newLayoutForm.get('archilogic_id').hasError('pattern')">invalid ID format</mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field class="input form-full-width" *ngIf="!useArchilogicId">
+          <input class="file-input-placeholder" matInput #uploadplaceholder placeholder="File" formControlName="floorplan_url" (focus)="triggerFileMenu()">
+          <mat-error *ngIf="newLayoutForm.get('floorplan_url').hasError('required')">required</mat-error>
+
+          <!-- <div class="input-label-wrapper">
+            <label for="file">File</label> -->
+          <!-- <label class="file-label" for="file">{{ filename }}</label> -->
+          <!-- </div> -->
+          <input class="file-input" #upload (change)="onFileChange($event)" type="file" accept=".image/png, image/jpeg, application/pdf"
+            id="file">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="input form-full-width">
+        <textarea rows="5" matInput placeholder="Description" formControlName="description"></textarea>
+        <mat-error *ngIf="newLayoutForm.get('description').hasError('maxlength')">150 characters max</mat-error>
+        <mat-error *ngIf="newLayoutForm.get('description').hasError('required')">required</mat-error>
+      </mat-form-field>
+
+      <button class="btn green" (click)="submit()" mat-button type="button" [disabled]="newLayoutForm.invalid">Create Layout</button>
+    </form>
+
+  </div>
+  <div class="footer">
+  </div>
+</div>

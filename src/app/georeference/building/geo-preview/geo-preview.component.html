@@ -1,0 +1,27 @@
+<!--
+  <div class="backdrop" (click)="onCloseEventStop($event)" (wheel)="onEventStop($event)" (mousedown)="onEventStop($event)"></div>
+-->
+<div class="sidebar" (wheel)="onEventStop($event)" (swiperight)="close.emit()">
+  <!-- this allows to scroll and not zoom in the 3d -->
+
+  <div class="header">
+    <div class="title">Precalculated positions</div>
+    <div class="close" (click)="close.emit()">
+      <app-icon icon="fa-times"></app-icon>
+    </div>
+  </div>
+
+  <!-- <div class="description"></div> this.features.find( (f) => f.key === sim ) -->
+  <div class="content" perfectScrollbar>
+    <div *ngFor="let previewImage of previewImages; let i = index"
+         [ngClass]="{'preview': true, 'selected': (previewImage.index!=='preselected' && currentPreset === previewImage.index)
+         , 'preselected': (previewImage.index==='preselected' && currentPreset === previewImage.index) }"
+         [ngStyle]="{'width': widthPrev+'px','height': heightPrev+'px'}">
+      <div (click)=preset.emit(previewImage.index)
+           class="previewPicture" [ngStyle]="{'background-image': 'url(' + previewImage.img + ')','width': (widthPrev-15)+'px','height': (heightPrev-15)+'px'}" ></div>
+
+      <div *ngIf="previewImage.index==='preselected'" class="number"><div>Preselected</div></div>
+      <div *ngIf="previewImage.index!=='preselected'" class="number"><div>{{previewImage.index + 1}}</div></div>
+    </div>
+  </div>
+</div>

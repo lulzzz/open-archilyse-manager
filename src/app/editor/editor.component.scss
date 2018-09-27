@@ -1,0 +1,67 @@
+@import 'media';
+@import 'colors';
+
+.editorContainer {
+  height: calc(100vh - 220px); // There's a header (60) + 2 Navigations (40 + 80)
+  @include for-tablet-landscape-up {
+    height: calc(100vh - 180px);
+  }
+}
+
+.footer {
+  display: grid;
+  grid-template-rows: '50px 50px';
+  grid-template-areas:
+    'left'
+    'right';
+  align-items: center;
+  height: 100px;
+  max-height: 100px;
+
+  @include for-tablet-landscape-up {
+    grid-template-areas: 'left right';
+    height: 60px;
+    max-height: 60px;
+  }
+}
+
+.sim-info{
+  margin-top: 10px;
+  cursor: pointer;
+  &:hover {
+    color: #2854b4;
+  }
+}
+
+.errorFound{
+  position: absolute;
+  top: 230px;
+  width: 600px;
+  margin-left: -300px;
+  left: 50%;
+  background: rgba(211, 0, 15, 0.6);
+  border-radius: 3px;
+  z-index: 10;
+  color: $white;
+  padding: 8px 16px;
+  font-size: 28px;
+  text-align: center;
+}
+
+.left {
+  grid-area: left;
+  justify-self: stretch;
+
+  .btn{
+    float: left;
+    margin-right: 10px;
+  }
+
+}
+
+.right {
+  grid-area: right;
+  justify-self: right;
+  display: flex;
+  align-items: center;
+}

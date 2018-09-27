@@ -1,0 +1,85 @@
+@import 'colors';
+@import 'media';
+
+.error {
+  color: red;
+  margin-bottom: 16px;
+}
+
+.info{
+  line-height: 22px;
+}
+
+.error{
+  color: red;
+  line-height: 22px;
+}
+
+textarea{
+  background: white;
+  white-space: nowrap;
+  width: 100%;
+  padding: 10px;
+}
+
+.contents {
+  margin: 0 auto;
+  width: 500px;
+  // padding-top: 128px;
+  display: flex;
+  flex-direction: column;
+}
+
+button[type='submit'] {
+  margin-top: 1em;
+  width: 100%;
+  justify-content: center;
+}
+
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    line-height: 32px;
+  }
+}
+
+hr {
+  margin: 24px 0;
+}
+
+.submitButton{
+  display: inline-block;
+  width: 200px !important;
+  float: left;
+}
+
+.selectSourceInline,
+.selectSource{
+  display: inline-block;
+  width: 250px !important;
+  margin: 13px 0 0 26px;
+  text-align: right;
+
+  label {
+    color: $new_text_grey;
+  }
+
+  select{
+    background: white;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}
+
+.buttonsContainer{
+  margin: 50px 0 0 0;
+
+  .portfolio,
+  .batch{
+    display: inline-block;
+    width: 160px;
+  }
+}

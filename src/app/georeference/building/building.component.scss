@@ -1,0 +1,112 @@
+@import 'colors';
+@import 'media';
+
+select{
+  cursor: pointer;
+}
+
+.loading{
+  position: absolute;
+  top: 230px;
+  width: 600px;
+  margin-left: -300px;
+  left: 50%;
+  background: rgba(62, 205, 211, 0.3);
+  border-radius: 3px;
+  z-index: 10;
+  color: $white;
+  padding: 8px 16px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.noFeaturesFound{
+
+  b{
+    font-size: 24px;
+    color: $dark;
+  }
+
+  position: absolute;
+  top: 230px;
+  width: 600px;
+  margin-left: -300px;
+  left: 50%;
+  background: rgba(211, 0, 15, 0.6);
+  border-radius: 3px;
+  z-index: 10;
+  color: $white;
+  padding: 8px 16px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.map-panel {
+  height: calc(100vh - 180px);
+
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.relative-pos{
+  position: relative;
+}
+
+.footer {
+  display: grid;
+  grid-template-rows: '50px 50px';
+  grid-template-columns: 6fr 4fr;
+  grid-template-areas:
+    'left'
+    'right';
+  align-items: center;
+  height: 100px;
+  max-height: 100px;
+
+  @include for-tablet-landscape-up {
+    grid-template-areas: 'left right';
+    height: 60px;
+    max-height: 60px;
+  }
+}
+
+.left {
+  grid-area: left;
+  justify-self: left;
+  display: flex;
+  align-items: center;
+}
+
+.right {
+  grid-area: right;
+  justify-self: right;
+
+  .btn {
+    display: inline-block;
+  }
+}
+
+.selectSourceInline,
+.selectMap,
+.selectSource{
+  display: inline-block;
+  width: 250px !important;
+  margin: 3px 0 0 16px;
+  text-align: right;
+
+  label {
+    color: $new_text_grey;
+  }
+
+  select{
+    background: white;
+    padding: 0 4px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}
+
+.selectSourceInline{
+  margin-right: 20px !important;
+}

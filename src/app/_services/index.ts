@@ -4,4 +4,7 @@ export * from './navigation.service';
 export * from './notification.service';
 export * from './overlay.service';
 export * from './token.interceptor';
-
+export * from './batch.service';
+export * from './diagram.service';
+export * from './editor.service';
+export * from './unique-id.service';

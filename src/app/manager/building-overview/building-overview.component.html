@@ -1,8 +1,9 @@
-<div class="container-lg">
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
@@ -15,19 +16,21 @@
       &nbsp;&nbsp;&nbsp;
       <button [popper]="tooltip8" class="btn green" (click)="addRow()">Add building</button>
     </div>
-    <div>
-      <button [popper]="tooltip9" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-      <button [popper]="tooltip10" class="btn yellow" (click)="export()" > CSV </button>
-      &nbsp;
-      <input *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-      <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'"   [popper]="tooltip11" for="file" class="btn yellow" >Import Excel file</label>
-      <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
-        <i class="fa fa-info-circle"></i>
-      </div>
-      &nbsp;&nbsp;&nbsp;
+    <div class="buttonRow">
       <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip12" class="btn orange" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>
       <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" class="btn orange" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
       <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" class="btn orange" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
+
+      <div style="float: right">
+        <input *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
+        <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'"   [popper]="tooltip11" for="file" class="btn yellow" >Import Excel file</label>
+        <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  class="sim-info" [popper]="infoExcelPopper" (click)="showInfoExcel()">
+          <i class="fa fa-info-circle"></i>
+        </div>
+        &nbsp;&nbsp;&nbsp;
+        <button [popper]="tooltip9" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected ({{selectedNodes.length}})</button>
+        <button [popper]="tooltip10" class="btn yellow" (click)="export()" > CSV </button>
+      </div>
     </div>
   </div>
 </div>
@@ -35,10 +38,11 @@
   <ag-grid-angular
     *ngIf="!loading && !generalError && gridOptions"
     style="width: 100%; height: 100%;"
-    class="ag-theme-balham"
+    class="ag-theme-material"
     [gridOptions]="gridOptions">
   </ag-grid-angular>
 </div>
+
 
 <!-- Tooltips -->
 

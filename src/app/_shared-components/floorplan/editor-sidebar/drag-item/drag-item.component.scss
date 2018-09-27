@@ -1,0 +1,51 @@
+@import 'colors';
+
+.imgContainer {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+
+  .dragImg {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border: 3px solid $grey;
+    background: $white;
+  }
+
+  &:hover {
+    .dragImg {
+      border: 3px solid $green-alt;
+    }
+  }
+}
+
+
+.isBeingDrag{
+  .dragImg {
+    border: 3px solid $red;
+  }
+}
+
+
+
+
+/**
+
+    &:hover{
+      img {
+        border: 3px solid $green-alt;
+      }
+    }
+    img {
+
+      cursor: pointer;
+      background: white;
+      border: 2px solid $grey;
+
+
+      width: 80px;
+      height: 80px;
+    }
+
+ */

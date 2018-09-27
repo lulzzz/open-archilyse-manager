@@ -1,0 +1,31 @@
+<div class="backdrop" (click)="close.emit()"></div>
+<div class="sidebar" @slideInOut (swiperight)="close.emit()">
+  <div class="header">
+    <div class="title">Edit Layout</div>
+    <div class="close" (click)="close.emit()">
+      <app-icon icon="fa-times"></app-icon>
+    </div>
+  </div>
+  <div class="description">
+    <p>Update the details of this layout.</p>
+  </div>
+  <div class="content" perfectScrollbar>
+
+    <form [formGroup]="editLayoutForm" (submit)="submit()" novalidate>
+      <mat-form-field class="input form-full-width">
+        <input matInput placeholder="Layout Name" formControlName="title">
+        <mat-error *ngIf="editLayoutForm.get('title').hasError('maxlength')">150 characters max</mat-error>
+        <mat-error *ngIf="editLayoutForm.get('title').hasError('required')">required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="input form-full-width">
+        <textarea rows="5" matInput placeholder="Description" formControlName="description"></textarea>
+        <mat-error *ngIf="editLayoutForm.get('description').hasError('maxlength')">2000 characters max</mat-error>
+      </mat-form-field>
+      <button class="btn green" (click)="submit()" mat-button type="button" [disabled]="editLayoutForm.invalid">Update Layout</button>
+    </form>
+
+  </div>
+  <div class="footer">
+  </div>
+</div>

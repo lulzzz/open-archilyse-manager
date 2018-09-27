@@ -18,6 +18,14 @@ import { OrdinalPipe } from '../_pipes/ordinal.pipe';
 import { MatCheckboxComponent } from './mat-checkbox/mat-checkbox.component';
 import { ProcentRendererComponent } from './procent-renderer/procent-renderer.component';
 import { InfoBoxOverlayComponent } from './overlays/info-box-overlay/info-box-overlay.component';
+import { FloorplanEditorComponent } from './floorplan/floorplan-editor.component';
+import { DragItemComponent } from './floorplan/editor-sidebar/drag-item/drag-item.component';
+import { EditorSidebarComponent } from './floorplan/editor-sidebar/editor-sidebar.component';
+import { EditorPropertiesSidebarComponent } from './floorplan/editor-properties-sidebar/editor-properties-sidebar.component';
+import { CreateLayoutComponent } from './create-layout/create-layout.component';
+import { EditLayoutComponent } from './edit-layout/edit-layout.component';
+import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
+import { UniqueIdService } from '../_services';
 
 @NgModule({
   imports: [
@@ -42,22 +50,33 @@ import { InfoBoxOverlayComponent } from './overlays/info-box-overlay/info-box-ov
     InfoBoxOverlayComponent,
     ErrorModalComponent,
     BreadcrumbComponent,
+    CreateLayoutComponent,
+    EditLayoutComponent,
     NavigationComponent,
+    ToggleButtonComponent,
     SafeHtmlPipe,
     OrdinalPipe,
+    FloorplanEditorComponent,
+    EditorSidebarComponent,
     IconComponent,
+    DragItemComponent,
+    EditorPropertiesSidebarComponent,
   ],
   exports: [
     InfoBoxOverlayComponent,
     ErrorModalComponent,
     BreadcrumbComponent,
+    CreateLayoutComponent,
+    ToggleButtonComponent,
+    EditLayoutComponent,
     NavigationComponent,
     SafeHtmlPipe,
     OrdinalPipe,
     IconComponent,
+    FloorplanEditorComponent,
   ],
-  providers: [],
+  providers: [UniqueIdService],
   entryComponents: [InfoBoxOverlayComponent, ErrorModalComponent],
-  bootstrap: [],
+  bootstrap: [FloorplanEditorComponent, DragItemComponent],
 })
 export class SharedModule {}

@@ -1,0 +1,47 @@
+<div class="containter-full-width editorContainer">
+  <floorplan-editor *ngIf="modelStructure"
+                    [modelStructure]="modelStructure" ></floorplan-editor>
+
+  <div *ngIf="error" class="errorFound" [innerHTML]="error"> </div>
+  <div *ngIf="loading" class="loading">
+    Loading
+  </div>
+</div>
+
+<create-layout *ngIf="newOfficeDialog" [unit]="project" [fromEditor]="true" (close)="saveAsNewClose()"></create-layout>
+
+<div class="container-lg">
+  <div class="footer">
+    <div class="left">
+      <button [popper]="save" class="btn icon-left green rounded" (click)="override()">
+        <app-icon class="icon" icon="fa-save"></app-icon>
+        Save Layout
+      </button>
+      <button [popper]="saveNew" class="btn icon-left green rounded" (click)="saveAsNew()">
+        <app-icon class="icon" icon="fa-plus"></app-icon>
+        Save as New
+      </button>
+
+      <div class="sim-info" [popper]="infoEditorPopper" (click)="showInfoEditor()">
+        <i class="fa fa-info-circle"></i>
+        <span>
+          How to use the editor
+        </span>
+      </div>
+
+
+    </div>
+    <div class="right">
+      <toggle-button [popper]="sidebar" (toggled)=showElementBar(!$event) [value]="!elementBar">
+        ELEMENTS
+      </toggle-button>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltips -->
+<popper-content #sidebar>Show/Hide element sidebar selector</popper-content>
+<popper-content #save>Override Layout</popper-content>
+<popper-content #saveNew>Save Layout as new</popper-content>
+
+<popper-content #infoEditorPopper >Show editor instructions</popper-content>

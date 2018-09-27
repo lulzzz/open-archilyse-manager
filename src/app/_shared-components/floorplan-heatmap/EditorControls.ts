@@ -1,0 +1,487 @@
+import {
+  OrbitControls,
+  OrthographicCamera,
+  WebGLRenderer,
+  MOUSE,
+  Scene,
+  Color,
+  Mesh,
+  Group,
+  Box3,
+  Raycaster,
+  Vector2,
+  Vector3,
+  MeshBasicMaterial,
+  MeshPhongMaterial,
+  CylinderGeometry,
+  SVGLoader,
+  SVGObject,
+  TextureLoader,
+  BoxGeometry,
+  DoubleSide,
+} from 'three-full/builds/Three.es.js';
+import { EditorConstants } from './EditorConstants';
+
+let controlsToIntersect = [];
+let uuidToControl = {};
+
+let selectedControl = null;
+let selectedControlMetadata = null;
+
+let controlsGroup;
+let controlsGroupX;
+let controlsGroupY;
+
+let controlsGroupRealX;
+let controlsGroupRealY;
+
+let controlsInnerGroup;
+
+let renderMethod;
+
+let dragging = false;
+let draggingElement = null;
+let draggingType = null;
+let onDragging = null;
+
+let draggingRefX = null;
+let draggingRefY = null;
+
+let elementOriginalX = null;
+let elementOriginalY = null;
+let elementOriginalAngle = null;
+let elementOriginalScale = null;
+
+let scale;
+let distance;
+const distanceReference = 150;
+
+let expandCoordX;
+let expandCoordY;
+
+let rotateCoordX;
+let rotateCoordY;
+
+let controlSizeX = 50;
+let controlSizeY = 50;
+
+let sceneContainer = null;
+let sceneCamera = null;
+
+let enableCamera;
+let disableCamera;
+
+let showScale;
+let controlMode;
+
+export class EditorControls {
+  public static init(
+    group,
+    onRender,
+    onUpdateObjectProperties,
+    camera,
+    container,
+    mode,
+    enableCameraControls,
+    disableCameraControls
+  ) {
+    // We can disable the camera control of the scene
+    enableCamera = enableCameraControls;
+    disableCamera = disableCameraControls;
+
+    controlsGroup = group;
+    renderMethod = onRender;
+
+    controlsToIntersect = [];
+    uuidToControl = {};
+
+    selectedControl = null;
+    selectedControlMetadata = null;
+
+    sceneContainer = container;
+    sceneCamera = camera;
+
+    this.cancelDragging();
+
+    onDragging = onUpdateObjectProperties;
+    showScale = true;
+
+    controlMode = mode;
+
+    if (controlMode === 'GEOPOSITION') {
+      scale = 1;
+      showScale = false;
+    } else if (controlMode === 'FLOORPLAN') {
+      scale = 0.035;
+    }
+
+    controlSizeX = 50 * scale;
+    controlSizeY = 50 * scale;
+
+    distance = distanceReference * scale;
+
+    expandCoordX = 0;
+    expandCoordY = distance;
+
+    rotateCoordX = -distance;
+    rotateCoordY = 0;
+  }
+
+  public static onMouseMove(event, raycaster) {
+    // calculate objects intersecting the picking ray
+    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+  }
+
+  public static onMouseDown(event, raycaster) {
+    // calculate objects intersecting the picking ray
+    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+  }
+
+  public static onMouseUp(event, raycaster) {
+    // calculate objects intersecting the picking ray
+    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+  }
+
+  public static onMouseOut(event, raycaster) {
+    // calculate objects intersecting the picking ray
+    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+  }
+
+  public static isDragging() {
+    return dragging;
+  }
+
+  public static cancelDragging() {
+    if (draggingType === EditorConstants.SIZE) {
+      selectedControl.position.y = expandCoordY;
+    }
+
+    if (enableCamera !== null && typeof enableCamera !== 'undefined') {
+      enableCamera();
+    }
+
+    dragging = false;
+    draggingType = null;
+
+    draggingRefX = null;
+    draggingRefY = null;
+
+    elementOriginalX = null;
+    elementOriginalY = null;
+    elementOriginalAngle = null;
+    elementOriginalScale = null;
+  }
+  public static topLeft() {
+    const rect = sceneContainer.getBoundingClientRect();
+    const rectBody = document.body.getBoundingClientRect();
+    return {
+      top: rect.top - rectBody.top,
+      left: rect.left - rectBody.left,
+    };
+  }
+
+  public static magnetizeAngle(original) {
+    const magnetStep = 0.025;
+    return Math.floor(original / magnetStep) * magnetStep;
+  }
+
+  public static identifyMaterial(event, intersects) {
+    let over = false;
+    if (event.type === 'mouseup' || event.type === 'mouseout') {
+      this.cancelDragging();
+    } else if (dragging) {
+      event.stopPropagation();
+
+      let newScale = elementOriginalScale;
+      let newAngle = elementOriginalAngle;
+
+      const tl = this.topLeft();
+
+      const incX = event.clientX - tl.left - draggingRefX;
+      let incY = event.clientY - tl.top - draggingRefY;
+
+      if (controlMode === 'GEOPOSITION') {
+      } else if (controlMode === 'FLOORPLAN') {
+        incY = -incY;
+      }
+
+      let newPositionX = elementOriginalX + incX * scale;
+      let newPositionY = elementOriginalY + incY * scale;
+
+      if (draggingType === EditorConstants.MOVE) {
+        controlsGroup.position.x = controlsGroupX + incX * scale;
+        controlsGroup.position.y = controlsGroupY + incY * scale;
+      } else if (draggingType === EditorConstants.SIZE || draggingType === EditorConstants.ROTATE) {
+        const rect = sceneContainer.getBoundingClientRect();
+        const rectBody = document.body.getBoundingClientRect();
+
+        const tl = this.topLeft();
+        const top = tl.top;
+        const left = tl.left;
+
+        const deltaX = Math.trunc(incX + draggingRefX - left - controlsGroupX - 25);
+        const deltaY = Math.trunc(incY + draggingRefY - top - controlsGroupY - 25);
+
+        if (draggingType === EditorConstants.SIZE) {
+          let dist = 150;
+          if (controlMode === 'GEOPOSITION') {
+            dist = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
+          } else if (controlMode === 'FLOORPLAN') {
+            const inc2X = event.clientX - tl.left - controlsGroupRealX;
+            const inc2Y = event.clientY - tl.top - controlsGroupRealY;
+
+            dist = Math.sqrt(inc2Y * inc2Y + inc2X * inc2X);
+          }
+
+          newScale = elementOriginalScale * (dist + 5) / distanceReference;
+          selectedControl.position.y = dist * scale;
+        } else if (draggingType === EditorConstants.ROTATE) {
+          const inc2X = event.clientX - tl.left - controlsGroupRealX;
+          const inc2Y = event.clientY - tl.top - controlsGroupRealY;
+
+          if (controlMode === 'GEOPOSITION') {
+            newAngle = this.magnetizeAngle(Math.atan2(inc2Y, inc2X) + Math.PI);
+
+            // The position doesn't chenge.
+            newPositionX = elementOriginalX;
+            newPositionY = elementOriginalY;
+          } else if (controlMode === 'FLOORPLAN') {
+            newAngle = -this.magnetizeAngle(Math.atan2(inc2Y, inc2X) + Math.PI);
+          }
+
+          controlsInnerGroup.rotation.z = newAngle;
+        }
+      }
+
+      onDragging(draggingElement, draggingType, newPositionX, newPositionY, newScale, newAngle);
+
+      // We intersected at least 1 element
+    } else if (intersects.length) {
+      const filtered = intersects.filter(o => o.object.type === 'Mesh');
+
+      // It's a mesh
+      if (filtered.length) {
+        event.stopPropagation();
+
+        const lestDistanceObject = filtered[0].object;
+        const control = uuidToControl[lestDistanceObject.uuid];
+
+        if (selectedControl !== null && selectedControl.uuid !== lestDistanceObject.uuid) {
+          selectedControl.material = selectedControlMetadata.material1;
+        }
+
+        selectedControl = lestDistanceObject;
+        selectedControlMetadata = control;
+
+        if (
+          control.type === EditorConstants.SIZE ||
+          control.type === EditorConstants.MOVE ||
+          control.type === EditorConstants.ROTATE
+        ) {
+          document.body.style.cursor = 'move';
+        }
+
+        over = true;
+
+        if (event.type === 'mousemove') {
+          if (!dragging) {
+            lestDistanceObject.material = control.material2;
+          }
+        } else if (event.type === 'click' || event.type === 'mousedown') {
+          lestDistanceObject.material = control.material3;
+          dragging = true;
+
+          if (disableCamera !== null) {
+            disableCamera();
+          }
+
+          const tl = this.topLeft();
+
+          draggingRefX = event.clientX - tl.left;
+          draggingRefY = event.clientY - tl.top;
+
+          draggingType = control.type;
+
+          controlsGroupX = controlsGroup.position.x;
+          controlsGroupY = controlsGroup.position.y;
+
+          const pos = controlsGroup.getWorldPosition().clone();
+          pos.project(sceneCamera);
+
+          const rect = sceneContainer.getBoundingClientRect();
+          const width = rect.width;
+          const height = rect.height;
+          const widthHalf = width / 2;
+          const heightHalf = height / 2;
+
+          controlsGroupRealX = pos.x * widthHalf + widthHalf;
+          controlsGroupRealY = -pos.y * heightHalf + heightHalf;
+
+          elementOriginalX = draggingElement.position.x;
+          elementOriginalY = draggingElement.position.y;
+          elementOriginalAngle = draggingElement.rotation.z;
+          elementOriginalScale = draggingElement.scale.x;
+        } else {
+          console.error('Event event.type: ', event.type);
+        }
+
+        renderMethod();
+      }
+    }
+
+    if (!over && !dragging) {
+      document.body.style.cursor = 'default';
+
+      if (selectedControl !== null) {
+        selectedControl.material = selectedControlMetadata.material1;
+        selectedControlMetadata = null;
+        selectedControl = null;
+
+        renderMethod();
+      }
+    }
+  }
+
+  public static addControlsForElement(element, coorZ) {
+    EditorControls.removeOldControls();
+
+    const controlsGroupBounds = new Box3().setFromObject(element);
+    const centerX =
+      controlsGroupBounds.min.x + (controlsGroupBounds.max.x - controlsGroupBounds.min.x) / 2;
+    const centerY =
+      controlsGroupBounds.min.y + (controlsGroupBounds.max.y - controlsGroupBounds.min.y) / 2;
+
+    draggingElement = element;
+
+    if (controlMode === 'GEOPOSITION') {
+      controlsGroup.position.x = element.position.x;
+      controlsGroup.position.y = element.position.y;
+    } else if (controlMode === 'FLOORPLAN') {
+      controlsGroup.position.x = centerX;
+      controlsGroup.position.y = centerY;
+    }
+
+    controlsInnerGroup = new Group();
+    controlsGroup.add(controlsInnerGroup);
+
+    controlsInnerGroup.rotation.z = element.rotation.z;
+
+    this.addControls(coorZ);
+  }
+
+  public static addControl(coorX, coorY, coorZ, control_type, url1, url2, url3, url4, onComplete) {
+    new TextureLoader().load(url1, img1 => {
+      new TextureLoader().load(url2, img2 => {
+        new TextureLoader().load(url3, img3 => {
+          new TextureLoader().load(url4, img4 => {
+            const geometry = new BoxGeometry(controlSizeX, controlSizeY, 0);
+            const material_1 = new MeshBasicMaterial({
+              map: img1,
+              transparent: true,
+            });
+            const material_2 = new MeshBasicMaterial({
+              map: img2,
+              transparent: true,
+            });
+            const material_3 = new MeshBasicMaterial({
+              map: img3,
+              transparent: true,
+            });
+            const material_4 = new MeshBasicMaterial({
+              map: img4,
+              transparent: true,
+            });
+            const cube = new Mesh(geometry, material_1);
+            controlsInnerGroup.add(cube);
+
+            controlsToIntersect.push(cube);
+            uuidToControl[cube.uuid] = {
+              type: control_type,
+              material1: material_1,
+              material2: material_2,
+              material3: material_3,
+              material4: material_4,
+            };
+
+            cube.position.x = coorX;
+            cube.position.y = coorY;
+            cube.position.z = coorZ;
+
+            onComplete();
+          });
+        });
+      });
+    });
+  }
+
+  public static addRotateMoveControls(coorZ) {
+    const move0 = this.addControl(
+      0,
+      0,
+      coorZ,
+      EditorConstants.MOVE,
+      '/assets/images/editor/move-0.png',
+      '/assets/images/editor/move-1.png',
+      '/assets/images/editor/move-2.png',
+      '/assets/images/editor/move-3.png',
+      () => {
+        const rotate0 = this.addControl(
+          rotateCoordX,
+          rotateCoordY,
+          coorZ,
+          EditorConstants.ROTATE,
+          '/assets/images/editor/rotate-0.png',
+          '/assets/images/editor/rotate-1.png',
+          '/assets/images/editor/rotate-2.png',
+          '/assets/images/editor/rotate-3.png',
+          renderMethod
+        );
+      }
+    );
+  }
+
+  public static addControls(coorZ) {
+    controlsToIntersect = [];
+    uuidToControl = {};
+
+    if (showScale) {
+      const expand0 = this.addControl(
+        expandCoordX,
+        expandCoordY,
+        coorZ,
+        EditorConstants.SIZE,
+        '/assets/images/editor/expand-0.png',
+        '/assets/images/editor/expand-1.png',
+        '/assets/images/editor/expand-2.png',
+        '/assets/images/editor/expand-3.png',
+        this.addRotateMoveControls.bind(this, coorZ)
+      );
+    } else {
+      this.addRotateMoveControls(coorZ);
+    }
+
+    /*
+    const controlsGroupBounds = new Box3().setFromObject(this.controlsGroup);
+    let centerX = controlsGroupBounds.min.x;
+    let centerY = controlsGroupBounds.min.y;
+
+    console.log('center:', centerX, centerY, controlsGroupBounds);
+    this.controlsGroup.translateX(-centerX);
+    this.controlsGroup.translateY(-centerY);
+    this.controlsGroup.position.z = -10;
+    this.render();
+    */
+  }
+
+  public static clearGroup(group) {
+    if (group && group.children) {
+      for (let i = group.children.length - 1; i >= 0; i -= 1) {
+        group.remove(group.children[i]);
+      }
+    }
+  }
+
+  public static removeOldControls() {
+    EditorControls.clearGroup(controlsGroup);
+  }
+}

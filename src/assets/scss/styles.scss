@@ -22,6 +22,7 @@
 @import 'sidebar';
 @import 'table';
 @import 'tags';
+@import 'stylesNew';
 
 // @import 'material';
 
@@ -29,6 +30,7 @@
 body {
   margin: 0;
   background: $background-alt;
+  font-family: 'Rubik', sans-serif;
   height: 100%;
 }
 
@@ -74,7 +76,6 @@ app-root {
 
 #errorDialog {
   max-width: 300px;
-  border-radius: 4px;
 }
 
 // Buttons
@@ -103,8 +104,8 @@ app-root {
 
 
 .topControls{
-  display: inline-block;
-  height: 95px;
+  padding-top: 10px;
+  height: 115px;
 }
 .generalError{
 
@@ -122,6 +123,8 @@ app-root {
   width: 100%;
   text-align: center;
   font-size: 22px;
+  color: white;
+  margin-top: 70px;
 }
 
 
@@ -162,7 +165,7 @@ app-root {
 }
 
 .label-dpoi{
-  font-weight: bold;
+  font-weight: 400;
 }
 
 
