@@ -76,8 +76,8 @@ export class BuildingSimulationRendererDpoiComponent {
     this.ready = false;
     this.addressSet = ManagerFunctions.isAddressCorrect(this.building);
 
-    this.urlRaw = `${urlPortfolio}/simulation/building/${params.data.building_id}`;
-    this.urlDpoi = `${urlPortfolio}/dpoi/${params.data.building_id}`;
+    this.urlRaw = `/manager/simulation/building/${params.data.building_id}`;
+    this.urlDpoi = `/manager/dpoi/${params.data.building_id}`;
 
     console.log('params.value', params.value);
 

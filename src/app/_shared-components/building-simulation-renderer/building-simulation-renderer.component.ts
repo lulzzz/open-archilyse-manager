@@ -62,7 +62,7 @@ export class BuildingSimulationRendererComponent {
     this.params = params;
 
     if (params.colDef.field === 'simulation_statuses.potential_view.status') {
-      this.urlPotencialView = `${urlPortfolio}/potentialView/${params.data.building_id}`;
+      this.urlPotencialView = `/manager/potentialView/${params.data.building_id}`;
     } else if (params.colDef.field === 'simulation_statuses.accoustics.status') {
     } else if (params.colDef.field === 'simulation_statuses.dpoi.status') {
     } else {
@@ -83,7 +83,7 @@ export class BuildingSimulationRendererComponent {
     this.addressSet = ManagerFunctions.isAddressCorrect(this.building);
     this.georeferenced = ManagerFunctions.isReferencedBuilding(this.building);
 
-    this.urlRaw = `${urlPortfolio}/simulation/building/${params.data.building_id}`;
+    this.urlRaw = `/manager/simulation/building/${params.data.building_id}`;
 
     if (!this.addressSet) {
       this.styles.backgroundColor = '#59f0ff';

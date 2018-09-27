@@ -39,25 +39,31 @@
   <div *ngIf="features && features.length>0" class="footer">
     <div class="left">
       <div class="legend">
-        <div>
-          Please select the building and or confirm it.
-        </div>
-        <div>
-          <span [popper]="very_probable"><i class="fa fa-circle veryProbable"></i> High probable building</span> &nbsp;&nbsp;
-          <span [popper]="probable"><i class="fa fa-circle probable"></i> Less probable buildings</span>
-        </div>
-        <div>
-          <span [popper]="selected"><i class="fa fa-circle selected"></i> Selected building</span>
-          <span *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
+        <div class="legendElement">
+          <div>
+            <span [popper]="very_probable"><i class="fa fa-circle veryProbable"></i> High probable building</span> &nbsp;&nbsp;
+            <span [popper]="probable"><i class="fa fa-circle probable"></i> Less probable buildings</span>
+          </div>
+          <div>
+            <span [popper]="selected"><i class="fa fa-circle selected"></i> Selected building</span>
+            <span *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
              &nbsp;&nbsp; <i class="fa fa-circle before"></i> Previously selected building
-            <!--
-            [ {{this.buildingReferenceIdPreselectedUser}}
-              {{this.buildingReferenceIdPreselectedDate}} ] -->
-          </span>
+              <!--
+              [ {{this.buildingReferenceIdPreselectedUser}}
+                {{this.buildingReferenceIdPreselectedDate}} ] -->
+            </span>
+          </div>
         </div>
-        <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
-          To georeference {{nextBatch.length}} buildings left.
+        <div class="legendElement">
+          <div>
+            Please select the building and or confirm it.
+          </div>
+          <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+            To georeference {{nextBatch.length}} buildings left.
+          </div>
         </div>
+
+
       </div>
     </div>
 

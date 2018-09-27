@@ -10,8 +10,11 @@ $secondary-foreground-color-opacity: 0.54 !default;
 $disabled-foreground-color-opacity: 0.38 !default;
 
 
-$icons-path: "~ag-grid/src/styles/icons/";
-$ag-mat-icons-path: "~ag-grid/src/styles/material-icons/";
+// defaults $icons-path: "~ag-grid/src/styles/icons/";
+// defaults $ag-mat-icons-path: "~ag-grid/src/styles/material-icons/";
+
+$icons-path: "../../assets/images/ag-grid-custom/icons/";
+$ag-mat-icons-path: "../../assets/images/ag-grid-custom/material-icons/";
 
 // changes the border color
 $border-color: $new_background_progress_bar;
@@ -106,7 +109,7 @@ $icon-color: #ffa000;
   z-index: -1;
 
   width: 100%;
-  height: 322px;
+  height: 323px;
   background: $new_background_blue;
 }
 

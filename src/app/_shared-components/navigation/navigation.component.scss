@@ -77,5 +77,6 @@
   /* Add a color on mouse-over */
   ul.navigation li a:hover {
     opacity: 1;
+      color: $new_table_header_blue;
   }
 }

@@ -2,8 +2,8 @@
   <span *ngIf="!addressSet" >Requires Address <a (click)="infoAddress()"><i class="fa fa-info-circle"></i></a></span>
 
   <span *ngIf="addressSet && complete">
-    <a *ngIf="currentProfile === 'developer'" [href]="urlRaw" > View raw</a> &nbsp;
-    <a [href]="urlDpoi" > View dpoi</a>
+    <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > View raw</a> &nbsp;
+    <a [routerLink]="urlDpoi" > View dpoi</a>
   </span>
   <span *ngIf="addressSet && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
   <span *ngIf="addressSet && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>

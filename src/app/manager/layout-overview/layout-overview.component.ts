@@ -264,7 +264,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Building Id',
             field: 'building_id',
             hide: this.currentProfile !== 'developer',
-            width: 230,
+            width: 275,
             cellRenderer: CellRender.viewBuilding,
             cellClass: 'readOnly',
           },
@@ -310,7 +310,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Unit Id',
             field: 'unit_id',
-            width: 230,
+            width: 275,
             cellRenderer: CellRender.viewUnit,
             cellEditor: 'agPopupSelectCellEditor',
             valueFormatter: CellRender.unitFormatter.bind(this),
@@ -336,7 +336,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Layout Id',
             field: 'layout_id',
-            width: 190,
+            width: 228,
             hide: this.currentProfile !== 'developer',
             editable: false,
             cellClass: 'idCell',

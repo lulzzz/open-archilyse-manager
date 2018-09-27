@@ -51,7 +51,8 @@ select{
 }
 
 .map-panel {
-  height: calc(100vh - 180px);
+  margin-top: 20px;
+  height: calc(100vh - 200px);
   background: white;
 }
 
@@ -75,6 +76,11 @@ select{
 .left {
   grid-area: left;
   justify-self: stretch;
+
+  .legendElement{
+    display: inline-block;
+    padding: 8px 20px 0 0;
+  }
 
   .legend{
     font-size: 12px;
@@ -116,6 +122,7 @@ select{
   display: inline-block;
   margin-right: 15px;
   color: #2a2a2a;
+  cursor: pointer;
 
   &.on{
     color: #868686;
@@ -124,7 +131,11 @@ select{
 
 .selectors{
   display: inline-block;
-  width: 160px;
+  width: 180px;
+
+  select{
+    background: white;
+  }
 
   * {
     font-size: 12px;

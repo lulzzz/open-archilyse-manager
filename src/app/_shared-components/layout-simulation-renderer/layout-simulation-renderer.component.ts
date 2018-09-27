@@ -75,7 +75,7 @@ export class LayoutSimulationRendererComponent {
     if (params.colDef.field === 'simulation_statuses.view.status') {
       requireBuilding = true;
       requireGeorefLayout = true;
-      this.urlView = `${urlPortfolio}/viewSim/${params.data.layout_id}`;
+      this.urlView = `/manager/viewSim/${params.data.layout_id}`;
     } else if (params.colDef.field === 'simulation_statuses.wbs.status') {
       // Just the model structure
     } else if (params.colDef.field === 'simulation_statuses.pathways.status') {
@@ -120,7 +120,7 @@ export class LayoutSimulationRendererComponent {
 
     this.modelStruct = ManagerFunctions.isDigitalizedLayout(this.layout);
 
-    this.urlRaw = `${urlPortfolio}/simulation/layout/${params.data.layout_id}`;
+    this.urlRaw = `/manager/simulation/layout/${params.data.layout_id}`;
 
     if (!this.unitSet) {
       this.styles.backgroundColor = '#59f0ff';

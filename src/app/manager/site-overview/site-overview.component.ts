@@ -129,7 +129,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             field: 'site_id',
             hide: this.currentProfile !== 'developer',
             columnGroupShow: 'open',
-            width: 190,
+            width: 228,
             editable: false,
             cellClass: 'idCell',
           },
