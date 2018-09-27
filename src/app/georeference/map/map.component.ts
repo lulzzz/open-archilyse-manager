@@ -224,7 +224,7 @@ export class MapComponent implements OnInit, OnDestroy {
               );
             }
 
-            if (referenceSource !== null) {
+            if (referenceSource && referenceSource !== null) {
               this.buildingReferenceIdPreselected = referenceSource.id;
 
               // TODO: Check when the API returns the user
@@ -369,6 +369,14 @@ export class MapComponent implements OnInit, OnDestroy {
     selected_collection.clear();
     if (this.displayVectors && this.buildingReferenceIdPreselected !== null) {
       const found = this.features.find(f => f.id_ === this.buildingReferenceIdPreselected);
+
+      console.log(
+        'found',
+        found,
+        this.features.map(f => f.id_),
+        this.buildingReferenceIdPreselected
+      );
+
       if (found) {
         selected_collection.push(found);
       }

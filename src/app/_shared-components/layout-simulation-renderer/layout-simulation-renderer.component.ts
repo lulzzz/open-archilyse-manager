@@ -4,6 +4,7 @@ import { ManagerFunctions } from '../../manager/managerFunctions';
 import { OverlayService } from '../../_services/overlay.service';
 import { environment } from '../../../environments/environment';
 import { NavigationService } from '../../_services/navigation.service';
+import { Router } from '@angular/router';
 
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
@@ -48,6 +49,7 @@ export class LayoutSimulationRendererComponent {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
@@ -171,9 +173,10 @@ export class LayoutSimulationRendererComponent {
   }
   georeference() {
     const src = 'swiss_topo';
-    ManagerFunctions.openLink(
-      urlGeoreference + '/map/' + this.layout.layout_id + (src ? `#source=${src}` : '')
-    );
+
+    this.router.navigate(['georeference', 'map', this.layout.layout_id], {
+      fragment: src ? `source=${src}` : null,
+    });
   }
 
   infoUnit() {

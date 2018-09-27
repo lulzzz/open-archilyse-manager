@@ -658,7 +658,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
   }
 
   viewRaw() {
-    window.location.href = `${urlPortfolio}/simulation/building/${this.buildingId}`;
+    this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
   }
 
   changeMap(data) {

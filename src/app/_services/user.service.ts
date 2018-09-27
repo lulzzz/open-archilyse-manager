@@ -64,9 +64,7 @@ export class UserService {
 
   signOut() {
     this.afAuth.auth.signOut().then(() => {
-      window.location.href = '/login';
+      this.router.navigate(['login']);
     });
-    // Router Navigate doesn't work
-    // this.router.navigate(['/login']);
   }
 }

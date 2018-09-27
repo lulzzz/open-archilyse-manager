@@ -290,15 +290,15 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   }
 
   seeRawData() {
-    window.location.href = `${urlPortfolio}/simulation/building/${this.buildingId}`;
+    this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
   }
 
   viewDpoi(buildingId) {
-    window.location.href = `${urlPortfolio}/dpoi/${buildingId}`;
+    this.router.navigate(['manager', 'dpoi', this.buildingId]);
   }
 
   switchDpoi() {
-    window.location.href = `${urlPortfolio}/dpoi/${this.buildingIdCompare}/${this.buildingId}`;
+    this.router.navigate(['manager', 'dpoi', this.buildingIdCompare, this.buildingId]);
   }
 
   clearFilters() {

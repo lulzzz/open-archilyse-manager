@@ -668,15 +668,18 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   geoRefBuildings(numBuildings, nodes, src) {
     if (numBuildings === 1) {
       const node = nodes[0];
-      ManagerFunctions.openLink(
-        urlGeoreference + '/map/' + node.data.building_id + (src ? `#source=${src}` : '')
-      );
+
+      this.router.navigate(['georeference', 'map', node.data.building_id], {
+        fragment: src ? `source=${src}` : null,
+      });
+
     } else if (numBuildings > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
       const list = building_ids.join('\t\n') + '\t\n';
-      ManagerFunctions.openLink(
-        urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
-      );
+
+      this.router.navigate(['georeference', 'multiple'], {
+        fragment: 'list=' + list + '' + (src ? `&source=${src}` : ''),
+      });
     }
   }
 
@@ -710,7 +713,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         if (nodes[1] && nodes[1].data && nodes[1].data.building_id) {
           const building_id1 = nodes[0].data.building_id;
           const building_id2 = nodes[1].data.building_id;
-          ManagerFunctions.openLink(`${urlPortfolio}/dpoi/${building_id1}/${building_id2}`);
+          // ManagerFunctions.openLink(`${urlPortfolio}/dpoi/${building_id1}/${building_id2}`);
+          this.router.navigate(['manager', 'dpoi', building_id1, building_id2]);
         } else {
           console.error('Second link wrong, ', nodes);
         }

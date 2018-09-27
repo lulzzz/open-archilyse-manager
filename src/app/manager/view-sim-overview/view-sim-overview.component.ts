@@ -752,7 +752,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   }
 
   viewRaw() {
-    window.location.href = `${urlPortfolio}/simulation/layout/${this.layoutId}`;
+    this.router.navigate(['manager', 'simulation', 'layout', this.layoutId]);
   }
 
   changeMap(data) {

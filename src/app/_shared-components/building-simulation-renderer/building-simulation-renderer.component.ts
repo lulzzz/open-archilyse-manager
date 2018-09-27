@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
 import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 const urlGeoreference = environment.urlGeoreference;
 const urlPortfolio = environment.urlPortfolio;
@@ -40,6 +41,7 @@ export class BuildingSimulationRendererComponent {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
@@ -139,9 +141,14 @@ export class BuildingSimulationRendererComponent {
   }
   georeference() {
     const src = 'swiss_topo';
+    this.router.navigate(['georeference', 'map', this.building.building_id], {
+      fragment: src ? `source=${src}` : null,
+    });
+    /**
     ManagerFunctions.openLink(
       urlGeoreference + '/map/' + this.building.building_id + (src ? `#source=${src}` : '')
     );
+     */
   }
 
   infoAddress() {

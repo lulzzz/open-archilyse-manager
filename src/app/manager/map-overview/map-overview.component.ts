@@ -38,11 +38,7 @@ const urlPortfolio = environment.urlPortfolio;
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
-import {
-  calculateDomain,
-  drawHexBlocks,
-  reduceHeatmap,
-} from '../hexagonFunctions';
+import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
 import { colors } from '../potential-view-overview/potential-view-overview.component';
 
 proj4.defs(
@@ -269,9 +265,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
               if (this.cities.indexOf(building.address.city) === -1) {
                 this.cities.push(building.address.city);
+                this.cities.sort(); // a to Z
               }
               if (this.countries.indexOf(building.address.country) === -1) {
                 this.countries.push(building.address.country);
+                this.countries.sort(); // a to Z
               }
 
               if (this.map === null) {
@@ -339,12 +337,15 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
                       const postion = featureId.indexOf('||') + 2;
                       const buildingId = featureId.substr(postion, featureId.length - postion);
-                      window.location.href = `${urlPortfolio}/building#building_id=${buildingId}`;
+
+                      this.router.navigate(['building'], {
+                        fragment: `building_id=${buildingId}`,
+                      });
                     } else {
                       // It's a building
-                      window.location.href = `${urlPortfolio}/building#building_id=${
-                        e.selected[0].id_
-                      }`;
+                      this.router.navigate(['building'], {
+                        fragment: `building_id=${e.selected[0].id_}`,
+                      });
                     }
                   }
                 });
@@ -545,7 +546,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     if (this.filterCity !== null) {
       filters.push(`address.city=${this.filterCity}`);
     }
-    window.location.href = `${urlPortfolio}/building#` + filters.join('&');
+    this.router.navigate(['manager', 'building'], {
+      fragment: filters.join('&'),
+    });
   }
 
   /**
