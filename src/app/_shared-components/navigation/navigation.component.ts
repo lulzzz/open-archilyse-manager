@@ -21,6 +21,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   subscriptionNavdiagramLinkActive: Subscription;
 
   currentProfile;
+  currentUrl;
 
   constructor(
     private router: Router,
@@ -34,38 +35,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.isUserLoggedIn = _authenticated;
     });
 
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+      this.prepareOptions();
+      this.reactToUrlChange();
+    });
+
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd && val['urlAfterRedirects']) {
-        const url = val['urlAfterRedirects'];
-        console.log('url ', url);
-
-        if (url === '/manager/map') {
-          this.current = 'map';
-        } else if (url === '/manager/country') {
-          this.current = 'country';
-        } else if (url === '/manager/region') {
-          this.current = 'region';
-        } else if (url === '/manager/site') {
-          this.current = 'site';
-        } else if (url === '/manager') {
-          this.current = ') ';
-        } else if (url === '/manager/building') {
-          this.current = 'building';
-        } else if (url === '/manager/unit') {
-          this.current = 'unit';
-        } else if (url === '/manager/layout') {
-          this.current = 'layout';
-        } else if (url === '/manager/log') {
-          this.current = 'log';
-        } else {
-          this.current = '';
-        }
-
-        if (url === '/error' || url === '/login' || url === '/logout') {
-          this.options = [];
-        } else {
-          this.options = this.optionsAvailable;
-        }
+        this.currentUrl = val['urlAfterRedirects'];
+        this.reactToUrlChange();
       }
     });
 
@@ -98,6 +77,43 @@ export class NavigationComponent implements OnInit, OnDestroy {
     // manager
     // developer
 
+    this.prepareOptions();
+    this.options = this.optionsAvailable;
+  }
+
+  reactToUrlChange() {
+    const url = this.currentUrl;
+
+    if (url === '/manager/map') {
+      this.current = 'map';
+    } else if (url === '/manager/country') {
+      this.current = 'country';
+    } else if (url === '/manager/region') {
+      this.current = 'region';
+    } else if (url === '/manager/site') {
+      this.current = 'site';
+    } else if (url === '/manager') {
+      this.current = ') ';
+    } else if (url === '/manager/building') {
+      this.current = 'building';
+    } else if (url === '/manager/unit') {
+      this.current = 'unit';
+    } else if (url === '/manager/layout') {
+      this.current = 'layout';
+    } else if (url === '/manager/log') {
+      this.current = 'log';
+    } else {
+      this.current = '';
+    }
+
+    if (url === '/error' || url === '/login' || url === '/logout') {
+      this.options = [];
+    } else {
+      this.options = this.optionsAvailable;
+    }
+  }
+
+  prepareOptions() {
     let extraOptions = [];
     if (this.currentProfile === 'analyst' || this.currentProfile === 'manager') {
       extraOptions = [
@@ -149,8 +165,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
         value: 'layout',
       },
     ];
-
-    this.options = this.optionsAvailable;
   }
 
   processURL(url) {
