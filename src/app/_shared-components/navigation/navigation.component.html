@@ -1,7 +1,7 @@
 <ul *ngIf="isUserLoggedIn" class="navigation">
   <li *ngFor="let option of options">
-    <span *ngIf="option.value === current" [popper]="'Current menu'" >{{ option.title }}</span>
-    <a *ngIf="option.value !== current && option.link" [routerLink]="option.link" [popper]="option.tooltip" >{{ option.title }}</a>
-    <a *ngIf="option.value !== current && !option.link" (click)="changeVal(option.value)" [popper]="option.tooltip" >{{ option.title }}</a>
+    <span *ngIf="option.value === current" [popper]="'Current menu'" [popperPlacement]="'bottom-end'" >{{ option.title }}</span>
+    <a *ngIf="option.value !== current && option.link" [routerLink]="option.link" [popper]="option.tooltip" [popperPlacement]="'bottom-end'" >{{ option.title }}</a>
+    <a *ngIf="option.value !== current && !option.link" (click)="changeVal(option.value)" [popper]="option.tooltip" [popperPlacement]="'bottom-end'" >{{ option.title }}</a>
   </li>
 </ul>

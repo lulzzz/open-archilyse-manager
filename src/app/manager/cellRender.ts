@@ -461,23 +461,18 @@ export class CellRender {
 
   public static viewCountryInRegion(params) {
     const country = params.value ? params.value : 'Not defined';
-    return (
-      country + ` <a href='${urlPortfolio}/region#country=` + params.value + `' > View regions</a>`
-    );
+    return country + ` <a href='/manager/region#country=` + params.value + `' > View regions</a>`;
   }
 
   public static viewCountryInCountry(params) {
     const country = params.value ? params.value : 'Not defined';
-    return country + ` <a href='${urlPortfolio}/country#country=` + params.value + `' > View </a>`;
+    return country + ` <a href='/manager/country#country=` + params.value + `' > View </a>`;
   }
 
   public static viewSiteOfBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
-        params.value +
-        `<a href='${urlPortfolio}/site#site_id=` +
-        params.data.site_id +
-        `' > View </a>`
+        params.value + `<a href='/manager/site#site_id=` + params.data.site_id + `' > View </a>`
       );
     }
     return ``;
@@ -486,10 +481,7 @@ export class CellRender {
   public static viewUnitsOfBuilding(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number +
-      `<a href='${urlPortfolio}/unit#building_id=` +
-      params.data.building_id +
-      `' > View </a>`
+      number + `<a href='/manager/unit#building_id=` + params.data.building_id + `' > View </a>`
     );
   }
 
@@ -508,7 +500,7 @@ export class CellRender {
     if (params && params.data && params.data.building_references) {
       const found = params.data.building_references.find(br => br.source === 'swiss_topo');
       if (found && found.id) {
-        return `<a href='${urlGeoreference}/map/${params.data.building_id}#source=swiss_topo' >${
+        return `<a href='/georeference/map/${params.data.building_id}#source=swiss_topo' >${
           found.id
         }</a>`;
       }
@@ -520,9 +512,9 @@ export class CellRender {
     if (params && params.value && params.value !== '') {
       const found = params.data.building_references.find(br => br.source === 'open_street_maps');
       if (found && found.id) {
-        return `<a href='${urlGeoreference}/map/${
-          params.data.building_id
-        }#source=open_street_maps' >${found.id}</a>`;
+        return `<a href='/georeference/map/${params.data.building_id}#source=open_street_maps' >${
+          found.id
+        }</a>`;
       }
     }
     return '';
@@ -532,7 +524,7 @@ export class CellRender {
     const number = params.value > 0 ? params.value : 0;
     return (
       number +
-      ` <a href='${urlPortfolio}/building#address.country=` +
+      ` <a href='/manager/building#address.country=` +
       params.data.country +
       `' > View list</a>`
     );
@@ -540,42 +532,32 @@ export class CellRender {
 
   public static viewBuildingsSite(params) {
     const number = params.value > 0 ? params.value : 0;
-    return (
-      number + `<a href='${urlPortfolio}/building#site_id=` + params.data.site_id + `' > View </a>`
-    );
+    return number + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`;
   }
 
   public static viewUnitsCountry(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number +
-      ` <a href='${urlPortfolio}/unit#address.country=` +
-      params.data.country +
-      `' > View </a>`
+      number + ` <a href='/manager/unit#address.country=` + params.data.country + `' > View </a>`
     );
   }
 
   public static viewBuildingsCity(params) {
     const number = params.value > 0 ? params.value : 0;
     return (
-      number +
-      ` <a href='${urlPortfolio}/building#address.city=` +
-      params.data.city +
-      `' > View </a>`
+      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
     );
   }
 
   public static viewUnitsCity(params) {
     const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='${urlPortfolio}/unit#address.city=` + params.data.city + `' > View </a>`
-    );
+    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
   }
 
   public static cellPdfDownloadLink(params) {
     if (params && params.value && params.value !== '') {
       return (
-        `<a href='${urlPortfolio}/assets/pdf/example.pdf' download=` +
+        `<a href='/manager/assets/pdf/example.pdf' download=` +
         params.value +
         `'>` +
         params.value +
@@ -592,7 +574,7 @@ export class CellRender {
       for (let i = 0; i < params.value.length; i += 1) {
         const movements = params.value[i];
         const source = movements.source ? movements.source : 'swiss_topo'; // 'open_street_maps';
-        result += `<a href="${urlGeoreference}/building/${layout_id}?source=${source}">${source}</a>`;
+        result += `<a href="/georeference}/building/${layout_id}?source=${source}">${source}</a>`;
       }
     }
     return result;
@@ -604,7 +586,7 @@ export class CellRender {
     }
 
     if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `<a href='${urlEditor}/` + params.data.layout_id + `' > View / edit model </a>`;
+      return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
     }
 
     return `Not digitalized`;
@@ -638,9 +620,7 @@ export class CellRender {
 
   public static viewUnit(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
-      return (
-        params.value + ` <a href='${urlPortfolio}/unit#unit_id=` + params.value + `' > View </a>`
-      );
+      return params.value + ` <a href='/manager/unit#unit_id=` + params.value + `' > View </a>`;
     }
     return ``;
   }
@@ -648,10 +628,7 @@ export class CellRender {
   public static viewBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
-        params.value +
-        ` <a href='${urlPortfolio}/building#building_id=` +
-        params.value +
-        `' > View </a>`
+        params.value + ` <a href='/manager/building#building_id=` + params.value + `' > View2 </a>`
       );
     }
     return ``;

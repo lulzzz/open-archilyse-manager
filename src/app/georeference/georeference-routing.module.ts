@@ -7,7 +7,6 @@ import { IntroComponent } from './intro/intro.component';
 import { BuildingComponent } from './building/building.component';
 import { MapComponent } from './map/map.component';
 import { MultipleComponent } from './multiple/multiple.component';
-import { LogOverviewComponent } from './log-overview/log-overview.component';
 
 const routes: Routes = [
   {
@@ -17,11 +16,6 @@ const routes: Routes = [
       {
         path: '',
         component: IntroComponent,
-        canActivate: [AuthGuard],
-      },
-      {
-        path: 'log',
-        component: LogOverviewComponent,
         canActivate: [AuthGuard],
       },
       {

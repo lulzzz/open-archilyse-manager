@@ -216,3 +216,17 @@ app-root {
   }
 
 }
+.whiteText{
+  color: #FFF;
+}
+
+.separator {
+
+  background: rgba(92,145,204,0.8);
+  display: inline-block;
+  height: 25px;
+  width: 1px;
+  margin: 0 15px 0 15px;
+  position: relative;
+  top: 8px;
+}

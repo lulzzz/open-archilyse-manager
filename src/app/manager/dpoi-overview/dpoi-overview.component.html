@@ -7,7 +7,6 @@
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
       &nbsp;&nbsp;&nbsp;
-      <button class="btn green" (click)="backPage()" > Back </button>
       <button class="btn green" (click)="seeRawData()" > See Raw data </button>
       &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Status:</span> {{status}}</span>
@@ -16,8 +15,8 @@
       &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Updated:</span> {{updated | date:'dd.MM.yyyy h:mma'}}</span>
       <div style="float: right">
-        <button [popper]="tooltip3" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-        <button [popper]="tooltip4" class="btn yellow" (click)="export()" > CSV </button>
+        <button [popper]="tooltip3" [popperPlacement]="'top-end'" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+        <button [popper]="tooltip4" [popperPlacement]="'top-end'" class="btn yellow" (click)="export()" > CSV </button>
       </div>
     </div>
     <div class="buttonRow">

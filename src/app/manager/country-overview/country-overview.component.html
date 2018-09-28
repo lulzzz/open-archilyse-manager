@@ -8,8 +8,8 @@
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
 
       <div style="float: right">
-        <button [popper]="tooltip3" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected ({{selectedNodes.length}})</button>
-        <button [popper]="tooltip4" class="btn yellow" (click)="export()" > CSV </button>
+        <button [popper]="tooltip3" [popperPlacement]="'top-end'" class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected ({{selectedNodes.length}})</button>
+        <button [popper]="tooltip4" [popperPlacement]="'top-end'" class="btn yellow" (click)="export()" > CSV </button>
       </div>
     </div>
   </div>

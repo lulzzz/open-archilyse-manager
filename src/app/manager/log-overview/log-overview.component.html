@@ -3,12 +3,13 @@
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
-    <div class="buttonRow">
-      <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
+    <div class="buttonRow">&nbsp;
     </div>
     <div class="buttonRow">
+      <span class="whiteText">
       Here you'll find an explained list of all the request done from the portfolio manager to the Archilyse API. <br/>
       This way the operations done by this application could be easily replicated.
+      </span>
     </div>
   </div>
 </div>
@@ -22,5 +23,3 @@
 </div>
 
 <!-- Tooltips -->
-
-<popper-content #tooltip1 >Back to the previous page</popper-content>

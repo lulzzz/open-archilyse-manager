@@ -77,9 +77,5 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
     this.json = simulations;
   }
 
-  backPage() {
-    window.history.back();
-  }
-
   ngOnDestroy(): void {}
 }

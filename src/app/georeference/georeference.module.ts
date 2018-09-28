@@ -15,7 +15,6 @@ import { NgxPopperModule } from 'ngx-popper';
 import { GeoEditorComponent } from './building/geo-editor/geo-editor.component';
 import { MultipleComponent } from './multiple/multiple.component';
 import { GeoPreviewComponent } from './building/geo-preview/geo-preview.component';
-import { LogOverviewComponent } from './log-overview/log-overview.component';
 import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
@@ -44,7 +43,6 @@ import { AgGridModule } from 'ag-grid-angular';
     GeoEditorComponent,
     MultipleComponent,
     GeoPreviewComponent,
-    LogOverviewComponent,
   ],
 })
 export class GeoreferenceModule {}

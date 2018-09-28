@@ -187,10 +187,10 @@ export class MapComponent implements OnInit, OnDestroy {
           const country = address.country ? address.country : '';
 
           const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
-          this.mapHelp = `Current address : <span class="green-text">${addressStr}</span>`;
+          this.mapHelp = `Current address : <span class="whiteText">${addressStr}</span>`;
         } else {
           const buildingName = building['name'] ? building['name'] : this.buildingId;
-          this.mapHelp = `Address not defined for building <span class="green-text">${buildingName}</span>`;
+          this.mapHelp = `Address not defined for building <span class="whiteText">${buildingName}</span>`;
         }
 
         // Empty map div

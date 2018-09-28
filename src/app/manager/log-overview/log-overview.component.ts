@@ -152,10 +152,6 @@ export class LogOverviewComponent implements OnInit, OnDestroy {
     };
   }
 
-  backPage() {
-    window.history.back();
-  }
-
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();

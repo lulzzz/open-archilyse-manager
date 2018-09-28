@@ -285,10 +285,6 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
    * Links
    */
 
-  backPage() {
-    window.history.back();
-  }
-
   seeRawData() {
     this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
   }

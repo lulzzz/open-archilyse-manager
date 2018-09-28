@@ -5,11 +5,12 @@
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
       <div style="float: right"></div>
-      <label>Click on a building to view the details.</label>
+      <span class="whiteText">Click on a building to view the details.</span>
     </div>
     <div class="buttonRow">
       <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
-      &nbsp;&nbsp;&nbsp;<label>Georeferenced buildings:</label> <span class="whiteText">{{numGeoreferencedBuildings}}</span>
+      <div class="separator"></div>
+      <label>Georeferenced buildings:</label> <span class="whiteText">{{numGeoreferencedBuildings}}</span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Filter country: </label>
       <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
         <option value=""> - </option>
@@ -23,7 +24,7 @@
       </select>
       &nbsp;&nbsp;
       <button [popper]="listPU" class="btn lightblue" (click)="linkToList()">View list</button>
-      &nbsp;&nbsp;
+      <div class="separator"></div>
       <div [popper]="selectMap" class="selectMap">
         <label >Map mode: </label>
         <select (change)="changeMap($event)" [value]="mapStyle">

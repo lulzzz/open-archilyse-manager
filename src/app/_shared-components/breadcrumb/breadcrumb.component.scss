@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 25px;
   color: white;
 
   /* Style the list */
@@ -55,21 +55,9 @@
   }
 }
 
-.layoutName{
-  cursor: pointer;
-  white-space: nowrap;
-}
-.layoutNameRed{
-  border-bottom: 2px solid $red;
-}
-.layoutNameBlue{
-  border-bottom: 2px solid $blue;
-}
-.layoutNameRed:hover{
-  color: $red;
-}
-.layoutNameBlue:hover{
-  color: $blue;
+.backButton{
+  margin-left: 20px;
+  padding: 6px 14px;
 }
 
 @include for-tablet-landscape-down {

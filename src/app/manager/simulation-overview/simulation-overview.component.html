@@ -3,7 +3,7 @@
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
-      <button [popper]="tooltip1" class="btn green" (click)="backPage()" > Back </button>
+      &nbsp;
     </div>
     <div class="buttonRow">
       JSON simulation result, click on each object to expand.
@@ -15,4 +15,3 @@
 </div>
 
 <!-- Tooltips -->
-<popper-content #tooltip1 >Back to the previous page</popper-content>

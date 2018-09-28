@@ -11,12 +11,15 @@ export class BreadcrumbComponent implements OnDestroy {
   breadcrumb;
   subs = [];
   sub_mode: Subscription;
+  showBack = false;
 
   constructor(private router: Router) {
     router.events.subscribe(val => {
       if (val instanceof NavigationEnd && val['urlAfterRedirects']) {
         const url = val['urlAfterRedirects'];
         console.log('url ', url);
+
+        this.showBack = false;
         if (url === '/manager/map') {
           this.breadcrumb = [{ title: 'Map Overview' }];
         } else if (url.startsWith('/manager/country')) {
@@ -25,7 +28,7 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Region Overview' }];
         } else if (url.startsWith('/manager/site')) {
           this.breadcrumb = [{ title: 'Site Overview' }];
-        } else if (url.startsWith('/manager') || url.startsWith('/manager/building')) {
+        } else if (url === '/manager' || url.startsWith('/manager/building')) {
           this.breadcrumb = [{ title: 'Building Overview' }];
         } else if (url.startsWith('/manager/unit')) {
           this.breadcrumb = [{ title: 'Unit Overview' }];
@@ -33,6 +36,7 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Layout Overview' }];
         } else if (url.startsWith('/manager/log')) {
           this.breadcrumb = [{ title: 'API Log Overview' }];
+          this.showBack = true;
         } else if (url.startsWith('/georeference/multiple')) {
           this.breadcrumb = [{ title: 'Georeference Tool, batch tool' }];
         } else if (url.startsWith('/georeference')) {
@@ -41,12 +45,16 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Log In' }];
         } else if (url.startsWith('/manager/potentialView')) {
           this.breadcrumb = [{ title: 'Potential View' }];
+          this.showBack = true;
         } else if (url.startsWith('/manager/simulation/building')) {
           this.breadcrumb = [{ title: 'Raw simulation View' }];
+          this.showBack = true;
         } else if (url.startsWith('/manager/dpoi')) {
           this.breadcrumb = [{ title: 'Dpoi simulation View' }];
+          this.showBack = true;
         } else if (url.startsWith('/manager/viewSim')) {
           this.breadcrumb = [{ title: 'Real view simulation' }];
+          this.showBack = true;
         } else {
           this.breadcrumb = [];
         }
@@ -87,6 +95,10 @@ export class BreadcrumbComponent implements OnDestroy {
     });
 
     this.breadcrumb = [];
+  }
+
+  backPage() {
+    window.history.back();
   }
 
   ngOnDestroy(): void {

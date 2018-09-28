@@ -10,9 +10,11 @@
 
   <div class="nav-items" *ngIf="isUserLoggedIn && showOptions">
 
-    <a *ngIf="currentProfile === 'developer'" [popper]="tooltip2" class="apiUsage" routerLink="/manager/log">Api usage log</a>
+    <span [popper]="tooltip2" [popperPlacement]="'bottom-end'">
+      <a *ngIf="currentProfile === 'developer'" class="apiUsage" routerLink="/manager/log">Api usage log</a>
+    </span>
 
-    <div [popper]="tooltip1" class="selectProfile">
+    <div [popper]="tooltip1" [popperPlacement]="'bottom-end'" class="selectProfile">
       <label >Profile: </label>
       <select (change)="changeProfile($event)" [value]="currentProfile">
         <option value="analyst">Data analyst</option>
@@ -23,7 +25,7 @@
     </div>
 
     <div class="drop-down-menu">
-      <div class="trigger" (click)="toggleDropdown($event)" [popper]="'App menu'" >
+      <div class="trigger" (click)="toggleDropdown($event)" [popper]="'App menu'" [popperPlacement]="'bottom-end'" >
         <i class="far fa-bars"></i>
       </div>
       <div class="drop-down" [ngClass]="{'active': isDropdownActive}">
