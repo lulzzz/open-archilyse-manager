@@ -133,7 +133,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   startBasicData() {
-    this.mapStyle = 'satellite';
+    this.mapStyle = 'streets';
 
     this.source = new OlXYZ({
       url:

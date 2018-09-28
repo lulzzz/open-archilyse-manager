@@ -1,10 +1,12 @@
+@import 'colors';
+
 .ngxp__container {
 
   text-transform: none !important;
 
   &.arch {
-    border: 1px solid #495057;
-    background: #495057;
+    border: 1px solid $new_table_header_blue;
+    background: $new_table_header_blue;
     color: #fff;
     font-weight: 400;
     font-size: 13px;
@@ -13,7 +15,7 @@
     z-index: 20;
 
     .ngxp__arrow {
-      border-color: #495057;
+      border-color: $new_table_header_blue;
     }
   }
 }

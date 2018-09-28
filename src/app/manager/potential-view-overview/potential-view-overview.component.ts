@@ -264,7 +264,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                     this.sim_result.sort((a, b) => a.height - b.height);
 
                     if (this.map === null) {
-                      this.mapStyle = 'satellite';
+                      this.mapStyle = 'streets';
 
                       this.source = new OlXYZ({
                         url:

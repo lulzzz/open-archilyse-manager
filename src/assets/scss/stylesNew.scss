@@ -35,8 +35,8 @@ $secondary-font-weight: 400 !default; // font-secondary-weight
 // Sizing
 $grid-size: 8px !default;
 $icon-size: 18px !default;
-$header-height: $grid-size * 7 !default;
-$row-height: $grid-size * 6 !default;
+$header-height: $grid-size * 5 !default;
+$row-height: $grid-size * 3 !default;
 $toolpanel-indent-size: $grid-size + $icon-size !default;
 $row-group-indent-size: $grid-size * 3 + $icon-size !default;
 $cell-horizontal-padding: $grid-size * 2 !default;
@@ -129,6 +129,17 @@ $icon-color: #ffa000;
   background: none;
   font: 14px 'Rubik', sans-serif;
 
+  .ag-cell{
+    line-height: 45px;
+  }
+
+  .ag-header-cell-text{
+    line-height: 65px;
+  }
+  .ag-header-group-cell{
+    line-height: 55px;
+  }
+
   .ag-root{
     background: white;
   }
@@ -147,14 +158,43 @@ $icon-color: #ffa000;
     font: 14px 'Rubik', sans-serif;
   }
 
+
+  .ag-header-group-cell-with-group{
+
+    overflow: initial !important;
+
+    .ag-header-row{
+      border-bottom: 1px solid $new_background_blue;
+      height: 200%;
+    }
+    .ag-header-cell-resize{
+    }
+    .ag-header-cell-resize::after{
+      border-right: 1px solid $new_background_blue;
+      height: 200%;
+      margin-top: 0;
+    }
+  }
+
+  .ag-header-cell-menu-button{
+    .ag-icon-menu{
+      height: 62px;
+    }
+  }
+
+  .ag-icon-filter{
+    height: 62px;
+  }
+
   .ag-header-row{
-    /** border-bottom: none; */
-    border-bottom: 1px solid $new_background_blue;
+    border-bottom: none;
+    // border-bottom: 1px solid $new_background_blue;
   }
   .ag-header-cell-resize::after{
-    border-right: 1px solid $new_background_blue;
+    // border-right: 1px solid $new_background_blue;
+    border: none;
     height: 100%;
-    margin-top: 0px;
+    margin-top: 0;
   }
 
   .ag-header-container{

@@ -273,7 +273,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
               }
 
               if (this.map === null) {
-                this.mapStyle = 'satellite';
+                this.mapStyle = 'streets';
 
                 this.source = new OlXYZ({
                   url:

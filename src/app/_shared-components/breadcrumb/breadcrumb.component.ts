@@ -19,27 +19,25 @@ export class BreadcrumbComponent implements OnDestroy {
         console.log('url ', url);
         if (url === '/manager/map') {
           this.breadcrumb = [{ title: 'Map Overview' }];
-        } else if (url === '/manager/country') {
+        } else if (url.startsWith('/manager/country')) {
           this.breadcrumb = [{ title: 'Country Overview' }];
-        } else if (url === '/manager/region') {
+        } else if (url.startsWith('/manager/region')) {
           this.breadcrumb = [{ title: 'Region Overview' }];
-        } else if (url === '/manager/site') {
+        } else if (url.startsWith('/manager/site')) {
           this.breadcrumb = [{ title: 'Site Overview' }];
-        } else if (url === '/manager') {
+        } else if (url.startsWith('/manager') || url.startsWith('/manager/building')) {
           this.breadcrumb = [{ title: 'Building Overview' }];
-        } else if (url === '/manager/building') {
-          this.breadcrumb = [{ title: 'Building Overview' }];
-        } else if (url === '/manager/unit') {
+        } else if (url.startsWith('/manager/unit')) {
           this.breadcrumb = [{ title: 'Unit Overview' }];
-        } else if (url === '/manager/layout') {
+        } else if (url.startsWith('/manager/layout')) {
           this.breadcrumb = [{ title: 'Layout Overview' }];
-        } else if (url === '/manager/log') {
+        } else if (url.startsWith('/manager/log')) {
           this.breadcrumb = [{ title: 'API Log Overview' }];
-        } else if (url === '/georeference/multiple') {
+        } else if (url.startsWith('/georeference/multiple')) {
           this.breadcrumb = [{ title: 'Georeference Tool, batch tool' }];
-        } else if (url === '/georeference') {
+        } else if (url.startsWith('/georeference')) {
           this.breadcrumb = [{ title: 'Georeference Tool' }];
-        } else if (url === '/login') {
+        } else if (url.startsWith('/login')) {
           this.breadcrumb = [{ title: 'Log In' }];
         } else if (url.startsWith('/manager/potentialView')) {
           this.breadcrumb = [{ title: 'Potential View' }];

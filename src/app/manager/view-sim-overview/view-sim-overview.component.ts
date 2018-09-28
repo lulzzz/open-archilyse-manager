@@ -410,7 +410,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
 
   setUpMapWithSimulations(epsg) {
     if (this.map === null) {
-      this.mapStyle = 'satellite';
+      this.mapStyle = 'streets';
 
       this.source = new OlXYZ({
         url:

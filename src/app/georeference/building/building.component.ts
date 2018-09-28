@@ -134,7 +134,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * Data started on init
    */
   startBasicData() {
-    this.mapStyle = 'satellite';
+    this.mapStyle = 'streets';
 
     this.source = new OlXYZ({
       url:
