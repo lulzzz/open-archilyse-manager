@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
 import { UserService, NavigationService } from '../_services';
+import { environment } from '../../environments/environment';
+const urlConsole = environment.urlConsole;
 
 @Component({
   selector: 'nav-bar',
@@ -16,6 +18,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   showOptions = true;
   isDropdownActive = false;
+
+  urlConsole = urlConsole;
 
   currentProfile;
   /**

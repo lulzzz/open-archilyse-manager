@@ -29,6 +29,9 @@
       <div class="drop-down" [ngClass]="{'active': isDropdownActive}">
         <ul class="drop-down-nav-list">
           <li class="drop-down-nav-item">
+            <a [href]="urlConsole" >Console</a>
+          </li>
+          <li class="drop-down-nav-item">
             <a routerLink="/logout" (click)="logOut()">Log Out</a>
           </li>
         </ul>

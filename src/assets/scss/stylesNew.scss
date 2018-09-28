@@ -133,6 +133,15 @@ $icon-color: #ffa000;
     background: white;
   }
 
+  /** Drop down */
+  .ag-menu{
+    background: white;
+    color: $new_text_dark;
+    select{
+      color: $new_text_dark;
+    }
+  }
+
   .ag-header{
     background: $new_table_header_blue;
     font: 14px 'Rubik', sans-serif;
