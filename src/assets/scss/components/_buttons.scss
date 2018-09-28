@@ -7,7 +7,7 @@
   padding: 10px 14px;
   border: 2px solid transparentize($text, 0.8);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
   color: $text;
   cursor: pointer;
   transition: all 100ms;
@@ -58,9 +58,15 @@
     background-color: $new_button_blue;
     border-color: $new_button_blue;
     color: $white;
+    font-weight: 400;
     &:hover {
-      background-color: $blue-alt;
-      border-color: $blue-alt;
+      background-color: rgba( $new_button_blue, .5 );
+      border-color: rgba( $new_button_blue, .5 );
+    }
+    &:disabled {
+      background-color: rgba( $new_button_blue, .35 );
+      border-color: rgba( $new_button_blue, .35 );
+      color: rgba( $white, .35 );
     }
   }
 
@@ -70,8 +76,13 @@
     border-color: $new_table_header_blue;
     color: $white;
     &:hover {
-      background-color: $blue-alt;
-      border-color: $blue-alt;
+      background-color: rgba( $new_table_header_blue, .5 );
+      border-color: rgba( $new_table_header_blue, .5 );
+    }
+    &:disabled {
+      background-color: rgba( $new_table_header_blue, .35 );
+      border-color: rgba( $new_table_header_blue, .35 );
+      color: rgba( $white, .35 );
     }
   }
 
@@ -80,8 +91,13 @@
     border-color: $yellow;
     color: $white;
     &:hover {
-      background-color: $yellow-alt;
-      border-color: $yellow-alt;
+      background-color: rgba( $yellow, .5 );
+      border-color: rgba( $yellow, .5 );
+    }
+    &:disabled {
+      background-color: rgba( $yellow, .35 );
+      border-color: rgba( $yellow, .35 );
+      color: rgba( $white, .35 );
     }
   }
 
@@ -91,8 +107,13 @@
     border-color: $orange;
     color: $white;
     &:hover {
-      background-color: $orange-alt;
-      border-color: $orange-alt;
+      background-color: rgba( $orange, .5 );
+      border-color: rgba( $orange, .5 );
+    }
+    &:disabled {
+      background-color: rgba( $orange, .35 );
+      border-color: rgba( $orange, .35 );
+      color: rgba( $white, .35 );
     }
   }
 

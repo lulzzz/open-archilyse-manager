@@ -182,8 +182,10 @@ $icon-color: #ffa000;
     }
   }
 
+  .ag-icon-asc,
+  .ag-icon-desc,
   .ag-icon-filter{
-    height: 62px;
+    margin-top: 4px;
   }
 
   .ag-header-row{
