@@ -35,6 +35,21 @@ export const exportOptions = {
         } else {
           return '';
         }
+      } else if (
+        params.column.colId === 'total_area' ||
+        params.column.colId === 'room' ||
+        params.column.colId === 'corridor' ||
+        params.column.colId === 'bathroom' ||
+        params.column.colId === 'kitchen' ||
+        params.column.colId === 'balcony' ||
+        params.column.colId === 'storeroom' ||
+        params.column.colId === 'notDefined'
+      ) {
+        if (params.value && params.value.length > 0) {
+          return params.value.map(val => val.toFixed(2)).join(', ');
+        } else {
+          return '';
+        }
       } else if (params.column.colId === 'movements') {
         if (params.value && params.value.length > 0) {
           return params.value.map(movement => movement.source).join(', ');
