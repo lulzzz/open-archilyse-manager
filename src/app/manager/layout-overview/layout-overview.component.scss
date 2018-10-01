@@ -70,10 +70,12 @@ button{
 }
 
 .floorInput{
-  margin-top: 8px;
+  height: 100%;
+  display: inline-block;
 }
 
 .floorInput.info{
+  margin-top: 8px;
   font-size: 14px;
   color: white;
 }

@@ -8,10 +8,9 @@
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
       <div class="separator"></div>
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip3" class="btn blue" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Copy ({{selectedNodes.length}})</button>
-      <button [popper]="tooltip4" class="btn blue" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
-      <div class="separator"></div>
-      <button [popper]="tooltip5" class="btn blue" (click)="addRow()" > Add site </button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  [popper]="tooltip3" class="btn lightblue" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Copy ({{selectedNodes.length}})</button>
+      <button [popper]="tooltip4" class="btn lightblue" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
+      <button [popper]="tooltip5" class="btn lightblue" (click)="addRow()" > Add site </button>
       &nbsp;
       <div style="float: right">
         <button [popper]="tooltip6" [popperPlacement]="'top-end'"

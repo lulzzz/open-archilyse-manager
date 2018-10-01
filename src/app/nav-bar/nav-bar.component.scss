@@ -31,6 +31,9 @@
 
   select{
     cursor: pointer;
+    option{
+      color: $new_background_blue;
+    }
   }
 }
 
