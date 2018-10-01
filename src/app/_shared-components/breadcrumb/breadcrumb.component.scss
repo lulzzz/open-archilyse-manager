@@ -1,12 +1,6 @@
 @import 'colors';
 @import 'media';
 
-::ng-deep .vs {
-  font-size: 10px;
-  font-weight: 800;
-  opacity: 0.6;
-}
-
 :host {
   height: 40px;
   display: flex;

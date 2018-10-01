@@ -140,7 +140,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SweetAlert2Module.forRoot({
       buttonsStyling: false,
       customClass: 'modal-content',
-      confirmButtonClass: 'btn green',
+      confirmButtonClass: 'btn blue',
       cancelButtonClass: 'btn',
     }),
     AppRoutingModule,

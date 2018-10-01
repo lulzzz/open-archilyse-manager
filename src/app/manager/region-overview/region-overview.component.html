@@ -4,12 +4,15 @@
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
+      &nbsp;
+    </div>
+    <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
       <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
 
       <div style="float: right">
-        <button [popper]="tooltip3"  class="btn yellow" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
-        <button [popper]="tooltip4"  class="btn yellow" (click)="export()" > CSV </button>
+        <button [popper]="tooltip3"  class="btn blue" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
+        <button [popper]="tooltip4"  class="btn blue" (click)="export()" > CSV </button>
       </div>
     </div>
   </div>

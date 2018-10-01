@@ -22,7 +22,7 @@
         <textarea rows="5" matInput placeholder="Description" formControlName="description"></textarea>
         <mat-error *ngIf="editLayoutForm.get('description').hasError('maxlength')">2000 characters max</mat-error>
       </mat-form-field>
-      <button class="btn green" (click)="submit()" mat-button type="button" [disabled]="editLayoutForm.invalid">Update Layout</button>
+      <button class="btn blue" (click)="submit()" mat-button type="button" [disabled]="editLayoutForm.invalid">Update Layout</button>
     </form>
 
   </div>
