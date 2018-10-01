@@ -21,6 +21,32 @@ export const exportOptions = {
   allColumns: true,
   columnGroups: true,
   columnSeparator: ';',
+  processCellCallback: params => {
+    if (params.column && params.column.colId) {
+      if (params.column.colId === 'floors') {
+        if (params.value && params.value.length > 0) {
+          return params.value.map(floor => floor.floor_nr + ' ' + floor.source).join(', ');
+        } else {
+          return '';
+        }
+      } else if (params.column.colId === 'model_structure') {
+        if (params.value) {
+          return 'DIGITALIZED';
+        } else {
+          return '';
+        }
+      } else if (params.column.colId === 'movements') {
+        if (params.value && params.value.length > 0) {
+          return params.value.map(movement => movement.source).join(', ');
+        } else {
+          return '';
+        }
+      } else {
+        console.log(params.column.colId);
+      }
+    }
+    return params.value;
+  },
 };
 
 export const exportSelectedOptions = {

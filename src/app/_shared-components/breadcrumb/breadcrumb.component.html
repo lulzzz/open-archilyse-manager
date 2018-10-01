@@ -1,11 +1,6 @@
 <ul class="breadcrumb" [ngClass]="{'multiple': breadcrumb?.length > 2}">
   <li *ngFor="let crumb of breadcrumb" class="breadcrumb-item">
-    <a *ngIf="crumb.back" href="javascript:history.back()" >
-      <span class="back-icon">
-        <i class="far fa-ellipsis-h"></i>
-      </span>
-      <span class="link-title">{{ crumb.title }}</span>
-    </a>
+    <span *ngIf="crumb.title" class="link-title">{{ crumb.title }}</span>
     <a *ngIf="crumb.link" routerLink="{{crumb.link}}">
       <span class="back-icon">
         <i class="far fa-ellipsis-h"></i>
@@ -14,11 +9,7 @@
     </a>
   </li>
 </ul>
-<span [popper]="tooltip1" >
-  <button *ngIf="showBack" class="btn blue backButton" (click)="backPage()" > Back </button>
-</span>
 
-<!-- Tooltips -->
-<popper-content #tooltip1 >Back to the previous page</popper-content>
+<button *ngIf="showBack" class="btn blue backButton" (click)="backPage()" > Back </button>
 
 
