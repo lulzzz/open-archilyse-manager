@@ -5,26 +5,6 @@
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
       <div style="float: right"></div>
-      <span class="whiteText">Click on a building to view the details.</span>
-    </div>
-    <div class="buttonRow">
-      <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
-      <div class="separator"></div>
-      <label>Georeferenced buildings:</label> <span class="whiteText">{{numGeoreferencedBuildings}}</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>Filter country: </label>
-      <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
-        <option value=""> - </option>
-        <option *ngFor="let country of countries" (value)="country">{{country}}</option>
-      </select>
-      &nbsp;&nbsp;
-      <label>Filter city: </label>
-      <select (change)="filterByCity($event.target.value)" [value]="filterCity">
-        <option value=""> - </option>
-        <option *ngFor="let city of cities" (value)="city">{{city}}</option>
-      </select>
-      &nbsp;&nbsp;
-      <button [popper]="listPU" class="btn lightblue" (click)="linkToList()">View list</button>
-      <div class="separator"></div>
       <div [popper]="selectMap" class="selectMap">
         <label >Map mode: </label>
         <select (change)="changeMap($event)" [value]="mapStyle">
@@ -36,7 +16,33 @@
         </select>
       </div>
       &nbsp;&nbsp;
-
+      <div *ngIf="showFilter" [popper]="selectSource" class="selectMap">
+        <label >Map source: </label>
+        <select (change)="changeSource($event)" [value]="filterSource">
+          <option value="swiss_topo">Swiss Topo</option>
+          <option value="open_street_maps">Open Street Maps</option>
+        </select>
+      </div>
+      <div class="separator"></div>
+      <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
+      <div class="separator"></div>
+      <span class="whiteText">Click on a building to view the details.</span>
+    </div>
+    <div class="buttonRow">
+      <label>Filter country: </label>
+      <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
+        <option value=""> - </option>
+        <option *ngFor="let country of countries" (value)="country">{{country}}</option>
+      </select>
+      &nbsp;&nbsp;
+      <label>Filter city: </label>
+      <select (change)="filterByCity($event.target.value)" [value]="filterCity">
+        <option value=""> - </option>
+        <option *ngFor="let city of cities" (value)="city">{{city}}</option>
+      </select>
+      &nbsp;&nbsp;
+      <button [popper]="listPU" class="btn lightblue" (click)="linkToList()">View list ({{numGeoreferencedBuildings}})</button>
+      &nbsp;&nbsp;
       <div style="float: right">
         <div *ngIf="enabledPV" [popper]="selectSimulation" class="selectMap">
           <label >Simulation: </label>
@@ -83,3 +89,5 @@
 <popper-content #selectMap >Change the map displayed.</popper-content>
 <popper-content #selectSimulation >Change the simulation displayed.</popper-content>
 <popper-content #selectFloor >Change the floor displayed.</popper-content>
+
+<popper-content #selectSource >Dis play the buildings from an specific source.</popper-content>

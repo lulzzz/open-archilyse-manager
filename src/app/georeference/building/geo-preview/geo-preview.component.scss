@@ -13,7 +13,7 @@
   }
 
   .title {
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
     height: 24px;
   }
@@ -26,7 +26,7 @@
 
 .preview {
 
-  border: 3px solid grey;
+  border: 3px solid $new_text_dark;
   cursor: pointer;
   display: inline-block;
 
@@ -43,8 +43,8 @@
     left: 4px;
     bottom: 4px;
     border-radius: 16px;
-    border: 1px solid grey;
-    background: grey;
+    border: 1px solid $new_text_dark;
+    background: $new_text_dark;
     font-size: 12px;
 
     div {
@@ -53,22 +53,22 @@
   }
 
   &:hover{
-    border: 3px solid $dark;
+    border: 3px solid $new_light_blue;
 
     .number{
-      border: 1px solid $dark;
-      background: $dark;
+      border: 1px solid $new_light_blue;
+      background: $new_light_blue;
     }
 
   }
 
   &.preselected{
-    border: 3px solid $blue;
+    border: 3px solid $new_button_blue;
     cursor: default;
 
     .number{
-      border: 1px solid $blue;
-      background: $blue;
+      border: 1px solid $new_button_blue;
+      background: $new_button_blue;
 
       div {
         position:relative; left: 0; top: 0; min-width: 72px; height: 16px; color: white; text-align:center;
@@ -77,12 +77,12 @@
   }
 
   &.selected{
-    border: 3px solid $green-beauty;
+    border: 3px solid $new_table_header_blue;
     cursor: default;
 
     .number{
-      border: 1px solid $green-beauty;
-      background: $green-beauty;
+      border: 1px solid $new_table_header_blue;
+      background: $new_table_header_blue;
     }
   }
 

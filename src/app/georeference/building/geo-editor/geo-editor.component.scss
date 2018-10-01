@@ -1,12 +1,12 @@
 :host{
   position: absolute;
   top: 0;
-  left: 20px;
+  left: 30px;
   z-index: 10;
 
   .editor-panel {
-    height: calc(100vh - 180px);
-    width: calc(100vw - 40px);
+    height: calc(100vh - 270px);
+    width: calc(100vw - 60px);
   }
 }
 

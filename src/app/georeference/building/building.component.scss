@@ -1,10 +1,6 @@
 @import 'colors';
 @import 'media';
 
-select{
-  cursor: pointer;
-}
-
 .loading{
   position: absolute;
   top: 230px;
@@ -40,7 +36,7 @@ select{
 }
 
 .map-panel {
-  height: calc(100vh - 180px);
+  height: calc(100vh - 270px);
 
   position: relative;
   top: 0;
@@ -69,27 +65,14 @@ select{
   }
 }
 
-.left {
-  grid-area: left;
-  justify-self: left;
-  display: flex;
-  align-items: center;
-}
-
-.right {
-  grid-area: right;
-  justify-self: right;
-
-  .btn {
-    display: inline-block;
-  }
+.btn{
+  display: inline-block;
 }
 
 .selectSourceInline,
 .selectMap,
 .selectSource{
   display: inline-block;
-  width: 250px !important;
   margin: 3px 0 0 16px;
   text-align: right;
 
@@ -99,7 +82,7 @@ select{
 
   select{
     background: white;
-    padding: 0 4px;
+    padding: 10px 14px;
     cursor: pointer;
   }
 }

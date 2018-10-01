@@ -1,4 +1,61 @@
 <div class="top_inner_background"></div>
+<div class="containter-full-width">
+<div class="topControls">
+  <div class="buttonRow">
+    <div *ngIf="error || !features || features.length<=0">
+      <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+        To georeference {{nextBatch.length}} buildings left.
+      </div>
+
+      <div *ngIf="layout" [popper]="selectSource" class="selectSourceInline">
+        <label>Source: </label>
+        <select (change)="selectApiSource($event.target.value)" [value]="(referenceSource)?referenceSource:''">
+          <option value="">Default (S.Topo)</option>
+          <option value="open_street_maps">Open Street Maps</option>
+          <option value="swiss_topo">Swiss Topo</option>
+        </select>
+      </div>
+
+      <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
+        Next
+      </button>
+    </div>
+    <div *ngIf="!error && features && features.length>0">
+      <div [popper]="selectMap" class="selectMap">
+        <label >Map mode: </label>
+        <select (change)="changeMap($event)" [value]="mapStyle">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="outdoors">Outdoors</option>
+          <option value="streets">Streets</option>
+          <option value="satellite">Satellite</option>
+        </select>
+      </div>
+      <div [popper]="selectSource" class="selectSource">
+        <label>Source: </label>
+        <select (change)="selectApiSource($event.target.value)" [value]="(referenceSource)?referenceSource:''">
+          <option value="">Default (S.Topo)</option>
+          <option value="open_street_maps">Open Street Maps</option>
+          <option value="swiss_topo">Swiss Topo</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="buttonRow">
+    <button [disabled]="showPreview" [popper]="confirm" class="btn lightblue" type="button" (click)="openPreviews()">
+      Show positions
+    </button>
+    <div class="separator"></div>
+    <button [popper]="confirm" class="btn blue" type="button" (click)="confirmCoordinates()">
+      Confirm position
+    </button>
+    &nbsp;
+    <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
+      {{hasNextBatch?'Skip and next':'Skip and finish'}}
+    </button>
+  </div>
+</div>
+</div>
 <div class="containter-full-width relative-pos">
   <app-geo-editor
     *ngIf="buildingPerimeter && buildingPerimeter !== null && modelStructure !== null && allPossibleCoords !==null"
@@ -32,69 +89,6 @@
   <div *ngIf="!error && (features && features.length>0 && !currentFeature)" class="noFeaturesFound">
     Georeferenced feature for the building not found
   </div>
-</div>
-<div class="containter-full-width">
-  <div *ngIf="error || !features || features.length<=0" class="footer">
-    <div class="left">
-      <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
-        To georeference {{nextBatch.length}} buildings left.
-      </div>
-    </div>
-    <div class="right">
-
-      <div *ngIf="layout" [popper]="selectSource" class="selectSourceInline">
-        <label>Source: </label>
-        <select (change)="selectApiSource($event.target.value)" [value]="(referenceSource)?referenceSource:''">
-          <option value="">Default (S.Topo)</option>
-          <option value="open_street_maps">Open Street Maps</option>
-          <option value="swiss_topo">Swiss Topo</option>
-        </select>
-      </div>
-
-      <button [popper]="confirm" class="btn blue" type="button" (click)="nextBuilding()">
-        Next
-      </button>
-    </div>
-  </div>
-  <div *ngIf="!error && features && features.length>0" class="footer">
-    <div class="left">
-      <div class="selectors">
-        <div [popper]="selectMap" class="selectMap">
-          <label >Map mode: </label>
-          <select (change)="changeMap($event)" [value]="mapStyle">
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="outdoors">Outdoors</option>
-            <option value="streets">Streets</option>
-            <option value="satellite">Satellite</option>
-          </select>
-        </div>
-        <div [popper]="selectSource" class="selectSource">
-          <label>Source: </label>
-          <select (change)="selectApiSource($event.target.value)" [value]="(referenceSource)?referenceSource:''">
-            <option value="">Default (S.Topo)</option>
-            <option value="open_street_maps">Open Street Maps</option>
-            <option value="swiss_topo">Swiss Topo</option>
-          </select>
-        </div>
-      </div>
-      &nbsp;
-      <button [popper]="confirm" class="btn lightblue" type="button" (click)="confirmCoordinates()">
-        Confirm position
-      </button>
-      &nbsp;
-      <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
-        {{hasNextBatch?'Skip and next':'Skip and finish'}}
-      </button>
-    </div>
-    <div class="right">
-      Select the correct position.&nbsp;
-      <button [disabled]="showPreview" [popper]="confirm" class="btn blue" type="button" (click)="openPreviews()">
-        Show positions
-      </button>
-    </div>
-  </div>
-
 </div>
 
 <popper-content #selectMap >Change the map displayed.</popper-content>

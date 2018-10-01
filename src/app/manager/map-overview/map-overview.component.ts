@@ -117,6 +117,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
   filterCountry = null;
   filterCity = null;
+  filterSource = null;
+  showFilter = false;
 
   currentSimulation = 'buildings';
   currentFloor = 0;
@@ -185,6 +187,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     // Empty map div
     document.getElementById('map').innerHTML = '';
 
+    this.showFilter = false;
+
     this.buildingsArray.forEach(building => {
       /** Filtering */
       if (
@@ -223,6 +227,13 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
             referenced = ref.id;
           }
         }
+      }
+
+      if (this.filterSource === null) {
+        this.filterSource = map_source;
+      } else if (this.filterSource !== map_source) {
+        this.showFilter = true;
+        return false;
       }
 
       if (referenced !== null) {
@@ -562,6 +573,10 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
   filterByCity(city) {
     this.filterCity = city;
+    this.setUpMap();
+  }
+  changeSource(data) {
+    this.filterSource = data.target.value;
     this.setUpMap();
   }
 
