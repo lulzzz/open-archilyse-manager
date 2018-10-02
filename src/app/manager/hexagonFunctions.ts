@@ -108,7 +108,7 @@ export function countHexagons(heatmap, no_value_number) {
 export function reduceHeatmap(heatmap, resolution, no_value_number) {
   const maxNumberPoligons = 1900;
 
-  const numberOfhexagonsStart = this.countHexagons(heatmap, no_value_number);
+  const numberOfhexagonsStart = countHexagons(heatmap, no_value_number);
   let numberOfhexagons = numberOfhexagonsStart;
   let currentHeatmap = heatmap;
   let resolutionCorrected = resolution;

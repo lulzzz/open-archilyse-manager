@@ -21,11 +21,11 @@
 
 .sub-nav {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 3fr 4fr;
   grid-template-areas: 'breadcrumb tabs';
 
   @include for-phone-only {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 3fr 4fr;
     grid-template-areas: 'breadcrumb' 'tabs';
   }
 }
@@ -85,7 +85,7 @@ app-navigation {
 .footer {
   margin-top: 4px;
   text-align: center;
-  color: #2e67b1;
+  color: $new_background_blue;
   position: relative;
   font-size: 12px;
   font-weight: 400;
@@ -103,18 +103,18 @@ app-navigation {
 
   .links{
     position: absolute;
-    font-size: 10px;
-    left: 16px;
-    bottom: 4px;
+    font-size: 14px;
+    left: 30px;
+    bottom: 15px;
 
     float: left;
 
     a{
-      color: $blue-alt;
+//      color: $blue-alt;
       cursor: pointer;
 
       &:hover{
-        color: $green-alt;
+  //      color: $green-alt;
       }
     }
 
