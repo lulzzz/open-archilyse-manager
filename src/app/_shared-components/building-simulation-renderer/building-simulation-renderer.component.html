@@ -7,8 +7,8 @@
       <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw </a> &nbsp;
       <a *ngIf="urlPotencialView" [routerLink]="urlPotencialView" > <i class="far fa-eye"></i> render </a>
     </span>
-    <span *ngIf="addressSet && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
-    <span *ngIf="addressSet && georeferenced && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
+    <span *ngIf="addressSet && georeferenced && ready" >Failed <a (click)="requestSimulation()">Restart</a></span>
+    <span *ngIf="addressSet && georeferenced && not_requested" ><a (click)="requestSimulation()">Start simulation</a></span>
     <span *ngIf="addressSet && georeferenced && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>
     <span *ngIf="addressSet && georeferenced && failed" >Failed <a (click)="requestSimulation()"> Retry</a></span>
     <span *ngIf="addressSet && georeferenced && unknown" >Unknown <a (click)="requestStatus()"><i class="fas fa-redo"></i></a></span>

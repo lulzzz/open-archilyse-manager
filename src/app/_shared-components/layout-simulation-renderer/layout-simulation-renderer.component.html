@@ -10,8 +10,8 @@
       <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw </a>
       <a *ngIf="urlView" [routerLink]="urlView" > <i class="far fa-eye"></i> render </a>
     </span>
-    <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
-    <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
+    <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && not_requested" ><a (click)="requestSimulation()">Start simulation</a></span>
+    <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && ready" >Failed <a (click)="requestSimulation()"> Restart</a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && failed" >Failed <a (click)="requestSimulation()"> Retry</a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && unknown" >Unknown <a (click)="requestStatus()"><i class="fas fa-redo"></i></a></span>

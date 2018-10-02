@@ -5,8 +5,8 @@
       <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw</a> &nbsp;
       <a [routerLink]="urlDpoi" > <i class="far fa-eye"></i> DPOI</a>
     </span>
-    <span *ngIf="addressSet && not_requested" >Not requested <a (click)="requestSimulation()"> Request</a></span>
-    <span *ngIf="addressSet && ready" >Failed <a (click)="requestSimulation()"> Request</a></span>
+    <span *ngIf="addressSet && not_requested" ><a (click)="requestSimulation()">Start simulation</a></span>
+    <span *ngIf="addressSet && ready" >Failed <a (click)="requestSimulation()"> Restart</a></span>
     <span *ngIf="addressSet && pending" >Pending <a (click)="requestStatus()"> Refresh</a></span>
     <span *ngIf="addressSet && failed" >Failed <a (click)="requestSimulation()"> Retry</a></span>
     <span *ngIf="addressSet && unknown" >Unknown <a (click)="requestStatus()"><i class="fas fa-redo"></i></a></span>
