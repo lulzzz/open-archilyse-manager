@@ -82,20 +82,21 @@ select{
   font-size: 12px;
 
   .veryProbable{
-    color: #ff5359;
+    color: $new_highlighted_red;
   }
 
   .probable{
-    color: #ff999c;
+    color: $new_highlighted_yellow;
   }
 
   .selected{
-    color: #6dff66;
+    color: $new_highlighted_green;
   }
 
   .before{
-    color: #7978ff;
+    color: $new_highlighted_purple;
   }
+
 }
 
 .progress{

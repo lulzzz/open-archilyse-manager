@@ -124,36 +124,41 @@ export class LayoutSimulationRendererComponent {
 
     this.urlRaw = `/manager/simulation/layout/${params.data.layout_id}`;
 
+    // const letterColor = '#bce6fa';
+    const letterColor = '#3d383e';
+
     if (!this.unitSet) {
-      this.styles.backgroundColor = '#59f0ff';
+      this.styles = { width: '15%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (!this.buildingSet) {
-      this.styles.backgroundColor = '#52a1ff';
+      this.styles = { width: '30%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (!this.buildingAddressSet) {
-      this.styles.backgroundColor = '#4dc3ff';
+      this.styles = { width: '45%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (!this.buildingGeorefSet) {
-      this.styles.backgroundColor = '#59b0ff';
+      this.styles = { width: '60%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (!this.modelStruct) {
-      this.styles.backgroundColor = '#66b9ff';
+      this.styles = { width: '75%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (!this.georeferenced) {
-      this.styles.backgroundColor = '#6bdfff';
+      this.styles = { width: '90%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (params.value) {
       if (params.value === 'failed') {
         this.failed = true;
-        this.styles.backgroundColor = '#ff8582';
+        this.styles = { width: '100%', backgroundColor: '#ff8582', color: letterColor };
       } else if (params.value === 'complete') {
         this.complete = true;
-        this.styles.backgroundColor = '#b5d686';
+        this.styles = { width: '100%', backgroundColor: '#b5d686', color: letterColor };
       } else if (params.value === 'not_requested') {
         this.not_requested = true;
-        this.styles.backgroundColor = '#4ebeff';
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (params.value === 'pending' || params.value === 'Pending') {
         this.pending = true;
-        this.styles.backgroundColor = '#ffc975';
+        this.styles = { width: '100%', backgroundColor: '#ffc975', color: letterColor };
       } else {
         this.ready = true;
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       }
     } else {
       this.unknown = true;
+      this.styles = { width: '0%', backgroundColor: '#2e67b1', color: letterColor };
     }
 
     return true;

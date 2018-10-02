@@ -81,28 +81,33 @@ export class BuildingSimulationRendererDpoiComponent {
 
     console.log('params.value', params.value);
 
+    // const letterColor = '#bce6fa';
+    const letterColor = '#3d383e';
+
     if (!this.addressSet) {
-      this.styles.backgroundColor = '#59f0ff';
+      this.styles = { width: '50%', backgroundColor: '#2e67b1', color: letterColor };
     } else if (params.value) {
       const status = params.value;
 
       if (status === 'failed') {
         this.failed = true;
-        this.styles.backgroundColor = '#ff8582';
+        this.styles = { width: '100%', backgroundColor: '#ff8582', color: letterColor };
       } else if (status === 'complete') {
         this.complete = true;
-        this.styles.backgroundColor = '#b5d686';
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (status === 'not_requested') {
         this.not_requested = true;
-        this.styles.backgroundColor = '#4ebeff';
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (status === 'pending' || status === 'Pending') {
         this.pending = true;
-        this.styles.backgroundColor = '#ffc975';
+        this.styles = { width: '100%', backgroundColor: '#ffc975', color: letterColor };
       } else {
         this.ready = true;
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       }
     } else {
       this.unknown = true;
+      this.styles = { width: '0%', backgroundColor: '#2e67b1', color: letterColor };
     }
     return true;
   }

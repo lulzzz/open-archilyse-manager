@@ -21,7 +21,7 @@ export const styleNormal = new OlStyle({
   }),
   stroke: new OlStyleStroke({
     color: '#5a5a5a',
-    width: 1,
+    // width: 1,
   }),
 });
 
@@ -31,19 +31,19 @@ export const styleNormalFaded = new OlStyle({
   }),
   stroke: new OlStyleStroke({
     color: 'rgba(90, 90, 90, 0.9)',
-    width: 3,
-    lineCap: 'round',
+    width: 2,
+    // lineCap: 'round',
   }),
 });
 
 export const styleSelected = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(110, 255, 110, 1)',
+    color: 'rgba(110,198,181, 1)',
   }),
   stroke: new OlStyleStroke({
-    color: '#ffffff',
-    width: 3,
-    lineCap: 'round',
+    color: 'rgba(110,198,181, 0.8)',
+    width: 2,
+    // lineCap: 'round',
   }),
 });
 
@@ -53,40 +53,40 @@ export const styleOver = new OlStyle({
   }),
   stroke: new OlStyleStroke({
     color: '#dddddd',
-    width: 3,
-    lineCap: 'round',
+    width: 2,
+    // lineCap: 'round',
   }),
 });
 
 export const styleProbable = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(190, 110, 110, 0.8)',
+    color: 'rgba(251,219,79, 0.8)', // $new_highlighted_yellow
   }),
   stroke: new OlStyleStroke({
-    color: '#dddddd',
-    width: 3,
-    lineCap: 'round',
+    color: 'rgba(251,219,79, 1)',
+    width: 2,
+    // lineCap: 'round',
   }),
 });
 
 export const styleVeryProbable = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(255, 110, 110, 0.8)',
+    color: 'rgba(242,117,123, 0.8)', // $new_highlighted_red
   }),
   stroke: new OlStyleStroke({
-    color: '#dddddd',
-    width: 3,
-    lineCap: 'round',
+    color: 'rgba(242,117,123, 1)',
+    width: 2,
+    // lineCap: 'round',
   }),
 });
 
 export const selectPreselected = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(110, 110, 255, 0.8)',
+    color: 'rgba(98,88,165, 0.8)',
   }),
   stroke: new OlStyleStroke({
-    color: '#dddddd',
-    width: 3,
-    lineCap: 'round',
+    color: 'rgba(98,88,165, 1)',
+    width: 2,
+    // lineCap: 'round',
   }),
 });

@@ -134,6 +134,15 @@ $icon-color: #ffa000;
     line-height: 45px;
   }
 
+  .ag-cell-focus{
+    border: 1px solid $new_table_header_blue;
+  }
+
+  .ag-cell-edit-input{
+    margin-top: -24px;
+    margin-left: -1px;
+  }
+
   .ag-header-cell-text{
     line-height: 65px;
   }

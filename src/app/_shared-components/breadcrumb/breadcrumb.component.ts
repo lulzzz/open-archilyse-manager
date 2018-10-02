@@ -28,7 +28,11 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Region Overview' }];
         } else if (url.startsWith('/manager/site')) {
           this.breadcrumb = [{ title: 'Site Overview' }];
-        } else if (url === '/manager' || url.startsWith('/manager/building')) {
+        } else if (
+          url === '/manager' ||
+          url.startsWith('/manager#') ||
+          url.startsWith('/manager/building')
+        ) {
           this.breadcrumb = [{ title: 'Building Overview' }];
         } else if (url.startsWith('/manager/unit')) {
           this.breadcrumb = [{ title: 'Unit Overview' }];

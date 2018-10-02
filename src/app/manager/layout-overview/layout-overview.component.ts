@@ -60,6 +60,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
    * Local vairables
    */
   @ViewChild('importFile') importField: ElementRef;
+  filtersHuman;
 
   buildingsArray;
   layoutsArray;
@@ -415,6 +416,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
+          /** Simulations
           {
             headerName: 'Wbs',
             field: 'simulation_statuses.wbs.status',
@@ -455,6 +457,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
+           */
         ],
       },
       /**
@@ -507,7 +510,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         );
 
         newPrevFloors.push({
-          floor_nr: floorVal,
+          floor_nr: '' + floorVal,
           source: sourceUrlVal,
         });
 
@@ -799,6 +802,14 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            this.filtersHuman = ManagerFunctions.calculateHumanFilters(
+              model,
+              this.filterModelSet,
+              sitesArray,
+              buildingsArray,
+              unitsArray,
+              layoutsArray
+            );
           },
           onSelectionChanged: () => {
             this.selectedNodes = this.gridOptions.api.getSelectedNodes();

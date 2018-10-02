@@ -87,7 +87,7 @@ export class LogOverviewComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Docs',
-          width: 70,
+          width: 90,
           editable: false,
           cellRenderer: renderRequestLinkDocs,
           cellClass: 'readOnly',

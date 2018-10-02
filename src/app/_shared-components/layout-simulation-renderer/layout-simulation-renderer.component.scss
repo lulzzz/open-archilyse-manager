@@ -1,3 +1,33 @@
+@import 'colors';
+
+a {
+  color: $new_light_blue;
+  &:hover{
+    color: white;
+  }
+}
+
+.div-percent-bar {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+  z-index: 0;
+}
+
+.div-percent-value {
+  position: absolute;
+  padding-left: 4px;
+  font-size: 13px;
+  z-index: 10;
+}
+
+.div-outer-div {
+  display: inline-block;
+  height: 20px;
+  width: 100%;
+}
+
+
 .container{
   padding-left: 8px;
 }

@@ -6,10 +6,11 @@
   width: 100vw;
   max-width: 400px;
   // background-color: #e9ecef;
-  background-color: #f1f1f1;
+  background-color:  $new_button_blue;
   position: absolute;
   right: 0;
-  box-shadow: -3px 0px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+  // box-shadow: -3px 0px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 
   display: grid;
   grid-template-areas:
@@ -35,7 +36,7 @@
   .header {
     grid-area: header;
     height: 55px;
-    background: $new_background_blue;
+    background: $new_button_blue;
     font-size: 13px;
     color: #f8f9fa;
     letter-spacing: 0.21px;

@@ -5,6 +5,13 @@
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
 
+      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
+      <span *ngIf="!((currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1) && filtersHuman" >
+        <div class="separator"></div>
+        <span class="filtersHuman" [innerHTML]="filtersHuman"></span>
+      </span>
+      <div class="separator"></div>
+
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">
         <form [formGroup]="sourceForm" class="form" (ngSubmit)="changeSource(false)" novalidate>
           <span class="label">Floor: </span><input id="floor" formControlName="floor" type="text" placeholder="Floor number" />
@@ -29,7 +36,6 @@
     </div>
     <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Sel.</button>
-      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. not Georef.</button>
       <button *ngIf="currentProfile === 'data'" [popper]="tooltip4" class="btn blue" (click)="selectNotDigitalized($event)" >Sel. not Digital</button>
       <div class="separator"></div>

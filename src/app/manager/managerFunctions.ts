@@ -4,6 +4,58 @@ import { Building, Layout, Site, Unit } from '../_models';
 import { ApiFunctions } from './apiFunctions';
 
 export class ManagerFunctions {
+  public static getName(array, id, idKey) {
+    const found = array.find(element => element[idKey] === id);
+    if (found) {
+      if (found.name) {
+        return found.name;
+      } else if (found.address && found.address.street && found.address.street_nr) {
+        return `${found.address.street} ${found.address.street_nr}`;
+      }
+    }
+    return id;
+  }
+
+  public static calculateHumanFilters(
+    data,
+    filterModelSet,
+    sitesArray,
+    buildingsArray,
+    unitsArray,
+    layoutsArray
+  ) {
+    console.log('data', data);
+    if (filterModelSet) {
+      if (data.site_id && data.site_id.type && data.site_id.type === 'equals') {
+        return `<label>Filtering site:</label> <span class="whiteText" >${ManagerFunctions.getName(
+          sitesArray,
+          data.site_id.filter,
+          'site_id'
+        )}</span>`;
+      } else if (data.building_id && data.building_id.type && data.building_id.type === 'equals') {
+        return `<label>Filtering building:</label> <span class="whiteText" >${ManagerFunctions.getName(
+          buildingsArray,
+          data.building_id.filter,
+          'building_id'
+        )}</span>`;
+      } else if (data.unit_id && data.unit_id.type && data.unit_id.type === 'equals') {
+        return `<label>Filtering unit:</label> <span class="whiteText" >${ManagerFunctions.getName(
+          unitsArray,
+          data.unit_id.filter,
+          'unit_id'
+        )}</span>`;
+      } else if (data.layout_id && data.layout_id.type && data.layout_id.type === 'equals') {
+        return `<label>Filtering layout:</label> <span class="whiteText" >${ManagerFunctions.getName(
+          layoutsArray,
+          data.layout_id.filter,
+          'layout_id'
+        )}</span>`;
+      }
+      return `<label>Filter set</label>`;
+    }
+    return null;
+  }
+
   /**
    * TOOLS
    */

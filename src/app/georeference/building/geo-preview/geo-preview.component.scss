@@ -26,7 +26,9 @@
 
 .preview {
 
-  border: 3px solid $new_text_dark;
+  border: 3px solid white; // $new_text_dark;
+  background: white;
+
   cursor: pointer;
   display: inline-block;
 
@@ -43,8 +45,8 @@
     left: 4px;
     bottom: 4px;
     border-radius: 16px;
-    border: 1px solid $new_text_dark;
-    background: $new_text_dark;
+    border: 1px solid $new_button_blue;
+    background: $new_button_blue;
     font-size: 12px;
 
     div {
@@ -54,16 +56,21 @@
 
   &:hover{
     border: 3px solid $new_light_blue;
+    background: $new_light_blue;
 
     .number{
-      border: 1px solid $new_light_blue;
-      background: $new_light_blue;
+      // border: 1px solid $new_light_blue;
+      // background: $new_light_blue;
     }
 
   }
 
   &.preselected{
-    border: 3px solid $new_button_blue;
+    // border: 3px solid $new_button_blue;
+
+    border: 3px solid $new_table_header_blue;
+    background: $new_table_header_blue;
+
     cursor: default;
 
     .number{
@@ -78,11 +85,13 @@
 
   &.selected{
     border: 3px solid $new_table_header_blue;
+    background: $new_table_header_blue;
+
     cursor: default;
 
     .number{
-      border: 1px solid $new_table_header_blue;
-      background: $new_table_header_blue;
+      // border: 1px solid $new_table_header_blue;
+      // background: $new_table_header_blue;
     }
   }
 

@@ -592,7 +592,7 @@ export class CellRender {
       for (let i = 0; i < params.value.length; i += 1) {
         const movements = params.value[i];
         const source = movements.source ? movements.source : 'swiss_topo'; // 'open_street_maps';
-        result += `<a href="/georeference}/building/${layout_id}?source=${source}">${source}</a>`;
+        result += `<a href="/georeference/building/${layout_id}?source=${source}">${source}</a>`;
       }
     }
     return result;
@@ -604,7 +604,8 @@ export class CellRender {
     }
 
     if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
+      return `Digitalized`;
+      // return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
     }
 
     return `Not digitalized`;
@@ -646,7 +647,7 @@ export class CellRender {
   public static viewBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
-        params.value + ` <a href='/manager/building#building_id=` + params.value + `' > View2 </a>`
+        params.value + ` <a href='/manager/building#building_id=` + params.value + `' > View </a>`
       );
     }
     return ``;

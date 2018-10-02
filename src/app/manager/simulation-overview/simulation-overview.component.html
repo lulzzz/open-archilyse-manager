@@ -1,5 +1,5 @@
 <div class="top_inner_background"></div>
-<div class="container-lg">
+<div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
@@ -7,7 +7,7 @@
       &nbsp;
     </div>
     <div class="buttonRow">
-      JSON simulation result, click on each object to expand.
+      <span class="whiteText">JSON simulation result, click on each object to expand.</span>
     </div>
   </div>
 </div>

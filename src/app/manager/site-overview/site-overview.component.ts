@@ -52,6 +52,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    */
   @ViewChild('importFile') importField: ElementRef;
   currentProfile;
+  filtersHuman;
 
   /**
    * Subscriptions
@@ -210,6 +211,7 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            this.filtersHuman = ManagerFunctions.calculateHumanFilters(model, this.filterModelSet, sitesArray, buildingsArray, unitsArray, layoutsArray);
           },
           onSelectionChanged: () => {
             this.selectedNodes = this.gridOptions.api.getSelectedNodes();
