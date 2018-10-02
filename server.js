@@ -15,6 +15,11 @@ app.use(uaRedirect({
   redirectTo: '/upgrade'
 }));
 
+
+console.log("Environment");
+console.log(process.env.NODE_ENV);
+console.log("Environment END");
+
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     if (req.get('x-forwarded-proto') !== 'https') {
