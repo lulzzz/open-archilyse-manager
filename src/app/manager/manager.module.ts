@@ -29,6 +29,7 @@ import { LogOverviewComponent } from './log-overview/log-overview.component';
 
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.
     ManagerRoutingModule,
     MatCheckboxModule,
     NgxJsonViewerModule,
+    ReactiveFormsModule,
     AgGridModule.withComponents([
       MatCheckboxComponent,
       ProcentRendererComponent,
@@ -70,7 +72,7 @@ import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.
     MapOverviewComponent,
     LogOverviewComponent,
     PotentialViewOverviewComponent,
-    ViewSimOverviewComponent
+    ViewSimOverviewComponent,
   ],
   providers: [OverlayService],
 })

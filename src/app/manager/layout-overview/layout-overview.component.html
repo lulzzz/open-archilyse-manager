@@ -4,11 +4,15 @@
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
+
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">
-        <span class="label">Floor: </span><input id="floor" type="text" placeholder="Floor number" />
-        <span class="label">Source: </span><input id="sourceUrl" type="text" placeholder="Url to source" />
-        <button class="btn blue" (click)="changeSource(false)" >Add source</button>
-        <button class="btn blue" (click)="changeSource(true)" >Clear source</button>
+        <form [formGroup]="sourceForm" class="form" (ngSubmit)="changeSource(false)" novalidate>
+          <span class="label">Floor: </span><input id="floor" formControlName="floor" type="text" placeholder="Floor number" />
+          <span class="label">Source: </span><input id="sourceUrl" formControlName="sourceUrl" type="text" placeholder="Url to source" />
+          <button class="btn blue" [popper]="tooltipAddSource" [disabled]="sourceForm.invalid" >Add source</button>
+        </form>
+        <div *ngIf="previousSources" class="separator"></div>
+        <button *ngIf="previousSources" class="btn blue" [popper]="tooltipClearSource" (click)="changeSource(true)" >Clear source</button>
       </div>
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length !== 1" class="floorInput info">
         <i class="fa fa-info-circle icon-info"></i> Select only one layout to add a floorplan source.
@@ -80,3 +84,6 @@
 
 <popper-content #tooltip13 >Request the status of the simulations from the selected layouts</popper-content>
 <popper-content #tooltip14 >Order the start simulations for the selected layouts</popper-content>
+
+<popper-content #tooltipAddSource > Adds a floor number with an Archilogic Id or URL to an archilogic model to be digitalized</popper-content>
+<popper-content #tooltipClearSource > Clears all the floors provided</popper-content>

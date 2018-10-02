@@ -18,6 +18,7 @@ import {
 } from '../excel';
 import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 const urlGeoreference = environment.urlGeoreference;
 
@@ -81,6 +82,20 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       this.currentProfile = newProfile;
       this.initComponent();
     });
+  }
+
+  sourceForm = new FormGroup({
+    floor: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(200)]),
+    sourceUrl: new FormControl('', Validators.required),
+  });
+
+  previousSources = false;
+
+  get floor() {
+    return this.sourceForm.get('floor');
+  }
+  get sourceUrl() {
+    return this.sourceForm.get('sourceUrl');
   }
 
   /**
@@ -470,26 +485,37 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         floors: [],
         model_structure: {},
       };
+
+      node.data.model_structure = '';
+      node.data.movements = [];
     } else {
       const floor = document.getElementById('floor');
       const sourceUrl = document.getElementById('sourceUrl');
 
       if (floor['value'] && sourceUrl['value']) {
-        const floorVal = floor['value'];
+        const floorVal = parseInt(floor['value'], 10);
         const sourceUrlVal = sourceUrl['value'];
+
+        this.sourceForm.get('floor').setValue(floorVal + 1);
+        this.sourceForm.get('sourceUrl').setValue('');
 
         const previousFloors = node.data.floors ? node.data.floors : [];
 
-        console.log('previousFloors', previousFloors);
+        // We avoid repeated floors
+        const newPrevFloors = previousFloors.filter(
+          prev => parseInt(prev.floor_nr, 10) !== floorVal
+        );
 
-        previousFloors.push({
+        newPrevFloors.push({
           floor_nr: floorVal,
           source: sourceUrlVal,
         });
 
         newValue = {
-          floors: previousFloors,
+          floors: newPrevFloors,
         };
+
+        node.data.model_structure = 'Loading';
       } else {
         console.error('Null source');
       }
@@ -498,7 +524,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     /**
      * When changing the floors, model structure gets loading
      */
-    node.data.model_structure = 'Loading';
+
     this.gridApi.updateRowData({
       update: [node.data],
     });
@@ -780,6 +806,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
             if (this.selectedRows && this.selectedRows.length === 1) {
               console.log('this.selectedRows', this.selectedRows[0]);
+
+              const floors = this.selectedRows[0].floors;
+              this.previousSources = floors && floors.length > 0;
             }
           },
           onGridReady: params => {
