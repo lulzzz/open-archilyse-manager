@@ -145,7 +145,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Amount',
             field: 'layouts',
             filter: 'agNumberColumnFilter',
-            width: 90,
+            width: 105,
             cellRenderer: this.viewLayouts,
             editable: false,
             cellClass: 'readOnly',

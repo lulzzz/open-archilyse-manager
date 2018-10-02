@@ -18,12 +18,12 @@
                for="file" class="btn blue" >Import Excel file</label>
         <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'" class="sim-info" [popper]="infoExcelPopper" [popperPlacement]="'top-end'" (click)="showInfoExcel()">
           <i class="fa fa-info-circle"></i>
+        </div>
         &nbsp;&nbsp;&nbsp;
         <button [popper]="tooltip6" [popperPlacement]="'top-end'"
                 class="btn blue" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
         <button [popper]="tooltip7" [popperPlacement]="'top-end'"
                 class="btn blue" (click)="export()" > CSV </button>
-        </div>
       </div>
     </div>
   </div>

@@ -15,12 +15,12 @@
       </div>
 
       <div style="float: right">
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeferenceAuto()"  >Geo. Auto({{selectedNodes.length}})</button>
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Geo. ({{selectedNodes.length}})</button>
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Geo. OSM ({{selectedNodes.length}})</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" [popperPlacement]="'top-end'" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeferenceAuto()"  >Geo. Auto({{selectedNodes.length}})</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5" [popperPlacement]="'top-end'" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeference()" >Geo. ({{selectedNodes.length}})</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" [popperPlacement]="'top-end'" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="georeferenceOSM()" >Geo. OSM ({{selectedNodes.length}})</button>
         <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'" class="separator"></div>
-        <!-- <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" class="btn blue" (click)="getSimulationStatus()" [disabled]="selectedNodes.length <= 0"  > Get Sim Status. ({{selectedNodes.length}})</button> -->
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" class="btn lightblue" (click)="startSimulations()" [disabled]="selectedNodes.length <= 0"  > Start Sims. ({{selectedNodes.length}})</button>
+        <!-- <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" [popperPlacement]="'top-end'" class="btn blue" (click)="getSimulationStatus()" [disabled]="selectedNodes.length <= 0"  > Get Sim Status. ({{selectedNodes.length}})</button> -->
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" [popperPlacement]="'top-end'" class="btn lightblue" (click)="startSimulations()" [disabled]="selectedNodes.length <= 0"  > Start Sims. ({{selectedNodes.length}})</button>
       </div>
     </div>
     <div class="buttonRow">

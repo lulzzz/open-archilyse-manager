@@ -123,6 +123,17 @@ export class BuildingComponent implements OnInit, OnDestroy {
       }
 
       this.params_sub = this.route.params.subscribe(params => {
+        console.log('params', params);
+
+        this.error = null;
+        this.showPreview = false;
+        this.previewImages = null;
+
+        this.modelStructure = null;
+        this.buildingAddress = '';
+
+        this.coordsToSave = null;
+
         this.startData();
       });
     });
@@ -154,6 +165,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * startMapWithNoError()
    */
   startData() {
+    console.log('startData');
     this.layoutId = this.route.snapshot.params['layoutid'];
 
     if (this.referenceSource === null) {
@@ -273,6 +285,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * Now we request the surroundings
    */
   startDataWithBuilding() {
+    console.log('startDataWithBuilding');
     const options = {
       params: {},
     };
@@ -588,7 +601,6 @@ export class BuildingComponent implements OnInit, OnDestroy {
     this._router.navigate(['georeference', 'building', this.layoutId], extras);
     this.referenceSource = newSource;
     this.referenceToHuman();
-    this.startData();
   }
 
   changeMapStyle(mapStyle) {
