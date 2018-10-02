@@ -12,6 +12,7 @@ export class BreadcrumbComponent implements OnDestroy {
   subs = [];
   sub_mode: Subscription;
   showBack = false;
+  showPortfolio = false;
 
   constructor(private router: Router) {
     router.events.subscribe(val => {
@@ -20,6 +21,7 @@ export class BreadcrumbComponent implements OnDestroy {
         console.log('url ', url);
 
         this.showBack = false;
+        this.showPortfolio = false;
         if (url === '/manager/map') {
           this.breadcrumb = [{ title: 'Map Overview' }];
         } else if (url.startsWith('/manager/country')) {
@@ -45,6 +47,7 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Georeference Tool, batch tool' }];
         } else if (url.startsWith('/georeference')) {
           this.breadcrumb = [{ title: 'Georeference Tool' }];
+          this.showPortfolio = true;
         } else if (url.startsWith('/login')) {
           this.breadcrumb = [{ title: 'Log In' }];
         } else if (url.startsWith('/manager/potentialView')) {
@@ -103,6 +106,9 @@ export class BreadcrumbComponent implements OnDestroy {
 
   backPage() {
     window.history.back();
+  }
+  backPortfolio() {
+    this.router.navigate(['manager', 'building']);
   }
 
   ngOnDestroy(): void {

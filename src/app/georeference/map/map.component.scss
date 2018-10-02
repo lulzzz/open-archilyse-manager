@@ -78,8 +78,14 @@ select{
   padding: 8px 20px 0 0;
 }
 
+.legendColumn{
+  display: inline-block;
+  width: 210px;
+  color: white;
+}
+
 .legend{
-  font-size: 12px;
+  font-size: 13px;
 
   .veryProbable{
     color: $new_highlighted_red;

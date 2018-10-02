@@ -7,22 +7,22 @@
       <div *ngIf="features && features.length>0" >
         <div class="legend">
           <div class="legendElement">
-            <div>
-              <span [popper]="very_probable"><i class="fa fa-circle veryProbable"></i> High probable building</span> &nbsp;&nbsp;
-              <span [popper]="probable"><i class="fa fa-circle probable"></i> Less probable buildings</span>
+            <div class="legendColumn">
+              <div [popper]="very_probable"><i class="fa fa-circle veryProbable"></i>&nbsp; High probable building</div>
+              <div [popper]="probable"><i class="fa fa-circle probable"></i>&nbsp; Less probable buildings</div>
             </div>
-            <div>
-              <span [popper]="selected"><i class="fa fa-circle selected"></i> Selected building</span>
-              <span *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
-             &nbsp;&nbsp; <i class="fa fa-circle before"></i> Previously selected building
+            <div class="legendColumn">
+              <div [popper]="selected"><i class="fa fa-circle selected"></i>&nbsp; Selected building</div>
+              <div *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
+                <i class="fa fa-circle before"></i>&nbsp; Previously selected building
                 <!--
                 [ {{this.buildingReferenceIdPreselectedUser}}
                   {{this.buildingReferenceIdPreselectedDate}} ] -->
-            </span>
+              </div>
             </div>
           </div>
           <div class="legendElement">
-            <div>
+            <div class="whiteText">
               Please select the building and or confirm it.
             </div>
             <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
@@ -33,33 +33,12 @@
       </div>
     </div>
     <div class="buttonRow">
-      <div *ngIf="!features || features.length<=0" class="footer">
-        <div class="left">
-          <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
-            To georeference {{nextBatch.length}} buildings left.
-          </div>
-        </div>
-        <div class="right">
-          <!-- We only display the source if the building exists -->
-          <div *ngIf="building" [popper]="selectSource" class="selectSource">
-            <label>Source: </label>
-            <select (change)="selectApiSource($event.target.value)" [value]="referenceSource?referenceSource:''" >
-              <option value="">Default (S.Topo)</option>
-              <option value="open_street_maps">Open Street Maps</option>
-              <option value="swiss_topo">Swiss Topo</option>
-            </select>
-          </div>
-          &nbsp;
-          <button [popper]="confirm" [popperPlacement]="'bottom-end'" class="btn lightblue" type="button" (click)="nextBuilding()">
-            Continue
-          </button>
-        </div>
-      </div>
       <div *ngIf="features && features.length>0" class="inlineList">
-        <div [popper]="hide" [ngClass]="{'hideOption': true, 'on': displayVectors}" (click)="toggleView()">
-          <span *ngIf="displayVectors"><i class="fas fa-2x fa-eye-slash"></i></span>
-          <span *ngIf="!displayVectors"><i class="fas fa-2x fa-eye"></i></span>
+        <div [popper]="hide" (click)="toggleView()">
+          <button [popper]="confirm" *ngIf="displayVectors"  class="btn lightblue" type="button" >Hide buildings</button>
+          <button [popper]="confirm" *ngIf="!displayVectors" class="btn blue" type="button" >Show buildings</button>
         </div>
+        <div class="separator"></div>
         <div class="selectors">
           <div [popper]="selectMap" class="selectMap">
             <label >Map mode: </label>
@@ -71,6 +50,7 @@
               <option value="satellite">Satellite</option>
             </select>
           </div>
+          &nbsp;
           <div [popper]="selectSource" class="selectSource">
             <label>Source: </label>
             <select (change)="selectApiSource($event.target.value)" [value]="referenceSource?referenceSource:''">
@@ -84,12 +64,13 @@
         <button [popper]="centerMapPU" class="btn lightblue" type="button" (click)="centerMap()">
           Center View
         </button>
-        <div class="separator"></div>
-        <button [popper]="skip" class="btn lightblue" type="button" (click)="nextBuilding()">{{hasNextBatch?'Skip and next':'Skip and finish'}}</button>
-        &nbsp;&nbsp;&nbsp;
-        <button [popper]="confirm" class="btn blue" type="button" [disabled]="buildingReferenceId=== null" (click)="confirmBuilding()">
-          {{buildingReferenceIdPreselected!==null && buildingReferenceIdPreselected!==this.buildingReferenceId?'Confirm change':'Confirm'}}
-        </button>
+        <div style="float: right">
+          <button [popper]="skip" [popperPlacement]="'top-end'"class="btn lightblue" type="button" (click)="nextBuilding()">{{hasNextBatch?'Skip and next':'Skip and finish'}}</button>
+          <div class="separator"></div>
+          <button [popper]="confirm" [popperPlacement]="'top-end'" class="btn blue" type="button" [disabled]="buildingReferenceId=== null" (click)="confirmBuilding()">
+            {{buildingReferenceIdPreselected!==null && buildingReferenceIdPreselected!==this.buildingReferenceId?'Confirm change':'Confirm'}}
+          </button>
+        </div>
       </div>
     </div>
   </div>
