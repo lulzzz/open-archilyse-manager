@@ -48,6 +48,15 @@ proj4.defs(
     '+k_0=1 +x_0=2600000 +y_0=1200000 ' +
     '+ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs'
 );
+
+proj4.defs(
+  'EPSG:3035',
+  '+proj=laea ' +
+    '+lat_0=52 +lon_0=10 +x_0=4321000 ' +
+    '+y_0=3210000 ' +
+    '+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+);
+
 RegisterProjections(proj4);
 
 const styleNormal = new OlStyle({
@@ -240,10 +249,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
         let feature;
         let epsg;
         if (building.footprints) {
+          console.log('building.footprints', building.footprints);
           const footprint = building.footprints.find(fp => fp.source === map_source);
           if (footprint) {
             epsg = footprint.epsg;
-
+            console.log('epsg', epsg);
             feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
             // To recover the value
             feature.setId(building.building_id);
@@ -282,6 +292,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 this.countries.push(building.address.country);
                 this.countries.sort(); // a to Z
               }
+
+              console.log('MAP', this.map, epsg);
 
               if (this.map === null) {
                 this.mapStyle = 'streets';

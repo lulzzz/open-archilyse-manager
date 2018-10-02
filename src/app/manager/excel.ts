@@ -112,7 +112,14 @@ export function getRows(workbook, dictionary) {
   let rowIndex = 3;
 
   // iterate over the worksheet pulling out the columns we're expecting
-  while (worksheet['A' + rowIndex] || worksheet['B' + rowIndex] || worksheet['C' + rowIndex]) {
+  while (
+    worksheet['A' + rowIndex] ||
+    worksheet['B' + rowIndex] ||
+    worksheet['C' + rowIndex] ||
+    worksheet['D' + rowIndex] ||
+    worksheet['E' + rowIndex] ||
+    worksheet['F' + rowIndex]
+  ) {
     const row = {};
     Object.keys(columns).forEach(column => {
       const varName = dictionary[columns[column]];

@@ -1,76 +1,79 @@
 <div class="top_inner_background"></div>
 <div class="containter-full-width">
-  <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
-  <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
-  <div *ngIf="!loading && !generalError" class="topControls">
+  <div class="topControls">
     <div class="buttonRow">
-      <div style="float: right"></div>
-      <div [popper]="selectMap" class="selectMap">
-        <label >Map mode: </label>
-        <select (change)="changeMap($event)" [value]="mapStyle">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="outdoors">Outdoors</option>
-          <option value="streets">Streets</option>
-          <option value="satellite">Satellite</option>
-        </select>
-      </div>
-      &nbsp;&nbsp;
-      <div *ngIf="showFilter" [popper]="selectSource" class="selectMap">
-        <label >Map source: </label>
-        <select (change)="changeSource($event)" [value]="filterSource">
-          <option value="swiss_topo">Swiss Topo</option>
-          <option value="open_street_maps">Open Street Maps</option>
-        </select>
-      </div>
-      <div class="separator"></div>
-      <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
-      <div class="separator"></div>
-      <span class="whiteText">Click on a building to view the details.</span>
-    </div>
-    <div class="buttonRow">
-      <label>Filter country: </label>
-      <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
-        <option value=""> - </option>
-        <option *ngFor="let country of countries" (value)="country">{{country}}</option>
-      </select>
-      &nbsp;&nbsp;
-      <label>Filter city: </label>
-      <select (change)="filterByCity($event.target.value)" [value]="filterCity">
-        <option value=""> - </option>
-        <option *ngFor="let city of cities" (value)="city">{{city}}</option>
-      </select>
-      &nbsp;&nbsp;
-      <button [popper]="listPU" class="btn lightblue" (click)="linkToList()">View list ({{numGeoreferencedBuildings}})</button>
-      &nbsp;&nbsp;
-      <div style="float: right">
-        <div *ngIf="enabledPV" [popper]="selectSimulation" [popperPlacement]="'bottom-end'" class="selectMap">
-          <label >Simulation: </label>
-          <select (change)="changeSimulation($event)" [value]="currentSimulation">
-            <option value="grounds">Grounds</option>
-            <option value="buildings">Buildings</option>
+      <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+      <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+      <span *ngIf="!loading && !generalError" >
+        <div style="float: right"></div>
+          <div [popper]="selectMap" class="selectMap">
+          <label >Map mode: </label>
+          <select (change)="changeMap($event)" [value]="mapStyle">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="outdoors">Outdoors</option>
             <option value="streets">Streets</option>
-            <option value="railroads">Railroads</option>
-            <option value="parks">Parks</option>
-            <option value="trees">Trees</option>
-            <option value="lakes">Lakes</option>
-            <option value="mountains">Mountains</option>
-            <option value="rivers">Rivers</option>
-            <!-- <option value="sky">Sky</option> -->
+            <option value="satellite">Satellite</option>
           </select>
         </div>
         &nbsp;&nbsp;
-        <div *ngIf="enabledPV && floors.length>0" [popper]="selectFloor" [popperPlacement]="'bottom-end'" class="selectMap">
-          <label >Floor: </label>
-          <select (change)="changeFloor($event)" [value]="currentFloor">
-            <option *ngFor="let floor of floors" [value]="floor">{{floor+1}}</option>
+        <div *ngIf="showFilter" [popper]="selectSource" class="selectMap">
+          <label >Map source: </label>
+          <select (change)="changeSource($event)" [value]="filterSource">
+            <option value="swiss_topo">Swiss Topo</option>
+            <option value="open_street_maps">Open Street Maps</option>
           </select>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span [popper]="enablePU" [popperPlacement]="'bottom-end'"><button *ngIf="!enabledPV" class="btn blue" (click)="enablePV()">Enable potential view </button></span>
-        <span [popper]="disablePU" [popperPlacement]="'bottom-end'"><button *ngIf="enabledPV" class="btn lightblue" (click)="disablePV()">Disable potential view</button></span>
-      </div>
-
+        <div class="separator"></div>
+        <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
+        <div class="separator"></div>
+        <span class="whiteText">Click on a building to view the details.</span>
+      </span>
+    </div>
+    <div class="buttonRow">
+      <span *ngIf="!loading && !generalError" >
+        <label>Filter country: </label>
+        <select (change)="filterByCountry($event.target.value)" [value]="filterCountry">
+          <option value=""> - </option>
+          <option *ngFor="let country of countries" (value)="country">{{country}}</option>
+        </select>
+        &nbsp;&nbsp;
+        <label>Filter city: </label>
+        <select (change)="filterByCity($event.target.value)" [value]="filterCity">
+          <option value=""> - </option>
+          <option *ngFor="let city of cities" (value)="city">{{city}}</option>
+        </select>
+        &nbsp;&nbsp;
+        <button [popper]="listPU" class="btn lightblue" (click)="linkToList()">View list ({{numGeoreferencedBuildings}})</button>
+        &nbsp;&nbsp;
+        <div style="float: right">
+          <div *ngIf="enabledPV" [popper]="selectSimulation" [popperPlacement]="'bottom-end'" class="selectMap">
+            <label >Simulation: </label>
+            <select (change)="changeSimulation($event)" [value]="currentSimulation">
+              <option value="grounds">Grounds</option>
+              <option value="buildings">Buildings</option>
+              <option value="streets">Streets</option>
+              <option value="railroads">Railroads</option>
+              <option value="parks">Parks</option>
+              <option value="trees">Trees</option>
+              <option value="lakes">Lakes</option>
+              <option value="mountains">Mountains</option>
+              <option value="rivers">Rivers</option>
+              <!-- <option value="sky">Sky</option> -->
+            </select>
+          </div>
+          &nbsp;&nbsp;
+          <div *ngIf="enabledPV && floors.length>0" [popper]="selectFloor" [popperPlacement]="'bottom-end'" class="selectMap">
+            <label >Floor: </label>
+            <select (change)="changeFloor($event)" [value]="currentFloor">
+              <option *ngFor="let floor of floors" [value]="floor">{{floor+1}}</option>
+            </select>
+          </div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span [popper]="enablePU" [popperPlacement]="'bottom-end'"><button *ngIf="!enabledPV" class="btn blue" (click)="enablePV()">Enable potential view </button></span>
+          <span [popper]="disablePU" [popperPlacement]="'bottom-end'"><button *ngIf="enabledPV" class="btn lightblue" (click)="disablePV()">Disable potential view</button></span>
+        </div>
+      </span>
     </div>
   </div>
 </div>

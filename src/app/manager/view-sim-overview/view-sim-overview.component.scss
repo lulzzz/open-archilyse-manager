@@ -41,7 +41,12 @@ select {
 
 .sim-info{
   display: inline-block;
+  color: $new_table_header_blue;
   cursor: pointer;
+
+  &:hover {
+    color: $new_light_blue;
+  }
 }
 
 .whiteText{

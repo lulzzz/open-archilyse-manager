@@ -60,7 +60,7 @@ export class ColumnDefinitions {
           columnGroupShow: 'open',
           headerTooltip: 'User that changed the last value',
           field: 'user_id',
-          width: 250,
+          width: 280,
           editable: false,
           cellClass: 'readOnly',
         },

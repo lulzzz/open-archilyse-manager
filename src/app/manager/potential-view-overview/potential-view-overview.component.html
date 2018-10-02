@@ -1,53 +1,55 @@
 <div class="top_inner_background"></div>
 <div class="containter-full-width">
-  <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
-  <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
-  <div *ngIf="!loading && !generalError" class="topControls">
+  <div class="topControls">
     <div class="buttonRow">
-      <div [innerHTML]="address"></div>
+      <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
+      <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
+      <div *ngIf="!loading && !generalError" [innerHTML]="address"></div>
     </div>
     <div class="buttonRow">
-      <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button> &nbsp;
-      <button [popper]="viewRawPU" class="btn blue" (click)="viewRaw()">View raw</button> &nbsp; &nbsp;
+      <span *ngIf="!loading && !generalError" >
+        <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button> &nbsp;
+        <button [popper]="viewRawPU" class="btn blue" (click)="viewRaw()">View raw</button> &nbsp; &nbsp;
 
-      <div [popper]="selectMap" class="selectMap">
-        <label >Map mode: </label>
-        <select (change)="changeMap($event)" [value]="mapStyle">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="outdoors">Outdoors</option>
-          <option value="streets">Streets</option>
-          <option value="satellite">Satellite</option>
-        </select>
-      </div>
-      &nbsp;&nbsp;
-      <div [popper]="selectSimulation" class="selectMap">
-        <label >Simulation: </label>
-        <select (change)="changeSimulation($event)" [value]="currentSimulation">
-          <option value="grounds">Grounds</option>
-          <option value="buildings">Buildings</option>
-          <option value="streets">Streets</option>
-          <option value="railroads">Railroads</option>
-          <option value="parks">Parks</option>
-          <option value="trees">Trees</option>
-          <option value="lakes">Lakes</option>
-          <option value="mountains">Mountains</option>
-          <option value="rivers">Rivers</option>
-          <option value="forests">Forest</option>
-          <!-- <option value="sky">Sky</option> -->
-        </select>
-      </div>
-      &nbsp;&nbsp;
-      <div *ngIf="floors.length>0" [popper]="selectFloor" class="selectMap">
-        <label >Floor: </label>
-        <select (change)="changeFloor($event)" [value]="currentFloor">
-          <option *ngFor="let floor of floors" [value]="floor">{{floor+1}}</option>
-        </select>
-      </div>
+        <div [popper]="selectMap" class="selectMap">
+          <label >Map mode: </label>
+          <select (change)="changeMap($event)" [value]="mapStyle">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="outdoors">Outdoors</option>
+            <option value="streets">Streets</option>
+            <option value="satellite">Satellite</option>
+          </select>
+        </div>
+        &nbsp;&nbsp;
+        <div [popper]="selectSimulation" class="selectMap">
+          <label >Simulation: </label>
+          <select (change)="changeSimulation($event)" [value]="currentSimulation">
+            <option value="grounds">Grounds</option>
+            <option value="buildings">Buildings</option>
+            <option value="streets">Streets</option>
+            <option value="railroads">Railroads</option>
+            <option value="parks">Parks</option>
+            <option value="trees">Trees</option>
+            <option value="lakes">Lakes</option>
+            <option value="mountains">Mountains</option>
+            <option value="rivers">Rivers</option>
+            <option value="forests">Forest</option>
+            <!-- <option value="sky">Sky</option> -->
+          </select>
+        </div>
+        &nbsp;&nbsp;
+        <div *ngIf="floors.length>0" [popper]="selectFloor" class="selectMap">
+          <label >Floor: </label>
+          <select (change)="changeFloor($event)" [value]="currentFloor">
+            <option *ngFor="let floor of floors" [value]="floor">{{floor+1}}</option>
+          </select>
+        </div>
 
-      <div style="float: right">
-        <button [popper]="exportKmlPU" class="btn blue" (click)="exportKML()">Export KML</button>
-      </div>
+        <div style="float: right">
+          <button [popper]="exportKmlPU" class="btn blue" (click)="exportKML()">Export KML</button>
+        </div>
+      </span>
     </div>
     <div *ngIf="summary"class="buttonRow">
       <label >Min: </label><span class="whiteText">{{summary.min.toFixed(2)}}</span>&nbsp;&nbsp;

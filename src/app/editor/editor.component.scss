@@ -28,8 +28,10 @@
 .sim-info{
   margin-top: 10px;
   cursor: pointer;
+  color: $new_table_header_blue;
+
   &:hover {
-    color: #2854b4;
+    color: $new_light_blue;
   }
 }
 

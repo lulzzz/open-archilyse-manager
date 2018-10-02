@@ -42,17 +42,19 @@
     </div>
   </div>
   <div class="buttonRow">
-    <button [disabled]="showPreview" [popper]="confirm" class="btn lightblue" type="button" (click)="openPreviews()">
-      Show positions
-    </button>
-    <div class="separator"></div>
-    <button [popper]="confirm" class="btn blue" type="button" (click)="confirmCoordinates()">
-      Confirm position
-    </button>
-    &nbsp;
-    <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
-      {{hasNextBatch?'Skip and next':'Skip and finish'}}
-    </button>
+    <span  *ngIf="!error && features && features.length>0">
+      <button [disabled]="showPreview" [popper]="confirm" class="btn lightblue" type="button" (click)="openPreviews()">
+        Show positions
+      </button>
+      <div class="separator"></div>
+      <button [popper]="confirm" class="btn blue" type="button" (click)="confirmCoordinates()">
+        Confirm position
+      </button>
+      &nbsp;
+      <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
+        {{hasNextBatch?'Skip and next':'Skip and finish'}}
+      </button>
+    </span>
   </div>
 </div>
 </div>

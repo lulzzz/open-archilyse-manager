@@ -15,9 +15,6 @@ import {
   showInfoExcel,
 } from '../excel';
 import { OverlayService, NavigationService } from '../../_services';
-import { environment } from '../../../environments/environment';
-const urlGeoreference = environment.urlGeoreference;
-const urlPortfolio = environment.urlPortfolio;
 
 /**
  * Add the Swiss topo projection
@@ -32,6 +29,15 @@ proj4.defs(
     '+k_0=1 +x_0=2600000 +y_0=1200000 ' +
     '+ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs'
 );
+
+proj4.defs(
+  'EPSG:3035',
+  '+proj=laea ' +
+  '+lat_0=52 +lon_0=10 +x_0=4321000 ' +
+  '+y_0=3210000 ' +
+  '+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+);
+
 RegisterProjections(proj4);
 
 @Component({
@@ -672,7 +678,6 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       this.router.navigate(['georeference', 'map', node.data.building_id], {
         fragment: src ? `source=${src}` : null,
       });
-
     } else if (numBuildings > 1) {
       const building_ids = nodes.map(node => node.data.building_id);
       const list = building_ids.join('\t\n') + '\t\n';
@@ -811,8 +816,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         dictionaryBuildings['Postal Code'] = 'address.postal_code';
 
         // building_reference
-        dictionaryBuildings['Swiss topo'] = 'building_reference.swiss_topo';
-        dictionaryBuildings['Open Street Maps'] = 'building_reference.open_street_maps';
+        // dictionaryBuildings['Swiss topo'] = 'building_reference.swiss_topo';
+        // dictionaryBuildings['Open Street Maps'] = 'building_reference.open_street_maps';
 
         // Images
         dictionaryBuildings['Images'] = 'images';

@@ -23,7 +23,7 @@
   }
 
   position: absolute;
-  top: 230px;
+  top: 380px;
   width: 600px;
   margin-left: -300px;
   left: 50%;
@@ -36,8 +36,8 @@
 }
 
 .map-panel {
-  height: calc(100vh - 270px);
-
+  height: calc(100vh - 280px);
+  background: white;
   position: relative;
   top: 0;
   left: 0;
@@ -81,7 +81,8 @@
   }
 
   select{
-    background: white;
+    background: $new_table_header_blue;
+    color: white;
     padding: 10px 14px;
     cursor: pointer;
   }

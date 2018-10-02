@@ -3,7 +3,8 @@
 
 :host {
   background: #2e67b1;
-  border-bottom: 1px solid rgba(92, 145, 204, 0.8);
+  border-bottom: 1px solid #2e67b1;
+  /** border-bottom: 1px solid rgba(92, 145, 204, 0.8); */
 }
 .navbar {
   height: 55px;
@@ -120,7 +121,7 @@
     // min-height: 4px;
     height: 2px;
     width: 100%;
-    background: #69db7c;
+    background: $new_background_blue;
     position: absolute;
     // left: calc(50% - 2px);
     left: 0;

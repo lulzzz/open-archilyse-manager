@@ -6,28 +6,28 @@
     <div class="buttonRow">
 
       <div style="float: right">
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn blue" (click)="georeferenceAuto()" [disabled]="selectedNodes.length<=0" >Georef. Auto({{selectedNodes.length}})</button>
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" class="btn blue" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5"  class="btn blue" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
-        <div class="separator"></div>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" [popperPlacement]="'top-end'" class="btn blue" (click)="georeferenceAuto()" [disabled]="selectedNodes.length<=0" >Georef. Auto({{selectedNodes.length}})</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip4" [popperPlacement]="'top-end'" class="btn blue" (click)="georeference()" [disabled]="selectedNodes.length<=0" >Georef. ({{selectedNodes.length}})</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip5" [popperPlacement]="'top-end'" class="btn blue" (click)="georeferenceOSM()" [disabled]="selectedNodes.length<=0" >Georef. OSM ({{selectedNodes.length}})</button>
+        <div  *ngIf="currentProfile === 'data' || currentProfile === 'developer'" class="separator"></div>
         <!-- <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip12" class="btn blue" (click)="getSimulationStatus()" [disabled]="selectedNodes.length<=0"  > Get Sim Status. ({{selectedNodes.length}})</button>-->
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" class="btn lightblue" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
-        <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" class="btn lightblue" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip13" [popperPlacement]="'top-end'" class="btn lightblue" (click)="compareDpoiSimulations()" [disabled]="selectedNodes.length!==2"  > Compare dpoi. ({{selectedNodes.length}}/2)</button>
+        <button *ngIf="currentProfile === 'data' || currentProfile === 'analyst' || currentProfile === 'developer'" [popper]="tooltip14" [popperPlacement]="'top-end'" class="btn lightblue" (click)="startSimulations()" [disabled]="selectedNodes.length<=0"  > Start Sims. ({{selectedNodes.length}})</button>
       </div>
     </div>
     <div class="buttonRow">
 
-      <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
-      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
-      <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
+      <button [popper]="tooltip1" [popperPlacement]="'top-end'" class="btn blue" [disabled]="selectedNodes.length<=0" (click)="clearSelection()">Clear Selection</button>
+      <button [popper]="tooltip2" [popperPlacement]="'top-end'" class="btn blue" [disabled]="!filterModelSet" (click)="clearFilters()">Clear Filters</button>
+      <button *ngIf="currentProfile === 'data'" [popper]="tooltip3" [popperPlacement]="'top-end'" class="btn blue" (click)="selectNotGeoreferenced($event)" >Sel. Not Georeferenced</button>
       <div class="separator"></div>
-      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" class="btn lightblue" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Copy ({{selectedNodes.length}})</button>
-      <button [popper]="tooltip7" class="btn lightblue" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
-      <button [popper]="tooltip8" class="btn lightblue" (click)="addRow()">Add building</button>
+      <button *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip6" [popperPlacement]="'top-end'" class="btn lightblue" (click)="duplicate($event)" [disabled]="selectedNodes.length<=0" >Copy ({{selectedNodes.length}})</button>
+      <button [popper]="tooltip7" [popperPlacement]="'top-end'" class="btn lightblue" (click)="delete($event)" [disabled]="selectedNodes.length<=0" >Delete ({{selectedNodes.length}})</button>
+      <button [popper]="tooltip8" [popperPlacement]="'top-end'" class="btn lightblue" (click)="addRow()">Add building</button>
 
       <div style="float: right">
         <input *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  #importFile type="file" name="file" id="file" accept=".xls,.xlsx" class="inputfile" (change)="importExcel($event.target.files)" />
-        <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'"   [popper]="tooltip11" [popperPlacement]="'top-end'" for="file" class="btn blue" >Import Excel file</label>
+        <label *ngIf="currentProfile === 'data' || currentProfile === 'developer'" [popper]="tooltip11" [popperPlacement]="'top-end'" for="file" class="btn blue" >Import Excel file</label>
         <div *ngIf="currentProfile === 'data' || currentProfile === 'developer'"  class="sim-info" [popper]="infoExcelPopper" [popperPlacement]="'top-end'" (click)="showInfoExcel()">
           <i class="fa fa-info-circle"></i>
         </div>

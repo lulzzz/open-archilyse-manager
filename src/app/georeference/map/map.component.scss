@@ -1,8 +1,21 @@
 @import 'colors';
 @import 'media';
 
+label {
+  color: $new_text_grey;
+}
+
 select{
   cursor: pointer;
+  background: $new_table_header_blue;
+  color: white;
+  padding: 8px 14px;
+}
+
+.inlineList{
+  * {
+    display: inline-block;
+  }
 }
 
 .topControls{
@@ -28,7 +41,7 @@ select{
 
 .noFeaturesFound{
   position: absolute;
-  top: 280px;
+  top: 380px;
   width: 600px;
   margin-left: -300px;
   left: 50%;
@@ -55,7 +68,7 @@ select{
 
 .map-panel {
   margin-top: 20px;
-  height: calc(100vh - 270px);
+  height: calc(100vh - 280px);
   background: white;
 }
 
@@ -92,31 +105,22 @@ select{
 
 
 .hideOption{
+
+  border: 1px solid $new_light_blue;
+  width: 50px;
+  height: 50px;
   display: inline-block;
-  margin-right: 15px;
-  color: #2a2a2a;
+  color: $new_text_dark;
   cursor: pointer;
 
   &.on{
-    color: #868686;
+    color: $new_boders_grey;
   }
 }
 
-.selectors{
+.selectMap{
+
+}
+.selectSource{
   display: inline-block;
-  width: 180px;
-
-  select{
-    background: white;
-  }
-
-  * {
-    font-size: 12px;
-  }
-  .selectMap{
-
-  }
-  .selectSource{
-
-  }
 }

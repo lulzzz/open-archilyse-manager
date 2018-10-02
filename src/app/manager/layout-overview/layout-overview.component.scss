@@ -65,8 +65,12 @@ button{
 
 .sim-info{
   cursor: pointer;
-  color: #2f96b4;
+  color: $new_table_header_blue;
   display: inline-block;
+
+  &:hover {
+    color: $new_light_blue;
+  }
 }
 
 .floorInput{

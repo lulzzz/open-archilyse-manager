@@ -531,27 +531,45 @@ export class CellRender {
   }
 
   public static viewBuildingsSite(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return number + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`;
+    if (params.value > 0) {
+      return (
+        params.value + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`
+      );
+    }
+    return 0;
   }
 
   public static viewUnitsCountry(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='/manager/unit#address.country=` + params.data.country + `' > View </a>`
-    );
+    if (params.value > 0) {
+      return (
+        params.value +
+        `<a href='/manager/unit#address.country=` +
+        params.data.country +
+        `' > View </a>`
+      );
+    }
+    return 0;
   }
 
   public static viewBuildingsCity(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + ` <a href='/manager/building#address.city=` + params.data.city + `' > View </a>`
-    );
+    if (params.value > 0) {
+      return (
+        params.value +
+        ` <a href='/manager/building#address.city=` +
+        params.data.city +
+        `' > View </a>`
+      );
+    }
+    return 0;
   }
 
   public static viewUnitsCity(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return number + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`;
+    if (params.value > 0) {
+      return (
+        params.value + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`
+      );
+    }
+    return 0;
   }
 
   public static cellPdfDownloadLink(params) {

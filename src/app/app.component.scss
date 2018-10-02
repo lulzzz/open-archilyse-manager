@@ -14,7 +14,8 @@
 
 .sub-nav-wrapper {
   height: 40px;
-  border-bottom: 1px solid rgba(92, 145, 204, 0.8);
+  /** border-bottom: 1px solid rgba(255, 255, 255, 0.2); // rgba(92, 145, 204, 0.8); */
+  border-bottom: 1px solid $new_background_blue;
   background: $new_background_blue;
 }
 

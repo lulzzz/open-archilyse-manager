@@ -33,7 +33,29 @@
       </div>
     </div>
     <div class="buttonRow">
-      <div *ngIf="features && features.length>0" >
+      <div *ngIf="!features || features.length<=0" class="footer">
+        <div class="left">
+          <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+            To georeference {{nextBatch.length}} buildings left.
+          </div>
+        </div>
+        <div class="right">
+          <!-- We only display the source if the building exists -->
+          <div *ngIf="building" [popper]="selectSource" class="selectSource">
+            <label>Source: </label>
+            <select (change)="selectApiSource($event.target.value)" [value]="referenceSource?referenceSource:''" >
+              <option value="">Default (S.Topo)</option>
+              <option value="open_street_maps">Open Street Maps</option>
+              <option value="swiss_topo">Swiss Topo</option>
+            </select>
+          </div>
+          &nbsp;
+          <button [popper]="confirm" [popperPlacement]="'bottom-end'" class="btn lightblue" type="button" (click)="nextBuilding()">
+            Continue
+          </button>
+        </div>
+      </div>
+      <div *ngIf="features && features.length>0" class="inlineList">
         <div [popper]="hide" [ngClass]="{'hideOption': true, 'on': displayVectors}" (click)="toggleView()">
           <span *ngIf="displayVectors"><i class="fas fa-2x fa-eye-slash"></i></span>
           <span *ngIf="!displayVectors"><i class="fas fa-2x fa-eye"></i></span>
@@ -73,7 +95,7 @@
   </div>
 
 
-  <div id="mapHelp" class="map-help" [innerHTML]="mapHelp">
+  <div *ngIf="mapHelp" id="mapHelp" class="map-help" [innerHTML]="mapHelp">
   </div>
   <div id="map" class="map-panel">
 
@@ -85,32 +107,6 @@
   <div *ngIf="loading" class="loading">
     Loading
   </div>
-</div>
-
-<div class="containter-full-width">
-  <div *ngIf="!features || features.length<=0" class="footer">
-    <div class="left">
-      <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
-        To georeference {{nextBatch.length}} buildings left.
-      </div>
-    </div>
-    <div class="right">
-      <!-- We only display the source if the building exists -->
-      <div *ngIf="building" [popper]="selectSource" class="selectSource">
-        <label>Source: </label>
-        <select (change)="selectApiSource($event.target.value)" [value]="referenceSource?referenceSource:''" >
-          <option value="">Default (S.Topo)</option>
-          <option value="open_street_maps">Open Street Maps</option>
-          <option value="swiss_topo">Swiss Topo</option>
-        </select>
-      </div>
-      &nbsp;
-      <button [popper]="confirm" class="btn lightblue" type="button" (click)="nextBuilding()">
-        Continue
-      </button>
-    </div>
-  </div>
-
 </div>
 
 <popper-content #hide >Mouse over to hide options and see only the map.</popper-content>
