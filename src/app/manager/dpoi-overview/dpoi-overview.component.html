@@ -5,15 +5,16 @@
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
       <button [popper]="tooltip1" class="btn blue" [disabled]="selectedNodes.length <= 0" (click)="clearSelection()">Clear Selection</button>
-      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
       &nbsp;&nbsp;&nbsp;
+      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
+      <div class="separator"></div>
       <button class="btn blue" (click)="seeRawData()" > See Raw data </button>
       &nbsp;&nbsp;&nbsp;
-      <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Status:</span> {{status}}</span>
+      <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Status:</span><span class="whiteText"> {{status}}</span></span>
       &nbsp;&nbsp;&nbsp;
-      <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Created:</span> {{created | date:'dd.MM.yyyy h:mma'}}</span>
+      <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Created:</span><span class="whiteText"> {{created | date:'dd.MM.yyyy h:mma'}}</span></span>
       &nbsp;&nbsp;&nbsp;
-      <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Updated:</span> {{updated | date:'dd.MM.yyyy h:mma'}}</span>
+      <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Updated:</span><span class="whiteText"> {{updated | date:'dd.MM.yyyy h:mma'}}</span></span>
       <div style="float: right">
         <button [popper]="tooltip3" [popperPlacement]="'top-end'" class="btn blue" (click)="exportSelected()" [disabled]="selectedNodes.length<=0"  > CSV selected</button>
         <button [popper]="tooltip4" [popperPlacement]="'top-end'" class="btn blue" (click)="export()" > CSV </button>

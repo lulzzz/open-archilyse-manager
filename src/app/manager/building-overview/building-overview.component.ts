@@ -33,9 +33,9 @@ proj4.defs(
 proj4.defs(
   'EPSG:3035',
   '+proj=laea ' +
-  '+lat_0=52 +lon_0=10 +x_0=4321000 ' +
-  '+y_0=3210000 ' +
-  '+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+    '+lat_0=52 +lon_0=10 +x_0=4321000 ' +
+    '+y_0=3210000 ' +
+    '+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
 );
 
 RegisterProjections(proj4);
@@ -260,7 +260,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             {
               headerName: 'Height',
               field: 'height',
-              width: 80,
+              width: 100,
               editable: true,
               cellRenderer: CellRender.viewHeight,
               filter: 'agNumberColumnFilter',
@@ -269,7 +269,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             {
               headerName: 'Floors',
               field: 'number_of_floors',
-              width: 80,
+              width: 90,
               editable: true,
               filter: 'agNumberColumnFilter',
               cellClass: 'right',

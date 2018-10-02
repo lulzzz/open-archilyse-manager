@@ -11,8 +11,6 @@ import { environment } from '../../../environments/environment';
 import { getCategory } from './categories';
 import { NavigationService } from '../../_services';
 
-const urlPortfolio = environment.urlPortfolio;
-
 /**
  * Get the difference in a full category validating that attributes are defined
  * @param res - Values origin
