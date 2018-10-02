@@ -202,7 +202,7 @@ export const columnDefs = [
       },
       {
         headerName: 'Link',
-        width: 130,
+        width: 150,
         cellRenderer: CellRender.viewLatLan,
         editable: false,
         cellClass: 'right readOnly',
