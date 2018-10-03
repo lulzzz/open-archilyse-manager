@@ -1,46 +1,49 @@
 <div class="top_inner_background"></div>
+<div *ngIf="features && features.length>0" class="legend">
+  <div class="legendElement">
+    <div class="legendColumn">
+      <div [popper]="very_probable"><i class="fa fa-circle veryProbable"></i>&nbsp; High probable building</div>
+      <div [popper]="probable"><i class="fa fa-circle probable"></i>&nbsp; Less probable buildings</div>
+      <div [popper]="selected"><i class="fa fa-circle selected"></i>&nbsp; Selected building</div>
+      <div *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
+        <i class="fa fa-circle before"></i>&nbsp; Previously selected building
+        <!--
+        [ {{this.buildingReferenceIdPreselectedUser}}
+          {{this.buildingReferenceIdPreselectedDate}} ] -->
+      </div>
+    </div>
+  </div>
+</div>
 <div class="containter-full-width">
 
   <div class="topControls">
 
     <div class="buttonRow">
+
       <div *ngIf="features && features.length>0" >
-        <div class="legend">
-          <div class="legendElement">
-            <div class="legendColumn">
-              <div [popper]="very_probable"><i class="fa fa-circle veryProbable"></i>&nbsp; High probable building</div>
-              <div [popper]="probable"><i class="fa fa-circle probable"></i>&nbsp; Less probable buildings</div>
-            </div>
-            <div class="legendColumn">
-              <div [popper]="selected"><i class="fa fa-circle selected"></i>&nbsp; Selected building</div>
-              <div *ngIf="buildingReferenceIdPreselected !== null" [popper]="prev_selected">
-                <i class="fa fa-circle before"></i>&nbsp; Previously selected building
-                <!--
-                [ {{this.buildingReferenceIdPreselectedUser}}
-                  {{this.buildingReferenceIdPreselectedDate}} ] -->
-              </div>
-            </div>
+
+        <div class="legendElement">
+          <div class="whiteText">
+            Please select the building and or confirm it.
           </div>
-          <div class="legendElement">
-            <div class="whiteText">
-              Please select the building and or confirm it.
-            </div>
-            <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
-              To georeference {{nextBatch.length}} buildings left.
-            </div>
+          <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
+            To georeference {{nextBatch.length}} buildings left.
           </div>
         </div>
+
       </div>
     </div>
     <div class="buttonRow">
-      <div *ngIf="features && features.length>0" class="inlineList">
-        <div [popper]="hide" (click)="toggleView()">
-          <button [popper]="confirm" *ngIf="displayVectors"  class="btn lightblue" type="button" >Hide buildings</button>
-          <button [popper]="confirm" *ngIf="!displayVectors" class="btn blue" type="button" >Show buildings</button>
-        </div>
-        <div class="separator"></div>
+      <div class="inlineList">
+        <span *ngIf="features && features.length>0" >
+          <div [popper]="hide" (click)="toggleView()">
+            <button [popper]="confirm" *ngIf="displayVectors"  class="btn lightblue" type="button" >Hide buildings</button>
+            <button [popper]="confirm" *ngIf="!displayVectors" class="btn blue" type="button" >Show buildings</button>
+          </div>
+          <div class="separator"></div>
+        </span>
         <div class="selectors">
-          <div *ngIf="currentProfile === 'developer'" [popper]="selectMap" class="selectMap">
+          <div *ngIf="currentProfile === 'developer' && features && features.length>0" [popper]="selectMap" class="selectMap">
             <label >Map mode: </label>
             <select (change)="changeMap($event)" [value]="mapStyle">
               <option value="light">Light</option>
@@ -61,10 +64,10 @@
           </div>
         </div>
         &nbsp;&nbsp;&nbsp;
-        <button [popper]="centerMapPU" class="btn lightblue" type="button" (click)="centerMap()">
+        <button *ngIf="features && features.length>0" [popper]="centerMapPU" class="btn lightblue" type="button" (click)="centerMap()">
           Center View
         </button>
-        <div style="float: right">
+        <div *ngIf="features && features.length>0" style="float: right">
           <button [popper]="skip" [popperPlacement]="'top-end'"class="btn lightblue" type="button" (click)="nextBuilding()">{{hasNextBatch?'Skip and next':'Skip and finish'}}</button>
           <div class="separator"></div>
           <button [popper]="confirm" [popperPlacement]="'top-end'" class="btn blue" type="button" [disabled]="buildingReferenceId=== null" (click)="confirmBuilding()">

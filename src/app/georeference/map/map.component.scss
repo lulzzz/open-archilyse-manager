@@ -76,17 +76,17 @@ select{
 
 .legendElement{
   display: inline-block;
-  padding: 8px 20px 0 0;
-}
-
-.legendColumn{
-  display: inline-block;
-  width: 210px;
-  color: white;
 }
 
 .legend{
   font-size: 13px;
+  position: fixed;
+  left: 60px;
+  bottom: 80px;
+  z-index: 2000;
+  background: white;
+  color: $new_text_dark;
+  padding: 10px 15px;
 
   .veryProbable{
     color: $new_highlighted_red;
