@@ -547,6 +547,15 @@ export class CellRender {
     return 0;
   }
 
+  public static viewBuildingNumberSite(params) {
+    if (params.value > 0) {
+      return (
+        params.value + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`
+      );
+    }
+    return 0;
+  }
+
   public static viewUnitsCountry(params) {
     if (params.value > 0) {
       return (

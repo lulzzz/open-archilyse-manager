@@ -108,7 +108,10 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           headerName: 'Count',
           hide: this.currentProfile !== 'analyst',
           headerTooltip: 'Number of elements assigned to this site',
-          children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsSite, null),
+          children: ColumnDefinitions.getBuildingsUnitsLayouts(
+            CellRender.viewBuildingNumberSite,
+            null
+          ),
         },
         {
           headerName: 'Progress Georeferencing',
