@@ -1,5 +1,6 @@
 const express = require('express');
 const uaRedirect = require('express-ua-redirect');
+const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS
 const app = express();
 
 app.use(express.static(__dirname + '/dist'));
@@ -15,19 +16,8 @@ app.use(uaRedirect({
   redirectTo: '/upgrade'
 }));
 
-
-console.log("Environment");
-console.log(process.env.NODE_ENV);
-console.log("Environment END");
-
 if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-    if (req.get('x-forwarded-proto') !== 'https') {
-      res.redirect(`https://${req.header('host')}${req.url}`);
-    } else {
-      next();
-    }
-  });
+  app.use(redirectToHTTPS());
 }
 
 app.get('/*', function (req, res) {
