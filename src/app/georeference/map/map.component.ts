@@ -30,7 +30,7 @@ import {
 import { parseParms } from '../url';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import {BatchService, NavigationService, OverlayService} from '../../_services';
+import { BatchService, NavigationService, OverlayService } from '../../_services';
 import { getBuildingLink } from '../portfolioLinks';
 import { environment } from '../../../environments/environment';
 const apiUrl = environment.apiUrl;
@@ -382,15 +382,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
     selected_collection = this.selectPreselected.getFeatures();
     selected_collection.clear();
-    if (this.displayVectors && this.buildingReferenceIdPreselected !== null) {
+    if (
+      this.displayVectors &&
+      this.buildingReferenceIdPreselected !== null &&
+      this.buildingReferenceIdPreselected !== this.buildingReferenceId
+    ) {
       const found = this.features.find(f => f.id_ === this.buildingReferenceIdPreselected);
-
-      console.log(
-        'found',
-        found,
-        this.features.map(f => f.id_),
-        this.buildingReferenceIdPreselected
-      );
 
       if (found) {
         selected_collection.push(found);

@@ -38,10 +38,10 @@ export const styleNormalFaded = new OlStyle({
 
 export const styleSelected = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(110,198,181, 1)',
+    color: 'rgba(110,198,181, 0.45)',
   }),
   stroke: new OlStyleStroke({
-    color: 'rgba(110,198,181, 0.8)',
+    color: 'rgba(110,198,181, 1)',
     width: 2,
     // lineCap: 'round',
   }),
@@ -60,7 +60,7 @@ export const styleOver = new OlStyle({
 
 export const styleProbable = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(251,219,79, 0.8)', // $new_highlighted_yellow
+    color: 'rgba(251,219,79, 0.45)', // $new_highlighted_yellow
   }),
   stroke: new OlStyleStroke({
     color: 'rgba(251,219,79, 1)',
@@ -71,7 +71,7 @@ export const styleProbable = new OlStyle({
 
 export const styleVeryProbable = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(242,117,123, 0.8)', // $new_highlighted_red
+    color: 'rgba(242,117,123, 0.45)', // $new_highlighted_red
   }),
   stroke: new OlStyleStroke({
     color: 'rgba(242,117,123, 1)',
@@ -82,7 +82,7 @@ export const styleVeryProbable = new OlStyle({
 
 export const selectPreselected = new OlStyle({
   fill: new OlStyleFill({
-    color: 'rgba(98,88,165, 0.8)',
+    color: 'rgba(98,88,165, 0.45)',
   }),
   stroke: new OlStyleStroke({
     color: 'rgba(98,88,165, 1)',
