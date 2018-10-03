@@ -36,7 +36,7 @@
     <div class="buttonRow">
       <div class="inlineList">
         <span *ngIf="features && features.length>0" >
-          <div [popper]="hide" (click)="toggleView()">
+          <div [popper]="hide" (click)="toggleView()" >
             <button [popper]="confirm" *ngIf="displayVectors"  class="btn lightblue" type="button" >Hide buildings</button>
             <button [popper]="confirm" *ngIf="!displayVectors" class="btn blue" type="button" >Show buildings</button>
           </div>

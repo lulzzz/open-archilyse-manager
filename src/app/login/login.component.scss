@@ -2,17 +2,26 @@
 @import 'media';
 
 .error {
-  color: red;
+  color: $new_error_red;
   margin-bottom: 16px;
 }
 
 .contents {
   margin: 0 auto;
   width: 300px;
+  color: white !important;
   // padding-top: 128px;
   display: flex;
   flex-direction: column;
 }
+
+.input .subscript .info,
+.input label {
+  color: white !important;
+  opacity: 0.7;
+}
+
+
 
 button[type='submit'] {
   margin-top: 4px;

@@ -1,6 +1,10 @@
+@import 'colors';
+
 .errorWrapper{
   width: 100%;
   height: 100%;
+
+  color: white;
 
   display: flex;
   justify-content: center;
@@ -25,10 +29,20 @@
     margin: 20px auto 40px;
 
     .browser{
-      margin: 0 10px 0 10px;
+      div{
+        width: 60px;
+        height: 60px;
+        margin: 0 10px 0 10px;
+        padding-top: 6px;
+        background: white;
+        display: inline-block;
+      }
+
     }
     .browser:hover{
-      border-bottom: 2px solid #3fba8f;
+      div {
+        background: $new_light_blue;
+      }
     }
   }
 

@@ -100,6 +100,17 @@ $icon-color: #ffa000;
 @import "~ag-grid/src/styles/ag-grid.scss";
 @import "~ag-grid/src/styles/ag-theme-material.scss";
 
+.full_background{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: -1;
+
+  background: $new_background_blue;
+}
 .top_inner_background{
   position: absolute;
   top: 0;
@@ -256,3 +267,12 @@ $icon-color: #ffa000;
     height: 35px;
   }
 }
+
+.mat-checkbox-disabled .mat-checkbox-background{
+  background-color: white !important;
+  color: $new_text_dark;
+}
+.mat-checkbox-background, .mat-checkbox-frame{
+  border-radius: 0;
+}
+
