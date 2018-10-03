@@ -23,14 +23,14 @@
       <div *ngIf="features && features.length>0" >
 
         <div class="legendElement">
-          <div class="whiteText">
-            Please select the building and or confirm it.
-          </div>
+
           <div *ngIf="nextBatch !== null && nextBatch.length>0" class="progress">
             To georeference {{nextBatch.length}} buildings left.
           </div>
         </div>
-
+        <div style="float: right" class="whiteText">
+            Please select the building and or confirm it.
+        </div>
       </div>
     </div>
     <div class="buttonRow">

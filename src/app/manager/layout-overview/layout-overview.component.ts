@@ -513,7 +513,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         );
 
         newPrevFloors.push({
-          floor_nr: '' + floorVal,
+          floor_nr: floorVal,
           source: sourceUrlVal,
         });
 
@@ -995,7 +995,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   georeferenceAuto() {
     const nodes = this.gridOptions.api.getSelectedNodes();
     nodes.forEach(node => {
-      console.log('node', node);
       if (
         ManagerFunctions.isDigitalizedLayout(node.data) &&
         node.data.unit_id &&
