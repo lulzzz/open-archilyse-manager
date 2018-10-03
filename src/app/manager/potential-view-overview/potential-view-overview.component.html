@@ -11,7 +11,7 @@
         <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button> &nbsp;
         <button [popper]="viewRawPU" class="btn blue" (click)="viewRaw()">View raw</button> &nbsp; &nbsp;
 
-        <div [popper]="selectMap" class="selectMap">
+        <div *ngIf="currentProfile === 'developer'" [popper]="selectMap" class="selectMap">
           <label >Map mode: </label>
           <select (change)="changeMap($event)" [value]="mapStyle">
             <option value="light">Light</option>

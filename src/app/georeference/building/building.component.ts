@@ -16,7 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import * as fromStore from '../../_store';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import { BatchService } from '../../_services';
+import { BatchService, NavigationService, OverlayService } from '../../_services';
 import { parseParms } from '../url';
 import { HttpClient } from '@angular/common/http';
 import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
@@ -94,6 +94,8 @@ export class BuildingComponent implements OnInit, OnDestroy {
   previousMovementsCurrent;
   previousMovementsOthers;
 
+  currentProfile;
+
   /**
    * ReferenceCoordinates
    */
@@ -112,8 +114,13 @@ export class BuildingComponent implements OnInit, OnDestroy {
     private store: Store<fromStore.AppState>,
     private route: ActivatedRoute,
     private _router: Router,
-    private batchService: BatchService
-  ) {}
+    private batchService: BatchService,
+    private navigationService: NavigationService
+  ) {
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+    });
+  }
 
   ngOnInit() {
     this.fragment_sub = this.route.fragment.subscribe(fragment => {
@@ -123,8 +130,6 @@ export class BuildingComponent implements OnInit, OnDestroy {
       }
 
       this.params_sub = this.route.params.subscribe(params => {
-        console.log('params', params);
-
         this.error = null;
         this.showPreview = false;
         this.previewImages = null;
@@ -165,13 +170,13 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * startMapWithNoError()
    */
   startData() {
-    console.log('startData');
     this.layoutId = this.route.snapshot.params['layoutid'];
 
     if (this.referenceSource === null) {
       this.referenceSource = this.batchService.getSource();
       this.referenceToHuman();
     }
+
     this.referenceCoordinates = this.batchService.getCoordinates();
 
     this.hasNextBatch = this.batchService.hasNextLine();
@@ -285,10 +290,10 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * Now we request the surroundings
    */
   startDataWithBuilding() {
-    console.log('startDataWithBuilding');
     const options = {
       params: {},
     };
+
     if (this.referenceSource) {
       options.params['source'] = this.referenceSource;
     }
@@ -300,7 +305,6 @@ export class BuildingComponent implements OnInit, OnDestroy {
     this.http.get(apiUrl + 'buildings/' + this.buildingId + '/surroundings', options).subscribe(
       surroundings => {
         if (typeof surroundings['source'] !== 'undefined' && surroundings['source'] !== null) {
-          console.log('Here was asigned', surroundings['source']);
           this.referenceSource = surroundings['source'];
           this.referenceToHuman();
         }

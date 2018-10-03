@@ -24,7 +24,6 @@ export class ManagerFunctions {
     unitsArray,
     layoutsArray
   ) {
-    console.log('data', data);
     if (filterModelSet) {
       if (data.site_id && data.site_id.type && data.site_id.type === 'equals') {
         return `<label>Filtering site:</label> <span class="whiteText" >${ManagerFunctions.getName(
@@ -111,16 +110,14 @@ export class ManagerFunctions {
         simulation_packages: simsRequested,
       },
       result => {
-        console.log('startSimulationsViaLayouts - result', result);
-
         if (!layout['simulation_statuses']) {
           layout['simulation_statuses'] = {};
         }
         simsRequested.forEach(sim => {
-          if (!layout['simulation_statuses'][sim]) {
-            layout['simulation_statuses'][sim] = {};
+          if (!layout['simulation_statuses'][sim.name]) {
+            layout['simulation_statuses'][sim.name] = {};
           }
-          layout['simulation_statuses'][sim].status = 'pending';
+          layout['simulation_statuses'][sim.name].status = 'pending';
         });
 
         const node = api.getRowNode(layout.layout_id);

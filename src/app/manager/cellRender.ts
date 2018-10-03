@@ -1,9 +1,4 @@
 import { ManagerFunctions } from './managerFunctions';
-import { environment } from '../../environments/environment';
-
-const urlEditor = environment.urlEditor;
-const urlGeoreference = environment.urlGeoreference;
-const urlPortfolio = environment.urlPortfolio;
 
 /**
  * ag-grid Class with methods to render different values.
@@ -297,33 +292,23 @@ export class CellRender {
       }
 
       if (params.data.category && params.data.category !== '') {
-        console.log(
-          `https://wiki.openstreetmap.org/wiki/Tag:${params.data.category_original}=${params.value}`
-        );
-        console.log(
-          `https://taginfo.openstreetmap.org/tags/${params.data.category_original}=${params.value}`
-        );
-
         return translate[params.value]
-          ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Tag:${
-              params.data.category_original
-            }=${
+          ? `<a href="https://wiki.openstreetmap.org/wiki/Tag:${params.data.category_original}=${
               params.value
-            }" target="_blank"><i class="fas fa-info-circle"></i></a> &nbsp; <a href="https://taginfo.openstreetmap.org/tags/${
+            }" target="_blank"><i class="fas fa-info-circle"></i></a>  <a href="https://taginfo.openstreetmap.org/tags/${
               params.data.category_original
-            }=${params.value}" target="_blank"><i class="fas fa-tag"></i></a>`
+            }=${params.value}" target="_blank"><i class="fas fa-tag"></i></a> &nbsp; ${
+              translate[params.value]
+            } `
           : params.value;
       }
 
-      console.log(`https://wiki.openstreetmap.org/wiki/Key:${params.value}`);
-      console.log(`https://taginfo.openstreetmap.org/keys/${params.value}`);
-
       return translate[params.value]
-        ? `${translate[params.value]} <a href="https://wiki.openstreetmap.org/wiki/Key:${
+        ? `<a href="https://wiki.openstreetmap.org/wiki/Key:${
             params.value
-          }" target="_blank"><i class="fas fa-info-circle"></i></a> &nbsp; <a href="https://taginfo.openstreetmap.org/keys/${
+          }" target="_blank"><i class="fas fa-info-circle"></i></a> <a href="https://taginfo.openstreetmap.org/keys/${
             params.value
-          }" target="_blank"><i class="fas fa-tag"></i></a>`
+          }" target="_blank"><i class="fas fa-tag"></i></a> ${translate[params.value]} `
         : params.value;
     }
     return ``;
@@ -604,14 +589,33 @@ export class CellRender {
 
   public static viewMovement(params) {
     let result = '';
-    if (params.value) {
+
+    console.log('params.value', params.value);
+    if (params.value && params.value.length > 0) {
       const layout_id = params.data.layout_id;
       for (let i = 0; i < params.value.length; i += 1) {
         const movements = params.value[i];
         const source = movements.source ? movements.source : 'swiss_topo'; // 'open_street_maps';
-        result += `<a href="/georeference/building/${layout_id}?source=${source}">${source}</a>`;
+        result += `<a href="/georeference/building/${layout_id}#source=${source}">${source}</a> `;
+      }
+    } else {
+      if (!params.data.unit_id) {
+        result = `No unit assigned`;
+      } else if (!params.data.building_id) {
+        result = `No building assigned`;
+      } else if (!ManagerFunctions.isDigitalizedLayout(params.data)) {
+        result = `Not digitalized`;
+      } else {
+        if (params.data.building_referenced_osm) {
+          result = `<a href="/georeference/building/${
+            params.data.layout_id
+          }#source=open_street_maps" >Georeference</a>`;
+        } else {
+          result = `<a href="/georeference/building/${params.data.layout_id}" >Georeference</a>`;
+        }
       }
     }
+
     return result;
   }
 
@@ -621,11 +625,11 @@ export class CellRender {
     }
 
     if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `Digitalized`;
+      return `Digitised`;
       // return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
     }
 
-    return `Not digitalized`;
+    return `Not digitised`;
   }
 
   public static areaInfoTotal(params) {

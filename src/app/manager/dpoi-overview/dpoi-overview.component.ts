@@ -7,7 +7,6 @@ import { ApiFunctions } from '../apiFunctions';
 import { ManagerFunctions } from '../managerFunctions';
 import { columnDefs, columnDefsCompare } from './columnDefinitions';
 import { exportOptions, exportSelectedOptions } from '../excel';
-import { environment } from '../../../environments/environment';
 import { getCategory } from './categories';
 import { NavigationService } from '../../_services';
 

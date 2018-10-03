@@ -6,18 +6,21 @@ function getColumnDefsCommon(distance, duration, score, nameColumns) {
       headerName: 'Simulation',
       children: [
         {
-          headerName: 'Name',
-          field: 'name',
-          width: 190,
-          cellRenderer: CellRender.dpoiName,
-          editable: false,
-          cellClass: 'readOnly',
-        },
-        {
           headerName: 'Category',
           field: 'category',
           width: 190,
           cellRenderer: CellRender.dpoiCategory,
+          editable: false,
+          cellClass: 'readOnly',
+
+          // By default sorted by descending
+          sort: 'desc',
+        },
+        {
+          headerName: 'Name',
+          field: 'name',
+          width: 190,
+          cellRenderer: CellRender.dpoiName,
           editable: false,
           cellClass: 'readOnly',
         },
@@ -28,8 +31,18 @@ function getColumnDefsCommon(distance, duration, score, nameColumns) {
       headerName: 'Foot',
       children: [
         {
+          headerName: 'Score',
+          field: 'foot.score',
+          filter: 'agNumberColumnFilter',
+          width: 100,
+          cellRenderer: score,
+          editable: false,
+          cellClass: 'right readOnly',
+        },
+        {
           headerName: 'Distance',
           field: 'foot.distance',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 110,
           cellRenderer: distance,
@@ -46,24 +59,24 @@ function getColumnDefsCommon(distance, duration, score, nameColumns) {
           editable: false,
           cellClass: 'right readOnly',
         },
-        {
-          headerName: 'Score',
-          field: 'foot.score',
-          columnGroupShow: 'open',
-          filter: 'agNumberColumnFilter',
-          width: 100,
-          cellRenderer: score,
-          editable: false,
-          cellClass: 'right readOnly',
-        },
       ],
     },
     {
       headerName: 'Bike',
       children: [
         {
+          headerName: 'Score',
+          field: 'bike.score',
+          filter: 'agNumberColumnFilter',
+          width: 100,
+          cellRenderer: score,
+          editable: false,
+          cellClass: 'right readOnly',
+        },
+        {
           headerName: 'Distance',
           field: 'bike.distance',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 110,
           cellRenderer: distance,
@@ -80,24 +93,24 @@ function getColumnDefsCommon(distance, duration, score, nameColumns) {
           editable: false,
           cellClass: 'right readOnly',
         },
-        {
-          headerName: 'Score',
-          field: 'bike.score',
-          columnGroupShow: 'open',
-          filter: 'agNumberColumnFilter',
-          width: 100,
-          cellRenderer: score,
-          editable: false,
-          cellClass: 'right readOnly',
-        },
       ],
     },
     {
       headerName: 'Car',
       children: [
         {
+          headerName: 'Score',
+          field: 'car.score',
+          filter: 'agNumberColumnFilter',
+          width: 100,
+          cellRenderer: score,
+          editable: false,
+          cellClass: 'right readOnly',
+        },
+        {
           headerName: 'Distance',
           field: 'car.distance',
+          columnGroupShow: 'open',
           filter: 'agNumberColumnFilter',
           width: 110,
           cellRenderer: distance,
@@ -111,16 +124,6 @@ function getColumnDefsCommon(distance, duration, score, nameColumns) {
           filter: 'agNumberColumnFilter',
           width: 110,
           cellRenderer: duration,
-          editable: false,
-          cellClass: 'right readOnly',
-        },
-        {
-          headerName: 'Score',
-          field: 'car.score',
-          columnGroupShow: 'open',
-          filter: 'agNumberColumnFilter',
-          width: 100,
-          cellRenderer: score,
           editable: false,
           cellClass: 'right readOnly',
         },
@@ -200,6 +203,7 @@ export const columnDefs = [
         editable: false,
         cellClass: 'right readOnly',
       },
+      /**
       {
         headerName: 'Link',
         width: 150,
@@ -207,6 +211,7 @@ export const columnDefs = [
         editable: false,
         cellClass: 'right readOnly',
       },
+      */
     ],
   },
 ];

@@ -100,7 +100,7 @@ export class BuildingSimulationRendererDpoiComponent {
         this.styles = { width: '60%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (status === 'pending' || status === 'Pending') {
         this.pending = true;
-        this.styles = { width: '60%', backgroundColor: '#ffc975', color: letterColor };
+        this.styles = { width: '80%', backgroundColor: '#ffc975', color: letterColor };
       } else {
         this.ready = true;
         this.styles = { width: '60%', backgroundColor: '#2e67b1', color: letterColor };

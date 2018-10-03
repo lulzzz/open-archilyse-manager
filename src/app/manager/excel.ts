@@ -26,15 +26,13 @@ export const exportOptions = {
       if (params.column.colId === 'floors') {
         if (params.value && params.value.length > 0) {
           return params.value.map(floor => floor.floor_nr + ' ' + floor.source).join(', ');
-        } else {
-          return '';
         }
+        return '';
       } else if (params.column.colId === 'model_structure') {
         if (params.value) {
           return 'DIGITALIZED';
-        } else {
-          return '';
         }
+        return '';
       } else if (
         params.column.colId === 'total_area' ||
         params.column.colId === 'room' ||
@@ -47,15 +45,13 @@ export const exportOptions = {
       ) {
         if (params.value && params.value.length > 0) {
           return params.value.map(val => val.toFixed(2)).join(', ');
-        } else {
-          return '';
         }
+        return '';
       } else if (params.column.colId === 'movements') {
         if (params.value && params.value.length > 0) {
           return params.value.map(movement => movement.source).join(', ');
-        } else {
-          return '';
         }
+        return '';
       } else {
         console.log(params.column.colId);
       }

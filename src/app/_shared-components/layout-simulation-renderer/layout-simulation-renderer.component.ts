@@ -145,16 +145,16 @@ export class LayoutSimulationRendererComponent {
         this.styles = { width: '90%', backgroundColor: '#ff8582', color: letterColor };
       } else if (params.value === 'complete') {
         this.complete = true;
-        this.styles = { width: '90%', backgroundColor: '#b5d686', color: letterColor };
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (params.value === 'not_requested') {
         this.not_requested = true;
         this.styles = { width: '90%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (params.value === 'pending' || params.value === 'Pending') {
         this.pending = true;
-        this.styles = { width: '90%', backgroundColor: '#ffc975', color: letterColor };
+        this.styles = { width: '95%', backgroundColor: '#ffc975', color: letterColor };
       } else {
         this.ready = true;
-        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = { width: '85%', backgroundColor: '#2e67b1', color: letterColor };
       }
     } else {
       this.unknown = true;

@@ -21,7 +21,7 @@
       </button>
     </div>
     <div *ngIf="!error && features && features.length>0">
-      <div [popper]="selectMap" class="selectMap">
+      <div *ngIf="currentProfile === 'developer'" [popper]="selectMap" class="selectMap">
         <label >Map mode: </label>
         <select (change)="changeMap($event)" [value]="mapStyle">
           <option value="light">Light</option>

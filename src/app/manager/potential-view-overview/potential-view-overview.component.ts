@@ -30,7 +30,7 @@ import { parseParms } from '../url';
 import { ApiFunctions } from '../apiFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { OverlayService } from '../../_services';
+import {NavigationService, OverlayService} from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../environments/environment';
 import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
@@ -134,6 +134,8 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
   numberOfFloors = 0;
   floors = [];
 
+  currentProfile;
+
   /**
    * Subscriptions
    */
@@ -143,8 +145,13 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+    });
+  }
 
   ngOnInit() {
     this.start();

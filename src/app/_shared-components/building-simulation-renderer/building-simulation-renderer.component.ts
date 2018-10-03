@@ -97,16 +97,16 @@ export class BuildingSimulationRendererComponent {
         this.styles = { width: '80%', backgroundColor: '#ff8582', color: letterColor };
       } else if (status === 'complete') {
         this.complete = true;
-        this.styles = { width: '80%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (status === 'not_requested') {
         this.not_requested = true;
         this.styles = { width: '80%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (status === 'pending' || status === 'Pending') {
         this.pending = true;
-        this.styles = { width: '80%', backgroundColor: '#ffc975', color: letterColor };
+        this.styles = { width: '90%', backgroundColor: '#ffc975', color: letterColor };
       } else {
         this.ready = true;
-        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = { width: '80%', backgroundColor: '#2e67b1', color: letterColor };
       }
     } else {
       this.unknown = true;

@@ -40,6 +40,7 @@ import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
 import { colors } from '../potential-view-overview/potential-view-overview.component';
+import { NavigationService, OverlayService } from '../../_services';
 
 proj4.defs(
   'EPSG:2056',
@@ -137,12 +138,23 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
   enabledPV = false;
 
+  currentProfile;
+
   /**
    * Subscriptions
    */
   fragment_sub: Subscription;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private navigationService: NavigationService
+  ) {
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+    });
+  }
 
   ngOnInit() {
     this.start();
@@ -589,6 +601,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   }
   changeSource(data) {
     this.filterSource = data.target.value;
+
+    // We reset the cities
+    this.cities = [];
+    this.countries = [];
+
     this.setUpMap();
   }
 

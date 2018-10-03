@@ -2,8 +2,8 @@
   <div class="div-percent-value">
     <span *ngIf="!addressSet" >Requires Address <a (click)="infoAddress()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="addressSet && complete">
-      <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw</a> &nbsp;
-      <a [routerLink]="urlDpoi" > <i class="far fa-eye"></i> DPOI</a>
+      <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> Raw</a> &nbsp;
+      <a [routerLink]="urlDpoi" > <i class="far fa-eye"></i> View</a>
     </span>
     <span *ngIf="addressSet && not_requested" ><a (click)="requestSimulation()">Start simulation</a></span>
     <span *ngIf="addressSet && ready" >Failed <a (click)="requestSimulation()"> Restart</a></span>

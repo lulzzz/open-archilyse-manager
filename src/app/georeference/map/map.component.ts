@@ -30,7 +30,7 @@ import {
 import { parseParms } from '../url';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import { BatchService } from '../../_services';
+import {BatchService, NavigationService, OverlayService} from '../../_services';
 import { getBuildingLink } from '../portfolioLinks';
 import { environment } from '../../../environments/environment';
 const apiUrl = environment.apiUrl;
@@ -109,6 +109,7 @@ export class MapComponent implements OnInit, OnDestroy {
   selectPreselected;
 
   processEnded;
+  currentProfile;
 
   /**
    * Subscriptions
@@ -119,8 +120,13 @@ export class MapComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private route: ActivatedRoute,
     private _router: Router,
-    private batchService: BatchService
-  ) {}
+    private batchService: BatchService,
+    private navigationService: NavigationService
+  ) {
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+    });
+  }
 
   ngOnInit() {
     console.log('ngOnInit');

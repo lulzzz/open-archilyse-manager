@@ -26,7 +26,7 @@ import { parseParms } from '../url';
 import { ApiFunctions } from '../apiFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { OverlayService } from '../../_services';
+import { NavigationService, OverlayService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../environments/environment';
 import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
@@ -34,7 +34,6 @@ import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
 import { sim_result_mock } from './mock';
 
 const apiUrl = environment.apiUrl;
-const urlPortfolio = environment.urlPortfolio;
 
 export const colors = [
   '#2c7bb6',
@@ -121,8 +120,6 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
 
   view: OlView;
 
-  referenceSource = 'swiss_topo';
-
   selectPointerClick;
   selectPointerMove;
 
@@ -139,6 +136,8 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   numberOfFloors = 0;
   floors = [];
 
+  currentProfile;
+
   /**
    * Subscriptions
    */
@@ -148,8 +147,13 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private route: ActivatedRoute,
-    private infoDialog: OverlayService
-  ) {}
+    private infoDialog: OverlayService,
+    private navigationService: NavigationService
+  ) {
+    navigationService.profile$.subscribe(newProfile => {
+      this.currentProfile = newProfile;
+    });
+  }
 
   ngOnInit() {
     this.start();
@@ -268,13 +272,8 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   startWithBuilding() {
     let buildingRefId = null;
 
-    console.log('this.building', this.building);
-    console.log('this.referenceSource', this.referenceSource);
-
-    if (this.building['building_references']) {
-      const br = this.building['building_references'].find(
-        br => br.source === this.referenceSource
-      );
+    if (this.building['building_references'] && this.building['building_references'].length) {
+      const br = this.building['building_references'][0];
       if (br && br.id) {
         buildingRefId = br.id;
       }
