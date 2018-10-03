@@ -30,7 +30,7 @@ import { parseParms } from '../url';
 import { ApiFunctions } from '../apiFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import {NavigationService, OverlayService} from '../../_services';
+import { NavigationService, OverlayService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../environments/environment';
 import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
@@ -626,9 +626,8 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
     const lookAt = `<LookAt>
             <longitude>${center[0]}</longitude><latitude>${center[1]}</latitude>
-            <altitude>${
-              this.absolute_height
-            }</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
+            <altitude>${this.absolute_height +
+              3}</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
           </LookAt>`;
 
     return {
