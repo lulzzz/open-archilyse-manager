@@ -156,7 +156,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Site Id',
             field: 'site_id',
-            width: 275,
+            width: 285,
             cellRenderer: CellRender.viewSiteOfBuilding,
             cellEditor: 'agPopupSelectCellEditor',
             cellEditorParams: {
@@ -183,9 +183,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Building Id',
             columnGroupShow: 'open',
             field: 'building_id',
-            width: 228,
+            width: 255,
             hide: this.currentProfile !== 'developer',
             editable: false,
+            cellRenderer: CellRender.cellId,
             cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', editable: true },

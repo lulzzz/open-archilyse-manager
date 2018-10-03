@@ -17,8 +17,8 @@
     <div [popper]="tooltip1" [popperPlacement]="'bottom-end'" class="selectProfile">
       <label >Profile: </label>
       <select (change)="changeProfile($event)" [value]="currentProfile">
-        <option value="analyst">Data analyst</option>
         <option value="data">Data input</option>
+        <option value="analyst">Data analyst</option>
         <option value="manager">Asset Manager</option>
         <option value="developer">Software developer</option>
       </select>

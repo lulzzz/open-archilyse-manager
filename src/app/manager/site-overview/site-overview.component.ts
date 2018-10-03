@@ -130,8 +130,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             field: 'site_id',
             hide: this.currentProfile !== 'developer',
             columnGroupShow: 'open',
-            width: 228,
+            width: 255,
             editable: false,
+            cellRenderer: CellRender.cellId,
             cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', width: 190, editable: true },
@@ -211,7 +212,14 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null && Object.keys(model).length > 0;
-            this.filtersHuman = ManagerFunctions.calculateHumanFilters(model, this.filterModelSet, sitesArray, buildingsArray, unitsArray, layoutsArray);
+            this.filtersHuman = ManagerFunctions.calculateHumanFilters(
+              model,
+              this.filterModelSet,
+              sitesArray,
+              buildingsArray,
+              unitsArray,
+              layoutsArray
+            );
           },
           onSelectionChanged: () => {
             this.selectedNodes = this.gridOptions.api.getSelectedNodes();

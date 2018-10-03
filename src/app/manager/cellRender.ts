@@ -472,7 +472,11 @@ export class CellRender {
   public static viewSiteOfBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
-        params.value + `<a href='/manager/site#site_id=` + params.data.site_id + `' > View </a>`
+        `<i class="fas fa-key secondaryKey"></i> ` +
+        params.value +
+        `<a href='/manager/site#site_id=` +
+        params.data.site_id +
+        `' > View </a>`
       );
     }
     return ``;
@@ -533,7 +537,11 @@ export class CellRender {
   public static viewBuildingsSite(params) {
     if (params.value > 0) {
       return (
-        params.value + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`
+        `<i class="fas fa-key"></i> ` +
+        params.value +
+        `<a href='/manager/building#site_id=` +
+        params.data.site_id +
+        `' > View </a>`
       );
     }
     return 0;
@@ -639,7 +647,13 @@ export class CellRender {
 
   public static viewUnit(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
-      return params.value + ` <a href='/manager/unit#unit_id=` + params.value + `' > View </a>`;
+      return (
+        `<i class="fas fa-key secondaryKey"></i> ` +
+        params.value +
+        ` <a href='/manager/unit#unit_id=` +
+        params.value +
+        `' > View </a>`
+      );
     }
     return ``;
   }
@@ -647,8 +661,19 @@ export class CellRender {
   public static viewBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
-        params.value + ` <a href='/manager/building#building_id=` + params.value + `' > View </a>`
+        `<i class="fas fa-key"></i> ` +
+        params.value +
+        ` <a href='/manager/building#building_id=` +
+        params.value +
+        `' > View </a>`
       );
+    }
+    return ``;
+  }
+
+  public static cellId(params) {
+    if (params.value && params.value !== '' && params.value !== 'None') {
+      return `<i class="fas fa-key"></i> ` + params.value;
     }
     return ``;
   }

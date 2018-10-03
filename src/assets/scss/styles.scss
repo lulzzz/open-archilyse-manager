@@ -129,18 +129,20 @@ app-root {
 
 
 .idCell{
-  background: #fffdd1;
+  // background: #fffdd1;
 }
 .readOnly{
   // background: #e5fff3;
   color: $new_text_read_only;
 }
-
+.secondaryKey{
+  color: $new_text_read_only;
+}
 
 
 .ag-row-selected{
   .idCell{
-    background: #afebff;
+    // background: #afebff;
   }
   .readOnly{
     // background: #afebff;
@@ -150,7 +152,7 @@ app-root {
 
 .ag-row-hover{
   .idCell{
-    background: #ebe9c0;
+    // background: #ebe9c0;
   }
   .readOnly{
     // background: #d5ebe0;

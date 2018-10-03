@@ -126,8 +126,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             field: 'unit_id',
             columnGroupShow: 'open',
             hide: this.currentProfile !== 'developer',
-            width: 228,
+            width: 255,
             editable: false,
+            cellRenderer: CellRender.cellId,
             cellClass: 'idCell',
           },
           { headerName: 'Name', field: 'name', editable: true },
@@ -236,6 +237,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   viewBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
+        `<i class="fas fa-key secondaryKey"></i> ` +
         params.value +
         `<a href='${urlPortfolio}/building#building_id=` +
         params.data.building_id +
@@ -327,7 +329,14 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null || Object.keys(model).length > 0;
-            this.filtersHuman = ManagerFunctions.calculateHumanFilters(model, this.filterModelSet, sitesArray, buildingsArray, unitsArray, layoutsArray);
+            this.filtersHuman = ManagerFunctions.calculateHumanFilters(
+              model,
+              this.filterModelSet,
+              sitesArray,
+              buildingsArray,
+              unitsArray,
+              layoutsArray
+            );
           },
           onSelectionChanged: () => {
             this.selectedNodes = this.gridOptions.api.getSelectedNodes();

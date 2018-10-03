@@ -10,8 +10,7 @@
         <div class="separator"></div>
         <span class="filtersHuman" [innerHTML]="filtersHuman"></span>
       </span>
-      <div class="separator"></div>
-
+      <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="separator"></div>
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">
         <form [formGroup]="sourceForm" class="form" (ngSubmit)="changeSource(false)" novalidate>
           <span class="label">Floor: </span><input id="floor" formControlName="floor" type="text" placeholder="Floor number" />
