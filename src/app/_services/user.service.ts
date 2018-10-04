@@ -28,6 +28,10 @@ export class UserService {
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore
   ) {
+    this.setUpAll();
+  }
+
+  setUpAll() {
     //// Get auth data, then get firestore user document || null
     this._authenticated = this.afAuth.authState;
 
@@ -64,7 +68,10 @@ export class UserService {
 
   signOut() {
     this.afAuth.auth.signOut().then(() => {
-      this.router.navigate(['login']);
+      // We reset everything
+      // By reloading the page instead of navigating everything works fine.
+      location.replace('/login');
+      // this.router.navigate(['login']);
     });
   }
 }
