@@ -4,7 +4,7 @@ import { UserService } from '../_services';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import * as fromStore from '../_store';
-import { take, map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,9 +16,9 @@ export class AuthGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.userService._authenticated.pipe(
-      take(1),
       map(user => !!user),
       tap(loggedIn => {
+        console.log('Check access:');
         if (!loggedIn) {
           console.log('access denied');
           this.router.navigate(['login']);
@@ -26,6 +26,9 @@ export class AuthGuard implements CanActivate {
       }),
       // We need an Api Key to continue
       switchMap(authenticated => this.userService.user),
+      tap(user => {
+        console.log('user', user);
+      }),
       map(user => user && user['api'] && !!user['api'].key)
     );
   }
