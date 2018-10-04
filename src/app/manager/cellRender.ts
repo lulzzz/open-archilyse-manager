@@ -479,16 +479,18 @@ export class CellRender {
   }
 
   public static cellPdfDownloadLink(params) {
-    if (params && params.value && params.value !== '') {
-      return (
-        `<a href='/manager/assets/pdf/example.pdf' download=` +
-        params.value +
-        `'>` +
-        params.value +
-        `</a>`
-      );
+    //if (params && params.value && params.value !== '') {
+    return (
+      `<a href='/manager/assets/pdf/example.pdf' download=` +
+      params.value +
+      `'>` +
+      params.value +
+      `</a>`
+    );
+    /*
     }
     return '';
+    */
   }
 
   public static viewModel(params) {

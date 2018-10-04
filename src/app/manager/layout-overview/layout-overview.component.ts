@@ -185,6 +185,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             },
           ],
         },
+        /**
         {
           headerName: 'Model Analysis (Furniture)',
           children: [
@@ -268,7 +269,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               cellClass: 'readOnly right',
             },
           ],
+
         },
+         */
       ];
     }
 
@@ -378,6 +381,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       {
         headerName: 'Model',
         children: [
+          /**
           {
             headerName: 'FloorPlan',
             field: 'floorPlan',
@@ -385,6 +389,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
+           */
           {
             headerName: 'Floors',
             field: 'floors',
@@ -392,13 +397,15 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
+          /**
           {
-            headerName: 'Model structure',
+            headerName: '3d model',
             field: 'model_structure',
             cellRenderer: CellRender.viewModel,
             editable: false,
             cellClass: 'readOnly',
           },
+           */
         ],
       },
       ...analysisColumns,
@@ -1060,8 +1067,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
       if (!ManagerFunctions.isDigitalizedLayout(node.data)) {
         ManagerFunctions.showWarning(
-          'Layout with no model structure',
-          `The layout has not been digitalized, a model structure is required before georeferencing.`,
+          'Layout with no 3d model',
+          `The layout has not been digitalized, a 3d model is required before georeferencing.`,
           'Ok',
           confirmed => {}
         );
@@ -1167,7 +1174,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
       if (withoutMS > 0) {
         ManagerFunctions.showWarning(
-          'Layouts with no model structure',
+          'Layouts with no 3d model',
           withoutMS === 1
             ? `There is a layout in your selection that has not been digitalized.`
             : `There are ${withoutMS} layouts in your selection that have not been digitalized.`,

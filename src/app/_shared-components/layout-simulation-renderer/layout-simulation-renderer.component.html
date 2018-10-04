@@ -4,7 +4,7 @@
     <span *ngIf="unitSet && !buildingSet" >Requires Building <a (click)="infoBuilding()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="unitSet && buildingSet && !buildingAddressSet" >Requires Building Address <a (click)="infoBuildingAddress()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && !buildingGeorefSet" >Requires Building Georef. <a (click)="infoBuildingGeoref()"><i class="fa fa-info-circle"></i></a></span>
-    <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && !modelStruct" >Requires Model Structure. <a (click)="infoLayoutModelStrucutre()"><i class="fa fa-info-circle"></i></a></span>
+    <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && !modelStruct" >Requires 3d Model. <a (click)="infoLayoutModelStrucutre()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && !georeferenced" >Requires Layout Georef. <a (click)="infoLayoutGeoref()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && complete">
       <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw </a>

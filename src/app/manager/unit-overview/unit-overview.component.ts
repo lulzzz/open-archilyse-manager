@@ -213,7 +213,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       name: '',
       description: '',
       address: {
-        floor_nr: '',
         additional: '',
       },
     };

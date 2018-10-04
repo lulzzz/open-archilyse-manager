@@ -50,8 +50,9 @@ export class LogOverviewComponent implements OnInit, OnDestroy {
         {
           headerName: 'Time',
           field: 'time',
-          width: 210,
+          width: 240,
           editable: false,
+          sort: 'desc',
           cellRenderer: renderTime,
           cellClass: 'readOnly',
         },
@@ -94,7 +95,7 @@ export class LogOverviewComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Description',
-          width: 310,
+          width: 550,
           editable: false,
           cellRenderer: renderRequestDescription,
           cellClass: 'readOnly',

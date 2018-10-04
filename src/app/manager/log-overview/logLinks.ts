@@ -129,13 +129,21 @@ export function renderRequestDescription(params) {
         return 'Requests the specified site by the site_id ';
       }
       if (url.startsWith(apiUrl + 'buildings')) {
-        return 'Requests the specified building by the building_id ';
+        if (url.endsWith('simulations')) {
+          return 'Requests simulations for the specified building by the building_id ';
+        } else {
+          return 'Requests the specified building by the building_id ';
+        }
       }
       if (url.startsWith(apiUrl + 'units')) {
         return 'Requests the specified unit by the unit_id ';
       }
       if (url.startsWith(apiUrl + 'layouts')) {
-        return 'Requests the specified layout by the layout_id ';
+        if (url.endsWith('simulations')) {
+          return 'Requests simulations for the specified layout by the layout_id ';
+        } else {
+          return 'Requests the specified layout by the layout_id ';
+        }
       }
 
       return 'Description not yet available';

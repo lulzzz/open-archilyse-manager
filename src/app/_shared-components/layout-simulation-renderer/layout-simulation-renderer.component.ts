@@ -75,13 +75,13 @@ export class LayoutSimulationRendererComponent {
       requireGeorefLayout = true;
       this.urlView = `/manager/viewSim/${params.data.layout_id}`;
     } else if (params.colDef.field === 'simulation_statuses.wbs.status') {
-      // Just the model structure
+      // Just the 3d model
     } else if (params.colDef.field === 'simulation_statuses.pathways.status') {
-      // Just the model structure
+      // Just the 3d model
     } else if (params.colDef.field === 'simulation_statuses.basic_features.status') {
-      // Just the model structure
+      // Just the 3d model
     } else if (params.colDef.field === 'simulation_statuses.accoustics.status') {
-      // Just the model structure
+      // Just the 3d model
     } else {
       console.error('Column simulations', params.colDef.field);
     }
@@ -185,7 +185,6 @@ export class LayoutSimulationRendererComponent {
     });
   }
 
-
   infoOutdated() {
     this.infoDialog.open({
       data: {
@@ -247,7 +246,7 @@ export class LayoutSimulationRendererComponent {
         title: 'Request simulation: Georeference needed',
         body:
           'In order to request the current simulation the selected layout must be georeferenced. <br/>' +
-          'Please use the georeference tool to place the model structure in the building.',
+          'Please use the georeference tool to place the 3d model in the building.',
         image: null,
       },
     });
@@ -255,10 +254,10 @@ export class LayoutSimulationRendererComponent {
   infoLayoutModelStrucutre() {
     this.infoDialog.open({
       data: {
-        title: 'Request simulation: Model Structure needed',
+        title: 'Request simulation: 3d Model needed',
         body:
-          'In order to request the current simulation the selected layout must be have a valid model structure. <br/>' +
-          'Please assign a model structure to the current layout.',
+          'In order to request the current simulation the selected layout must be have a valid 3d model. <br/>' +
+          'Please assign a 3d model to the current layout.',
         image: null,
       },
     });

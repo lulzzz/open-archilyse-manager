@@ -270,7 +270,9 @@ $icon-color: #ffa000;
 
 .mat-checkbox-disabled .mat-checkbox-background{
   background-color: white !important;
-  color: $new_text_dark;
+  svg{
+    opacity: 0.55;
+  }
 }
 .mat-checkbox-background, .mat-checkbox-frame{
   border-radius: 0;
