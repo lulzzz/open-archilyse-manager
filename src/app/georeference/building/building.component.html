@@ -20,7 +20,7 @@
         Next
       </button>
     </div>
-    <div *ngIf="!error && features && features.length>0">
+    <div *ngIf="!error && features && features.length>0 && currentFeature">
       <div *ngIf="currentProfile === 'developer'" [popper]="selectMap" class="selectMap">
         <label >Map mode: </label>
         <select (change)="changeMap($event)" [value]="mapStyle">
@@ -42,7 +42,7 @@
     </div>
   </div>
   <div class="buttonRow">
-    <span  *ngIf="!error && features && features.length>0">
+    <span  *ngIf="!error && features && features.length>0 && currentFeature">
       <button [popper]="confirm" class="btn blue" type="button" (click)="confirmCoordinates()">
         Confirm position
       </button>
@@ -61,7 +61,7 @@
 </div>
 <div class="containter-full-width relative-pos">
   <app-geo-editor
-    *ngIf="buildingPerimeter && buildingPerimeter !== null && modelStructure !== null && allPossibleCoords !==null"
+    *ngIf="buildingPerimeter && buildingPerimeter !== null && modelStructure !== null && allPossibleCoords !==null && (features && features.length>0 && currentFeature)"
     [buildingPerimeter]="buildingPerimeter"
     [buildingPerimeterScale]="buildingPerimeterScale"
     [modelStructure]="modelStructure"
