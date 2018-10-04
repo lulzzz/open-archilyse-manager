@@ -340,7 +340,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               type: 'viewUnit',
             },
             cellEditor: 'agPopupSelectCellEditor',
-            valueFormatter: CellRender.unitFormatter.bind(this),
+            valueFormatter: CellRender.unitFormatter.bind(this, this.currentProfile),
             cellEditorParams: {
               values: ['', ...units.map(unit => unit.unit_id)],
             },
@@ -1308,6 +1308,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             );
           } else {
             addedRows += 1;
+
+            // We never send the layout id, even when is ''
+            delete oneRow.layout_id;
+
             ApiFunctions.post(
               this.http,
               'layouts',

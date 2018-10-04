@@ -109,8 +109,10 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
           hide: this.currentProfile !== 'analyst',
           headerTooltip: 'Number of elements assigned to this site',
           children: ColumnDefinitions.getBuildingsUnitsLayouts(
-            'linkRenderer', { type: 'viewBuildingNumberSite' },
-            null, null
+            'linkRenderer',
+            { type: 'viewBuildingNumberSite' },
+            null,
+            null
           ),
         },
         {
@@ -396,6 +398,9 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
             );
           } else {
             addedRows += 1;
+
+            // We never send the site id, even when is ''
+            delete oneRow.site_id;
 
             ApiFunctions.post(
               this.http,

@@ -74,7 +74,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             width: 275,
             cellRenderer: this.viewBuilding,
             cellEditor: 'agPopupSelectCellEditor',
-            valueFormatter: CellRender.buildingFormatter.bind(this),
+            valueFormatter: CellRender.buildingFormatter.bind(this, this.currentProfile),
             cellEditorParams: {
               values: ['', ...buildings.map(building => building.building_id)],
             },
@@ -514,6 +514,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             );
           } else {
             addedRows += 1;
+
+            // We never send the unit id, even when is ''
+            delete oneRow.unit_id;
 
             ApiFunctions.post(
               this.http,

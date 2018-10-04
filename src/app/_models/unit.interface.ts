@@ -4,7 +4,7 @@ export interface Unit {
   name?: string;
   description?: string;
 
-  address?: Object;
+  address?: AddressUnitReference;
   building_id?: string;
 
   images?: string;
@@ -16,4 +16,9 @@ export interface Unit {
   user_id: string;
   created: string;
   updated: string;
+}
+
+export interface AddressUnitReference {
+  floor_nr?: number;
+  additional?: string;
 }

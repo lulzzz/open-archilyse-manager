@@ -4,36 +4,67 @@ import { ManagerFunctions } from './managerFunctions';
  * ag-grid Class with methods to render different values.
  */
 export class CellRender {
-  public static siteFormatter(params) {
+  public static siteFormatter(currentProfile, params) {
     if (params && params.value) {
       const site = this['sitesArray'].find(site => site.site_id === params.value);
+      const isDev = currentProfile === 'developer';
       if (site && site.name && site.name !== '') {
-        return site.name + ' - ' + params.value;
+        if (isDev) {
+          return site.name + ' - ' + params.value;
+        } else {
+          return site.name + ' - ' + site.description;
+        }
       }
     }
-    return params.value;
+    return 'Site #id ' + params.value;
   }
 
-  public static buildingFormatter(params) {
+  public static buildingFormatter(currentProfile, params) {
     if (params && params.value) {
       const building = this['buildingsArray'].find(
         building => building.building_id === params.value
       );
+
+      const isDev = currentProfile === 'developer';
       if (building && building.name && building.name !== '') {
-        return building.name + ' - ' + params.value;
+        if (isDev) {
+          return building.name + ' - ' + params.value;
+        } else {
+          if (ManagerFunctions.isAddressCorrect(building)) {
+            return (
+              building.name + ' - ' + building.address.street + ', ' + building.address.street_nr
+            );
+          } else {
+            return building.name + ' - ' + building.description;
+          }
+        }
       }
     }
-    return params.value;
+    return 'Building #id ' + params.value;
   }
 
-  public static unitFormatter(params) {
+  public static unitFormatter(currentProfile, params) {
     if (params && params.value) {
       const unit = this['unitsArray'].find(unit => unit.unit_id === params.value);
+
+      const isDev = currentProfile === 'developer';
       if (unit && unit.name && unit.name !== '') {
-        return unit.name + ' - ' + params.value;
+        if (isDev) {
+          return unit.name + ' - ' + params.value;
+        } else {
+          if (unit.address.floor_nr && unit.address.additional) {
+            return unit.name + ' - Nr' + unit.address.floor_nr + ', ' + unit.address.additional;
+          } else if (unit.address.floor_nr) {
+            return unit.name + ' - Nr' + unit.address.floor_nr;
+          } else if (unit.address.additional) {
+            return unit.name + ' - ' + unit.address.additional;
+          } else {
+            return unit.name + ' - ' + unit.description;
+          }
+        }
       }
     }
-    return params.value;
+    return 'Unit #id ' + params.value;
   }
 
   /**

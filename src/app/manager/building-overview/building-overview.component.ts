@@ -166,7 +166,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             cellEditorParams: {
               values: ['', ...sites.map(site => site.site_id)],
             },
-            valueFormatter: CellRender.siteFormatter.bind(this),
+            valueFormatter: CellRender.siteFormatter.bind(this, this.currentProfile),
             editable: true,
           },
           {
@@ -865,6 +865,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             );
           } else {
             addedRows += 1;
+
+            // We never send the building id, even when is ''
+            delete oneRow.building_id;
 
             ApiFunctions.post(
               this.http,
