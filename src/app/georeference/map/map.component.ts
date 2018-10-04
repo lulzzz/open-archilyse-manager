@@ -509,10 +509,10 @@ export class MapComponent implements OnInit, OnDestroy {
         } else if (next.layout) {
           this._router.navigate(['georeference', 'layout', next.layout]);
         } else {
-          this._router.navigate(['georeference']);
+          this._router.navigate(['manager', 'building']);
         }
       } else {
-        this._router.navigate(['georeference']);
+        this._router.navigate(['manager', 'building']);
       }
     }
   }

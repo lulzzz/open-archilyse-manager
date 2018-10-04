@@ -6,7 +6,7 @@
     <span *ngIf="addressSet && georeferenced && complete">
       <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> Raw </a> &nbsp;
       <a *ngIf="urlPotencialView" [routerLink]="urlPotencialView" > <i class="far fa-eye"></i> View </a>
-      <a *ngIf="outdated" (click)="infoOutdated()" > (Outdated <i class="far fa-info-circle"></i>)</a>
+      <a *ngIf="outdated" (click)="infoOutdated()" > &nbsp; (Outdated <i class="far fa-info-circle"></i>)</a>
     </span>
     <span *ngIf="addressSet && georeferenced && ready" >Failed <a (click)="requestSimulation()">Restart</a></span>
     <span *ngIf="addressSet && georeferenced && not_requested" ><a (click)="requestSimulation()">Start simulation</a></span>

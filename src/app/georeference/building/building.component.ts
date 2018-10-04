@@ -637,10 +637,10 @@ export class BuildingComponent implements OnInit, OnDestroy {
           replaceUrl: true,
         });
       } else {
-        this._router.navigate(['georeference']);
+        this._router.navigate(['manager', 'layout']);
       }
     } else {
-      this._router.navigate(['georeference']);
+      this._router.navigate(['manager', 'layout']);
     }
   }
 
