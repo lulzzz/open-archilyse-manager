@@ -57,10 +57,10 @@ textarea:focus {
 
     .info {
       opacity: 0.5;
-      color: $text;
+      color: $white;
     }
     .warn {
-      color: $red;
+      color: $new_highlighted_red;
     }
   }
 }
