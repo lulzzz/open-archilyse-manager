@@ -283,7 +283,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             field: 'building_id',
             hide: this.currentProfile !== 'developer',
             width: 285,
-            cellRenderer: CellRender.viewBuilding,
+            cellRenderer: 'linkRenderer',
+            cellRendererParams: {
+              type: 'viewBuilding',
+            },
             cellClass: 'readOnly',
           },
           {
@@ -329,7 +332,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Unit Id',
             field: 'unit_id',
             width: 285,
-            cellRenderer: CellRender.viewUnit,
+            cellRenderer: 'linkRenderer',
+            cellRendererParams: {
+              type: 'viewUnit',
+            },
             cellEditor: 'agPopupSelectCellEditor',
             valueFormatter: CellRender.unitFormatter.bind(this),
             cellEditorParams: {
@@ -402,7 +408,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Movements',
             field: 'movements',
-            cellRenderer: CellRender.viewMovement,
+            cellRenderer: 'georeferenceRenderer',
+            cellRendererParams: { type: 'layout' },
             editable: true,
           },
         ],
@@ -815,14 +822,16 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             );
           },
           onSelectionChanged: () => {
-            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-            this.selectedRows = this.gridOptions.api.getSelectedRows();
+            if (this.gridOptions && this.gridOptions.api) {
+              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+              this.selectedRows = this.gridOptions.api.getSelectedRows();
 
-            if (this.selectedRows && this.selectedRows.length === 1) {
-              console.log('this.selectedRows', this.selectedRows[0]);
+              if (this.selectedRows && this.selectedRows.length === 1) {
+                console.log('this.selectedRows', this.selectedRows[0]);
 
-              const floors = this.selectedRows[0].floors;
-              this.previousSources = floors && floors.length > 0;
+                const floors = this.selectedRows[0].floors;
+                this.previousSources = floors && floors.length > 0;
+              }
             }
           },
           onGridReady: params => {
@@ -880,12 +889,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
       // Id is not duplicated
       delete newRow['layout_id'];
-
-      // Calculated are not duplicated
-      if (newRow['model_structure']) {
-        delete newRow['model_structure'].id;
-        delete newRow['model_structure'].type;
-      }
 
       delete newRow['unit'];
       delete newRow['unit_name'];

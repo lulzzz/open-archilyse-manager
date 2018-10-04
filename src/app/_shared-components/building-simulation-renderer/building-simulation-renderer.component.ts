@@ -23,6 +23,7 @@ export class BuildingSimulationRendererComponent {
   failed = false;
   unknown = false;
   complete = false;
+  outdated = false;
   georeferenced = false;
   addressSet = false;
   ready = false;
@@ -76,6 +77,7 @@ export class BuildingSimulationRendererComponent {
     this.failed = false;
     this.unknown = false;
     this.complete = false;
+    this.outdated = false;
     this.ready = false;
 
     this.addressSet = ManagerFunctions.isAddressCorrect(this.building);
@@ -96,6 +98,10 @@ export class BuildingSimulationRendererComponent {
         this.failed = true;
         this.styles = { width: '80%', backgroundColor: '#ff8582', color: letterColor };
       } else if (status === 'complete') {
+        this.complete = true;
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+      } else if (status === 'outdated') {
+        this.outdated = true;
         this.complete = true;
         this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (status === 'not_requested') {
@@ -150,6 +156,16 @@ export class BuildingSimulationRendererComponent {
       urlGeoreference + '/map/' + this.building.building_id + (src ? `#source=${src}` : '')
     );
      */
+  }
+
+  infoOutdated() {
+    this.infoDialog.open({
+      data: {
+        title: 'Simulation outdated',
+        body: 'The georeference from this building changed after the simulation was calculated.',
+        image: null,
+      },
+    });
   }
 
   infoAddress() {

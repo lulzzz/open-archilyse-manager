@@ -261,11 +261,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
         let feature;
         let epsg;
         if (building.footprints) {
-          console.log('building.footprints', building.footprints);
           const footprint = building.footprints.find(fp => fp.source === map_source);
           if (footprint) {
             epsg = footprint.epsg;
-            console.log('epsg', epsg);
             feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
             // To recover the value
             feature.setId(building.building_id);
@@ -304,8 +302,6 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 this.countries.push(building.address.country);
                 this.countries.sort(); // a to Z
               }
-
-              console.log('MAP', this.map, epsg);
 
               if (this.map === null) {
                 this.mapStyle = 'streets';

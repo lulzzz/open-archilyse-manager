@@ -467,13 +467,6 @@ export class CellRender {
     return ``;
   }
 
-  public static viewUnitsOfBuilding(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + `<a href='/manager/unit#building_id=` + params.data.building_id + `' > View </a>`
-    );
-  }
-
   public static viewDate(params) {
     if (params.value && params.value !== '') {
       const readable = new Date(params.value);
@@ -483,95 +476,6 @@ export class CellRender {
       return `${d}.${m}.${y}`;
     }
     return ``;
-  }
-
-  public static viewGeorefBuildingST(params) {
-    if (params && params.data && params.data.building_references) {
-      const found = params.data.building_references.find(br => br.source === 'swiss_topo');
-      if (found && found.id) {
-        return `<a href='/georeference/map/${params.data.building_id}#source=swiss_topo' >${
-          found.id
-        }</a>`;
-      }
-    }
-    return '';
-  }
-
-  public static viewGeorefBuildingOSM(params) {
-    if (params && params.value && params.value !== '') {
-      const found = params.data.building_references.find(br => br.source === 'open_street_maps');
-      if (found && found.id) {
-        return `<a href='/georeference/map/${params.data.building_id}#source=open_street_maps' >${
-          found.id
-        }</a>`;
-      }
-    }
-    return '';
-  }
-
-  public static viewBuildingsCountry(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number +
-      ` <a href='/manager/building#address.country=` +
-      params.data.country +
-      `' > View list</a>`
-    );
-  }
-
-  public static viewBuildingsSite(params) {
-    if (params.value > 0) {
-      return (
-        `<i class="fas fa-key"></i> ` +
-        params.value +
-        `<a href='/manager/building#site_id=` +
-        params.data.site_id +
-        `' > View </a>`
-      );
-    }
-    return 0;
-  }
-
-  public static viewBuildingNumberSite(params) {
-    if (params.value > 0) {
-      return (
-        params.value + `<a href='/manager/building#site_id=` + params.data.site_id + `' > View </a>`
-      );
-    }
-    return 0;
-  }
-
-  public static viewUnitsCountry(params) {
-    if (params.value > 0) {
-      return (
-        params.value +
-        `<a href='/manager/unit#address.country=` +
-        params.data.country +
-        `' > View </a>`
-      );
-    }
-    return 0;
-  }
-
-  public static viewBuildingsCity(params) {
-    if (params.value > 0) {
-      return (
-        params.value +
-        ` <a href='/manager/building#address.city=` +
-        params.data.city +
-        `' > View </a>`
-      );
-    }
-    return 0;
-  }
-
-  public static viewUnitsCity(params) {
-    if (params.value > 0) {
-      return (
-        params.value + ` <a href='/manager/unit#address.city=` + params.data.city + `' > View </a>`
-      );
-    }
-    return 0;
   }
 
   public static cellPdfDownloadLink(params) {
@@ -585,38 +489,6 @@ export class CellRender {
       );
     }
     return '';
-  }
-
-  public static viewMovement(params) {
-    let result = '';
-
-    console.log('params.value', params.value);
-    if (params.value && params.value.length > 0) {
-      const layout_id = params.data.layout_id;
-      for (let i = 0; i < params.value.length; i += 1) {
-        const movements = params.value[i];
-        const source = movements.source ? movements.source : 'swiss_topo'; // 'open_street_maps';
-        result += `<a href="/georeference/building/${layout_id}#source=${source}">${source}</a> `;
-      }
-    } else {
-      if (!params.data.unit_id) {
-        result = `No unit assigned`;
-      } else if (!params.data.building_id) {
-        result = `No building assigned`;
-      } else if (!ManagerFunctions.isDigitalizedLayout(params.data)) {
-        result = `Not digitalized`;
-      } else {
-        if (params.data.building_referenced_osm) {
-          result = `<a href="/georeference/building/${
-            params.data.layout_id
-          }#source=open_street_maps" >Georeference</a>`;
-        } else {
-          result = `<a href="/georeference/building/${params.data.layout_id}" >Georeference</a>`;
-        }
-      }
-    }
-
-    return result;
   }
 
   public static viewModel(params) {
@@ -654,32 +526,6 @@ export class CellRender {
       }
 
       return params.value[0].toFixed(2) + `m<sup>2</sup> `;
-    }
-    return ``;
-  }
-
-  public static viewUnit(params) {
-    if (params.value && params.value !== '' && params.value !== 'None') {
-      return (
-        `<i class="fas fa-key secondaryKey"></i> ` +
-        params.value +
-        ` <a href='/manager/unit#unit_id=` +
-        params.value +
-        `' > View </a>`
-      );
-    }
-    return ``;
-  }
-
-  public static viewBuilding(params) {
-    if (params.value && params.value !== '' && params.value !== 'None') {
-      return (
-        `<i class="fas fa-key"></i> ` +
-        params.value +
-        ` <a href='/manager/building#building_id=` +
-        params.value +
-        `' > View </a>`
-      );
     }
     return ``;
   }

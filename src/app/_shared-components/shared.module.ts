@@ -8,15 +8,12 @@ import { TagInputModule } from 'ngx-chips';
 import { NgxPopperModule } from 'ngx-popper';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
-// import { BrowserModule } from '@angular/platform-browser';
 import { NgDragDropModule } from 'ng-drag-drop';
 import { ErrorModalComponent } from './error-modal/error-modal.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { SafeHtmlPipe } from '../_pipes/safeHtml.pipe';
 import { OrdinalPipe } from '../_pipes/ordinal.pipe';
-import { MatCheckboxComponent } from './mat-checkbox/mat-checkbox.component';
-import { ProcentRendererComponent } from './procent-renderer/procent-renderer.component';
 import { InfoBoxOverlayComponent } from './overlays/info-box-overlay/info-box-overlay.component';
 import { FloorplanEditorComponent } from './floorplan/floorplan-editor.component';
 import { DragItemComponent } from './floorplan/editor-sidebar/drag-item/drag-item.component';
@@ -27,6 +24,7 @@ import { EditLayoutComponent } from './edit-layout/edit-layout.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import { UniqueIdService } from '../_services';
 import { FloorplanComponent } from './floorplan/floorplan.component';
+import { GeoreferenceRendererComponent } from './georeference-renderer/georeference-renderer.component';
 
 @NgModule({
   imports: [

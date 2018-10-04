@@ -112,7 +112,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               field: 'units',
               filter: 'agNumberColumnFilter',
               width: 90,
-              cellRenderer: CellRender.viewUnitsOfBuilding,
+              cellRenderer: 'linkRenderer',
+              cellRendererParams: {
+                type: 'viewUnitsOfBuilding',
+              },
+              // cellRenderer: CellRender.viewUnitsOfBuilding,
               editable: false,
               cellClass: 'readOnly',
             },
@@ -241,7 +245,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               field: 'building_referenced_st',
               hide: this.currentProfile !== 'developer', // A developer sees the details
               width: 265,
-              cellRenderer: CellRender.viewGeorefBuildingST,
+              cellRenderer: 'georeferenceRenderer',
+              cellRendererParams: { type: 'building_st' },
               editable: false,
               cellClass: 'readOnly',
             },
@@ -250,7 +255,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               field: 'building_referenced_osm',
               hide: this.currentProfile !== 'developer', // A developer sees the details
               width: 150,
-              cellRenderer: CellRender.viewGeorefBuildingOSM,
+              cellRenderer: 'georeferenceRenderer',
+              cellRendererParams: { type: 'building_osm' },
               editable: false,
               cellClass: 'readOnly',
             },
@@ -442,8 +448,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             );
           },
           onSelectionChanged: () => {
-            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-            this.selectedRows = this.gridOptions.api.getSelectedRows();
+            if (this.gridOptions && this.gridOptions.api) {
+              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+              this.selectedRows = this.gridOptions.api.getSelectedRows();
+            }
           },
           onGridReady: params => {
             this.gridApi = params.api;

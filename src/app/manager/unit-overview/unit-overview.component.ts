@@ -148,7 +148,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             field: 'layouts',
             filter: 'agNumberColumnFilter',
             width: 105,
-            cellRenderer: this.viewLayouts,
+            cellRenderer: 'linkRenderer',
+            cellRendererParams: {
+              type: 'viewLayouts',
+            },
             editable: false,
             cellClass: 'readOnly',
           },
@@ -167,9 +170,20 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         headerName: 'Unit address',
         openByDefault: this.currentProfile === 'data',
         children: [
-          { headerName: 'Line1', field: 'address.line1', editable: true },
-          { headerName: 'Line2', field: 'address.line2', editable: true, columnGroupShow: 'open' },
-          { headerName: 'Line3', field: 'address.line3', editable: true, columnGroupShow: 'open' },
+          {
+            headerName: 'Floor Nr',
+            field: 'address.floor_nr',
+            filter: 'agNumberColumnFilter',
+            width: 105,
+            editable: true,
+          },
+          {
+            headerName: 'Additional',
+            field: 'address.additional',
+            editable: true,
+            width: 250,
+            columnGroupShow: 'open',
+          },
         ],
       },
       /**
@@ -245,13 +259,6 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       );
     }
     return '';
-  }
-
-  viewLayouts(params) {
-    const number = params.value > 0 ? params.value : 0;
-    return (
-      number + `<a href='${urlPortfolio}/layout#unit_id=` + params.data.unit_id + `' > View </a>`
-    );
   }
 
   unitReactionToEdit(nodeData, element) {
@@ -339,8 +346,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             );
           },
           onSelectionChanged: () => {
-            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-            this.selectedRows = this.gridOptions.api.getSelectedRows();
+            if (this.gridOptions && this.gridOptions.api) {
+              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+              this.selectedRows = this.gridOptions.api.getSelectedRows();
+            }
           },
           onGridReady: params => {
             this.gridApi = params.api;

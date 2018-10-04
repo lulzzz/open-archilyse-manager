@@ -1,7 +1,9 @@
+@import 'colors';
+
 .cdk-overlay-backdrop {
   &.cdk-overlay-backdrop-showing {
     &.dark-backdrop {
-      background-color: #343a40;
+      background-color: $new_background_blue;
       opacity: 0.9;
     }
   }

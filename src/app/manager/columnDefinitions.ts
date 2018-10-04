@@ -4,6 +4,8 @@ import { CellRender } from './cellRender';
 import { BuildingSimulationRendererComponent } from '../_shared-components/building-simulation-renderer/building-simulation-renderer.component';
 import { BuildingSimulationRendererDpoiComponent } from '../_shared-components/building-simulation-dpoi-renderer/building-simulation-dpoi-renderer.component';
 import { LayoutSimulationRendererComponent } from '../_shared-components/layout-simulation-renderer/layout-simulation-renderer.component';
+import { LinkRendererComponent } from '../_shared-components/link-renderer/link-renderer.component';
+import { GeoreferenceRendererComponent } from '../_shared-components/georeference-renderer/georeference-renderer.component';
 
 export class ColumnDefinitions {
   /**
@@ -22,6 +24,8 @@ export class ColumnDefinitions {
       simulationLayoutRenderer: LayoutSimulationRendererComponent,
       simulationBuildingRenderer: BuildingSimulationRendererComponent,
       simulationBuildingDpoiRenderer: BuildingSimulationRendererDpoiComponent,
+      linkRenderer: LinkRendererComponent,
+      georeferenceRenderer: GeoreferenceRendererComponent,
     },
 
     // rowHeight: 48, recommended row height for material design data grids,
@@ -195,7 +199,12 @@ export class ColumnDefinitions {
     },
   ];
 
-  public static getBuildingsUnitsLayouts(viewBuildings, viewUnits) {
+  public static getBuildingsUnitsLayouts(
+    viewBuildings,
+    viewBuildingsParams,
+    viewUnits,
+    viewUnitsParams
+  ) {
     return [
       {
         headerName: 'Buildings',
@@ -204,6 +213,7 @@ export class ColumnDefinitions {
         filter: 'agNumberColumnFilter',
         width: 100,
         cellRenderer: viewBuildings,
+        cellRendererParams: viewBuildingsParams,
         editable: false,
         cellClass: 'readOnly',
       },
@@ -215,6 +225,7 @@ export class ColumnDefinitions {
         filter: 'agNumberColumnFilter',
         width: 100,
         cellRenderer: viewUnits,
+        cellRendererParams: viewUnitsParams,
         editable: false,
         cellClass: 'readOnly',
       },

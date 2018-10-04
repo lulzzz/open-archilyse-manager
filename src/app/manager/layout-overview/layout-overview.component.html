@@ -9,6 +9,7 @@
       <span *ngIf="!((currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1) && filtersHuman" >
         <div class="separator"></div>
         <span class="filtersHuman" [innerHTML]="filtersHuman"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
       </span>
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="separator"></div>
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">

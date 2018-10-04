@@ -40,6 +40,8 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
   columnDefs;
 
   currentProfile;
+  filtersHuman;
+
   /**
    * Subscriptions
    */
@@ -73,7 +75,12 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
       },
       {
         headerName: 'Count',
-        children: ColumnDefinitions.getBuildingsUnitsLayouts(CellRender.viewBuildingsCountry, null),
+        children: ColumnDefinitions.getBuildingsUnitsLayouts(
+          'linkRenderer',
+          { type: 'viewBuildingsCountry' },
+          null,
+          null
+        ),
       },
       {
         headerName: 'Progress',
@@ -156,10 +163,20 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
             this.filterModelSet = model !== null || Object.keys(model).length > 0;
+            this.filtersHuman = ManagerFunctions.calculateHumanFilters(
+              model,
+              this.filterModelSet,
+              sitesArray,
+              buildingsArray,
+              unitsArray,
+              layoutsArray
+            );
           },
           onSelectionChanged: () => {
-            this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-            this.selectedRows = this.gridOptions.api.getSelectedRows();
+            if (this.gridOptions && this.gridOptions.api) {
+              this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+              this.selectedRows = this.gridOptions.api.getSelectedRows();
+            }
           },
           onGridReady: params => {
             this.gridApi = params.api;

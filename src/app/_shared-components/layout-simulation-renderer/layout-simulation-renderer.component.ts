@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../manager/managerFunctions';
-import { OverlayService } from '../../_services/overlay.service';
-import { environment } from '../../../environments/environment';
-import { NavigationService } from '../../_services/navigation.service';
+import { OverlayService, NavigationService } from '../../_services';
 import { Router } from '@angular/router';
-
-const urlGeoreference = environment.urlGeoreference;
-const urlPortfolio = environment.urlPortfolio;
 
 @Component({
   selector: 'app-layout-simulation-renderer',
@@ -28,6 +23,7 @@ export class LayoutSimulationRendererComponent {
   failed = false;
   unknown = false;
   complete = false;
+  outdated = false;
   georeferenced = false;
   modelStruct = false;
   ready = false;
@@ -102,6 +98,7 @@ export class LayoutSimulationRendererComponent {
     this.failed = false;
     this.unknown = false;
     this.complete = false;
+    this.outdated = false;
     this.ready = false;
     this.georeferenced = false;
     this.modelStruct = false;
@@ -146,6 +143,10 @@ export class LayoutSimulationRendererComponent {
       } else if (params.value === 'complete') {
         this.complete = true;
         this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+      } else if (status === 'outdated') {
+        this.complete = true;
+        this.outdated = true;
+        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
       } else if (params.value === 'not_requested') {
         this.not_requested = true;
         this.styles = { width: '90%', backgroundColor: '#2e67b1', color: letterColor };
@@ -181,6 +182,17 @@ export class LayoutSimulationRendererComponent {
 
     this.router.navigate(['georeference', 'map', this.layout.layout_id], {
       fragment: src ? `source=${src}` : null,
+    });
+  }
+
+
+  infoOutdated() {
+    this.infoDialog.open({
+      data: {
+        title: 'Simulation outdated',
+        body: 'The georeference from this building changed after the simulation was calculated.',
+        image: null,
+      },
     });
   }
 

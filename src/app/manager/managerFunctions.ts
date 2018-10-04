@@ -3,6 +3,10 @@ import { parseParms } from './url';
 import { Building, Layout, Site, Unit } from '../_models';
 import { ApiFunctions } from './apiFunctions';
 
+function _capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export class ManagerFunctions {
   public static getName(array, id, idKey) {
     const found = array.find(element => element[idKey] === id);
@@ -25,7 +29,31 @@ export class ManagerFunctions {
     layoutsArray
   ) {
     if (filterModelSet) {
-      if (data.site_id && data.site_id.type && data.site_id.type === 'equals') {
+      if (
+        data['address.country'] &&
+        data['address.country'].type &&
+        data['address.country'].type === 'equals'
+      ) {
+        return `<label>Filtering by country: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+          data['address.country'].filter
+        )}</span>`;
+      } else if (data['country'] && data['country'].type && data['country'].type === 'equals') {
+        return `<label>Filtering by country: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+          data['country'].filter
+        )}</span>`;
+      } else if (
+        data['address.city'] &&
+        data['address.city'].type &&
+        data['address.city'].type === 'equals'
+      ) {
+        return `<label>Filtering by city: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+          data['address.city'].filter
+        )}</span>`;
+      } else if (data['city'] && data['city'].type && data['city'].type === 'equals') {
+        return `<label>Filtering by city: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+          data['city'].filter
+        )}</span>`;
+      } else if (data.site_id && data.site_id.type && data.site_id.type === 'equals') {
         return `<label>Filtering site:</label> <span class="whiteText" >${ManagerFunctions.getName(
           sitesArray,
           data.site_id.filter,

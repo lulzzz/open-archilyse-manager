@@ -255,8 +255,10 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
         this.filterModelSet = model !== null && Object.keys(model).length > 0;
       },
       onSelectionChanged: () => {
-        this.selectedNodes = this.gridOptions.api.getSelectedNodes();
-        this.selectedRows = this.gridOptions.api.getSelectedRows();
+        if (this.gridOptions && this.gridOptions.api) {
+          this.selectedNodes = this.gridOptions.api.getSelectedNodes();
+          this.selectedRows = this.gridOptions.api.getSelectedRows();
+        }
       },
       onGridReady: params => {
         this.gridApi = params.api;
