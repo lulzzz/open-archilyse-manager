@@ -1,0 +1,17 @@
+<div *ngIf="type === 'number'">
+  {{params.value > 0 ? params.value : 0}} <a *ngIf="params.value > 0" [routerLink]="url" [fragment]="fragment" > View </a>
+</div>
+<div *ngIf="type === 'text'">
+  {{params.value}} <a [routerLink]="url" [fragment]="fragment" > View </a>
+</div>
+<div *ngIf="type === 'key'">
+  <i class="fas fa-key"></i> {{params.value}} <a [routerLink]="url" [fragment]="fragment" > View </a>
+</div>
+<div *ngIf="type === 'secondary_key'">
+  <i class="fas fa-key secondaryKey"></i> {{params.value}} <a [routerLink]="url" [fragment]="fragment" > View </a>
+</div>
+
+
+
+
+
