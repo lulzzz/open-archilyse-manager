@@ -5,13 +5,13 @@
   <div *ngIf="!loading && !generalError" class="topControls">
     <div class="buttonRow">
 
-      <button [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
+      <button *ngIf="!((currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1)" [popper]="tooltip2" class="btn blue" [disabled]="!filterModelSet"         (click)="clearFilters()">Clear Filters</button>
       <span *ngIf="!((currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1) && filtersHuman" >
         <div class="separator"></div>
         <span class="filtersHuman" [innerHTML]="filtersHuman"></span>
         &nbsp;&nbsp;&nbsp;&nbsp;
       </span>
-      <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="separator"></div>
+      <div *ngIf="!(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="separator"></div>
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length === 1" class="floorInput">
         <form [formGroup]="sourceForm" class="form" (ngSubmit)="changeSource(false)" novalidate>
           <span class="label">Floor: </span><input id="floor" formControlName="floor" type="text" placeholder="Floor number" />
@@ -22,7 +22,7 @@
         <button *ngIf="previousSources" class="btn blue" [popper]="tooltipClearSource" (click)="changeSource(true)" >Clear source</button>
       </div>
       <div *ngIf="(currentProfile === 'data' || currentProfile === 'developer') && selectedNodes.length !== 1" class="floorInput info">
-        <i class="fa fa-info-circle icon-info"></i> Select only one layout to add a floorplan source.
+        &nbsp; &nbsp; <i class="fa fa-info-circle icon-info"></i> Select only one layout to add a floorplan source.
       </div>
 
       <div style="float: right">

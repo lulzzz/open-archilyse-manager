@@ -73,6 +73,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { EditorComponent } from './editor/editor.component';
 import { IntroEditorComponent } from './editor/intro.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true,
@@ -87,6 +88,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ToastComponent,
     EditorComponent,
     IntroEditorComponent,
+    PasswordResetComponent,
   ],
   entryComponents: [ToastComponent],
   imports: [

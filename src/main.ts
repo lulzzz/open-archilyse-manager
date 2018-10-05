@@ -9,7 +9,7 @@ import 'velocity-animate';
 
 if (environment.production) {
   // Redirection to https:
-  if (location.protocol != 'https:') {
+  if (location.protocol !== 'https:') {
     location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
   }
 

@@ -6,8 +6,9 @@ import { UpgradeBrowserComponent } from './upgrade-browser/upgrade-browser.compo
 import { ErrorComponent } from './error/error.component';
 
 import { AuthGuard } from './_guards/auth.guard';
-import {IntroEditorComponent} from './editor/intro.component';
-import {EditorComponent} from './editor/editor.component';
+import { IntroEditorComponent } from './editor/intro.component';
+import { EditorComponent } from './editor/editor.component';
+import { PasswordResetComponent } from './password-reset/password-reset.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,11 @@ const routes: Routes = [
     path: 'upgrade',
     pathMatch: 'full',
     component: UpgradeBrowserComponent,
+  },
+  {
+    path: 'resetPassword',
+    pathMatch: 'full',
+    component: PasswordResetComponent,
   },
   {
     path: 'login',

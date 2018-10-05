@@ -28,6 +28,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   user_sub: Subscription;
   route_sub: Subscription;
 
+  logoLink = '/';
+
   constructor(
     private navigationService: NavigationService,
     private userService: UserService,
@@ -40,6 +42,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
     this.userService._authenticated.subscribe(auth => {
       this.isUserLoggedIn = auth;
+      if (auth) {
+        this.logoLink = '/';
+      } else {
+        this.logoLink = 'https://www.archilyse.com/';
+      }
     });
 
     this.currentProfile = navigationService.profile.getValue();

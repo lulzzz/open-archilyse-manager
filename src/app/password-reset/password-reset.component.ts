@@ -6,22 +6,20 @@ import * as fromStore from '../_store';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../environments/environment';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { ManagerFunctions } from '../manager/managerFunctions';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-password-reset',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  templateUrl: './password-reset.component.html',
+  styleUrls: ['./password-reset.component.scss'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
-  userLoading$;
-  userLoaded$;
+export class PasswordResetComponent implements OnInit, OnDestroy {
   userError$;
 
   userErrorString = '';
 
   // Subscriptions:
-  userLoaded_sub: Subscription;
   errorLoaded_sub: Subscription;
 
   constructor(
@@ -30,21 +28,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     private _router: Router
   ) {}
 
-  logInForm = new FormGroup({
+  resetEmailForm = new FormGroup({
     email: new FormControl(environment.defaultUser, [Validators.required, Validators.email]),
-    password: new FormControl(environment.defaultPass, Validators.required),
   });
 
   ngOnInit() {
-    this.userLoading$ = this.store.select(fromStore.getUserLoading);
     this.userError$ = this.store.select(fromStore.getUserError);
-    this.userLoaded$ = this.store.select(fromStore.getUserLoaded);
-
-    this.userLoaded_sub = this.userLoaded$.subscribe(loaded => {
-      if (loaded) {
-        this.navigateToDashboard();
-      }
-    });
 
     this.errorLoaded_sub = this.userError$.subscribe(error => {
       if (error !== null && error) {
@@ -65,30 +54,31 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.errorLoaded_sub) {
       this.errorLoaded_sub.unsubscribe();
     }
-    if (this.userLoaded_sub) {
-      this.userLoaded_sub.unsubscribe();
-    }
   }
 
   get email() {
-    return this.logInForm.get('email');
-  }
-  get password() {
-    return this.logInForm.get('password');
+    return this.resetEmailForm.get('email');
   }
 
-  logIn() {
-    const lowercase = this.logInForm.get('email').value.toLowerCase();
-    this.logInForm.get('email').setValue(lowercase);
-    this.store.dispatch(new fromStore.Authenticate(this.logInForm.value));
-  }
-
-  //     <a (click)="passwordReset()">Password reset</a>
-  passwordReset(email: string) {
+  passwordReset() {
+    const email = this.resetEmailForm.get('email').value.toLowerCase();
     this.afAuth.auth.sendPasswordResetEmail(email);
+
+    ManagerFunctions.showWarning(
+      'Email sent',
+      `An email with instructions to change your password was sent to your address.`,
+      'Ok',
+      () => {
+        this.navigateToLogin();
+      }
+    );
   }
 
   navigateToDashboard() {
     this._router.navigate(['/']);
+  }
+
+  navigateToLogin() {
+    this._router.navigate(['/login']);
   }
 }
