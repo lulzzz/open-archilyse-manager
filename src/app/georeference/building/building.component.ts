@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { paddingToBuilding, styleCurrent, styleNormalFaded } from '../data';
@@ -16,7 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import * as fromStore from '../../_store';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import { BatchService, NavigationService, OverlayService } from '../../_services';
+import { BatchService, NavigationService } from '../../_services';
 import { parseParms } from '../url';
 import { HttpClient } from '@angular/common/http';
 import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
