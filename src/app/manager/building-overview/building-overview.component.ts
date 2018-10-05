@@ -161,7 +161,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Site Id',
             field: 'site_id',
             width: 285,
-            cellRenderer: CellRender.viewSiteOfBuilding,
+            cellRenderer: 'linkRenderer',
+            cellRendererParams: {
+              type: 'viewSiteOfBuilding',
+              readOnlyKey: false,
+            },
             cellEditor: 'agPopupSelectCellEditor',
             cellEditorParams: {
               values: ['', ...sites.map(site => site.site_id)],

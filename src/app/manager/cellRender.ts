@@ -16,7 +16,7 @@ export class CellRender {
         }
       }
     }
-    return 'Site #id ' + params.value;
+    return params.value;
   }
 
   public static buildingFormatter(currentProfile, params) {
@@ -40,7 +40,7 @@ export class CellRender {
         }
       }
     }
-    return 'Building #id ' + params.value;
+    return params.value;
   }
 
   public static unitFormatter(currentProfile, params) {
@@ -64,7 +64,7 @@ export class CellRender {
         }
       }
     }
-    return 'Unit #id ' + params.value;
+    return params.value;
   }
 
   /**

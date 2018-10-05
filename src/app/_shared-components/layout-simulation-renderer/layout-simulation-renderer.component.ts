@@ -177,9 +177,25 @@ export class LayoutSimulationRendererComponent {
   requestStatus() {
     ManagerFunctions.requestLayoutSimulationsStatus(this.http, this.layout, this.api);
   }
-  georeference() {
-    const src = 'swiss_topo';
 
+  georeferenceBuilding() {
+    const src = 'swiss_topo';
+    if (this.layout && this.layout.building && this.layout.building.building_id) {
+      this.router.navigate(['georeference', 'map', this.layout.building.building_id], {
+        fragment: src ? `source=${src}` : null,
+      });
+    }
+  }
+
+  georeference() {
+    let src = 'swiss_topo';
+
+    // If the building is in OSM we keep OSM
+    if (this.layout && this.layout.building) {
+      if (ManagerFunctions.isReferencedOSMBuilding(this.layout.building)) {
+        src = 'open_street_maps';
+      }
+    }
     this.router.navigate(['georeference', 'map', this.layout.layout_id], {
       fragment: src ? `source=${src}` : null,
     });

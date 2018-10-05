@@ -12,10 +12,18 @@ export class LinkRendererComponent {
   url;
   fragment;
 
+  readOnly;
+
   constructor() {}
 
   agInit(params): void {
     this.params = params;
+    this.readOnly = false;
+
+    if (params.readOnlyKey === true) {
+      this.readOnly = true;
+    }
+
     if (params.type === 'viewUnitsOfBuilding') {
       this.url = `/manager/unit`;
       this.fragment = `building_id=${params.data.building_id}`;
@@ -43,6 +51,10 @@ export class LinkRendererComponent {
     } else if (params.type === 'viewBuilding') {
       this.url = `/manager/building`;
       this.fragment = `building_id=${params.data.building_id}`;
+      this.type = 'secondaryKey';
+    } else if (params.type === 'viewSiteOfBuilding') {
+      this.url = `/manager/site`;
+      this.fragment = `site_id=${params.data.site_id}`;
       this.type = 'secondaryKey';
     } else {
       console.error('unknown type', params.type);

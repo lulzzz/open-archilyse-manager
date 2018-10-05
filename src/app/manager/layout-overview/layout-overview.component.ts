@@ -289,6 +289,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: 'linkRenderer',
             cellRendererParams: {
               type: 'viewBuilding',
+              readOnlyKey: true,
             },
             cellClass: 'readOnly',
           },
@@ -338,6 +339,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: 'linkRenderer',
             cellRendererParams: {
               type: 'viewUnit',
+              readOnlyKey: false,
             },
             cellEditor: 'agPopupSelectCellEditor',
             valueFormatter: CellRender.unitFormatter.bind(this, this.currentProfile),

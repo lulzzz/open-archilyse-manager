@@ -11,7 +11,7 @@
   <div *ngIf="params.value && params.value!==''">
     <i class="fas fa-key secondaryKey"></i> {{params.value}} <a [routerLink]="url" [fragment]="fragment" > View </a>
   </div>
-  <div *ngIf="!(params.value && params.value!=='')" class="fakedropdown">
+  <div *ngIf="(!params.value || params.value === '' ) && !readOnly" class="fakedropdown">
     <i class="fas fa-caret-down"></i>
   </div>
 </div>

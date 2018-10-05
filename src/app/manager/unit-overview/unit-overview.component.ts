@@ -72,7 +72,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
             headerName: 'Building Id',
             field: 'building_id',
             width: 275,
-            cellRenderer: this.viewBuilding,
+            cellRenderer: 'linkRenderer',
+            cellRendererParams: {
+              type: 'viewBuilding',
+              readOnlyKey: false,
+            },
             cellEditor: 'agPopupSelectCellEditor',
             valueFormatter: CellRender.buildingFormatter.bind(this, this.currentProfile),
             cellEditorParams: {
