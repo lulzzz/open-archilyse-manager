@@ -71,7 +71,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
           {
             headerName: 'Building Id',
             field: 'building_id',
-            width: 275,
+            width: 280,
             cellRenderer: 'linkRenderer',
             cellRendererParams: {
               type: 'viewBuilding',
