@@ -21,6 +21,7 @@ import { OverlayService, NavigationService } from '../../_services';
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
+import { ToastrService } from 'ngx-toastr';
 
 proj4.defs(
   'EPSG:2056',
@@ -87,7 +88,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private infoDialog: OverlayService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private toastr: ToastrService
   ) {
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
@@ -363,6 +365,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     if (element.number_of_floors) {
       nodeData['number_of_floors'] = element.number_of_floors;
     }
+
     if (element.footprints) {
       nodeData['footprints'] = element.footprints;
     }
@@ -521,6 +524,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         });
         // We move to the last page. (After adding, because can be in a new page)
         this.gridOptions.api.paginationGoToLastPage();
+        this.toastr.success('Building added successfully');
       },
       ManagerFunctions.showErroruser
     );
@@ -573,6 +577,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
           // We move to the last page. (After adding, because can be in a new page)
           this.gridOptions.api.paginationGoToLastPage();
+          this.toastr.success('Building copied successfully');
         },
         ManagerFunctions.showErroruser
       );
@@ -613,6 +618,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
 
     ManagerFunctions.reactToDelete(
+      this.toastr,
       this.http,
       this.selectedRows,
       this.gridOptions.api,

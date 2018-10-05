@@ -40,6 +40,7 @@ const apiUrl = environment.apiUrl;
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
+import { ToastrService } from 'ngx-toastr';
 
 proj4.defs(
   'EPSG:2056',
@@ -121,7 +122,8 @@ export class MapComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private _router: Router,
     private batchService: BatchService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private toastr: ToastrService
   ) {
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
@@ -542,6 +544,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
         this.http.patch(apiUrl + 'buildings/' + this.buildingId, buildingNewValue).subscribe(
           element => {
+            this.toastr.success('Building georeferenced successfully');
             this.nextBuilding();
           },
           error => {

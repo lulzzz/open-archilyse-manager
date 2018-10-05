@@ -21,6 +21,7 @@ import { parseParms } from '../url';
 import { HttpClient } from '@angular/common/http';
 import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
 import { environment } from '../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 const apiUrl = environment.apiUrl;
 
@@ -115,7 +116,8 @@ export class BuildingComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private _router: Router,
     private batchService: BatchService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private toastr: ToastrService
   ) {
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
@@ -665,6 +667,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
      */
     this.http.patch(apiUrl + 'layouts/' + this.layoutId, layoutNewValue).subscribe(
       element => {
+        this.toastr.success('Layout georeferenced successfully');
         this.nextBuilding();
       },
       error => {

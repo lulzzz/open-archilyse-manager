@@ -16,6 +16,7 @@ import {
 } from '../excel';
 import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 
 const urlPortfolio = environment.urlPortfolio;
 
@@ -232,6 +233,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
         // We move to the last page. (After adding, because can be in a new page)
         this.gridOptions.api.paginationGoToLastPage();
+        this.toastr.success('Unit added successfully');
       },
       ManagerFunctions.showErroruser
     );
@@ -242,7 +244,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private infoDialog: OverlayService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private toastr: ToastrService
   ) {
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
@@ -421,6 +424,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
           // We move to the last page. (After adding, because can be in a new page)
           this.gridOptions.api.paginationGoToLastPage();
+          this.toastr.success('Unit copied successfully');
         },
         ManagerFunctions.showErroruser
       );
@@ -447,6 +451,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     }
 
     ManagerFunctions.reactToDelete(
+      this.toastr,
       this.http,
       this.selectedRows,
       this.gridOptions.api,

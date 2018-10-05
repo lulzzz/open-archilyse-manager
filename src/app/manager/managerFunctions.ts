@@ -358,6 +358,7 @@ export class ManagerFunctions {
    */
 
   public static reactToDelete(
+    toastr,
     httpService,
     selectedRows,
     gridApi,
@@ -404,6 +405,8 @@ export class ManagerFunctions {
         gridApi.updateRowData({
           remove: selectedRows,
         });
+
+        toastr.success('Elements deleted successfully');
       }
     });
   }
