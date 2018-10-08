@@ -41,6 +41,7 @@ const apiUrl = environment.apiUrl;
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import { ToastrService } from 'ngx-toastr';
+import { ManagerFunctions } from '../../manager/managerFunctions';
 
 proj4.defs(
   'EPSG:2056',
@@ -542,18 +543,58 @@ export class MapComponent implements OnInit, OnDestroy {
           source: this.referenceSource,
         });
 
-        this.http.patch(apiUrl + 'buildings/' + this.buildingId, buildingNewValue).subscribe(
-          element => {
-            this.toastr.success('Building georeferenced successfully');
-            this.nextBuilding();
-          },
-          error => {
-            this.error = `Error saving ${getBuildingLink(this.buildingId, this.building)}`;
-            console.error(error);
-          }
-        );
+        if (
+          // The building was not set or has been changed
+          (this.buildingReferenceIdPreselected === null ||
+            this.buildingReferenceIdPreselected !== this.buildingReferenceId) &&
+          (this.building.height > 0 || this.building.number_of_floors > 0)
+        ) {
+          ManagerFunctions.showWarning(
+            'Override height and number of floors?',
+            'The building has already height and number of floors set, do you want to override this values with the selected building?',
+            'Override',
+            confirmed => {
+              if (confirmed) {
+                this.http
+                  .patch(apiUrl + 'buildings/' + this.buildingId, {
+                    height: null,
+                    number_of_floors: null,
+                  })
+                  .subscribe(
+                    element => {
+                      this.patchBuilding(buildingNewValue);
+                    },
+                    error => {
+                      this.error = `Error deleting height and number of floors ${getBuildingLink(
+                        this.buildingId,
+                        this.building
+                      )}`;
+                      console.error(error);
+                    }
+                  );
+              } else {
+                this.patchBuilding(buildingNewValue);
+              }
+            }
+          );
+        } else {
+          this.patchBuilding(buildingNewValue);
+        }
       }
     }
+  }
+
+  patchBuilding(buildingNewValue) {
+    this.http.patch(apiUrl + 'buildings/' + this.buildingId, buildingNewValue).subscribe(
+      element => {
+        this.toastr.success('Building georeferenced successfully');
+        this.nextBuilding();
+      },
+      error => {
+        this.error = `Error saving ${getBuildingLink(this.buildingId, this.building)}`;
+        console.error(error);
+      }
+    );
   }
 
   /**
