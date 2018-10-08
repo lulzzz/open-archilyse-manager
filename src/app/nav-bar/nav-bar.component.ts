@@ -37,7 +37,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.route_sub = router.events.subscribe((event: RouterEvent) => {
-      this.showOptions = event.url && (event.url.startsWith('/manager') || event.url === '/');
+      this.showOptions =
+        event.url &&
+        (event.url.startsWith('/manager') ||
+          event.url.startsWith('/georeference') ||
+          event.url.startsWith('/editor') ||
+          event.url === '/');
     });
 
     this.userService._authenticated.subscribe(auth => {
