@@ -90,7 +90,6 @@ app-navigation {
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.02rem;
-  text-transform: uppercase;
 
   .coplyright{
     position: absolute;
@@ -99,22 +98,23 @@ app-navigation {
     width: 200px;
     margin-left: -100px;
     text-align: center;
+    text-transform: uppercase;
   }
 
   .links{
     position: absolute;
     font-size: 14px;
     left: 30px;
-    bottom: 15px;
+    bottom: 21px;
 
     float: left;
 
     a{
-//      color: $blue-alt;
+      //  color: $blue-alt;
       cursor: pointer;
 
       &:hover{
-  //      color: $green-alt;
+      //  color: $green-alt;
       }
     }
 

@@ -51,15 +51,15 @@ export class BreadcrumbComponent implements OnDestroy {
         } else if (url.startsWith('/login')) {
           this.breadcrumb = [{ title: 'Log In' }];
         } else if (url.startsWith('/resetPassword')) {
-          this.breadcrumb = [{ title: 'Reset Password form' }];
+          this.breadcrumb = [{ title: 'Reset password form' }];
         } else if (url.startsWith('/manager/potentialView')) {
-          this.breadcrumb = [{ title: 'Potential View' }];
+          this.breadcrumb = [{ title: 'Potential view' }];
           this.showBack = true;
         } else if (url.startsWith('/manager/simulation/building')) {
-          this.breadcrumb = [{ title: 'Raw simulation View' }];
+          this.breadcrumb = [{ title: 'Raw Simulation view' }];
           this.showBack = true;
         } else if (url.startsWith('/manager/dpoi')) {
-          this.breadcrumb = [{ title: 'Dpoi simulation View' }];
+          this.breadcrumb = [{ title: 'Dpoi Simulation view' }];
           this.showBack = true;
         } else if (url.startsWith('/manager/viewSim')) {
           this.breadcrumb = [{ title: 'Real view simulation' }];
