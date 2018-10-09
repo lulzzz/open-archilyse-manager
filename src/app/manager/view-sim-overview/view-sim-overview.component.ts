@@ -11,6 +11,10 @@ import OlView from 'ol/View';
 import Vector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+
+const scaleLineControl = new ScaleLine();
+scaleLineControl.setUnits('metric');
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -93,6 +97,16 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
 
   generalError = null;
   loading = true;
+
+  /**
+   * Data for the legend
+   */
+
+  legendData;
+  unitStr;
+  color;
+  min;
+  max;
 
   /**
    * TABLE DOCUMENTATION
@@ -446,6 +460,9 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
       });
 
       this.map = new OlMap({
+        controls: defaultControls({
+          zoom: false,
+        }).extend([scaleLineControl]),
         target: 'map',
         layers: [this.layer, this.globalLayer, this.detailLayer],
         view: this.view,
@@ -546,11 +563,14 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
         // this.summary.min, this.summary.max
         // 0, 5
         // this.summary.min, this.summary.max
-        const valueToColor = calculateDomain(
-          colors,
-          0,
-          this.summary.max > 1.5 ? this.summary.max : 1.5
-        );
+
+        this.min = 0;
+        this.max = this.summary.max > 1.5 ? this.summary.max : 1.5;
+        this.unitStr = 'Steradians';
+        this.legendData = heatmap;
+        this.color = colors;
+
+        const valueToColor = calculateDomain(colors, this.min, this.max);
 
         const colorAverage = valueToColor(this.summary.average);
 

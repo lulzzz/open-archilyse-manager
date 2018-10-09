@@ -38,3 +38,13 @@ select{
 .selectMap{
   display: inline-block;
 }
+
+.legend{
+  position: absolute;
+  bottom: 75px;
+  left: 50px;
+  width: 500px;
+  height: 40px;
+  z-index: 2000;
+  background: white;
+}

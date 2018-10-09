@@ -1,10 +1,31 @@
 <div class="top_inner_background"></div>
+<div class="legend">
+  <app-floorplan-heatmap-legend *ngIf="legendData" [legendId]="'legeni'" [unit]="unit" [color]="color" [hexData]="legendData"
+                                [min]="min" [max]="max"></app-floorplan-heatmap-legend>
+</div>
 <div class="containter-full-width">
   <div class="topControls">
-    <div class="buttonRow">
+    <div class="buttonRow" style="position: relative">
       <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
       <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>
       <div *ngIf="!loading && !generalError" [innerHTML]="address"></div>
+
+      <div *ngIf="summary" style="position: absolute; top: 0; right: 0;">
+        <div>
+          <label >Min: </label><span class="whiteText">{{summary.min.toFixed(2)}}</span>&nbsp;&nbsp;
+          <label >Max: </label><span class="whiteText">{{summary.max.toFixed(2)}}</span>&nbsp;&nbsp;
+          <label >Avg: </label><span class="whiteText">{{summary.average.toFixed(2)}}</span>&nbsp;&nbsp;
+          <label >Median: </label><span class="whiteText">{{summary.median.toFixed(2)}}</span>&nbsp;&nbsp;
+          <label >St. dev: </label><span class="whiteText">{{summary.std.toFixed(2)}}</span>&nbsp;&nbsp;
+          <div class="sim-info" [popper]="infoSimPopper" (click)="showInfoSim()">
+            <i class="fa fa-info-circle"></i>
+          </div>
+        </div>
+        <div>
+          <label >Height: </label><span class="whiteText">{{height.toFixed(2)}} m.&nbsp;&nbsp;</span>
+          <span *ngIf="building && building.height"><label >Building height: </label><span class="whiteText">{{building.height.toFixed(2)}} m.</span></span>
+        </div>
+      </div>
     </div>
     <div class="buttonRow">
       <span *ngIf="!loading && !generalError" >
@@ -50,22 +71,6 @@
           <button [popper]="exportKmlPU" [popperPlacement]="'top-end'" class="btn blue" (click)="exportKML()">Download KML</button>
         </div>
       </span>
-    </div>
-    <div *ngIf="summary"class="buttonRow">
-      <label >Min: </label><span class="whiteText">{{summary.min.toFixed(2)}}</span>&nbsp;&nbsp;
-      <label >Max: </label><span class="whiteText">{{summary.max.toFixed(2)}}</span>&nbsp;&nbsp;
-      <label >Avg: </label><span class="whiteText">{{summary.average.toFixed(2)}}</span>&nbsp;&nbsp;
-      <label >Median: </label><span class="whiteText">{{summary.median.toFixed(2)}}</span>&nbsp;&nbsp;
-      <label >St. dev: </label><span class="whiteText">{{summary.std.toFixed(2)}}</span>&nbsp;&nbsp;
-      <div class="sim-info" [popper]="infoSimPopper" (click)="showInfoSim()">
-        <i class="fa fa-info-circle"></i>
-      </div>
-      &nbsp;&nbsp;
-      &nbsp;&nbsp;
-      &nbsp;&nbsp;
-      &nbsp;&nbsp;
-      <label >Height: </label><span class="whiteText">{{height.toFixed(2)}} m.&nbsp;&nbsp;</span>
-      <span *ngIf="building && building.height"><label >Building height: </label>{{building.height.toFixed(2)}} m.&nbsp;&nbsp;</span>
     </div>
   </div>
 </div>

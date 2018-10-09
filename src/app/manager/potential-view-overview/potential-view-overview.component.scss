@@ -48,3 +48,13 @@ select{
     color: $new_light_blue;
   }
 }
+
+.legend{
+  position: absolute;
+  bottom: 85px;
+  left: 50px;
+  width: 500px;
+  height: 40px;
+  z-index: 2000;
+  background: white;
+}

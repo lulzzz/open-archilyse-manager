@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-export const paddingToBuildings = [25, 25, 25, 25];
+export const paddingToBuildings = [25, 25, 70, 25];
 
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
@@ -11,6 +11,10 @@ import OlView from 'ol/View';
 import Vector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+
+const scaleLineControl = new ScaleLine();
+scaleLineControl.setUnits('metric');
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -96,6 +100,16 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
 
   generalError = null;
   loading = true;
+
+  /**
+   * Data for the legend
+   */
+
+  legendData;
+  unit;
+  color;
+  min;
+  max;
 
   /**
    * TABLE DOCUMENTATION
@@ -308,6 +322,9 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
                       });
 
                       this.map = new OlMap({
+                        controls: defaultControls({
+                          zoom: false,
+                        }).extend([scaleLineControl]),
                         target: 'map',
                         layers: [this.layer, this.globalLayer, this.detailLayer],
                         view: this.view,
@@ -443,14 +460,17 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         const x_off = starting_point[0]; // 947839.4323007881;
         const y_off = starting_point[1]; // 6005873.054931145;
 
+        this.min = 0;
+        this.max = this.summary.max > 1.5 ? this.summary.max : 1.5;
+        this.unit = 'Steradians';
+        this.legendData = heatmap;
+        this.color = colors;
+
         // this.summary.min, this.summary.max
         // 0, 5
         // this.summary.min, this.summary.max
-        const valueToColor = calculateDomain(
-          colors,
-          0,
-          this.summary.max > 1.5 ? this.summary.max : 1.5
-        );
+        const valueToColor = calculateDomain(colors, 0, this.max);
+
         /*
           this.summary.min,
           this.summary.max

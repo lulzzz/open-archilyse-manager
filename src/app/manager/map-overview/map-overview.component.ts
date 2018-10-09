@@ -13,6 +13,10 @@ import OlView from 'ol/View';
 import Vector from 'ol/source/Vector';
 import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+
+const scaleLineControl = new ScaleLine();
+scaleLineControl.setUnits('metric');
 
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
@@ -95,6 +99,16 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   loading = true;
 
   /**
+   * Data for the legend
+   */
+
+  legendData;
+  unit;
+  color;
+  min;
+  max;
+
+  /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
@@ -137,6 +151,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   floors = [0];
 
   enabledPV = false;
+  displayedPV = false;
 
   currentProfile;
 
@@ -341,6 +356,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 });
 
                 this.map = new OlMap({
+                  controls: defaultControls({
+                    zoom: false,
+                  }).extend([scaleLineControl]),
                   target: 'map',
                   layers: [this.layer, this.detailLayer, this.globalLayer],
                   view: this.view,
@@ -466,7 +484,14 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
       // this.summary.min, this.summary.max
       // 0, 5
       // sim.summary.min, sim.summary.max
-      const valueToColor = calculateDomain(colors, 0, 1.5);
+
+      this.min = 0;
+      this.max = 1.5;
+      this.unit = 'Steradians';
+      this.legendData = heatmap;
+      this.color = colors;
+
+      const valueToColor = calculateDomain(colors, this.min, this.max);
 
       const colorAverage = valueToColor(sim.summary.average);
 
@@ -538,9 +563,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     if (resolution < 1.5 && this.enabledPV) {
       this.detailLayer.setVisible(true);
       this.globalLayer.setVisible(false);
+      this.displayedPV = true;
     } else {
       this.detailLayer.setVisible(false);
       this.globalLayer.setVisible(true);
+      this.displayedPV = false;
     }
   }
 

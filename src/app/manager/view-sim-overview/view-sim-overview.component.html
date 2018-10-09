@@ -1,4 +1,8 @@
 <div class="top_inner_background"></div>
+<div class="legend">
+  <app-floorplan-heatmap-legend *ngIf="legendData" [legendId]="'legeni'" [unit]="unitStr" [color]="color" [hexData]="legendData"
+                                [min]="min" [max]="max"></app-floorplan-heatmap-legend>
+</div>
 <div class="containter-full-width">
   <div *ngIf="generalError" class="generalError" [innerHTML]="generalError"></div>
   <div *ngIf="loading && !generalError" class="loading" > Loading data... </div>

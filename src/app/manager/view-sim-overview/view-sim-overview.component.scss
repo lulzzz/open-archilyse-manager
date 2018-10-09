@@ -52,3 +52,13 @@ select {
 .whiteText{
   color: white;
 }
+
+.legend{
+  position: absolute;
+  bottom: 85px;
+  left: 50px;
+  width: 500px;
+  height: 40px;
+  z-index: 2000;
+  background: white;
+}

@@ -1,4 +1,8 @@
 <div class="top_inner_background"></div>
+<div *ngIf="displayedPV" class="legend">
+  <app-floorplan-heatmap-legend *ngIf="legendData" [legendId]="'legeni'" [unit]="unit" [color]="color" [hexData]="legendData"
+                                [min]="min" [max]="max"></app-floorplan-heatmap-legend>
+</div>
 <div class="containter-full-width">
   <div class="topControls">
     <div class="buttonRow">
