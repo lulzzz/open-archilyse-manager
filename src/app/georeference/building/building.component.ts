@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { paddingToBuilding, styleCurrent, styleNormalFaded } from '../data';
+import { paddingToBuilding, styleCurrent, styleNormalFaded } from '../../_shared-libraries/OlMapStyles';
 
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
@@ -17,13 +17,19 @@ import * as fromStore from '../../_store';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { BatchService, NavigationService } from '../../_services';
-import { parseParms } from '../url';
 import { HttpClient } from '@angular/common/http';
-import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
-import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { parseParms } from '../../_shared-libraries/Url';
+import {
+  getBuildingLink,
+  getLayoutLink,
+  getUnitLink,
+} from '../../_shared-libraries/PortfolioLinks';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 
-const apiUrl = environment.apiUrl;
+const scaleLineControl = new ScaleLine();
+scaleLineControl.setUnits('metric');
 
 @Component({
   selector: 'app-building',
@@ -189,7 +195,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
     // Empty map div
     document.getElementById('map').innerHTML = '';
 
-    this.http.get(apiUrl + 'layouts/' + this.layoutId).subscribe(
+    ApiFunctions.get(
+      this.http,
+      'layouts/' + this.layoutId,
       layout => {
         this.previousMovements = layout['movements'];
 
@@ -217,7 +225,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * We have the layout, now we request the units.
    */
   startDataWithLayout() {
-    this.http.get(apiUrl + 'units/' + this.unitId).subscribe(
+    ApiFunctions.get(
+      this.http,
+      'units/' + this.unitId,
       unit => {
         if (!unit) {
           this.loading = false;
@@ -249,7 +259,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * We have the layout and the units, now we request the building.
    */
   startDataWithUnit() {
-    this.http.get(apiUrl + 'buildings/' + this.buildingId).subscribe(
+    ApiFunctions.get(
+      this.http,
+      'buildings/' + this.buildingId,
       building => {
         if (!building) {
           this.error = `Building ${getBuildingLink(this.buildingId, building)} not found.`;
@@ -304,7 +316,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
       options.params['coordinates'] = this.referenceCoordinates;
     }
 
-    this.http.get(apiUrl + 'buildings/' + this.buildingId + '/surroundings', options).subscribe(
+    ApiFunctions.get(
+      this.http,
+      'buildings/' + this.buildingId + '/surroundings',
       surroundings => {
         if (typeof surroundings['source'] !== 'undefined' && surroundings['source'] !== null) {
           this.referenceSource = surroundings['source'];
@@ -356,7 +370,8 @@ export class BuildingComponent implements OnInit, OnDestroy {
           this.buildingId,
           this.building
         )} not found not found in ${this.referenceSourceHumanStr}.`;
-      }
+      },
+      options
     );
   }
 
@@ -365,64 +380,67 @@ export class BuildingComponent implements OnInit, OnDestroy {
    * We have the surroundings and now we request the georeference proposals
    */
   startDataWithFeatures() {
-    this.http
-      .get(apiUrl + 'layouts/' + this.layoutId + '/georef_proposals?source=' + this.referenceSource)
-      .subscribe(
-        proposals => {
-          const vectorSource = new Vector({
-            features: this.features.filter(feature => feature.getId() !== this.buildingReferenceId),
+    ApiFunctions.get(
+      this.http,
+      'layouts/' + this.layoutId + '/georef_proposals?source=' + this.referenceSource,
+      proposals => {
+        const vectorSource = new Vector({
+          features: this.features.filter(feature => feature.getId() !== this.buildingReferenceId),
+        });
+
+        this.currentFeature = this.features.filter(
+          feature => feature.getId() === this.buildingReferenceId
+        );
+
+        if (this.currentFeature) {
+          const vectorSourceCurrent = new Vector({
+            features: this.currentFeature,
           });
 
-          this.currentFeature = this.features.filter(
-            feature => feature.getId() === this.buildingReferenceId
-          );
+          this.vectorLayer = new OlVectorLayer({
+            source: vectorSource,
+            style: styleNormalFaded,
+          });
 
-          if (this.currentFeature) {
-            const vectorSourceCurrent = new Vector({
-              features: this.currentFeature,
-            });
+          this.vectorLayerCurrent = new OlVectorLayer({
+            source: vectorSourceCurrent,
+            style: styleCurrent,
+          });
 
-            this.vectorLayer = new OlVectorLayer({
-              source: vectorSource,
-              style: styleNormalFaded,
-            });
+          this.layer = new OlTileLayer({
+            source: this.source,
+          });
 
-            this.vectorLayerCurrent = new OlVectorLayer({
-              source: vectorSourceCurrent,
-              style: styleCurrent,
-            });
+          this.view = new OlView({
+            projection: this.geoJson.crs.properties.name,
+          });
 
-            this.layer = new OlTileLayer({
-              source: this.source,
-            });
+          this.map = new OlMap({
+            controls: defaultControls({
+              zoom: false,
+            }).extend([scaleLineControl]),
+            target: 'map',
+            layers: [this.layer, this.vectorLayer, this.vectorLayerCurrent],
+            view: this.view,
+            interactions: [],
+          });
 
-            this.view = new OlView({
-              projection: this.geoJson.crs.properties.name,
-            });
+          this.centerToPolygon();
 
-            this.map = new OlMap({
-              target: 'map',
-              layers: [this.layer, this.vectorLayer, this.vectorLayerCurrent],
-              view: this.view,
-              interactions: [],
-            });
-
-            this.centerToPolygon();
-
-            // No error so far
-            if (this.error === null) {
-              this.startMapWithNoError(proposals);
-            }
+          // No error so far
+          if (this.error === null) {
+            this.startMapWithNoError(proposals);
           }
-        },
-        error => {
-          this.loading = false;
-          this.error = `Georeference proposals for layout ${getLayoutLink(
-            this.layoutId,
-            this.layout
-          )} not found in ${this.referenceSourceHumanStr}.`;
         }
-      );
+      },
+      error => {
+        this.loading = false;
+        this.error = `Georeference proposals for layout ${getLayoutLink(
+          this.layoutId,
+          this.layout
+        )} not found in ${this.referenceSourceHumanStr}.`;
+      }
+    );
   }
 
   /**
@@ -665,7 +683,10 @@ export class BuildingComponent implements OnInit, OnDestroy {
     /**
      * PATCH
      */
-    this.http.patch(apiUrl + 'layouts/' + this.layoutId, layoutNewValue).subscribe(
+    ApiFunctions.patch(
+      this.http,
+      'layouts/' + this.layoutId,
+      layoutNewValue,
       element => {
         this.toastr.success('Layout georeferenced successfully');
         this.nextBuilding();

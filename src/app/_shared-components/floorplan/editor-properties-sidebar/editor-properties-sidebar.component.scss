@@ -7,22 +7,24 @@
   height: 100px;
   z-index: 100;
   opacity: 0.98;
-
-  .elementTitle {
-    font-weight: 400;
-    font-size: 16px;
-    height: 24px;
-  }
-
-  .subtitle {
-    display: inline-block;
-    color: #6f7479;
-  }
+  color: white;
 
   .close{
     cursor: pointer;
   }
 }
+
+.title {
+  font-weight: 400;
+  font-size: 16px;
+  height: 24px;
+}
+
+.subtitle {
+  display: inline-block;
+  color: #6f7479;
+}
+
 
 .description{
   margin-bottom: 10px;
@@ -72,7 +74,7 @@ input[type='range'] {
     display: inline-block;
     cursor: pointer;
     &:hover{
-        color: $green;
+        color: $new_table_header_blue;
     }
   }
 }

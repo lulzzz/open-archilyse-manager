@@ -1,3 +1,29 @@
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
+  <div class="topControls">
+    <div class="buttonRow">
+
+    </div>
+    <div class="buttonRow">
+
+      <button [popper]="save" class="btn blue" (click)="override()">Save Layout</button>
+      <button [popper]="saveNew" class="btn blue" (click)="saveAsNew()">Save as New</button>
+      &nbsp;&nbsp;&nbsp;
+      <div class="sim-info" [popper]="infoEditorPopper" (click)="showInfoEditor()">
+        <i class="fa fa-info-circle"></i>
+        <span>
+          How to use the editor
+        </span>
+      </div>
+
+      <div style="float: right">
+        <toggle-button [popper]="sidebar" (toggled)=showElementBar(!$event) [value]="!elementBar">
+          ELEMENTS
+        </toggle-button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="containter-full-width editorContainer">
   <floorplan-editor *ngIf="modelStructure"
                     [modelStructure]="modelStructure" ></floorplan-editor>
@@ -7,37 +33,7 @@
     Loading
   </div>
 </div>
-
-<create-layout *ngIf="newOfficeDialog" [unit]="project" [fromEditor]="true" (close)="saveAsNewClose()"></create-layout>
-
-<div class="container-lg">
-  <div class="footer">
-    <div class="left">
-      <button [popper]="save" class="btn icon-left green rounded" (click)="override()">
-        <app-icon class="icon" icon="fa-save"></app-icon>
-        Save Layout
-      </button>
-      <button [popper]="saveNew" class="btn icon-left green rounded" (click)="saveAsNew()">
-        <app-icon class="icon" icon="fa-plus"></app-icon>
-        Save as New
-      </button>
-
-      <div class="sim-info" [popper]="infoEditorPopper" (click)="showInfoEditor()">
-        <i class="fa fa-info-circle"></i>
-        <span>
-          How to use the editor
-        </span>
-      </div>
-
-
-    </div>
-    <div class="right">
-      <toggle-button [popper]="sidebar" (toggled)=showElementBar(!$event) [value]="!elementBar">
-        ELEMENTS
-      </toggle-button>
-    </div>
-  </div>
-</div>
+<create-layout *ngIf="newOfficeDialog" [layout]="layout" (close)="saveAsNewClose()"></create-layout>
 
 <!-- Tooltips -->
 <popper-content #sidebar>Show/Hide element sidebar selector</popper-content>

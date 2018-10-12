@@ -6,7 +6,7 @@ import {
   drawGeometriesFilter,
   geometriesToBounds,
   svgColorsMini,
-} from '../floorplan-heatmap/simData';
+} from '../../_shared-libraries/SimData';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';

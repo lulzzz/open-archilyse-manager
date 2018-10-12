@@ -7,7 +7,7 @@
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && !modelStruct" >Requires 3d Model. <a (click)="infoLayoutModelStrucutre()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && !georeferenced" ><a (click)="georeference()">Requires Layout Georef.</a> <a (click)="infoLayoutGeoref()"><i class="fa fa-info-circle"></i></a></span>
     <span *ngIf="unitSet && buildingSet && buildingAddressSet && buildingGeorefSet && modelStruct && georeferenced && complete">
-      <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw </a>
+      <a *ngIf="currentProfile === 'developer'" [routerLink]="urlRaw" > <i class="far fa-eye"></i> raw </a> &nbsp;
       <a *ngIf="urlView" [routerLink]="urlView" > <i class="far fa-eye"></i> render </a>
       <a *ngIf="outdated" (click)="infoOutdated()" > &nbsp; (Outdated <i class="far fa-info-circle"></i>)</a>
     </span>

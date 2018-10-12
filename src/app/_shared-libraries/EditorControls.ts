@@ -1,25 +1,12 @@
 import {
-  OrbitControls,
-  OrthographicCamera,
-  WebGLRenderer,
-  MOUSE,
-  Scene,
-  Color,
   Mesh,
   Group,
   Box3,
-  Raycaster,
-  Vector2,
-  Vector3,
   MeshBasicMaterial,
-  MeshPhongMaterial,
-  CylinderGeometry,
-  SVGLoader,
-  SVGObject,
   TextureLoader,
   BoxGeometry,
-  DoubleSide,
 } from 'three-full/builds/Three.es.js';
+
 import { EditorConstants } from './EditorConstants';
 
 let controlsToIntersect = [];
@@ -75,6 +62,12 @@ let showScale;
 let controlMode;
 
 export class EditorControls {
+  /**
+   * Control modes
+   */
+  public static GEOPOSITION = 10; // Doesn't have resize
+  public static FLOORPLAN = 20;
+
   public static init(
     group,
     onRender,
@@ -108,10 +101,10 @@ export class EditorControls {
 
     controlMode = mode;
 
-    if (controlMode === 'GEOPOSITION') {
+    if (controlMode === EditorControls.GEOPOSITION) {
       scale = 1;
       showScale = false;
-    } else if (controlMode === 'FLOORPLAN') {
+    } else if (controlMode === EditorControls.FLOORPLAN) {
       scale = 0.035;
     }
 
@@ -127,6 +120,9 @@ export class EditorControls {
     rotateCoordY = 0;
   }
 
+  /**
+   * Mouse controls
+   */
   public static onMouseMove(event, raycaster) {
     // calculate objects intersecting the picking ray
     this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
@@ -171,6 +167,10 @@ export class EditorControls {
     elementOriginalAngle = null;
     elementOriginalScale = null;
   }
+
+  /**
+   * We calculate the top left corner from the scene in pixels
+   */
   public static topLeft() {
     const rect = sceneContainer.getBoundingClientRect();
     const rectBody = document.body.getBoundingClientRect();
@@ -180,6 +180,9 @@ export class EditorControls {
     };
   }
 
+  /**
+   * Angle changes only 0.025 radians each time
+   */
   public static magnetizeAngle(original) {
     const magnetStep = 0.025;
     return Math.floor(original / magnetStep) * magnetStep;
@@ -200,13 +203,13 @@ export class EditorControls {
       const incX = event.clientX - tl.left - draggingRefX;
       let incY = event.clientY - tl.top - draggingRefY;
 
-      if (controlMode === 'GEOPOSITION') {
-      } else if (controlMode === 'FLOORPLAN') {
+      if (controlMode === EditorControls.GEOPOSITION) {
+      } else if (controlMode === EditorControls.FLOORPLAN) {
         incY = -incY;
       }
 
-      const newPositionX = elementOriginalX + incX * scale;
-      const newPositionY = elementOriginalY + incY * scale;
+      let newPositionX = elementOriginalX + incX * scale;
+      let newPositionY = elementOriginalY + incY * scale;
 
       if (draggingType === EditorConstants.MOVE) {
         controlsGroup.position.x = controlsGroupX + incX * scale;
@@ -224,9 +227,9 @@ export class EditorControls {
 
         if (draggingType === EditorConstants.SIZE) {
           let dist = 150;
-          if (controlMode === 'GEOPOSITION') {
+          if (controlMode === EditorControls.GEOPOSITION) {
             dist = Math.sqrt(deltaY * deltaY + deltaX * deltaX);
-          } else if (controlMode === 'FLOORPLAN') {
+          } else if (controlMode === EditorControls.FLOORPLAN) {
             const inc2X = event.clientX - tl.left - controlsGroupRealX;
             const inc2Y = event.clientY - tl.top - controlsGroupRealY;
 
@@ -239,9 +242,13 @@ export class EditorControls {
           const inc2X = event.clientX - tl.left - controlsGroupRealX;
           const inc2Y = event.clientY - tl.top - controlsGroupRealY;
 
-          if (controlMode === 'GEOPOSITION') {
+          if (controlMode === EditorControls.GEOPOSITION) {
             newAngle = this.magnetizeAngle(Math.atan2(inc2Y, inc2X) + Math.PI);
-          } else if (controlMode === 'FLOORPLAN') {
+
+            // The position doesn't chenge.
+            newPositionX = elementOriginalX;
+            newPositionY = elementOriginalY;
+          } else if (controlMode === EditorControls.FLOORPLAN) {
             newAngle = -this.magnetizeAngle(Math.atan2(inc2Y, inc2X) + Math.PI);
           }
 
@@ -349,10 +356,10 @@ export class EditorControls {
 
     draggingElement = element;
 
-    if (controlMode === 'GEOPOSITION') {
+    if (controlMode === EditorControls.GEOPOSITION) {
       controlsGroup.position.x = element.position.x;
       controlsGroup.position.y = element.position.y;
-    } else if (controlMode === 'FLOORPLAN') {
+    } else if (controlMode === EditorControls.FLOORPLAN) {
       controlsGroup.position.x = centerX;
       controlsGroup.position.y = centerY;
     }
@@ -411,7 +418,7 @@ export class EditorControls {
   }
 
   public static addRotateMoveControls(coorZ) {
-    const move0 = this.addControl(
+    this.addControl(
       0,
       0,
       coorZ,
@@ -421,7 +428,7 @@ export class EditorControls {
       '/assets/images/editor/move-2.png',
       '/assets/images/editor/move-3.png',
       () => {
-        const rotate0 = this.addControl(
+        this.addControl(
           rotateCoordX,
           rotateCoordY,
           coorZ,
@@ -441,7 +448,7 @@ export class EditorControls {
     uuidToControl = {};
 
     if (showScale) {
-      const expand0 = this.addControl(
+      this.addControl(
         expandCoordX,
         expandCoordY,
         coorZ,
@@ -455,18 +462,6 @@ export class EditorControls {
     } else {
       this.addRotateMoveControls(coorZ);
     }
-
-    /*
-    const controlsGroupBounds = new Box3().setFromObject(this.controlsGroup);
-    let centerX = controlsGroupBounds.min.x;
-    let centerY = controlsGroupBounds.min.y;
-
-    console.log('center:', centerX, centerY, controlsGroupBounds);
-    this.controlsGroup.translateX(-centerX);
-    this.controlsGroup.translateY(-centerY);
-    this.controlsGroup.position.z = -10;
-    this.render();
-    */
   }
 
   public static clearGroup(group) {

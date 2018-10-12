@@ -8,6 +8,7 @@ export interface Layout {
   description?: string;
   images?: string;
   movements?: Movement[];
+  floors?: Floor[];
 
   model_structure?: ModelStructure;
 
@@ -22,4 +23,9 @@ export interface ModelStructure {
   type: string;
   is_office: boolean;
   children: Object[];
+}
+
+export interface Floor {
+  floor_nr: number;
+  source: string;
 }

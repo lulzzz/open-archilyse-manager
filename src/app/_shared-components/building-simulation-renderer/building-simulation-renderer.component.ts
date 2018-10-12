@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../../manager/managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { OverlayService, NavigationService } from '../../_services';
 import { Router } from '@angular/router';
 
@@ -151,11 +151,6 @@ export class BuildingSimulationRendererComponent {
     this.router.navigate(['georeference', 'map', this.building.building_id], {
       fragment: src ? `source=${src}` : null,
     });
-    /**
-    ManagerFunctions.openLink(
-      urlGeoreference + '/map/' + this.building.building_id + (src ? `#source=${src}` : '')
-    );
-     */
   }
 
   infoOutdated() {

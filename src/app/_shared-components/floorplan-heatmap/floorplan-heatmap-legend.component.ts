@@ -8,7 +8,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { getHexColorsAndLegend } from './simData';
+import { getHexColorsAndLegend } from '../../_shared-libraries/SimData';
 
 import * as d3 from 'd3';
 import { DiagramService } from '../../_services';

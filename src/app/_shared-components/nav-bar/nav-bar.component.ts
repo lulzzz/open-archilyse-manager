@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
-import * as fromStore from '../_store';
+import * as fromStore from '../../_store/index';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
-import { UserService, NavigationService } from '../_services';
-import { environment } from '../../environments/environment';
+import { UserService, NavigationService } from '../../_services/index';
+import { environment } from '../../../environments/environment';
 const urlConsole = environment.urlConsole;
 
 @Component({

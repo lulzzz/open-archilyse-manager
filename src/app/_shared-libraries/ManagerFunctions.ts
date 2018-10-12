@@ -1,7 +1,7 @@
 import swal from 'sweetalert2';
-import { parseParms } from './url';
+import { parseParms } from './Url';
 import { Building, Layout, Site, Unit } from '../_models';
-import { ApiFunctions } from './apiFunctions';
+import { ApiFunctions } from './ApiFunctions';
 
 function _capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -13,7 +13,9 @@ export class ManagerFunctions {
     if (found) {
       if (found.name) {
         return found.name;
-      } else if (found.address && found.address.street && found.address.street_nr) {
+      }
+
+      if (found.address && found.address.street && found.address.street_nr) {
         return `${found.address.street} ${found.address.street_nr}`;
       }
     }
@@ -37,11 +39,15 @@ export class ManagerFunctions {
         return `<label>Filtering by country: </label> <span class="whiteText" >${_capitalizeFirstLetter(
           data['address.country'].filter
         )}</span>`;
-      } else if (data['country'] && data['country'].type && data['country'].type === 'equals') {
+      }
+
+      if (data['country'] && data['country'].type && data['country'].type === 'equals') {
         return `<label>Filtering by country: </label> <span class="whiteText" >${_capitalizeFirstLetter(
           data['country'].filter
         )}</span>`;
-      } else if (
+      }
+
+      if (
         data['address.city'] &&
         data['address.city'].type &&
         data['address.city'].type === 'equals'
@@ -49,29 +55,39 @@ export class ManagerFunctions {
         return `<label>Filtering by city: </label> <span class="whiteText" >${_capitalizeFirstLetter(
           data['address.city'].filter
         )}</span>`;
-      } else if (data['city'] && data['city'].type && data['city'].type === 'equals') {
+      }
+
+      if (data['city'] && data['city'].type && data['city'].type === 'equals') {
         return `<label>Filtering by city: </label> <span class="whiteText" >${_capitalizeFirstLetter(
           data['city'].filter
         )}</span>`;
-      } else if (data.site_id && data.site_id.type && data.site_id.type === 'equals') {
+      }
+
+      if (data.site_id && data.site_id.type && data.site_id.type === 'equals') {
         return `<label>Filtering site:</label> <span class="whiteText" >${ManagerFunctions.getName(
           sitesArray,
           data.site_id.filter,
           'site_id'
         )}</span>`;
-      } else if (data.building_id && data.building_id.type && data.building_id.type === 'equals') {
+      }
+
+      if (data.building_id && data.building_id.type && data.building_id.type === 'equals') {
         return `<label>Filtering building:</label> <span class="whiteText" >${ManagerFunctions.getName(
           buildingsArray,
           data.building_id.filter,
           'building_id'
         )}</span>`;
-      } else if (data.unit_id && data.unit_id.type && data.unit_id.type === 'equals') {
+      }
+
+      if (data.unit_id && data.unit_id.type && data.unit_id.type === 'equals') {
         return `<label>Filtering unit:</label> <span class="whiteText" >${ManagerFunctions.getName(
           unitsArray,
           data.unit_id.filter,
           'unit_id'
         )}</span>`;
-      } else if (data.layout_id && data.layout_id.type && data.layout_id.type === 'equals') {
+      }
+
+      if (data.layout_id && data.layout_id.type && data.layout_id.type === 'equals') {
         return `<label>Filtering layout:</label> <span class="whiteText" >${ManagerFunctions.getName(
           layoutsArray,
           data.layout_id.filter,
@@ -497,6 +513,8 @@ export class ManagerFunctions {
     if (column === 'height') {
       columnValue = parseFloat(columnValue);
     } else if (column === 'number_of_floors') {
+      columnValue = parseInt(columnValue, 10);
+    } else if (column === 'address.floor_nr') {
       columnValue = parseInt(columnValue, 10);
     }
 

@@ -3,9 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BatchService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
-import { parseParms } from '../url';
 
 import { environment } from '../../../environments/environment';
+import {parseParms} from '../../_shared-libraries/Url';
 const urlPortfolio = environment.urlPortfolio;
 
 @Component({

@@ -2,6 +2,7 @@ export const environment = {
   production: true,
 
   apiUrl: 'https://api.archilyse.com/v0.1/',
+  apiPath: 'http://graphhopper.fission.prod.archilyse.com/route',
 
   /** Development */
   urlConsole: 'https://console.archilyse.com',

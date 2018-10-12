@@ -131,9 +131,9 @@ export function renderRequestDescription(params) {
       if (url.startsWith(apiUrl + 'buildings')) {
         if (url.endsWith('simulations')) {
           return 'Requests simulations for the specified building by the building_id ';
-        } else {
-          return 'Requests the specified building by the building_id ';
         }
+
+        return 'Requests the specified building by the building_id ';
       }
       if (url.startsWith(apiUrl + 'units')) {
         return 'Requests the specified unit by the unit_id ';
@@ -141,9 +141,9 @@ export function renderRequestDescription(params) {
       if (url.startsWith(apiUrl + 'layouts')) {
         if (url.endsWith('simulations')) {
           return 'Requests simulations for the specified layout by the layout_id ';
-        } else {
-          return 'Requests the specified layout by the layout_id ';
         }
+
+        return 'Requests the specified layout by the layout_id ';
       }
 
       return 'Description not yet available';

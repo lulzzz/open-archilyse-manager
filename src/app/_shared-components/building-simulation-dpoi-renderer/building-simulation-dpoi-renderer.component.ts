@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../../manager/managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { OverlayService, NavigationService } from '../../_services';
 
 @Component({
@@ -30,6 +30,7 @@ export class BuildingSimulationRendererDpoiComponent {
 
   urlRaw: any;
   urlDpoi: any;
+  urlDpoiMap: any;
 
   currentProfile;
 
@@ -77,6 +78,7 @@ export class BuildingSimulationRendererDpoiComponent {
 
     this.urlRaw = `/manager/simulation/building/${params.data.building_id}`;
     this.urlDpoi = `/manager/dpoi/${params.data.building_id}`;
+    this.urlDpoiMap = `/manager/dpoiView/${params.data.building_id}`;
 
     // const letterColor = '#bce6fa';
     const letterColor = '#3d383e';

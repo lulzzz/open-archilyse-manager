@@ -15,6 +15,7 @@ import { MapOverviewComponent } from './map-overview/map-overview.component';
 import { PotentialViewOverviewComponent } from './potential-view-overview/potential-view-overview.component';
 import { LogOverviewComponent } from './log-overview/log-overview.component';
 import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.component';
+import { DpoiViewerOverviewComponent } from './dpoi-viewer-overview/dpoi-viewer-overview.component';
 
 const routes: Routes = [
   {
@@ -79,6 +80,11 @@ const routes: Routes = [
       {
         path: 'dpoi/:buildingId',
         component: DpoiOverviewComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'dpoiView/:buildingId',
+        component: DpoiViewerOverviewComponent,
         canActivate: [AuthGuard],
       },
       {

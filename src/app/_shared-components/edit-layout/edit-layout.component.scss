@@ -4,4 +4,12 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  color: white;
+  z-index: 2000;
+}
+
+.title {
+  font-weight: 400;
+  font-size: 16px;
+  height: 24px;
 }

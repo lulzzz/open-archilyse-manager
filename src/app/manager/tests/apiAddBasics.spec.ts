@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ApiFunctions } from '../apiFunctions';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Testers } from './testers';
 import { TokenInterceptor } from '../../_services/token.interceptor';

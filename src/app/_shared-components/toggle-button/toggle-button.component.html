@@ -1,5 +1,5 @@
 <!-- <input type="checkbox" [attr.id]="id" (change)="onChange($event)" [checked]="value"> -->
 
-<button (click)="onToggle()" class="btn rounded" [ngClass]="{'green': value}">
+<button (click)="onToggle()" class="btn" [ngClass]="{'blue': value, 'lightblue': !value}">
   <ng-content></ng-content>
 </button>

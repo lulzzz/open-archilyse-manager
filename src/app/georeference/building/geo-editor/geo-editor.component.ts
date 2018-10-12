@@ -9,7 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { svgBoundingBox } from '../../../_shared-components/floorplan-heatmap/simData';
+import { svgBoundingBox } from '../../../_shared-libraries/SimData';
 
 import {
   OrthographicCamera,
@@ -20,13 +20,9 @@ import {
   Raycaster,
   Vector2,
 } from 'three-full/builds/Three.es.js';
-import {
-  drawPolygons,
-  drawGeometries,
-} from '../../../_shared-components/floorplan-heatmap/geometries';
-import { AREA, WALL, WINDOW } from '../../../_shared-components/floorplan-heatmap/constants';
-import { EditorControls } from '../../../_shared-components/floorplan-heatmap/EditorControls';
-import { EditorConstants } from '../../../_shared-components/floorplan-heatmap/EditorConstants';
+import { drawPolygons, drawGeometries } from '../../../_shared-libraries/Geometries';
+import { EditorControls } from '../../../_shared-libraries/EditorControls';
+import { EditorConstants } from '../../../_shared-libraries/EditorConstants';
 
 const LAYER_CONTROLS = 0.1;
 
@@ -204,7 +200,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
       this.updateObjectProperties.bind(this),
       this.camera,
       this.container,
-      'GEOPOSITION',
+      EditorControls.GEOPOSITION,
       null,
       null
     );
@@ -410,7 +406,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
     ) {
       drawPolygons(
         this.floorplan,
-        WALL,
+        EditorConstants.WALL,
         structure.footprint.coordinates,
         black,
         zIndex,
@@ -434,7 +430,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
     ) {
       drawPolygons(
         this.floorplan,
-        AREA,
+        EditorConstants.AREA,
         structure.footprint.coordinates,
         grey,
         zIndex,
@@ -448,7 +444,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
       if (structure.footprint && structure.footprint.coordinates) {
         drawPolygons(
           this.floorplan,
-          AREA,
+          EditorConstants.AREA,
           structure.footprint.coordinates,
           grey,
           zIndex,
@@ -473,7 +469,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
       drawGeometries(this.floorplan, structure.footprint.coordinates, 0x333333, 1, -1);
       drawPolygons(
         this.floorplan,
-        WINDOW,
+        structure.type,
         structure.footprint.coordinates,
         white, // grey,
         -0.09,
@@ -570,7 +566,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
    * White background with black walls.
    */
   addBuilding() {
-    const objectClass = WALL;
+    const objectClass = EditorConstants.WALL;
     const materialColor = 0xffffff;
     const lineColor = 0x000000;
     const zIndex = 0.01;

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 
 export const paddingToBuildings = [25, 25, 25, 25];
 
@@ -30,21 +30,22 @@ import {
 
 import Select from 'ol/interaction/Select';
 
-import { parseParms } from '../url';
+import { parseParms } from '../../_shared-libraries/Url';
 import { ActivatedRoute, Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
-
-const apiUrl = environment.apiUrl;
-const urlPortfolio = environment.urlPortfolio;
 
 /**
  * Add the Swiss topo projection
  */
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
-import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
+import {
+  calculateDomain,
+  drawHexBlocks,
+  reduceHeatmap,
+} from '../../_shared-libraries/HexagonFunctions';
 import { colors } from '../potential-view-overview/potential-view-overview.component';
 import { NavigationService, OverlayService } from '../../_services';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 
 proj4.defs(
   'EPSG:2056',
@@ -287,13 +288,10 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
         // footprints
         if (feature) {
-          this.http
-            .get(apiUrl + 'buildings/' + building.building_id + '/simulations', {
-              params: {
-                simulation_packages: ['potential_view'],
-              },
-            })
-            .subscribe(simulations => {
+          ApiFunctions.get(
+            this.http,
+            'buildings/' + building.building_id + '/simulations',
+            simulations => {
               if (
                 simulations &&
                 simulations['potential_view'] &&
@@ -417,7 +415,16 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
               this.drawSimulations(building, simulations, feature);
               this.centerMap();
-            });
+            },
+            error => {
+              console.error('Building with no sims', error, building);
+            },
+            {
+              params: {
+                simulation_packages: ['potential_view'],
+              },
+            }
+          );
         } else {
           console.log('Building not footprint', building);
         }
@@ -486,12 +493,14 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
       // sim.summary.min, sim.summary.max
 
       this.min = 0;
-      this.max = 1.5;
-      this.unit = 'Steradians';
+
+      const max = 1.5;
+      this.max = max * 100 / (Math.PI * 4);
+      this.unit = '%';
       this.legendData = heatmap;
       this.color = colors;
 
-      const valueToColor = calculateDomain(colors, this.min, this.max);
+      const valueToColor = calculateDomain(colors, this.min, max);
 
       const colorAverage = valueToColor(sim.summary.average);
 

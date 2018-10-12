@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ApiFunctions } from '../apiFunctions';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 function httpError(done, error) {

@@ -2,11 +2,11 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../_store';
+import * as fromStore from '../../_store/index';
 import { Subscription } from 'rxjs/Subscription';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { ManagerFunctions } from '../manager/managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 
 @Component({
   selector: 'app-password-reset',

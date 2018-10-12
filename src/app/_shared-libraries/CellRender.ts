@@ -1,4 +1,4 @@
-import { ManagerFunctions } from './managerFunctions';
+import { ManagerFunctions } from './ManagerFunctions';
 
 /**
  * ag-grid Class with methods to render different values.
@@ -11,9 +11,8 @@ export class CellRender {
       if (site && site.name && site.name !== '') {
         if (isDev) {
           return site.name + ' - ' + params.value;
-        } else {
-          return site.name + ' - ' + site.description;
         }
+        return site.name + ' - ' + site.description;
       }
     }
     return params.value;
@@ -29,15 +28,15 @@ export class CellRender {
       if (building && building.name && building.name !== '') {
         if (isDev) {
           return building.name + ' - ' + params.value;
-        } else {
-          if (ManagerFunctions.isAddressCorrect(building)) {
-            return (
-              building.name + ' - ' + building.address.street + ', ' + building.address.street_nr
-            );
-          } else {
-            return building.name + ' - ' + building.description;
-          }
         }
+
+        if (ManagerFunctions.isAddressCorrect(building)) {
+          return (
+            building.name + ' - ' + building.address.street + ', ' + building.address.street_nr
+          );
+        }
+
+        return building.name + ' - ' + building.description;
       }
     }
     return params.value;
@@ -51,17 +50,17 @@ export class CellRender {
       if (unit && unit.name && unit.name !== '') {
         if (isDev) {
           return unit.name + ' - ' + params.value;
-        } else {
-          if (unit.address.floor_nr && unit.address.additional) {
-            return unit.name + ' - Nr' + unit.address.floor_nr + ', ' + unit.address.additional;
-          } else if (unit.address.floor_nr) {
-            return unit.name + ' - Nr' + unit.address.floor_nr;
-          } else if (unit.address.additional) {
-            return unit.name + ' - ' + unit.address.additional;
-          } else {
-            return unit.name + ' - ' + unit.description;
-          }
         }
+        if (unit.address.floor_nr && unit.address.additional) {
+          return unit.name + ' - Nr' + unit.address.floor_nr + ', ' + unit.address.additional;
+        }
+        if (unit.address.floor_nr) {
+          return unit.name + ' - Nr' + unit.address.floor_nr;
+        }
+        if (unit.address.additional) {
+          return unit.name + ' - ' + unit.address.additional;
+        }
+        return unit.name + ' - ' + unit.description;
       }
     }
     return params.value;
@@ -510,7 +509,7 @@ export class CellRender {
   }
 
   public static cellPdfDownloadLink(params) {
-    //if (params && params.value && params.value !== '') {
+    // if (params && params.value && params.value !== '') {
     return (
       `<a href='/manager/assets/pdf/example.pdf' download=` +
       params.value +
@@ -530,8 +529,7 @@ export class CellRender {
     }
 
     if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `Digitised`;
-      // return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
+      return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
     }
 
     return `Not digitised`;

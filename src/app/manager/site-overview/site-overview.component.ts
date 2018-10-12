@@ -2,18 +2,18 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { Site } from '../../_models';
-import { ApiFunctions } from '../apiFunctions';
-import { ColumnDefinitions } from '../columnDefinitions';
-import { CellRender } from '../cellRender';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
+import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
+import { CellRender } from '../../_shared-libraries/CellRender';
 import {
   convertFileToWorkbook,
   exportOptions,
   exportSelectedOptions,
   getRows,
   showInfoExcel,
-} from '../excel';
+} from '../../_shared-libraries/ExcelManagement';
 import { OverlayService, NavigationService } from '../../_services';
 import { ToastrService } from 'ngx-toastr';
 

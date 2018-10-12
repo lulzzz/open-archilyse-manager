@@ -1,0 +1,40 @@
+<div class="top_inner_background"></div>
+<div class="containter-full-width">
+  <div class="topControls">
+    <div class="buttonRow">
+      <button [popper]="centerMapPU" class="btn blue" (click)="centerMap()">Center View</button>
+      <div class="separator"></div>
+      <button class="btn lightblue" (click)="seeRawData()" > See Raw data </button>
+      &nbsp;&nbsp;&nbsp;
+      <button class="btn lightblue" (click)="seeTableView()" > See Table view </button>
+    </div>
+    <div class="buttonRow">
+      <div *ngIf="currentProfile === 'developer'" [popper]="selectMap" class="selectMap">
+        <label >Map mode: </label>
+        <select (change)="changeMap($event)" [value]="mapStyle">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="outdoors">Outdoors</option>
+          <option value="streets">Streets</option>
+          <option value="satellite">Satellite</option>
+        </select>
+        &nbsp;&nbsp;
+      </div>
+      <div [popper]="selectVehicle" class="selectVehicle">
+        <label >Vehicle: </label>
+        <select (change)="changeVehicle($event)" [value]="mapVehicle">
+          <option value="foot">Foot</option>
+          <option value="bike">Bike</option>
+          <option value="car">Car</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="containter-full-width full-height">
+  <div id="map" class="map"></div>
+</div>
+
+<popper-content #selectMap >Change the map displayed.</popper-content>
+<popper-content #selectVehicle >Change the vehicle for the routes.</popper-content>
+<popper-content #centerMapPU >Center the map to view all the buildings.</popper-content>

@@ -4,9 +4,17 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+  color: white;
+  z-index: 2000;
 }
 
 .file-input {
   height: 0.1px;
   visibility: hidden;
+}
+
+.title {
+  font-weight: 400;
+  font-size: 16px;
+  height: 24px;
 }

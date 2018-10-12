@@ -8,24 +8,12 @@ import {
   OnDestroy,
   OnChanges,
 } from '@angular/core';
-import {
-  AREA,
-  groupToHuman,
-  KITCHEN,
-  OFFICE_MISC,
-  SEAT,
-  DESK,
-  SINK,
-  STAIRS,
-  TOILET,
-  DOOR,
-  WALL,
-  WINDOW,
-} from '../constants';
-import { COOR_X, COOR_Y } from '../simData';
+
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { EditorService } from '../../../_services';
 import { Subscription } from 'rxjs/Subscription';
+import { EditorConstants, groupToHuman } from '../../../_shared-libraries/EditorConstants';
+import { COOR_X, COOR_Y } from '../../../_shared-libraries/SimData';
 
 @Component({
   selector: 'app-editor-properties-sidebar',
@@ -67,7 +55,9 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
     this.controls = null;
     this.title = groupToHuman(this.sidebarPropertiesData.group, false, true) + ' properties.';
 
-    if (this.sidebarPropertiesData.group === AREA) {
+    const group = this.sidebarPropertiesData.group;
+
+    if (group === EditorConstants.AREA) {
       const currentArray = this.sidebarPropertiesData.data.areaData;
       const currentArrayVector = currentArray.map(coor => new Vector2(coor[COOR_X], coor[COOR_Y]));
       const calculatedM2 = Math.abs(ShapeUtils.area(currentArrayVector)).toFixed(2);
@@ -80,20 +70,21 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
 
       this.attributeGroups = [];
     } else if (
-      this.sidebarPropertiesData.group === DOOR ||
-      this.sidebarPropertiesData.group === WALL ||
-      this.sidebarPropertiesData.group === WINDOW
+      group === EditorConstants.DOOR ||
+      group === EditorConstants.WALL ||
+      group === EditorConstants.WINDOW_ENVELOPE ||
+      group === EditorConstants.WINDOW_INTERIOR
     ) {
       /** Not implemented yet */
       this.controls = [];
       this.attributeGroups = [];
       this.content = ``;
     } else if (
-      this.sidebarPropertiesData.group === TOILET ||
-      this.sidebarPropertiesData.group === KITCHEN ||
-      this.sidebarPropertiesData.group === STAIRS ||
-      this.sidebarPropertiesData.group === SINK ||
-      this.sidebarPropertiesData.group === OFFICE_MISC
+      group === EditorConstants.TOILET ||
+      group === EditorConstants.KITCHEN ||
+      group === EditorConstants.STAIRS ||
+      group === EditorConstants.SINK ||
+      group === EditorConstants.OFFICE_MISC
     ) {
       const reference = this.sidebarPropertiesData.data.object;
 
@@ -196,10 +187,7 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
       ];
 
       this.content = ``;
-    } else if (
-      this.sidebarPropertiesData.group === DESK ||
-      this.sidebarPropertiesData.group === SEAT
-    ) {
+    } else if (group === EditorConstants.DESK || group === EditorConstants.CHAIR) {
       const reference = this.sidebarPropertiesData.data.object;
 
       const x = reference.pos[0];
@@ -313,7 +301,17 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
       ];
 
       this.content = ``;
+    } else if (EditorConstants.MISC) {
+      /** Not implemented yet */
+      this.controls = [];
+      this.attributeGroups = [];
+      this.content = `Miscellaneous element`;
     } else {
+      console.error(`Unknown element`, group);
+
+      /** Not implemented yet */
+      this.controls = [];
+      this.attributeGroups = [];
       this.content = `Unknown element`;
     }
     this.footer = '';

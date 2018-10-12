@@ -20,20 +20,16 @@ import {
   styleProbable,
   styleVeryProbable,
   selectPreselected,
-} from '../data';
+} from '../../_shared-libraries/OlMapStyles';
 
 import {
   click as conditionClick,
   pointerMove as conditionPointerMove,
   never as conditionNever,
 } from 'ol/events/condition';
-import { parseParms } from '../url';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { BatchService, NavigationService, OverlayService } from '../../_services';
-import { getBuildingLink } from '../portfolioLinks';
-import { environment } from '../../../environments/environment';
-const apiUrl = environment.apiUrl;
 
 /**
  * Add the Swiss topo projection
@@ -41,7 +37,14 @@ const apiUrl = environment.apiUrl;
 import { register as RegisterProjections } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 import { ToastrService } from 'ngx-toastr';
-import { ManagerFunctions } from '../../manager/managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
+import { parseParms } from '../../_shared-libraries/Url';
+import { getBuildingLink } from '../../_shared-libraries/PortfolioLinks';
+import { defaults as defaultControls, ScaleLine } from 'ol/control';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
+
+const scaleLineControl = new ScaleLine();
+scaleLineControl.setUnits('metric');
 
 proj4.defs(
   'EPSG:2056',
@@ -192,7 +195,10 @@ export class MapComponent implements OnInit, OnDestroy {
     this.hasNextBatch = this.batchService.hasNextLine();
     this.nextBatch = this.batchService.getLines();
 
-    this.http.get(apiUrl + 'buildings/' + this.buildingId).subscribe(
+    // @ts-ignore
+    ApiFunctions.get(
+      this.http,
+      'buildings/' + this.buildingId,
       building => {
         this.building = building;
 
@@ -225,7 +231,9 @@ export class MapComponent implements OnInit, OnDestroy {
           options.params['coordinates'] = this.referenceCoordinates;
         }
 
-        this.http.get(apiUrl + 'buildings/' + this.buildingId + '/surroundings', options).subscribe(
+        ApiFunctions.get(
+          this.http,
+          'buildings/' + this.buildingId + '/surroundings',
           surroundings => {
             if (typeof surroundings['source'] !== 'undefined' && surroundings['source'] !== null) {
               this.referenceSource = surroundings['source'];
@@ -280,6 +288,9 @@ export class MapComponent implements OnInit, OnDestroy {
               });
 
               this.map = new OlMap({
+                controls: defaultControls({
+                  zoom: false,
+                }).extend([scaleLineControl]),
                 target: 'map',
                 layers: [this.layer, this.vectorLayer],
                 view: this.view,
@@ -369,7 +380,8 @@ export class MapComponent implements OnInit, OnDestroy {
               this.building
             )}.`;
             console.error(error);
-          }
+          },
+          options
         );
       },
       error => {
@@ -555,23 +567,24 @@ export class MapComponent implements OnInit, OnDestroy {
             'Override',
             confirmed => {
               if (confirmed) {
-                this.http
-                  .patch(apiUrl + 'buildings/' + this.buildingId, {
+                ApiFunctions.patch(
+                  this.http,
+                  'buildings/' + this.buildingId,
+                  {
                     height: null,
                     number_of_floors: null,
-                  })
-                  .subscribe(
-                    element => {
-                      this.patchBuilding(buildingNewValue);
-                    },
-                    error => {
-                      this.error = `Error deleting height and number of floors ${getBuildingLink(
-                        this.buildingId,
-                        this.building
-                      )}`;
-                      console.error(error);
-                    }
-                  );
+                  },
+                  element => {
+                    this.patchBuilding(buildingNewValue);
+                  },
+                  error => {
+                    this.error = `Error deleting height and number of floors ${getBuildingLink(
+                      this.buildingId,
+                      this.building
+                    )}`;
+                    console.error(error);
+                  }
+                );
               } else {
                 this.patchBuilding(buildingNewValue);
               }
@@ -585,7 +598,10 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   patchBuilding(buildingNewValue) {
-    this.http.patch(apiUrl + 'buildings/' + this.buildingId, buildingNewValue).subscribe(
+    ApiFunctions.patch(
+      this.http,
+      'buildings/' + this.buildingId,
+      buildingNewValue,
       element => {
         this.toastr.success('Building georeferenced successfully');
         this.nextBuilding();

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiFunctions } from '../apiFunctions';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { NavigationService } from '../../_services';
 
 @Component({

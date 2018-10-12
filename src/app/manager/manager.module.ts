@@ -32,7 +32,8 @@ import { ViewSimOverviewComponent } from './view-sim-overview/view-sim-overview.
 import { ReactiveFormsModule } from '@angular/forms';
 import { LinkRendererComponent } from '../_shared-components/link-renderer/link-renderer.component';
 import { GeoreferenceRendererComponent } from '../_shared-components/georeference-renderer/georeference-renderer.component';
-import {FloorplanHeatmapLegendComponent} from '../_shared-components/floorplan-heatmap/floorplan-heatmap-legend.component';
+import { FloorplanHeatmapLegendComponent } from '../_shared-components/floorplan-heatmap/floorplan-heatmap-legend.component';
+import { DpoiViewerOverviewComponent } from './dpoi-viewer-overview/dpoi-viewer-overview.component';
 
 @NgModule({
   imports: [
@@ -80,7 +81,8 @@ import {FloorplanHeatmapLegendComponent} from '../_shared-components/floorplan-h
     LogOverviewComponent,
     PotentialViewOverviewComponent,
     ViewSimOverviewComponent,
-    FloorplanHeatmapLegendComponent
+    FloorplanHeatmapLegendComponent,
+    DpoiViewerOverviewComponent,
   ],
   providers: [OverlayService],
 })

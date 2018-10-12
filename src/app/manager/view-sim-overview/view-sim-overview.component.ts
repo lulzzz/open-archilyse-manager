@@ -19,25 +19,29 @@ scaleLineControl.setUnits('metric');
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
-import KML from 'ol/format/KML';
-import { get as getProjection } from 'ol/proj';
 
 import { click as conditionClick } from 'ol/events/condition';
 
 import Select from 'ol/interaction/Select';
 
-import { parseParms } from '../url';
-import { ApiFunctions } from '../apiFunctions';
+import { parseParms } from '../../_shared-libraries/Url';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NavigationService, OverlayService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
-import { environment } from '../../../environments/environment';
-import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
-import { getBuildingLink, getLayoutLink, getUnitLink } from '../portfolioLinks';
-import { sim_result_mock } from './mock';
 
-const apiUrl = environment.apiUrl;
+import {
+  calculateDomain,
+  drawHexBlocks,
+  reduceHeatmap,
+} from '../../_shared-libraries/HexagonFunctions';
+import {
+  getBuildingLink,
+  getLayoutLink,
+  getUnitLink,
+} from '../../_shared-libraries/PortfolioLinks';
+import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
 
 export const colors = [
   '#2c7bb6',
@@ -50,19 +54,6 @@ export const colors = [
   '#e76818',
   '#d7191c',
 ];
-
-const saveData = (() => {
-  const a = document.createElement('a');
-  document.body.appendChild(a);
-  return (fileName, data) => {
-    const blob = new Blob([data], { type: 'octet/stream' });
-    const url = window.URL.createObjectURL(blob);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-})();
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({
@@ -90,7 +81,7 @@ const styleOver = new OlStyle({
   templateUrl: './view-sim-overview.component.html',
   styleUrls: ['./view-sim-overview.component.scss'],
 })
-export class ViewSimOverviewComponent implements OnInit, OnDestroy {
+export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDestroy {
   /**
    * Loading and general error
    */
@@ -164,6 +155,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
+    super();
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
     });
@@ -358,67 +350,50 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
   }
 
   setUpMapWithFeature(epsg) {
-    const debug = false;
-    if (debug) {
-      console.log('sim_result_mock', sim_result_mock);
-      this.sim_result = sim_result_mock;
+    ApiFunctions.get(
+      this.http,
+      'layouts/' + this.layoutId + '/simulations',
+      simulations => {
+        console.log('simulations', simulations['view']);
 
-      this.sim_result.sort((a, b) => a.height - b.height);
+        if (simulations && simulations['view']) {
+          if (simulations['view']['status'] === 'complete') {
+            if (simulations['view']['result']) {
+              this.sim_result = simulations['view']['result'];
 
-      this.setUpMapWithSimulations(epsg);
+              this.sim_result.sort((a, b) => a.height - b.height);
 
-      this.globalSource.addFeature(this.feature);
-      this.drawSimulation(this.feature);
+              this.setUpMapWithSimulations(epsg);
 
-      this.loading = false;
-      this.centerMap();
+              this.globalSource.addFeature(this.feature);
+              this.drawSimulation(this.feature);
 
-      return false;
-    }
-
-    this.http
-      .get(apiUrl + 'layouts/' + this.layoutId + '/simulations', {
-        params: {
-          simulation_packages: ['view'],
-        },
-      })
-      .subscribe(
-        simulations => {
-          console.log('simulations', simulations['view']);
-
-          if (simulations && simulations['view']) {
-            if (simulations['view']['status'] === 'complete') {
-              if (simulations['view']['result']) {
-                this.sim_result = simulations['view']['result'];
-
-                this.sim_result.sort((a, b) => a.height - b.height);
-
-                this.setUpMapWithSimulations(epsg);
-
-                this.globalSource.addFeature(this.feature);
-                this.drawSimulation(this.feature);
-
-                this.loading = false;
-                this.centerMap();
-              } else {
-                this.loading = false;
-                this.generalError = `View is empty for the given layout`;
-              }
+              this.loading = false;
+              this.centerMap();
             } else {
               this.loading = false;
-              this.generalError = `View is not yet ready for the given layout`;
+              this.generalError = `View is empty for the given layout`;
             }
           } else {
             this.loading = false;
-            this.generalError = `View not available for the given layout`;
+            this.generalError = `View is not yet ready for the given layout`;
           }
-        },
-        error => {
+        } else {
           this.loading = false;
           this.generalError = `View not available for the given layout`;
-          console.error(error);
         }
-      );
+      },
+      error => {
+        this.loading = false;
+        this.generalError = `View not available for the given layout`;
+        console.error(error);
+      },
+      {
+        params: {
+          simulation_packages: ['view'],
+        },
+      }
+    );
   }
 
   setUpMapWithSimulations(epsg) {
@@ -565,12 +540,15 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
         // this.summary.min, this.summary.max
 
         this.min = 0;
-        this.max = this.summary.max > 1.5 ? this.summary.max : 1.5;
+
+        const max = this.summary.max > 1.5 ? this.summary.max : 1.5;
+        this.max = max * 100 / (Math.PI * 4);
+
         this.unitStr = 'Steradians';
         this.legendData = heatmap;
         this.color = colors;
 
-        const valueToColor = calculateDomain(colors, this.min, this.max);
+        const valueToColor = calculateDomain(colors, this.min, max);
 
         const colorAverage = valueToColor(this.summary.average);
 
@@ -626,124 +604,12 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Exports a kml File.
-   */
   exportKML() {
-    const introduction = `<?xml version="1.0" encoding="UTF-8"?>
-        <kml xmlns="http://www.opengis.net/kml/2.2">
-          <Document>
-            <name>Layout ${this.layout.name} Id#${this.layout.layout_id}</name>
-            <open>1</open>
-            <description> ${this.address} </description>`;
-
-    const originalSimulation = this.currentSimulation;
-    const originalFloor = this.currentFloor;
-
-    let content = '';
-    const simulationsToExport = ['buildings', 'rivers', 'trees'];
-    for (let i = 0; i < simulationsToExport.length; i += 1) {
-      this.currentSimulation = simulationsToExport[i];
-
-      // There's no need from extra folder
-      // let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
-      let contentFolder = ``;
-
-      // Only the original simulation is visible by default
-      if (this.currentSimulation !== originalSimulation) {
-        contentFolder += `<visibility>0</visibility>`;
-      }
-      for (let j = 0; j < this.floors.length; j += 1) {
-        this.currentFloor = this.floors[j];
-        this.drawSimulation(this.feature);
-        const result = this.exportSimulationKML();
-        if (j === 0) {
-          if (i === 0) {
-            content += result.camera;
-          }
-          contentFolder += result.camera;
-        }
-        contentFolder += result.data;
-      }
-
-      // contentFolder += `</Folder>`;
-
-      content += contentFolder;
-    }
-
-    const end = `
-        </Document>
-    </kml>`;
-
-    saveData('Archilyse.kml', introduction + content + end);
-
-    // Revert to the original simulation:
-    this.currentSimulation = originalSimulation;
-    this.currentFloor = originalFloor;
-    this.drawSimulation(this.feature);
-  }
-
-  exportSimulationKML() {
-    const format = new KML();
-    const features = this.detailSource.getFeatures();
-
-    const result = format.writeFeaturesNode(features, {
-      featureProjection: this.view.getProjection(),
-      dataProjection: getProjection('EPSG:4326'),
-    });
-
-    const documents = result.childNodes[0];
-    const featureLists = documents.childNodes;
-    const height = this.height;
-    const absolute_height = this.absolute_height;
-    const heightStrSpace = `,${absolute_height} `;
-    const heightStr = `,${absolute_height}`;
-
-    let center = null;
-
-    const placemarks = [];
-    featureLists.forEach(feature => {
-      const featureXML = feature.childNodes;
-      const style = featureXML[0];
-      const polygon = featureXML[1];
-
-      const XXX = polygon.childNodes[0];
-      const YYY = XXX.childNodes[0];
-      const coordinateTag = YYY.childNodes[0];
-      const coordinates = coordinateTag.childNodes[0];
-      const coords = coordinates.nodeValue.split(' ');
-      const coordinatesStr = coords.join(heightStrSpace) + heightStr;
-
-      const exagonColor = style.childNodes[0].childNodes[0].childNodes[0].data;
-
-      if (center === null) {
-        center = coords[0].split(',');
-      }
-
-      // Documentation:
-      // https://developers.google.com/kml/documentation/kmlreference#polystyle
-      placemarks.push(`
-        <Placemark>
-          <Style><LineStyle><color>${exagonColor}</color></LineStyle><PolyStyle><color>${exagonColor}</color><fill>1</fill></PolyStyle></Style>
-          <Polygon><altitudeMode>absolute</altitudeMode><outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
-        </Placemark>`);
-    });
-
-    const lookAt = `<LookAt>
-            <longitude>${center[0]}</longitude><latitude>${center[1]}</latitude>
-            <altitude>${
-              this.absolute_height
-            }</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
-          </LookAt>`;
-
-    return {
-      camera: lookAt,
-      data: `<Folder><name>${this.currentSimulation} simulation</name>
-          <description> Analyzes the ${
-            this.currentSimulation
-          } visibility </description>${lookAt}${placemarks}
-         </Folder>`,
-    };
+    this.export(
+      this.drawSimulation,
+      `Layout ${this.layout.name} Id#${this.layout.layout_id}`,
+      false
+    );
   }
 
   /**
@@ -788,11 +654,6 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     this.currentSimulation = data.target.value;
     this.drawSimulation(this.feature);
   }
-  changeFloor(data) {
-    console.log('Floor changed', data.target.value);
-    this.currentFloor = data.target.value;
-    this.drawSimulation(this.feature);
-  }
 
   /**
    * Displays information about the displayed simulation.
@@ -801,7 +662,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     if (this.currentSimulation === 'buildings') {
       this.infoDialog.open({
         data: {
-          title: 'Potential view: Buildings information.',
+          title: 'Real view: Buildings information.',
           body:
             'This simulations represents the amount of visible buildings from inside each part of the current building.',
           image: null,
@@ -810,7 +671,7 @@ export class ViewSimOverviewComponent implements OnInit, OnDestroy {
     } else if (this.currentSimulation === 'streets') {
       this.infoDialog.open({
         data: {
-          title: 'Potential view: Streets information.',
+          title: 'Real view: Streets information.',
           body:
             'This simulations represents the amount of visible streets from inside each part of the current building.',
           image: null,

@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LogService } from '../../_services';
-import { ColumnDefinitions } from '../columnDefinitions';
-import { ManagerFunctions } from '../managerFunctions';
+import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { Subscription } from 'rxjs/Subscription';
 import { renderRequestDescription, renderRequestLinkDocs } from './logLinks';
 import {

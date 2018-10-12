@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ManagerFunctions } from '../../manager/managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 
 @Component({
   selector: 'app-georeference-renderer',

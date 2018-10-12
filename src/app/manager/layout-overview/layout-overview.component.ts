@@ -2,29 +2,27 @@ import { Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { Building, Layout, Unit } from '../../_models';
-import { ApiFunctions } from '../apiFunctions';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
-import { CellRender } from '../cellRender';
-import { ColumnDefinitions } from '../columnDefinitions';
-import { EditorConstants } from '../EditorConstants';
+import { CellRender } from '../../_shared-libraries/CellRender';
+import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
+import { EditorConstants } from '../../_shared-libraries/EditorConstants';
 import {
   convertFileToWorkbook,
   exportOptions,
   exportSelectedOptions,
   getRows,
   showInfoExcel,
-} from '../excel';
+} from '../../_shared-libraries/ExcelManagement';
 import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
 
 const urlGeoreference = environment.urlGeoreference;
-
-export const COOR_X = 0;
-export const COOR_Y = 1;
 
 @Component({
   selector: 'app-floorplan-overview',
@@ -401,15 +399,13 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
-          /**
           {
             headerName: '3d model',
             field: 'model_structure',
             cellRenderer: CellRender.viewModel,
             editable: false,
             cellClass: 'readOnly',
-          },
-           */
+          }
         ],
       },
       ...analysisColumns,

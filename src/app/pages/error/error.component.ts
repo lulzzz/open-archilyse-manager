@@ -1,20 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import * as fromStore from '../../_store/index';
 import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../_store';
 
 @Component({
-  selector: 'app-upgrade-browser',
-  templateUrl: './upgrade-browser.component.html',
-  styleUrls: ['./upgrade-browser.component.scss'],
+  selector: 'app-error',
+  templateUrl: './error.component.html',
+  styleUrls: ['./error.component.scss'],
 })
-export class UpgradeBrowserComponent implements OnInit, OnDestroy {
+export class ErrorComponent implements OnInit, OnDestroy {
   isUserLoggedIn = false;
-
-  /**
-   * Subscriptions
-   */
   user_sub: Subscription;
 
   constructor(private store: Store<fromStore.AppState>, private _router: Router) {}

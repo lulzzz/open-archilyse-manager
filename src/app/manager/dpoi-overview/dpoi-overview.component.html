@@ -10,6 +10,8 @@
       <div class="separator"></div>
       <button class="btn blue" (click)="seeRawData()" > See Raw data </button>
       &nbsp;&nbsp;&nbsp;
+      <button class="btn blue" (click)="seeMapView()" > See Map view </button>
+      &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Status:</span><span class="whiteText"> {{status}}</span></span>
       &nbsp;&nbsp;&nbsp;
       <span *ngIf="!buildingIdCompare"><span class="label-dpoi">Created:</span><span class="whiteText"> {{created | date:'dd.MM.yyyy h:mma'}}</span></span>

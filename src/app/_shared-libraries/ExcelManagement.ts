@@ -1,5 +1,5 @@
 import { read } from 'xlsx';
-import { ManagerFunctions } from './managerFunctions';
+import { ManagerFunctions } from './ManagerFunctions';
 
 export const showInfoExcel = {
   data: {
@@ -28,12 +28,16 @@ export const exportOptions = {
           return params.value.map(floor => floor.floor_nr + ' ' + floor.source).join(', ');
         }
         return '';
-      } else if (params.column.colId === 'model_structure') {
+      }
+
+      if (params.column.colId === 'model_structure') {
         if (params.value) {
           return 'DIGITALIZED';
         }
         return '';
-      } else if (
+      }
+
+      if (
         params.column.colId === 'total_area' ||
         params.column.colId === 'room' ||
         params.column.colId === 'corridor' ||
@@ -47,14 +51,16 @@ export const exportOptions = {
           return params.value.map(val => val.toFixed(2)).join(', ');
         }
         return '';
-      } else if (params.column.colId === 'movements') {
+      }
+
+      if (params.column.colId === 'movements') {
         if (params.value && params.value.length > 0) {
           return params.value.map(movement => movement.source).join(', ');
         }
         return '';
-      } else {
-        console.log(params.column.colId);
       }
+
+      console.log(params.column.colId);
     }
     return params.value;
   },

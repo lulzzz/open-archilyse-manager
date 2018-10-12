@@ -1,5 +1,3 @@
-import { COOR_X, COOR_Y, COOR_Z } from './simData';
-
 import {
   Mesh,
   Shape,
@@ -10,6 +8,7 @@ import {
   Geometry,
   Vector3,
 } from 'three-full/builds/Three.es.js';
+import { COOR_X, COOR_Y, COOR_Z } from './SimData';
 
 export function drawMark(container, coordinates, lineColor, deltaZ) {
   const lineOpacity = 0.6;

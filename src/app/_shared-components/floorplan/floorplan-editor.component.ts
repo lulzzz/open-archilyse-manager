@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { boundingBox, COOR_X, COOR_Y, COOR_Z } from './simData';
 import { Easing, Tween, autoPlay } from 'es6-tween';
 import {
   OrbitControls,
@@ -23,29 +22,14 @@ const LAYER_CONTROLS = 1;
 const colorClick = 0x99ff;
 const colorOver = 0xff99;
 
-import { DiagramService, ElementEvent } from '../../_services/diagram.service';
 import { Subscription } from 'rxjs/Subscription';
-import { hideLegend } from './legend';
-import { drawGeometries, drawPolygons } from './geometries';
+import { hideLegend } from '../../_shared-libraries/Legend';
+import { drawGeometries, drawPolygons } from '../../_shared-libraries/Geometries';
 
-import {
-  AREA,
-  AREA_DIFF,
-  DESK,
-  DOOR,
-  KITCHEN,
-  OFFICE_MISC,
-  SEAT,
-  TOILET,
-  WALL,
-  WINDOW,
-  STAIRS,
-  SINK,
-  MISC,
-} from './constants';
-import { EditorControls } from './EditorControls';
-import { EditorConstants } from './EditorConstants';
-import { EditorService } from '../../_services/editor.service';
+import { DiagramService, ElementEvent, EditorService } from '../../_services';
+import { EditorConstants } from '../../_shared-libraries/EditorConstants';
+import { boundingBox, COOR_X, COOR_Y, COOR_Z } from '../../_shared-libraries/SimData';
+import { EditorControls } from '../../_shared-libraries/EditorControls';
 
 @Component({
   selector: 'floorplan-editor',
@@ -243,7 +227,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
         this.updateObjectProperties.bind(this),
         this.camera,
         this.container,
-        'FLOORPLAN',
+        EditorControls.FLOORPLAN,
         this.enableCameraControls.bind(this),
         this.disableCameraControls.bind(this)
       );
@@ -411,11 +395,11 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     return objects;
   }
 
-  drawWindows(buildingStructure, originalObject, windowSegments) {
+  drawWindows(buildingStructure, objectType, originalObject, windowSegments) {
     this.drawPolygonsAndRegister(
       buildingStructure,
       originalObject,
-      WINDOW,
+      objectType,
       windowSegments,
       0xffffff,
       LAYER_2,
@@ -450,7 +434,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     this.drawPolygonsAndRegister(
       seatPolygons,
       originalObject,
-      DESK,
+      EditorConstants.DESK,
       data,
       0xffffff,
       LAYER_1,
@@ -511,21 +495,21 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
   drawGenericsPolygon(deskPolygons, originalObject, data) {
     let objectClass;
     if (originalObject.type === EditorConstants.TOILET) {
-      objectClass = TOILET;
+      objectClass = EditorConstants.TOILET;
     } else if (originalObject.type === EditorConstants.STAIRS) {
-      objectClass = STAIRS;
+      objectClass = EditorConstants.STAIRS;
     } else if (originalObject.type === EditorConstants.SINK) {
-      objectClass = SINK;
+      objectClass = EditorConstants.SINK;
     } else if (originalObject.type === EditorConstants.KITCHEN) {
-      objectClass = KITCHEN;
+      objectClass = EditorConstants.KITCHEN;
     } else if (originalObject.type === EditorConstants.OFFICE_MISC) {
-      objectClass = OFFICE_MISC;
+      objectClass = EditorConstants.OFFICE_MISC;
     } else if (originalObject.type === EditorConstants.MISC) {
-      objectClass = MISC;
+      objectClass = EditorConstants.MISC;
     } else if (originalObject.type === EditorConstants.DESK) {
-      objectClass = DESK;
+      objectClass = EditorConstants.DESK;
     } else if (originalObject.type === EditorConstants.CHAIR) {
-      objectClass = SEAT;
+      objectClass = EditorConstants.CHAIR;
     } else {
       console.error('Unknown Object type', originalObject, originalObject.type);
     }
@@ -557,7 +541,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     this.drawPolygonsAndRegister(
       deskPolygons,
       originalObject,
-      SEAT,
+      EditorConstants.CHAIR,
       data,
       0xffffff,
       LAYER_1,
@@ -574,7 +558,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     this.drawPolygonsAndRegister(
       areaPolygons,
       originalObject,
-      AREA,
+      EditorConstants.AREA,
       data,
       fillAreaColors,
       -LAYER_1,
@@ -587,7 +571,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     this.drawPolygonsAndRegister(
       buildingStructure,
       originalObject,
-      WALL,
+      EditorConstants.WALL,
       wallSegments,
       0x0,
       LAYER_1
@@ -615,12 +599,12 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       polygonOpacity,
       (segmentMesh, objectClass, i) => {
         let object;
-        if (objectClass === SEAT) {
+        if (objectClass === EditorConstants.CHAIR) {
           object = {
             seatIndex: i,
             object: originalObject,
           };
-        } else if (objectClass === DESK) {
+        } else if (objectClass === EditorConstants.DESK) {
           const seatsGeometries = null;
           object = {
             deskData: polygonSegments[i],
@@ -628,16 +612,16 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
             object: originalObject,
           };
         } else if (
-          objectClass === TOILET ||
-          objectClass === KITCHEN ||
-          objectClass === OFFICE_MISC
+          objectClass === EditorConstants.TOILET ||
+          objectClass === EditorConstants.KITCHEN ||
+          objectClass === EditorConstants.OFFICE_MISC
         ) {
           object = {
             object: originalObject,
           };
-        } else if (objectClass === AREA_DIFF) {
+        } else if (objectClass === EditorConstants.AREA_DIFF) {
           object = { areaData: data };
-        } else if (objectClass === AREA) {
+        } else if (objectClass === EditorConstants.AREA) {
           object = {
             areaIndex: i,
             areaData: polygonSegments[i],
@@ -742,7 +726,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
         /** AreaType */
       } else if (
         structure.type === EditorConstants.BATHROOM ||
-        structure.type === EditorConstants.KITCHEN_DINING ||
+        structure.type === EditorConstants.AREA_KITCHEN_DINING ||
         structure.type === EditorConstants.SHAFT ||
         structure.type === EditorConstants.BALCONY ||
         structure.type === EditorConstants.CORRIDOR ||
@@ -782,7 +766,12 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       ) {
         // ************ structure.footprint.coordinates,
 
-        this.drawWindows(buildingStructure, structure, structure.footprint.coordinates); // Over the walls.
+        this.drawWindows(
+          buildingStructure,
+          structure.type,
+          structure,
+          structure.footprint.coordinates
+        ); // Over the walls.
         this.drawLines(buildingStructure, structure.footprint.coordinates);
 
         /** Undefined */
@@ -928,13 +917,13 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       document.body.style.cursor = 'pointer';
 
       if (
-        objectData.group === AREA ||
-        objectData.group === AREA_DIFF ||
-        objectData.group === DESK ||
-        objectData.group === SEAT ||
-        objectData.group === TOILET ||
-        objectData.group === KITCHEN ||
-        objectData.group === OFFICE_MISC
+        objectData.group === EditorConstants.AREA ||
+        objectData.group === EditorConstants.AREA_DIFF ||
+        objectData.group === EditorConstants.DESK ||
+        objectData.group === EditorConstants.CHAIR ||
+        objectData.group === EditorConstants.TOILET ||
+        objectData.group === EditorConstants.KITCHEN ||
+        objectData.group === EditorConstants.OFFICE_MISC
       ) {
         this.highlightMaterialOver(material);
         mouseOver = true;
@@ -958,16 +947,20 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       this.sidebarMaterial = material;
       */
 
-      if (objectData.group === SEAT) {
+      if (objectData.group === EditorConstants.CHAIR) {
         this.diagramService.selectSeat(objectData.data.seatIndex);
-      } else if (objectData.group === DESK) {
+      } else if (objectData.group === EditorConstants.DESK) {
         // ?? What to do
-      } else if (objectData.group === AREA) {
+      } else if (objectData.group === EditorConstants.AREA) {
         // ?? What to do
       }
 
       // We don't show anything for not meaningful elements
-      if (objectData.group === DOOR || objectData.group === WALL || objectData.group === WINDOW) {
+      if (
+        objectData.group === EditorConstants.DOOR ||
+        objectData.group === EditorConstants.WALL ||
+        objectData.group === EditorConstants.WINDOW_ENVELOPE
+      ) {
         this.closeSidebarProperties();
         this.restoreMaterial();
       } else {
@@ -977,11 +970,11 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
         // We display the
         if (
           selected &&
-          (objectData.group === SEAT ||
-            objectData.group === DESK ||
-            objectData.group === TOILET ||
-            objectData.group === KITCHEN ||
-            objectData.group === OFFICE_MISC)
+          (objectData.group === EditorConstants.CHAIR ||
+            objectData.group === EditorConstants.DESK ||
+            objectData.group === EditorConstants.TOILET ||
+            objectData.group === EditorConstants.KITCHEN ||
+            objectData.group === EditorConstants.OFFICE_MISC)
         ) {
           EditorControls.addControlsForElement(material.parent, LAYER_CONTROLS);
         } else {

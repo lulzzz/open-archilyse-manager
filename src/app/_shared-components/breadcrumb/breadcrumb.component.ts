@@ -50,6 +50,8 @@ export class BreadcrumbComponent implements OnDestroy {
           this.showPortfolio = true;
         } else if (url.startsWith('/login')) {
           this.breadcrumb = [{ title: 'Log In' }];
+        } else if (url.startsWith('/editor')) {
+          this.breadcrumb = [{ title: 'Layout editor' }];
         } else if (url.startsWith('/resetPassword')) {
           this.breadcrumb = [{ title: 'Reset password form' }];
         } else if (url.startsWith('/manager/potentialView')) {
@@ -58,8 +60,11 @@ export class BreadcrumbComponent implements OnDestroy {
         } else if (url.startsWith('/manager/simulation/building')) {
           this.breadcrumb = [{ title: 'Raw Simulation view' }];
           this.showBack = true;
+        } else if (url.startsWith('/manager/dpoiViewer')) {
+          this.breadcrumb = [{ title: 'Dpoi Simulation map view' }];
+          this.showBack = true;
         } else if (url.startsWith('/manager/dpoi')) {
-          this.breadcrumb = [{ title: 'Dpoi Simulation view' }];
+          this.breadcrumb = [{ title: 'Dpoi Simulation table view' }];
           this.showBack = true;
         } else if (url.startsWith('/manager/viewSim')) {
           this.breadcrumb = [{ title: 'Real view simulation' }];

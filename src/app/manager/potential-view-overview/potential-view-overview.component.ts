@@ -19,6 +19,7 @@ scaleLineControl.setUnits('metric');
 import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
+
 import KML from 'ol/format/KML';
 import { get as getProjection } from 'ol/proj';
 
@@ -30,29 +31,18 @@ import {
 
 import Select from 'ol/interaction/Select';
 
-import { parseParms } from '../url';
-import { ApiFunctions } from '../apiFunctions';
+import { parseParms } from '../../_shared-libraries/Url';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { NavigationService, OverlayService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
-import { environment } from '../../../environments/environment';
-import { calculateDomain, drawHexBlocks, reduceHeatmap } from '../hexagonFunctions';
-
-const apiUrl = environment.apiUrl;
-const urlPortfolio = environment.urlPortfolio;
-
-export const colors = [
-  '#2c7bb6',
-  '#00a6ca',
-  '#00ccbc',
-  '#90eb9d',
-  '#ffff8c',
-  '#f9d057',
-  '#f29e2e',
-  '#e76818',
-  '#d7191c',
-];
+import {
+  calculateDomain,
+  drawHexBlocks,
+  reduceHeatmap,
+} from '../../_shared-libraries/HexagonFunctions';
+import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
 
 const saveData = (() => {
   const a = document.createElement('a');
@@ -66,6 +56,18 @@ const saveData = (() => {
     window.URL.revokeObjectURL(url);
   };
 })();
+
+export const colors = [
+  '#2c7bb6',
+  '#00a6ca',
+  '#00ccbc',
+  '#90eb9d',
+  '#ffff8c',
+  '#f9d057',
+  '#f29e2e',
+  '#e76818',
+  '#d7191c',
+];
 
 const styleNormal = new OlStyle({
   fill: new OlStyleFill({
@@ -93,7 +95,7 @@ const styleOver = new OlStyle({
   templateUrl: './potential-view-overview.component.html',
   styleUrls: ['./potential-view-overview.component.scss'],
 })
-export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
+export class PotentialViewOverviewComponent extends KmlExport implements OnInit, OnDestroy {
   /**
    * Loading and general error
    */
@@ -162,6 +164,7 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     private infoDialog: OverlayService,
     private navigationService: NavigationService
   ) {
+    super();
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
     });
@@ -267,163 +270,164 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
       }
 
       if (this.feature) {
-        this.http
-          .get(apiUrl + 'buildings/' + this.buildingId + '/simulations', {
-            params: {
-              simulation_packages: ['potential_view'],
-            },
-          })
-          .subscribe(
-            simulations => {
-              console.log('simulations', simulations['potential_view']);
+        ApiFunctions.get(
+          this.http,
+          'buildings/' + this.buildingId + '/simulations',
+          simulations => {
+            console.log('simulations', simulations['potential_view']);
 
-              if (simulations && simulations['potential_view']) {
-                if (simulations['potential_view']['status'] === 'complete') {
-                  if (simulations['potential_view']['result']) {
-                    this.sim_result = simulations['potential_view']['result'];
+            if (simulations && simulations['potential_view']) {
+              if (simulations['potential_view']['status'] === 'complete') {
+                if (simulations['potential_view']['result']) {
+                  this.sim_result = simulations['potential_view']['result'];
 
-                    this.sim_result.sort((a, b) => a.height - b.height);
+                  this.sim_result.sort((a, b) => a.height - b.height);
 
-                    if (this.map === null) {
-                      this.mapStyle = 'streets';
+                  if (this.map === null) {
+                    this.mapStyle = 'streets';
 
-                      this.source = new OlXYZ({
-                        url:
-                          'https://api.tiles.mapbox.com/v4/mapbox.' +
-                          this.mapStyle +
-                          '/{z}/{x}/{y}.png?' +
-                          'access_token=***REMOVED***',
-                      });
+                    this.source = new OlXYZ({
+                      url:
+                        'https://api.tiles.mapbox.com/v4/mapbox.' +
+                        this.mapStyle +
+                        '/{z}/{x}/{y}.png?' +
+                        'access_token=***REMOVED***',
+                    });
 
-                      this.detailSource = new Vector({
-                        features: [],
-                      });
+                    this.detailSource = new Vector({
+                      features: [],
+                    });
 
-                      this.globalSource = new Vector({
-                        features: [],
-                      });
+                    this.globalSource = new Vector({
+                      features: [],
+                    });
 
-                      this.detailLayer = new OlVectorLayer({
-                        source: this.detailSource,
-                        style: styleNormal,
-                      });
+                    this.detailLayer = new OlVectorLayer({
+                      source: this.detailSource,
+                      style: styleNormal,
+                    });
 
-                      this.globalLayer = new OlVectorLayer({
-                        source: this.globalSource,
-                        style: styleNormal,
-                      });
+                    this.globalLayer = new OlVectorLayer({
+                      source: this.globalSource,
+                      style: styleNormal,
+                    });
 
-                      this.layer = new OlTileLayer({
-                        source: this.source,
-                      });
+                    this.layer = new OlTileLayer({
+                      source: this.source,
+                    });
 
-                      this.view = new OlView({
-                        projection: 'EPSG:' + epsg,
-                      });
+                    this.view = new OlView({
+                      projection: 'EPSG:' + epsg,
+                    });
 
-                      this.map = new OlMap({
-                        controls: defaultControls({
-                          zoom: false,
-                        }).extend([scaleLineControl]),
-                        target: 'map',
-                        layers: [this.layer, this.globalLayer, this.detailLayer],
-                        view: this.view,
-                      });
+                    this.map = new OlMap({
+                      controls: defaultControls({
+                        zoom: false,
+                      }).extend([scaleLineControl]),
+                      target: 'map',
+                      layers: [this.layer, this.globalLayer, this.detailLayer],
+                      view: this.view,
+                    });
 
-                      this.view.on('propertychange', e => {
-                        switch (e.key) {
-                          case 'resolution':
-                            this.correctVisibility(e.oldValue);
-                            break;
-                        }
-                      });
+                    this.view.on('propertychange', e => {
+                      switch (e.key) {
+                        case 'resolution':
+                          this.correctVisibility(e.oldValue);
+                          break;
+                      }
+                    });
 
-                      this.fragment_sub = this.route.fragment.subscribe(fragment => {
-                        const urlParams = parseParms(fragment);
-                        if (urlParams.hasOwnProperty('mapStyle')) {
-                          this.changeMapStyle(urlParams['mapStyle']);
-                        }
-                      });
+                    this.fragment_sub = this.route.fragment.subscribe(fragment => {
+                      const urlParams = parseParms(fragment);
+                      if (urlParams.hasOwnProperty('mapStyle')) {
+                        this.changeMapStyle(urlParams['mapStyle']);
+                      }
+                    });
 
-                      // select interaction working on "pointermove"
-                      this.selectPointerClick = new Select({
-                        condition: conditionClick,
-                        style: styleOver,
-                      });
+                    // select interaction working on "pointermove"
+                    this.selectPointerClick = new Select({
+                      condition: conditionClick,
+                      style: styleOver,
+                    });
 
-                      this.map.addInteraction(this.selectPointerClick);
+                    this.map.addInteraction(this.selectPointerClick);
 
-                      this.selectPointerClick.on('select', e => {
-                        if (e.selected.length > 0 && e.selected[0].id_) {
-                          const featureId = e.selected[0].id_;
-                          if (featureId.includes('#') && featureId.includes('||')) {
-                            // It's an hexagon
+                    this.selectPointerClick.on('select', e => {
+                      if (e.selected.length > 0 && e.selected[0].id_) {
+                        const featureId = e.selected[0].id_;
+                        if (featureId.includes('#') && featureId.includes('||')) {
+                          // It's an hexagon
 
-                            const postion = featureId.indexOf('||');
-                            const buildingId = featureId.substr(
-                              postion + 2,
-                              featureId.length - postion
-                            );
-                            const coords = featureId.substr(0, postion).split('#');
+                          const postion = featureId.indexOf('||');
+                          const buildingId = featureId.substr(
+                            postion + 2,
+                            featureId.length - postion
+                          );
+                          const coords = featureId.substr(0, postion).split('#');
 
-                            const xx = Math.abs(coords[0]);
-                            const yy = Math.abs(coords[1]);
+                          const xx = Math.abs(coords[0]);
+                          const yy = Math.abs(coords[1]);
 
-                            const thisHeightSims = this.sim_result.filter(
-                              sim => sim.height === this.height
-                            );
+                          const thisHeightSims = this.sim_result.filter(
+                            sim => sim.height === this.height
+                          );
 
-                            let totalValue = 0;
-                            const simValues = thisHeightSims.map(sim => {
-                              const value = sim.heatmap[yy][xx];
-                              totalValue += value;
-                              return {
-                                category: sim.category,
-                                value: value,
-                              };
-                            });
+                          let totalValue = 0;
+                          const simValues = thisHeightSims.map(sim => {
+                            const value = sim.heatmap[yy][xx];
+                            totalValue += value;
+                            return {
+                              category: sim.category,
+                              value: value,
+                            };
+                          });
 
-                            console.log('simValues', simValues);
-                            console.log('totalValue', totalValue);
+                          console.log('simValues', simValues);
+                          console.log('totalValue', totalValue);
 
-                            // window.location.href = `${urlPortfolio}/building#building_id=${buildingId}`;
-                          } else {
-                            console.log('BUILDING', e.selected[0].id_);
-                            /**
+                          // window.location.href = `${urlPortfolio}/building#building_id=${buildingId}`;
+                        } else {
+                          console.log('BUILDING', e.selected[0].id_);
+                          /**
                             // It's a building
                             window.location.href = `${urlPortfolio}/building#building_id=${
                               e.selected[0].id_
                               }`;
                             */
-                          }
                         }
-                      });
-                    }
-
-                    this.globalSource.addFeature(this.feature);
-                    this.drawSimulation(this.feature);
-
-                    this.loading = false;
-                    this.centerMap();
-                  } else {
-                    this.loading = false;
-                    this.generalError = `Potential view is empty for the given building`;
+                      }
+                    });
                   }
+
+                  this.globalSource.addFeature(this.feature);
+                  this.drawSimulation(this.feature);
+
+                  this.loading = false;
+                  this.centerMap();
                 } else {
                   this.loading = false;
-                  this.generalError = `Potential view is not yet ready for the given building`;
+                  this.generalError = `Potential view is empty for the given building`;
                 }
               } else {
                 this.loading = false;
-                this.generalError = `Potential view not available for the given building`;
+                this.generalError = `Potential view is not yet ready for the given building`;
               }
-            },
-            error => {
+            } else {
               this.loading = false;
               this.generalError = `Potential view not available for the given building`;
-              console.error(error);
             }
-          );
+          },
+          error => {
+            this.loading = false;
+            this.generalError = `Potential view not available for the given building`;
+            console.error(error);
+          },
+          {
+            params: {
+              simulation_packages: ['potential_view'],
+            },
+          }
+        );
       } else {
         this.loading = false;
         this.generalError = `Perimeter not found for the given building in ${map_source_str}`;
@@ -461,15 +465,16 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
         const y_off = starting_point[1]; // 6005873.054931145;
 
         this.min = 0;
-        this.max = this.summary.max > 1.5 ? this.summary.max : 1.5;
-        this.unit = 'Steradians';
+        const max = this.summary.max > 1.5 ? this.summary.max : 1.5;
+        this.max = max * 100 / (Math.PI * 4);
+        this.unit = '%';
         this.legendData = heatmap;
         this.color = colors;
 
         // this.summary.min, this.summary.max
         // 0, 5
         // this.summary.min, this.summary.max
-        const valueToColor = calculateDomain(colors, 0, this.max);
+        const valueToColor = calculateDomain(colors, 0, max);
 
         /*
           this.summary.min,
@@ -526,138 +531,22 @@ export class PotentialViewOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Exports a kml File.
+   */
+  exportKML() {
+    this.export(
+      this.drawSimulation,
+      `Building ${this.building.name} Id#${this.building.building_id}`,
+      true
+    );
+  }
+
   removeOldFeatures() {
     const features = this.detailSource.getFeatures();
     features.forEach(feature => {
       this.detailSource.removeFeature(feature);
     });
-  }
-
-  /**
-   * Exports a kml File.
-   */
-  exportKML() {
-    const introduction = `<?xml version="1.0" encoding="UTF-8"?>
-        <kml xmlns="http://www.opengis.net/kml/2.2">
-          <Document>
-            <name>Building ${this.building.name} Id#${this.building.building_id}</name>
-            <open>1</open>
-            <description> ${this.address} </description>`;
-
-    const originalSimulation = this.currentSimulation;
-    const originalFloor = this.currentFloor;
-
-    let content = '';
-    const simulationsToExport = [
-      'buildings',
-      'grounds',
-      'streets',
-      'railroads',
-      'parks',
-      'trees',
-      'lakes',
-      'mountains',
-      'rivers',
-    ]; // , 'rivers', 'trees'
-
-    for (let i = 0; i < simulationsToExport.length; i += 1) {
-      this.currentSimulation = simulationsToExport[i];
-      let contentFolder = `<Folder><name>Simulation ${this.currentSimulation}</name>`;
-
-      // Only the original simulation is visible by default
-      if (i > 0) {
-        contentFolder += `<visibility>0</visibility>`;
-      } else {
-        contentFolder += `<visibility>1</visibility>`;
-      }
-      for (let j = 0; j < this.floors.length; j += 1) {
-        this.currentFloor = this.floors[j];
-        this.drawSimulation(this.feature);
-        const result = this.exportSimulationKML();
-        if (j === 0) {
-          if (i === 0) {
-            content += result.camera;
-          }
-          contentFolder += result.camera;
-        }
-        contentFolder += result.data;
-      }
-      contentFolder += `</Folder>`;
-      content += contentFolder;
-    }
-
-    const end = `
-        </Document>
-    </kml>`;
-
-    saveData('Archilyse.kml', introduction + content + end);
-
-    // Revert to the original simulation:
-    this.currentSimulation = originalSimulation;
-    this.currentFloor = originalFloor;
-    this.drawSimulation(this.feature);
-  }
-
-  exportSimulationKML() {
-    const format = new KML();
-    const features = this.detailSource.getFeatures();
-
-    const result = format.writeFeaturesNode(features, {
-      featureProjection: this.view.getProjection(),
-      dataProjection: getProjection('EPSG:4326'),
-    });
-
-    const documents = result.childNodes[0];
-    const featureLists = documents.childNodes;
-    const height = this.height;
-    const absolute_height = this.absolute_height;
-    const heightStrSpace = `,${absolute_height} `;
-    const heightStr = `,${absolute_height}`;
-
-    let center = null;
-
-    const placemarks = [];
-    featureLists.forEach(feature => {
-      const featureXML = feature.childNodes;
-      const style = featureXML[0];
-      const polygon = featureXML[1];
-
-      const XXX = polygon.childNodes[0];
-      const YYY = XXX.childNodes[0];
-      const coordinateTag = YYY.childNodes[0];
-      const coordinates = coordinateTag.childNodes[0];
-      const coords = coordinates.nodeValue.split(' ');
-      const coordinatesStr = coords.join(heightStrSpace) + heightStr;
-
-      const exagonColor = style.childNodes[0].childNodes[0].childNodes[0].data;
-
-      if (center === null) {
-        center = coords[0].split(',');
-      }
-
-      // Documentation:
-      // https://developers.google.com/kml/documentation/kmlreference#polystyle
-      placemarks.push(`
-        <Placemark>
-          <Style><LineStyle><color>${exagonColor}</color></LineStyle><PolyStyle><color>${exagonColor}</color><fill>1</fill></PolyStyle></Style>
-          <Polygon><altitudeMode>absolute</altitudeMode><outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
-        </Placemark>`);
-    });
-
-    const lookAt = `<LookAt>
-            <longitude>${center[0]}</longitude><latitude>${center[1]}</latitude>
-            <altitude>${this.absolute_height +
-              3}</altitude><heading>0</heading><tilt>50</tilt><range>30</range>
-          </LookAt>`;
-
-    return {
-      camera: lookAt,
-      data: `<Folder><name>${this.currentSimulation} simulation height ${this.height}</name>
-          <description> Analyzes the ${
-            this.currentSimulation
-          } visibility </description>${lookAt}${placemarks}
-         </Folder>`,
-    };
   }
 
   /**

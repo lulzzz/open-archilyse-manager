@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
-import { ManagerFunctions } from '../managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { HttpClient } from '@angular/common/http';
-import { CellRender } from '../cellRender';
-import { ColumnDefinitions } from '../columnDefinitions';
-import { exportOptions, exportSelectedOptions } from '../excel';
+import { CellRender } from '../../_shared-libraries/CellRender';
+import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
+import { exportOptions, exportSelectedOptions } from '../../_shared-libraries/ExcelManagement';
 import { NavigationService } from '../../_services';
 
 @Component({

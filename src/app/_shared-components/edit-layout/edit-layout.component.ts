@@ -4,6 +4,10 @@ import { Store } from '@ngrx/store';
 import * as fromStore from '../../_store';
 import { Layout } from '../../_models';
 import { slideInOut } from '../../_animations/slideInOut.animation';
+import { ToastrService } from 'ngx-toastr';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'edit-layout',
@@ -17,7 +21,12 @@ export class EditLayoutComponent implements OnInit {
 
   editLayoutForm: FormGroup;
 
-  constructor(private store: Store<fromStore.AppState>, private formBuilder: FormBuilder) {}
+  constructor(
+    private http: HttpClient,
+    private store: Store<fromStore.AppState>,
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.buildForm();
@@ -36,6 +45,21 @@ export class EditLayoutComponent implements OnInit {
       description: this.editLayoutForm.value.description,
     };
 
-    console.log('ADD LAYOUT', updatedLayout);
+    const newLayout = {
+      name: this.editLayoutForm.value.name,
+      description: this.editLayoutForm.value.description,
+      unit_id: this.layout.unit_id,
+      floors: this.layout.floors,
+    };
+
+    ApiFunctions.post(
+      this.http,
+      'layouts',
+      newLayout,
+      layouts => {
+        this.toastr.success('Layout added successfully');
+      },
+      ManagerFunctions.showErroruser
+    );
   }
 }

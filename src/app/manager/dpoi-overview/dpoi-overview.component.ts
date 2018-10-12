@@ -1,13 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { ColumnDefinitions } from '../columnDefinitions';
+import {
+  ColumnDefinitions,
+  columnDefs,
+  columnDefsCompare,
+} from '../../_shared-libraries/ColumnDefinitions';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiFunctions } from '../apiFunctions';
-import { ManagerFunctions } from '../managerFunctions';
-import { columnDefs, columnDefsCompare } from './columnDefinitions';
-import { exportOptions, exportSelectedOptions } from '../excel';
-import { getCategory } from './categories';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
+import { exportOptions, exportSelectedOptions } from '../../_shared-libraries/ExcelManagement';
+import { getCategory } from '../../_shared-libraries/Categories';
 import { NavigationService } from '../../_services';
 
 /**
@@ -287,9 +290,12 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   seeRawData() {
     this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
   }
+  seeMapView() {
+    this.router.navigate(['manager', 'dpoiView', this.buildingId]);
+  }
 
   viewDpoi(buildingId) {
-    this.router.navigate(['manager', 'dpoi', this.buildingId]);
+    this.router.navigate(['manager', 'dpoi', buildingId]);
   }
 
   switchDpoi() {

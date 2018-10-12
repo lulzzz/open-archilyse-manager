@@ -2,18 +2,18 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { Building, Site } from '../../_models';
-import { ApiFunctions } from '../apiFunctions';
-import { CellRender } from '../cellRender';
-import { ColumnDefinitions } from '../columnDefinitions';
+import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
+import { CellRender } from '../../_shared-libraries/CellRender';
+import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
 import {
   convertFileToWorkbook,
   exportOptions,
   exportSelectedOptions,
   getRows,
   showInfoExcel,
-} from '../excel';
+} from '../../_shared-libraries/ExcelManagement';
 import { OverlayService, NavigationService } from '../../_services';
 
 /**
@@ -302,26 +302,12 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
               editable: false,
               cellClass: 'readOnly',
             },
-            /** No yet provided
             {
-              headerName: 'Accoustics',
-              field: 'simulation_statuses.accoustics.status',
-              cellRenderer: 'simulationBuildingRenderer',
-              cellStyle: { padding: '0px' },
-              width: 140,
-              editable: false,
-              cellClass: 'readOnly',
-            },
-             */
-            {
-              // cellRenderer: CellRender.viewSimulationBuilding,
-              // cellRenderer: CellRender.viewSimulationBuilding,
-              // cellRenderer: CellRender.viewSimulationDpoiBuilding,
               headerName: 'DPOI',
               field: 'simulation_statuses.dpoi.status',
               cellRenderer: 'simulationBuildingDpoiRenderer',
               cellStyle: { padding: '0px' },
-              width: this.currentProfile === 'developer' ? 200 : 160,
+              width: this.currentProfile === 'developer' ? 235 : 195, // Smaller because there's no "raw"  view
               editable: false,
               cellClass: 'readOnly',
             },

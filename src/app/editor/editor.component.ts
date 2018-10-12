@@ -1,24 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DiagramService, EditorService, OverlayService } from '../_services';
+import { DiagramService, EditorService, NavigationService, OverlayService } from '../_services';
 import { Subscription } from 'rxjs/Subscription';
 import swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-
-const apiUrl = environment.apiUrl;
-const urlPortfolio = environment.urlPortfolio;
-
-export function getLayoutLink(layoutId, layout?) {
-  if (layoutId && layoutId !== '' && layoutId !== 'None') {
-    let layoutName = layoutId;
-    if (layout && layout.name && layout.name !== '') {
-      layoutName = layout.name;
-    }
-    return `<a href="${urlPortfolio}/layout#layout_id=${layoutId}">${layoutName}</a>`;
-  }
-  return `"undefined"`;
-}
+import { getLayoutLink } from '../_shared-libraries/PortfolioLinks';
+import { ApiFunctions } from '../_shared-libraries/ApiFunctions';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-editor',
@@ -30,6 +18,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   error = null;
 
   layoutId;
+  layout;
 
   modelStructure;
 
@@ -46,7 +35,8 @@ export class EditorComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private infoDialog: OverlayService,
     private editorService: EditorService,
-    private diagramService: DiagramService
+    private diagramService: DiagramService,
+    private toastr: ToastrService
   ) {}
 
   showElementBar(event) {
@@ -63,7 +53,22 @@ export class EditorComponent implements OnInit, OnDestroy {
       customClass: 'arch',
     }).then(result => {
       if (result.value) {
-        console.log('OVERRIDE!!');
+        console.log('OVERRIDE!!', this.layout);
+        ApiFunctions.patch(
+          this.http,
+          'layouts/' + this.layout.layout_id,
+          {
+            model_structure: this.layout.model_structure,
+          },
+          element => {
+            console.log('Element ', element);
+            this.toastr.success('Layout updated successfully');
+          },
+          error => {
+            this.error = `Error saving the layout.`;
+            console.error(error);
+          }
+        );
         // TODO: Complete the overryde method.
       }
     });
@@ -82,8 +87,11 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.layoutId = this.route.snapshot.params['layoutId'];
 
-    this.subscriptionLayout = this.http.get(apiUrl + 'layouts/' + this.layoutId).subscribe(
+    this.subscriptionLayout = ApiFunctions.get(
+      this.http,
+      'layouts/' + this.layoutId,
       layout => {
+        this.layout = layout;
         this.modelStructure = layout['model_structure'];
         this.loading = false;
       },

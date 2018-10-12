@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ManagerFunctions } from '../../manager/managerFunctions';
+import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { OverlayService, NavigationService } from '../../_services';
 import { Router } from '@angular/router';
 

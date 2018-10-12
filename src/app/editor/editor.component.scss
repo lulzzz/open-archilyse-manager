@@ -2,33 +2,21 @@
 @import 'colors';
 
 .editorContainer {
-  height: calc(100vh - 220px); // There's a header (60) + 2 Navigations (40 + 80)
-  @include for-tablet-landscape-up {
-    height: calc(100vh - 180px);
-  }
+  margin-top: 20px;
+  height: calc(100vh - 280px);
 }
 
-.footer {
-  display: grid;
-  grid-template-rows: '50px 50px';
-  grid-template-areas:
-    'left'
-    'right';
-  align-items: center;
-  height: 100px;
-  max-height: 100px;
-
-  @include for-tablet-landscape-up {
-    grid-template-areas: 'left right';
-    height: 60px;
-    max-height: 60px;
+.buttonRow{
+  button{
+    display: inline-block;
   }
 }
 
 .sim-info{
+  display: inline-block;
   margin-top: 10px;
   cursor: pointer;
-  color: $new_table_header_blue;
+  color: $white;
 
   &:hover {
     color: $new_light_blue;
@@ -48,22 +36,4 @@
   padding: 8px 16px;
   font-size: 28px;
   text-align: center;
-}
-
-.left {
-  grid-area: left;
-  justify-self: stretch;
-
-  .btn{
-    float: left;
-    margin-right: 10px;
-  }
-
-}
-
-.right {
-  grid-area: right;
-  justify-self: right;
-  display: flex;
-  align-items: center;
 }

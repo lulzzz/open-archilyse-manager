@@ -61,19 +61,19 @@ import { NgxMaskModule } from 'ngx-mask';
 // COMPONENTS
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
-import { UpgradeBrowserComponent } from './upgrade-browser/upgrade-browser.component';
-import { ErrorComponent } from './error/error.component';
+import { UpgradeBrowserComponent } from './pages/upgrade-browser/upgrade-browser.component';
+import { ErrorComponent } from './pages/error/error.component';
 
 import { logout } from './_store/reducers/user.reducer';
-import { ToastComponent } from './toast/toast.component';
-import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { ToastComponent } from './_shared-components/toast/toast.component';
+import { NavBarComponent } from './_shared-components/nav-bar/nav-bar.component';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { AngularFireStorageModule } from 'angularfire2/storage';
 import { EditorComponent } from './editor/editor.component';
 import { IntroEditorComponent } from './editor/intro.component';
-import { PasswordResetComponent } from './password-reset/password-reset.component';
+import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true,
