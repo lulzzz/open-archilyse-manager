@@ -505,6 +505,9 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
     }
   }
 
+  /**
+   * We center the elements coordinates and reset the scale.
+   */
   resetCoordinates() {
     // this.floorplan.rotateZ(-this.floorplan.rotation.z);
     this.floorplanWrapper.rotateZ(-this.floorplanWrapper.rotation.z);

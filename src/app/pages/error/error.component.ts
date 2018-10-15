@@ -15,6 +15,16 @@ export class ErrorComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<fromStore.AppState>, private _router: Router) {}
 
+  ngOnInit() {
+    this.user_sub = this.store.select(fromStore.getUser).subscribe(user => {
+      this.isUserLoggedIn = !!user;
+    });
+  }
+
+  /**
+   * Links to other pages
+   */
+
   toProjects() {
     this._router.navigate(['/projects']);
   }
@@ -23,11 +33,9 @@ export class ErrorComponent implements OnInit, OnDestroy {
     this._router.navigate(['/login']);
   }
 
-  ngOnInit() {
-    this.user_sub = this.store.select(fromStore.getUser).subscribe(user => {
-      this.isUserLoggedIn = !!user;
-    });
-  }
+  /**
+   * En of the cycle, we unsubscribe
+   */
 
   ngOnDestroy(): void {
     if (this.user_sub) {

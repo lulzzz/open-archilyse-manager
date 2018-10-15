@@ -407,11 +407,54 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     );
   }
 
-  drawOpenings(buildingStructure, data) {
-    drawGeometries(buildingStructure, data, 0x333333, 1, LAYER_1);
+  drawOpenings(buildingStructure, opening_area) {
+
+     const numPoints = 10;
+     const points = [opening_area.axis];
+
+     const distRef = this.distance(
+     opening_area.open[COOR_X],
+     opening_area.open[COOR_Y],
+     opening_area.axis[COOR_X],
+     opening_area.axis[COOR_Y]
+     );
+
+     for (let i = 0; i <= numPoints; i++) {
+       const rectX =
+         opening_area.close[COOR_X] * i / numPoints +
+         opening_area.open[COOR_X] * (numPoints - i) / numPoints;
+       const rectY =
+         opening_area.close[COOR_Y] * i / numPoints +
+         opening_area.open[COOR_Y] * (numPoints - i) / numPoints;
+
+       const currentDist = this.distance(
+         opening_area.axis[COOR_X],
+         opening_area.axis[COOR_Y],
+         rectX,
+         rectY
+       );
+
+       const correction = 1 - currentDist / distRef;
+
+       const newPoint = [
+         rectX + (rectX - opening_area.axis[COOR_X]) * correction,
+         rectY + (rectY - opening_area.axis[COOR_Y]) * correction,
+       ];
+
+       points.push(newPoint);
+     }
+
+    points.push(opening_area.axis);
+
+    drawGeometries(buildingStructure, [points], 0x333333, 1.5, LAYER_1);
+  }
+
+  distance(coor1X, coor1Y, coor2X, coor2Y) {
+    return Math.sqrt(Math.pow(coor2X - coor1X, 2) + Math.pow(coor2Y - coor1Y, 2));
   }
 
   drawDoors(buildingStructure, data) {
+    console.log("drawDoors", data);
     drawGeometries(buildingStructure, data, 0x333333, 1.5, LAYER_1);
   }
 
@@ -756,9 +799,12 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
           // ************ structure.footprint.coordinates
           this.drawDoors(buildingStructure, structure.footprint.coordinates);
         }
-        if (structure.opening_area && structure.opening_area.coordinates) {
+        if (structure.opening_area) {
           // ************ structure.opening_area.coordinates
-          this.drawOpenings(buildingStructure, structure.opening_area.coordinates);
+          structure.opening_area.forEach(opening => {
+            this.drawOpenings(buildingStructure, opening);
+          })
+
         }
       } else if (
         structure.type === EditorConstants.WINDOW_ENVELOPE ||

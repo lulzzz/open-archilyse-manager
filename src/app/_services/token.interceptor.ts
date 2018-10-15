@@ -13,6 +13,11 @@ export class TokenInterceptor implements HttpInterceptor {
     private logService: LogService
   ) {}
 
+  /**
+   * We add the APIKEY to each request to the API
+   * @param request
+   * @param next
+   */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.logService.addRequest(this.router.url, request);
     const modifiedRequest = request.clone({

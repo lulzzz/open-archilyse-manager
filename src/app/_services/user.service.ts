@@ -31,6 +31,9 @@ export class UserService {
     this.setUpAll();
   }
 
+  /**
+   * We subscribe to get the user and then to get the api Key.
+   */
   setUpAll() {
     //// Get auth data, then get firestore user document || null
     this._authenticated = this.afAuth.authState;
@@ -66,6 +69,10 @@ export class UserService {
     return from(this.afAuth.auth.signInWithEmailAndPassword(email, password));
   }
 
+  /**
+   * We sign out from Firebase.
+   * We link the user to the login page after.
+   */
   signOut() {
     this.afAuth.auth.signOut().then(() => {
       // We reset everything

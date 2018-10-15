@@ -240,6 +240,7 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
 
   /**
    * Ag-grid parameters.
+   * https://www.ag-grid.com/documentation-main/documentation.php
    * @param simulationsArray
    */
   prepareGrid(simulationsArray) {

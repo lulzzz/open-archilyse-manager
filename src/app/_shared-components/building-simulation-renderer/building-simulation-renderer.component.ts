@@ -153,6 +153,9 @@ export class BuildingSimulationRendererComponent {
     });
   }
 
+  /**
+   * Information window: Outdated
+   */
   infoOutdated() {
     this.infoDialog.open({
       data: {
@@ -163,6 +166,9 @@ export class BuildingSimulationRendererComponent {
     });
   }
 
+  /**
+   * Information window: Address needed
+   */
   infoAddress() {
     this.infoDialog.open({
       data: {
@@ -174,6 +180,10 @@ export class BuildingSimulationRendererComponent {
       },
     });
   }
+
+  /**
+   * Information window: Georeference needed
+   */
   infoGeoreference() {
     this.infoDialog.open({
       data: {

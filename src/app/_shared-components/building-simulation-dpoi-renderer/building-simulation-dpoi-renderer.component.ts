@@ -128,6 +128,9 @@ export class BuildingSimulationRendererDpoiComponent {
     ManagerFunctions.requestBuildingSimulationsStatus(this.http, this.building, this.api);
   }
 
+  /**
+   * Information window: Outdated needed
+   */
   infoOutdated() {
     this.infoDialog.open({
       data: {
@@ -138,6 +141,9 @@ export class BuildingSimulationRendererDpoiComponent {
     });
   }
 
+  /**
+   * Information window: Address needed
+   */
   infoAddress() {
     this.infoDialog.open({
       data: {

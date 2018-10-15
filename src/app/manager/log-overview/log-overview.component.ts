@@ -122,6 +122,11 @@ export class LogOverviewComponent implements OnInit, OnDestroy {
     this.prepareGrid(requests);
   }
 
+  /**
+   * Preparation for the ag-grid
+   * https://www.ag-grid.com/documentation-main/documentation.php
+   * @param requestsArray
+   */
   prepareGrid(requestsArray) {
     this.gridOptions = {
       rowData: requestsArray,

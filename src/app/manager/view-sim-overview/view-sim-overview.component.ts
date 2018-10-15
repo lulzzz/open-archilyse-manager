@@ -42,6 +42,8 @@ import {
   getUnitLink,
 } from '../../_shared-libraries/PortfolioLinks';
 import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
+import { EditorConstants } from '../../_shared-libraries/EditorConstants';
+import { COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
 
 export const colors = [
   '#2c7bb6',
@@ -118,9 +120,11 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
   layer: OlTileLayer;
 
   detailLayer: OlVectorLayer;
+  layoutLayer: OlVectorLayer;
   globalLayer: OlVectorLayer;
 
   detailSource;
+  layoutSource;
   globalSource;
 
   view: OlView;
@@ -412,12 +416,21 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
         features: [],
       });
 
+      this.layoutSource = new Vector({
+        features: [],
+      });
+
       this.globalSource = new Vector({
         features: [],
       });
 
       this.detailLayer = new OlVectorLayer({
         source: this.detailSource,
+        style: styleNormal,
+      });
+
+      this.layoutLayer = new OlVectorLayer({
+        source: this.layoutSource,
         style: styleNormal,
       });
 
@@ -439,7 +452,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
           zoom: false,
         }).extend([scaleLineControl]),
         target: 'map',
-        layers: [this.layer, this.globalLayer, this.detailLayer],
+        layers: [this.layer, this.globalLayer, this.detailLayer, this.layoutLayer],
         view: this.view,
       });
 
@@ -544,7 +557,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
         const max = this.summary.max > 1.5 ? this.summary.max : 1.5;
         this.max = max * 100 / (Math.PI * 4);
 
-        this.unitStr = 'Steradians';
+        this.unitStr = '%';
         this.legendData = heatmap;
         this.color = colors;
 
@@ -569,6 +582,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
         const resolutionCorrected = result.resolution;
 
         this.removeOldFeatures();
+        this.removeOldLayout();
 
         currentHeatmap.forEach((row, y) => {
           row.forEach((val, x) => {
@@ -587,6 +601,9 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
             }
           });
         });
+
+        const movement = this.layout.movements[0];
+        this.drawModelStructure(movement, this.layout.model_structure);
       } else {
         this.loading = false;
         this.generalError = `Selected floor not found`;
@@ -597,6 +614,192 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     }
   }
 
+  drawModelStructure(movement, modelStructure) {
+    modelStructure.floors.forEach(floor => {
+      this.drawModelStructureRecursive(movement, floor);
+    });
+  }
+
+  drawPolygons(movement, type, coordinates, color) {
+    const newCoords = this.correctCoords(movement, coordinates);
+    newCoords.forEach((newCoord, i) => {
+      this.drawCoords(newCoord, i, color, null, null);
+    });
+  }
+
+  drawGeometries(movement, type, coordinates, lineColor, lineWidth) {
+    const newCoords = this.correctCoords(movement, coordinates);
+    newCoords.forEach((newCoord, i) => {
+      this.drawCoords(newCoord, i, null, lineColor, lineWidth);
+    });
+  }
+
+  correctCoords(movement, coordinates) {
+    const radians = movement.angle * Math.PI / 180;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+
+    return coordinates.map(coordinateRow =>
+      coordinateRow.map(coor => {
+        const x = coor[COOR_X] - movement.x_pivot;
+        const y = coor[COOR_Y] - movement.y_pivot;
+
+        const xFinal = x * cos - y * sin + movement.x_pivot;
+        const yFinal = x * sin + y * cos + movement.y_pivot;
+
+        return [xFinal + movement.x_off, yFinal + movement.y_off];
+      })
+    );
+  }
+
+  drawCoords(coords, featureId, color, lineColor, lineWidth) {
+    const feature = new OlFeature({ geometry: new OlPolygon([coords]) });
+    // To recover the value
+    // feature.setId(featureId);
+
+    this.layoutSource.addFeature(feature);
+
+    // const colorValue = 'rgb(253, 239, 123)';
+
+    feature.setStyle(
+      new OlStyle({
+        fill:
+          color !== null
+            ? new OlStyleFill({
+                color: color,
+              })
+            : null,
+        stroke: new OlStyleStroke({
+          color: lineColor,
+          width: lineWidth,
+        }),
+      })
+    );
+  }
+
+  drawModelStructureRecursive(movement, structure) {
+    const opacity = 0.95;
+
+    const white = `rgba(255, 255, 255, ${opacity})`;
+    const grey = `rgba(155, 155, 155, ${opacity})`;
+    const darkGrey = `rgba(75, 75, 75, ${opacity})`;
+    const black = `rgba(0, 0, 0, ${opacity})`;
+
+    /** Features */
+    if (structure.type === EditorConstants.TOILET) {
+    } else if (structure.type === EditorConstants.STAIRS) {
+    } else if (structure.type === EditorConstants.SINK) {
+    } else if (structure.type === EditorConstants.KITCHEN) {
+    } else if (structure.type === EditorConstants.DESK) {
+    } else if (structure.type === EditorConstants.CHAIR) {
+    } else if (structure.type === EditorConstants.OFFICE_MISC) {
+    } else if (structure.type === EditorConstants.MISC) {
+      /** Separators */
+    } else if (
+      structure.type === EditorConstants.SEPARATOR_NOT_DEFINED ||
+      structure.type === EditorConstants.ENVELOPE ||
+      structure.type === EditorConstants.RAILING
+    ) {
+      this.drawPolygons(movement, EditorConstants.WALL, structure.footprint.coordinates, black);
+
+      /** AreaType */
+    } else if (
+      structure.type === EditorConstants.SHAFT ||
+      structure.type === EditorConstants.BALCONY ||
+      structure.type === EditorConstants.CORRIDOR ||
+      structure.type === EditorConstants.STOREROOM ||
+      structure.type === EditorConstants.ROOM ||
+      structure.type === EditorConstants.DINING ||
+      structure.type === EditorConstants.BATHROOM ||
+      structure.type === EditorConstants.AREA_KITCHEN ||
+      structure.type === EditorConstants.AREA_KITCHEN_DINING ||
+      structure.type === EditorConstants.AREA_NOT_DEFINED
+    ) {
+      // this.drawPolygons(movement, EditorConstants.AREA, structure.footprint.coordinates, white);
+      /** SpaceType */
+    } else if (structure.type === EditorConstants.SPACE_NOT_DEFINED) {
+      if (structure.footprint && structure.footprint.coordinates) {
+        // this.drawPolygons(movement, EditorConstants.AREA, structure.footprint.coordinates, white);
+      }
+
+      /** OpeningType */
+    } else if (structure.type === EditorConstants.DOOR) {
+      if (structure.footprint && structure.footprint.coordinates) {
+        this.drawGeometries(movement, structure.type, structure.footprint.coordinates, white, 1.5);
+      }
+      console.log('opening_area ', structure);
+      if (structure.opening_area) {
+        for (let i = 0; i < structure.opening_area.length; i++) {
+          const opening_area = structure.opening_area[i];
+
+          const numPoints = 10;
+          const points = [opening_area.axis];
+
+          const distRef = this.distance(
+            opening_area.open[COOR_X],
+            opening_area.open[COOR_Y],
+            opening_area.axis[COOR_X],
+            opening_area.axis[COOR_Y]
+          );
+
+          for (let i = 0; i <= numPoints; i++) {
+            const rectX =
+              opening_area.close[COOR_X] * i / numPoints +
+              opening_area.open[COOR_X] * (numPoints - i) / numPoints;
+            const rectY =
+              opening_area.close[COOR_Y] * i / numPoints +
+              opening_area.open[COOR_Y] * (numPoints - i) / numPoints;
+
+            const currentDist = this.distance(
+              opening_area.axis[COOR_X],
+              opening_area.axis[COOR_Y],
+              rectX,
+              rectY
+            );
+
+            const correction = 1 - currentDist / distRef;
+
+            const newPoint = [
+              rectX + (rectX - opening_area.axis[COOR_X]) * correction,
+              rectY + (rectY - opening_area.axis[COOR_Y]) * correction,
+            ];
+
+            points.push(newPoint);
+          }
+
+          this.drawGeometries(movement, structure.type, [points], darkGrey, 1.5);
+        }
+      }
+    } else if (
+      structure.type === EditorConstants.WINDOW_ENVELOPE ||
+      structure.type === EditorConstants.WINDOW_INTERIOR
+    ) {
+      this.drawGeometries(movement, structure.type, structure.footprint.coordinates, 0x333333, 1);
+      this.drawPolygons(movement, structure.type, structure.footprint.coordinates, white);
+
+      /** Undefined */
+    } else if (structure.type === EditorConstants.to_be_filled) {
+    } else if (structure.type) {
+      console.error('UNKNOWN analyzeStructure ', structure.type);
+    }
+
+    if (structure.children) {
+      structure.children.forEach(child => {
+        this.drawModelStructureRecursive(movement, child);
+      });
+    }
+  }
+
+  distance(coor1X, coor1Y, coor2X, coor2Y) {
+    return Math.sqrt(Math.pow(coor2X - coor1X, 2) + Math.pow(coor2Y - coor1Y, 2));
+  }
+
+  removeOldLayout() {
+    const features = this.layoutSource.getFeatures();
+    features.forEach(feature => {
+      this.layoutSource.removeFeature(feature);
+    });
+  }
   removeOldFeatures() {
     const features = this.detailSource.getFeatures();
     features.forEach(feature => {
@@ -633,6 +836,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     const referenceResolution = 1.5;
 
     this.detailLayer.setVisible(resolution < referenceResolution);
+    this.layoutLayer.setVisible(resolution < referenceResolution);
     this.globalLayer.setVisible(resolution >= referenceResolution);
   }
 

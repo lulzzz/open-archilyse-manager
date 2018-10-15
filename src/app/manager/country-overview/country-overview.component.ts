@@ -152,6 +152,10 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
           };
         });
 
+        /**
+         * Preparation for the ag-grid
+         * https://www.ag-grid.com/documentation-main/documentation.php
+         */
         this.gridOptions = {
           rowData: rowsData,
           columnDefs: this.columnDefs,

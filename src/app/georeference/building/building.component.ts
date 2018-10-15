@@ -291,6 +291,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   *
+   */
   referenceToHuman() {
     if (this.referenceSource === 'swiss_topo') {
       this.referenceSourceHumanStr = 'Swiss topo';

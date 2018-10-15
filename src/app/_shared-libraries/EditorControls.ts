@@ -345,6 +345,11 @@ export class EditorControls {
     }
   }
 
+  /**
+   * Given element
+   * @param element
+   * @param coorZ
+   */
   public static addControlsForElement(element, coorZ) {
     EditorControls.removeOldControls();
 

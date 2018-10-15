@@ -8,6 +8,13 @@ function _capitalizeFirstLetter(string) {
 }
 
 export class ManagerFunctions {
+  /**
+   * Gets the name of an element or the street if there's no name
+   * If the element was not in the array (searched by idKey) returns only the id.
+   * @param array
+   * @param id
+   * @param idKey
+   */
   public static getName(array, id, idKey) {
     const found = array.find(element => element[idKey] === id);
     if (found) {
@@ -22,6 +29,15 @@ export class ManagerFunctions {
     return id;
   }
 
+  /**
+   * Builds an HTML based on the (ag-grid) filters in the URL
+   * @param data
+   * @param filterModelSet
+   * @param sitesArray      // All the sites
+   * @param buildingsArray  // All the buildings
+   * @param unitsArray      // All the units
+   * @param layoutsArray    // All the layouts
+   */
   public static calculateHumanFilters(
     data,
     filterModelSet,
@@ -205,6 +221,12 @@ export class ManagerFunctions {
     return building.address && building.address.city ? building.address.city : '';
   }
 
+  /**
+   * Aout of the building, unit and layout arrays
+   * @param buildingsList
+   * @param unitsArray
+   * @param layoutsArray
+   */
   public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray) {
     const numBuildings = buildingsList.length;
     const buildingsReferenced = buildingsList.filter(building =>

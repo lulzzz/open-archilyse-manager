@@ -13,8 +13,6 @@ function httpError(done, error) {
 describe('Api Add requests', () => {
   let http: HttpClient;
 
-  const usersActive = false;
-
   beforeEach(() => {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
@@ -52,7 +50,7 @@ describe('Api Add requests', () => {
       newSite,
       site => {
         expect(site).toBeDefined();
-        Testers.validateSites([site], usersActive);
+        Testers.validateSites([site]);
 
         expect(site.name).toBe(testName);
         expect(site.description).toBe(testDescription);
@@ -90,7 +88,7 @@ describe('Api Add requests', () => {
       newBuilding,
       building => {
         expect(building).toBeDefined();
-        Testers.validateBuildings([building], usersActive);
+        Testers.validateBuildings([building]);
 
         expect(building.name).toBe(testName);
         expect(building.description).toBe(testDescription);
@@ -123,7 +121,7 @@ describe('Api Add requests', () => {
       newBuilding,
       unit => {
         expect(unit).toBeDefined();
-        Testers.validateUnits([unit], usersActive);
+        Testers.validateUnits([unit]);
 
         expect(unit.name).toBe(testName);
         expect(unit.description).toBe(testDescription);
@@ -150,7 +148,7 @@ describe('Api Add requests', () => {
       newBuilding,
       layout => {
         expect(layout).toBeDefined();
-        Testers.validateLayouts([layout], usersActive);
+        Testers.validateLayouts([layout]);
 
         expect(layout.name).toBe(testName);
         expect(layout.description).toBe(testDescription);

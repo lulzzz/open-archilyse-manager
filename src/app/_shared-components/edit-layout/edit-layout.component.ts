@@ -40,10 +40,6 @@ export class EditLayoutComponent implements OnInit {
   }
 
   submit() {
-    const updatedLayout: Partial<Layout> = {
-      name: this.editLayoutForm.value.name,
-      description: this.editLayoutForm.value.description,
-    };
 
     const newLayout = {
       name: this.editLayoutForm.value.name,

@@ -1,45 +1,75 @@
 import {} from 'jasmine';
 
+/**
+ * Helper class for the Unit tests
+ */
 export class Testers {
-  static validateCommon(object, usersActive: boolean) {
-    if (usersActive) {
-      expect(object.user).toBeDefined('User not defined');
-    }
+  /**
+   * All the entities have at least [user, updated, created, name, description] we validate those fields
+   * @param object
+   */
+  static validateCommon(object) {
+    expect(object.user).toBeDefined('User not defined');
+
     expect(object.updated).toBeDefined('Updated date not defined');
     expect(object.created).toBeDefined('Created date not defined');
 
     expect(object.name).toBeDefined('Name not defined');
     expect(object.description).toBeDefined('Description not defined');
   }
-  static validateSites(sites, usersActive: boolean) {
+
+  /**
+   * We validate all the sites with [id] defined
+   * @param sites
+   */
+  static validateSites(sites) {
     expect(Array.isArray(sites)).toBeTruthy();
     sites.forEach(site => {
       expect(site.site_id).toBeDefined('id not defined');
-      this.validateCommon(site, usersActive);
-    });
-  }
-  static validateBuildings(buildings, usersActive: boolean) {
-    expect(Array.isArray(buildings)).toBeTruthy();
-    buildings.forEach(building => {
-      expect(building.building_id).toBeDefined('id not defined');
-      this.validateCommon(building, usersActive);
-    });
-  }
-  static validateUnits(units, usersActive: boolean) {
-    expect(Array.isArray(units)).toBeTruthy();
-    units.forEach(unit => {
-      expect(unit.unit_id).toBeDefined('id not defined');
-      this.validateCommon(unit, usersActive);
-    });
-  }
-  static validateLayouts(layouts, usersActive: boolean) {
-    expect(Array.isArray(layouts)).toBeTruthy();
-    layouts.forEach(layout => {
-      expect(layout.layout_id).toBeDefined('id not defined');
-      this.validateCommon(layout, usersActive);
+      this.validateCommon(site);
     });
   }
 
+  /**
+   * We validate all the buildings with [id] defined
+   * @param buildings
+   */
+  static validateBuildings(buildings) {
+    expect(Array.isArray(buildings)).toBeTruthy();
+    buildings.forEach(building => {
+      expect(building.building_id).toBeDefined('id not defined');
+      this.validateCommon(building);
+    });
+  }
+
+  /**
+   * We validate all the units with [id] defined
+   * @param units
+   */
+  static validateUnits(units) {
+    expect(Array.isArray(units)).toBeTruthy();
+    units.forEach(unit => {
+      expect(unit.unit_id).toBeDefined('id not defined');
+      this.validateCommon(unit);
+    });
+  }
+
+  /**
+   * We validate all the layouts with [id] defined
+   * @param layouts
+   */
+  static validateLayouts(layouts) {
+    expect(Array.isArray(layouts)).toBeTruthy();
+    layouts.forEach(layout => {
+      expect(layout.layout_id).toBeDefined('id not defined');
+      this.validateCommon(layout);
+    });
+  }
+
+  /**
+   * We validate all the surroundings with [top_shot_id, candidates_ids, geojson: [crs, features, type]] defined
+   * @param surroundings
+   */
   static validateSurroundings(surroundings) {
     // Top shot and candidates
     expect(surroundings.top_shot_id).toBeDefined();

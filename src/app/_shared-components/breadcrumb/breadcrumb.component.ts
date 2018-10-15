@@ -52,6 +52,7 @@ export class BreadcrumbComponent implements OnDestroy {
           this.breadcrumb = [{ title: 'Log In' }];
         } else if (url.startsWith('/editor')) {
           this.breadcrumb = [{ title: 'Layout editor' }];
+          this.showBack = true;
         } else if (url.startsWith('/resetPassword')) {
           this.breadcrumb = [{ title: 'Reset password form' }];
         } else if (url.startsWith('/manager/potentialView')) {

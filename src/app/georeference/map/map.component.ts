@@ -34,35 +34,18 @@ import { BatchService, NavigationService, OverlayService } from '../../_services
 /**
  * Add the Swiss topo projection
  */
-import { register as RegisterProjections } from 'ol/proj/proj4';
-import proj4 from 'proj4';
 import { ToastrService } from 'ngx-toastr';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { parseParms } from '../../_shared-libraries/Url';
 import { getBuildingLink } from '../../_shared-libraries/PortfolioLinks';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
+import {registerAllProjections} from '../../_shared-libraries/MapProjections';
 
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
-proj4.defs(
-  'EPSG:2056',
-  '+proj=somerc ' +
-    '+lat_0=46.95240555555556 +lon_0=7.439583333333333 ' +
-    '+k_0=1 +x_0=2600000 +y_0=1200000 ' +
-    '+ellps=bessel +towgs84=674.374,15.056,405.346,0,0,0,0 +units=m +no_defs'
-);
-
-proj4.defs(
-  'EPSG:3035',
-  '+proj=laea ' +
-    '+lat_0=52 +lon_0=10 +x_0=4321000 ' +
-    '+y_0=3210000 ' +
-    '+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
-);
-
-RegisterProjections(proj4);
+registerAllProjections();
 
 @Component({
   selector: 'app-map',
@@ -467,6 +450,11 @@ export class MapComponent implements OnInit, OnDestroy {
     this.startData();
   }
 
+  /**
+   * Change the map source from mapbox.
+   * Possible map styles :light, dark, outdoors, streets, satellite
+   */
+
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
     this._router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
@@ -486,6 +474,9 @@ export class MapComponent implements OnInit, OnDestroy {
     this.layer.setSource(this.source);
   }
 
+  /**
+   * Center the map to the buildings displayed
+   */
   centerMap() {
     this.view.fit(this.vectorSource.getExtent(), {
       padding: paddingToBuildings,
