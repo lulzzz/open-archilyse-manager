@@ -1,3 +1,6 @@
+/**
+ * Entity building from the API
+ */
 export interface Building {
   is_company_admin?: boolean;
   metadata?: any;
@@ -17,11 +20,17 @@ export interface Building {
   updated: string;
 }
 
+/**
+ * Address from building
+ */
 export interface BuildingReference {
-  id: string;
-  source: string;
+  id: string; // Id of the building connected
+  source: string; // open_street_maps || swiss_topo
 }
 
+/**
+ * Address from building
+ */
 export interface AddressReference {
   city?: string;
   country?: string;

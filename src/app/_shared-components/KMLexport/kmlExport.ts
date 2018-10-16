@@ -1,6 +1,9 @@
 import KML from 'ol/format/KML';
 import { get as getProjection } from 'ol/proj';
 
+/**
+ * function to download the final file
+ */
 const saveData = (() => {
   const a = document.createElement('a');
   document.body.appendChild(a);
@@ -58,7 +61,9 @@ export class KmlExport {
       this.currentSimulation = simulationsToExport[i];
 
       // There's no need from extra folder
-      let contentFolder = (extraFolders)?`<Folder><name>Simulation ${this.currentSimulation}</name>`:``;
+      let contentFolder = extraFolders
+        ? `<Folder><name>Simulation ${this.currentSimulation}</name>`
+        : ``;
 
       // Only the original simulation is visible by default
       if (this.currentSimulation !== originalSimulation) {
@@ -77,7 +82,7 @@ export class KmlExport {
         contentFolder += result.data;
       }
 
-      if (extraFolders){
+      if (extraFolders) {
         contentFolder += `</Folder>`;
       }
 

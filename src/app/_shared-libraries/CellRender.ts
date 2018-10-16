@@ -4,6 +4,12 @@ import { ManagerFunctions } from './ManagerFunctions';
  * ag-grid Class with methods to render different values.
  */
 export class CellRender {
+  /**
+   * Displays a site as human readable as possible (with Id's for developers):
+   * If name is found the displayed, otherwise the id
+   * @param currentProfile - Selected profile from the user
+   * @param params - Cell parameters from Ag - grid
+   */
   public static siteFormatter(currentProfile, params) {
     if (params && params.value) {
       const site = this['sitesArray'].find(site => site.site_id === params.value);
@@ -18,6 +24,12 @@ export class CellRender {
     return params.value;
   }
 
+  /**
+   * Displays a building as human readable as possible (with Id's for developers):
+   * If building is found the displayed, otherwise the id
+   * @param currentProfile - Selected profile from the user
+   * @param params - Cell parameters from Ag - grid
+   */
   public static buildingFormatter(currentProfile, params) {
     if (params && params.value) {
       const building = this['buildingsArray'].find(
@@ -42,6 +54,12 @@ export class CellRender {
     return params.value;
   }
 
+  /**
+   * Displays a unit as human readable as possible (with Id's for developers):
+   * If building is found the displayed, otherwise the id
+   * @param currentProfile - Selected profile from the user
+   * @param params - Cell parameters from Ag - grid
+   */
   public static unitFormatter(currentProfile, params) {
     if (params && params.value) {
       const unit = this['unitsArray'].find(unit => unit.unit_id === params.value);
@@ -69,7 +87,6 @@ export class CellRender {
   /**
    * Distance, duration, score
    */
-
   public static dpoiCategory(params) {
     if (params.value) {
       return params.value;
@@ -344,20 +361,34 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Based on the value displayed in 3 colors: Negative, Positive, Neutral (defined with css)
+   * It has a 0.5 margin and after displays the unit
+   * @param value
+   * @param unit
+   */
   public static compareValue(value, unit) {
+    const margin = 0.5;
     let classSpan = 'diffNeutral';
-    if (value > 0.5) {
+    if (value > margin) {
       classSpan = 'diffNegative';
-    } else if (value < -0.5) {
+    } else if (value < -margin) {
       classSpan = 'diffPositive';
     }
     return `<span class="${classSpan}">${value}${unit}</span>`;
   }
+
+  /**
+   * Based on the value displayed in 3 colors: Negative, Positive, Neutral (defined with css)
+   * It has a 0.1 margin
+   * @param value
+   */
   public static compareValueScore(value) {
+    const margin = 0.1;
     let classSpan = 'diffNeutral';
-    if (value > 0.1) {
+    if (value > margin) {
       classSpan = 'diffNegative';
-    } else if (value < -0.1) {
+    } else if (value < -margin) {
       classSpan = 'diffPositive';
     }
     return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
@@ -497,6 +528,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Render a date in a human readable
+   * @param params
+   */
   public static viewDate(params) {
     if (params.value && params.value !== '') {
       const readable = new Date(params.value);

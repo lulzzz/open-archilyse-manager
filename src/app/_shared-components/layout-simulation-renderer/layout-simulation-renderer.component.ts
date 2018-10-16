@@ -201,6 +201,9 @@ export class LayoutSimulationRendererComponent {
     });
   }
 
+  /**
+   * Information pop-ups
+   */
   infoOutdated() {
     this.infoDialog.open({
       data: {
@@ -210,7 +213,6 @@ export class LayoutSimulationRendererComponent {
       },
     });
   }
-
   infoUnit() {
     this.infoDialog.open({
       data: {
@@ -222,7 +224,6 @@ export class LayoutSimulationRendererComponent {
       },
     });
   }
-
   infoBuilding() {
     this.infoDialog.open({
       data: {

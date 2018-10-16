@@ -79,14 +79,15 @@ export class OverlayService {
       .centerHorizontally()
       .centerVertically();
 
-    const overlayConfig = new OverlayConfig({
+    /**
+     * Overlay config
+     */
+    return new OverlayConfig({
       positionStrategy,
       hasBackdrop: config.hasBackdrop,
       backdropClass: config.backdropClass,
       panelClass: config.panelClass,
       scrollStrategy: this.overlay.scrollStrategies.block(),
     });
-
-    return overlayConfig;
   }
 }

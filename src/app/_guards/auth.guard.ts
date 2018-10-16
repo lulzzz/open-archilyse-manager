@@ -7,6 +7,9 @@ import * as fromStore from '../_store';
 import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
+/**
+ * Only when logged in and has an API key
+ */
 export class AuthGuard implements CanActivate {
   constructor(
     private store: Store<fromStore.AppState>,

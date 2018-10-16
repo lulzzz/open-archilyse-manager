@@ -135,6 +135,10 @@ function boundingBoxRecursive(polygonVertices, structure) {
   }
 }
 
+/**
+ * Calculation of the bounding box out of the modelStructure
+ * @param modelStructure
+ */
 export function boundingBox(modelStructure) {
   console.log('boundingBox', modelStructure);
 
@@ -469,6 +473,10 @@ export function insidePolygon(point, vs) {
 
 /**
  * Draws the geometries including or excluding categories
+ * @param _this
+ * @param layer
+ * @param colors
+ * @param svgGeometries
  * @param categoriesToInclude null for all, array with values to include only some.
  * @param categoriesToAvoid null for any, array with values to exclude only some.
  */
@@ -521,8 +529,7 @@ export function getHexColorsAndLegend(dataArray, min, max, numSteps = 30) {
     const rawVal = min + range * i / numSteps;
 
     const value = rawVal.toFixed(numDecimals);
-    const color = numberToHex(rawVal);
-    legend[value] = color;
+    legend[value] = numberToHex(rawVal);
   }
 
   return {

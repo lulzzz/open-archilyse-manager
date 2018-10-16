@@ -15,11 +15,16 @@ import { NavigationService } from '../../_services';
 })
 export class RegionOverviewComponent implements OnInit, OnDestroy {
   /**
+   * Loading and general error
+   */
+
+  generalError = null;
+  loading = true;
+
+  /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
    */
-  generalError = null;
-  loading = true;
 
   selectedNodes = [];
   selectedRows = [];

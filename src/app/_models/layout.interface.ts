@@ -1,5 +1,8 @@
 import { Movement } from './movement.interface';
 
+/**
+ * Entity layout from the API
+ */
 export interface Layout {
   layout_id: string;
   unit_id?: string;

@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -14,11 +15,10 @@ export class BreadcrumbComponent implements OnDestroy {
   showBack = false;
   showPortfolio = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private location: Location) {
     router.events.subscribe(val => {
       if (val instanceof NavigationEnd && val['urlAfterRedirects']) {
         const url = val['urlAfterRedirects'];
-        console.log('url ', url);
 
         this.showBack = false;
         this.showPortfolio = false;
@@ -75,30 +75,6 @@ export class BreadcrumbComponent implements OnDestroy {
         }
       }
     });
-
-    /**
-    router.events
-      .filter(event => event instanceof NavigationEnd)
-      .subscribe((event: RouterEvent) => {
-        // console.log('event ', event);
-        if (event.url) {
-          // console.log('event.url ', event.url);
-
-          const urlAndFragment = event.url.split('#');
-
-          let currentUrl;
-          if (urlAndFragment) {
-            currentUrl = urlAndFragment[0];
-          } else {
-            currentUrl = '';
-          }
-
-          const url = currentUrl.split('/');
-          url.shift();
-          this.processURL(url);
-        }
-      });
-     */
   }
 
   processURL(url) {
@@ -113,7 +89,7 @@ export class BreadcrumbComponent implements OnDestroy {
   }
 
   backPage() {
-    window.history.back();
+    this.location.back();
   }
   backPortfolio() {
     this.router.navigate(['manager', 'building']);

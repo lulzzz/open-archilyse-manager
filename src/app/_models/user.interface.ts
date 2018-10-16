@@ -1,3 +1,6 @@
+/**
+ * Entity user from the API
+ */
 export interface User {
   user_id?: string;
   name?: string;

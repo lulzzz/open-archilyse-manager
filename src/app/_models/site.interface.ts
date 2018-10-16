@@ -1,3 +1,6 @@
+/**
+ * Entity site from the API
+ */
 export interface Site {
   name: string;
   description: string;

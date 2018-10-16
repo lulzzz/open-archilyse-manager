@@ -20,14 +20,7 @@ import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 
-import KML from 'ol/format/KML';
-import { get as getProjection } from 'ol/proj';
-
-import {
-  click as conditionClick,
-  pointerMove as conditionPointerMove,
-  never as conditionNever,
-} from 'ol/events/condition';
+import { click as conditionClick } from 'ol/events/condition';
 
 import Select from 'ol/interaction/Select';
 
@@ -43,19 +36,6 @@ import {
   reduceHeatmap,
 } from '../../_shared-libraries/HexagonFunctions';
 import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
-
-const saveData = (() => {
-  const a = document.createElement('a');
-  document.body.appendChild(a);
-  return (fileName, data) => {
-    const blob = new Blob([data], { type: 'octet/stream' });
-    const url = window.URL.createObjectURL(blob);
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-})();
 
 export const colors = [
   '#2c7bb6',

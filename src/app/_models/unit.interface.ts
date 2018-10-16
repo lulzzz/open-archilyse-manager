@@ -1,3 +1,6 @@
+/**
+ * Entity unit from the API
+ */
 export interface Unit {
   unit_id: string;
 

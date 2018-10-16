@@ -1,3 +1,7 @@
+/**
+ * Layout movements when georeferenced
+ * Layout.movements property
+ */
 export interface Movement {
   source?: string;
   angle: number;

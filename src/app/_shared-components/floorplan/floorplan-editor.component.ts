@@ -13,13 +13,22 @@ import {
   MeshPhongMaterial,
 } from 'three-full/builds/Three.es.js';
 
+/** Base Layer */
 const LAYER_1 = 0.4;
+/** 2nd Layer */
 const LAYER_2 = 0.8;
+/** 3rd Layer */
 const LAYER_3 = 1.2;
+/** 4th Layer */
 const LAYER_4 = 1.6;
+
+/** Z-Index for the controls */
 const LAYER_CONTROLS = 1;
 
+/** Color when clicked */
 const colorClick = 0x99ff;
+
+/** Color when mouse over */
 const colorOver = 0xff99;
 
 import { Subscription } from 'rxjs/Subscription';
@@ -408,41 +417,40 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
   }
 
   drawOpenings(buildingStructure, opening_area) {
+    const numPoints = 10;
+    const points = [opening_area.axis];
 
-     const numPoints = 10;
-     const points = [opening_area.axis];
+    const distRef = this.distance(
+      opening_area.open[COOR_X],
+      opening_area.open[COOR_Y],
+      opening_area.axis[COOR_X],
+      opening_area.axis[COOR_Y]
+    );
 
-     const distRef = this.distance(
-     opening_area.open[COOR_X],
-     opening_area.open[COOR_Y],
-     opening_area.axis[COOR_X],
-     opening_area.axis[COOR_Y]
-     );
+    for (let i = 0; i <= numPoints; i++) {
+      const rectX =
+        opening_area.close[COOR_X] * i / numPoints +
+        opening_area.open[COOR_X] * (numPoints - i) / numPoints;
+      const rectY =
+        opening_area.close[COOR_Y] * i / numPoints +
+        opening_area.open[COOR_Y] * (numPoints - i) / numPoints;
 
-     for (let i = 0; i <= numPoints; i++) {
-       const rectX =
-         opening_area.close[COOR_X] * i / numPoints +
-         opening_area.open[COOR_X] * (numPoints - i) / numPoints;
-       const rectY =
-         opening_area.close[COOR_Y] * i / numPoints +
-         opening_area.open[COOR_Y] * (numPoints - i) / numPoints;
+      const currentDist = this.distance(
+        opening_area.axis[COOR_X],
+        opening_area.axis[COOR_Y],
+        rectX,
+        rectY
+      );
 
-       const currentDist = this.distance(
-         opening_area.axis[COOR_X],
-         opening_area.axis[COOR_Y],
-         rectX,
-         rectY
-       );
+      const correction = 1 - currentDist / distRef;
 
-       const correction = 1 - currentDist / distRef;
+      const newPoint = [
+        rectX + (rectX - opening_area.axis[COOR_X]) * correction,
+        rectY + (rectY - opening_area.axis[COOR_Y]) * correction,
+      ];
 
-       const newPoint = [
-         rectX + (rectX - opening_area.axis[COOR_X]) * correction,
-         rectY + (rectY - opening_area.axis[COOR_Y]) * correction,
-       ];
-
-       points.push(newPoint);
-     }
+      points.push(newPoint);
+    }
 
     points.push(opening_area.axis);
 
@@ -454,7 +462,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
   }
 
   drawDoors(buildingStructure, data) {
-    console.log("drawDoors", data);
+    console.log('drawDoors', data);
     drawGeometries(buildingStructure, data, 0x333333, 1.5, LAYER_1);
   }
 
@@ -803,8 +811,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
           // ************ structure.opening_area.coordinates
           structure.opening_area.forEach(opening => {
             this.drawOpenings(buildingStructure, opening);
-          })
-
+          });
         }
       } else if (
         structure.type === EditorConstants.WINDOW_ENVELOPE ||
