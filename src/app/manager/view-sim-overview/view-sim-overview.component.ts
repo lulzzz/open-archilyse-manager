@@ -729,7 +729,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
       }
       console.log('opening_area ', structure);
       if (structure.opening_area) {
-        for (let i = 0; i < structure.opening_area.length; i++) {
+        for (let i = 0; i < structure.opening_area.length; i += 1) {
           const opening_area = structure.opening_area[i];
 
           const numPoints = 10;
@@ -742,7 +742,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
             opening_area.axis[COOR_Y]
           );
 
-          for (let i = 0; i <= numPoints; i++) {
+          for (let i = 0; i <= numPoints; i += 1) {
             const rectX =
               opening_area.close[COOR_X] * i / numPoints +
               opening_area.open[COOR_X] * (numPoints - i) / numPoints;

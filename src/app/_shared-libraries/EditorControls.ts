@@ -422,6 +422,10 @@ export class EditorControls {
     });
   }
 
+  /**
+   * Move an rotate controls only for georeferencing a Layout
+   * @param coorZ zIndez for the controls
+   */
   public static addRotateMoveControls(coorZ) {
     this.addControl(
       0,

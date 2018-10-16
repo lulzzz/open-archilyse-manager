@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { exportOptions, exportSelectedOptions } from '../../_shared-libraries/ExcelManagement';
-import { getCategory } from '../../_shared-libraries/Categories';
+import { getCategory } from '../../_shared-libraries/DpoiCategories';
 import { NavigationService } from '../../_services';
 
 /**

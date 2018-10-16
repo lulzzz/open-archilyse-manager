@@ -143,7 +143,7 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
     const simKeys = Object.keys(this.simulations.dpoi.result);
     const dpoiResult = this.simulations.dpoi.result;
 
-    for (let i = 0; i < simKeys.length; i++) {
+    for (let i = 0; i < simKeys.length; i += 1) {
       const simKey = simKeys[i];
       if (simKey !== 'coordinates') {
         ApiFunctions.getPath(

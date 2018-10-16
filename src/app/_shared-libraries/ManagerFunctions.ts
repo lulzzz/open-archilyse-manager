@@ -7,6 +7,9 @@ function _capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+/**
+ * Portfolio Manager helper functions
+ */
 export class ManagerFunctions {
   /**
    * Gets the name of an element or the street if there's no name

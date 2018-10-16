@@ -1,6 +1,5 @@
 import { environment } from '../../environments/environment';
 const apiUrl = environment.apiUrl;
-const apiPath = environment.apiPath;
 
 /**
  * Collection of functions to centralize the API calls.

@@ -427,7 +427,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       opening_area.axis[COOR_Y]
     );
 
-    for (let i = 0; i <= numPoints; i++) {
+    for (let i = 0; i <= numPoints; i += 1) {
       const rectX =
         opening_area.close[COOR_X] * i / numPoints +
         opening_area.open[COOR_X] * (numPoints - i) / numPoints;

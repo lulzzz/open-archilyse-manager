@@ -113,6 +113,12 @@ export const colorsComparePos = [
   '#00df00',
 ];
 
+/**
+ * Recursive function to analyze the bounding box of a model structure.
+ * Triggered by the function "boundingBox"
+ * @param polygonVertices
+ * @param structure
+ */
 function boundingBoxRecursive(polygonVertices, structure) {
   if (
     structure.type === EditorConstants.BATHROOM ||
