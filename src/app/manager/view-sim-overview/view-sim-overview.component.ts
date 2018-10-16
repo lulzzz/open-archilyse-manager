@@ -496,11 +496,11 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
 
             let totalValue = 0;
             const simValues = thisHeightSims.map(sim => {
-              const value = sim.heatmap[yy][xx];
-              totalValue += value;
+              const heatmapValue = sim.heatmap[yy][xx];
+              totalValue += heatmapValue;
               return {
                 category: sim.category,
-                value: value,
+                value: heatmapValue,
               };
             });
 
@@ -652,7 +652,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     );
   }
 
-  drawCoords(coords, featureId, color, lineColor, lineWidth) {
+  drawCoords(coords, featureId, colorToFill, lineColor, lineWidth) {
     const feature = new OlFeature({ geometry: new OlPolygon([coords]) });
     // To recover the value
     // feature.setId(featureId);
@@ -664,9 +664,9 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     feature.setStyle(
       new OlStyle({
         fill:
-          color !== null
+          colorToFill !== null
             ? new OlStyleFill({
-                color: color,
+                color: colorToFill,
               })
             : null,
         stroke: new OlStyleStroke({

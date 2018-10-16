@@ -132,19 +132,21 @@ export class KmlExport {
       const coords = coordinates.nodeValue.split(' ');
       const coordinatesStr = coords.join(heightStrSpace) + heightStr;
 
-      const exagonColor = style.childNodes[0].childNodes[0].childNodes[0].data;
+      const hexagonColor = style.childNodes[0].childNodes[0].childNodes[0].data;
 
       if (center === null) {
         center = coords[0].split(',');
       }
 
+      const hexagonColorXML = `<color>${hexagonColor}</color>`;
+      const styleXML = `<Style><LineStyle>${hexagonColorXML}</LineStyle><PolyStyle>${hexagonColorXML}<fill>1</fill></PolyStyle></Style>`;
+      const coordinatesXML = `<outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs>`;
+      const polygonXML = `<Polygon><altitudeMode>absolute</altitudeMode>${coordinatesXML}</Polygon>`;
+
       // Documentation:
       // https://developers.google.com/kml/documentation/kmlreference#polystyle
       placemarks.push(`
-        <Placemark>
-          <Style><LineStyle><color>${exagonColor}</color></LineStyle><PolyStyle><color>${exagonColor}</color><fill>1</fill></PolyStyle></Style>
-          <Polygon><altitudeMode>absolute</altitudeMode><outerBoundaryIs><LinearRing><coordinates>${coordinatesStr}</coordinates></LinearRing></outerBoundaryIs></Polygon>
-        </Placemark>`);
+        <Placemark>${styleXML}${polygonXML}</Placemark>`);
     });
 
     const lookAt = `<LookAt>

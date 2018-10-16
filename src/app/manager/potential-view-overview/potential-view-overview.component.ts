@@ -354,11 +354,11 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
 
                           let totalValue = 0;
                           const simValues = thisHeightSims.map(sim => {
-                            const value = sim.heatmap[yy][xx];
-                            totalValue += value;
+                            const heatmapValue = sim.heatmap[yy][xx];
+                            totalValue += heatmapValue;
                             return {
                               category: sim.category,
-                              value: value,
+                              value: heatmapValue,
                             };
                           });
 

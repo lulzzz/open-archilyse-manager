@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { HttpClient } from '@angular/common/http';
 import { parseParms } from '../../_shared-libraries/Url';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 
 import OlMap from 'ol/Map';
 import OlTileLayer from 'ol/layer/Tile';
@@ -66,7 +66,7 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
   view: OlView;
 
   mapStyle;
-  mapVehicle = 'foot'; //'bike', 'car'
+  mapVehicle = 'foot'; // 'bike', 'car'
 
   /**
    * Simulation data

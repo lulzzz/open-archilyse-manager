@@ -3,7 +3,7 @@ import { parseParms } from './Url';
 import { Building, Layout, Site, Unit } from '../_models';
 import { ApiFunctions } from './ApiFunctions';
 
-function _capitalizeFirstLetter(string) {
+function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -55,13 +55,13 @@ export class ManagerFunctions {
         data['address.country'].type &&
         data['address.country'].type === 'equals'
       ) {
-        return `<label>Filtering by country: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+        return `<label>Filtering by country: </label> <span class="whiteText" >${capitalizeFirstLetter(
           data['address.country'].filter
         )}</span>`;
       }
 
       if (data['country'] && data['country'].type && data['country'].type === 'equals') {
-        return `<label>Filtering by country: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+        return `<label>Filtering by country: </label> <span class="whiteText" >${capitalizeFirstLetter(
           data['country'].filter
         )}</span>`;
       }
@@ -71,13 +71,13 @@ export class ManagerFunctions {
         data['address.city'].type &&
         data['address.city'].type === 'equals'
       ) {
-        return `<label>Filtering by city: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+        return `<label>Filtering by city: </label> <span class="whiteText" >${capitalizeFirstLetter(
           data['address.city'].filter
         )}</span>`;
       }
 
       if (data['city'] && data['city'].type && data['city'].type === 'equals') {
-        return `<label>Filtering by city: </label> <span class="whiteText" >${_capitalizeFirstLetter(
+        return `<label>Filtering by city: </label> <span class="whiteText" >${capitalizeFirstLetter(
           data['city'].filter
         )}</span>`;
       }
