@@ -18,8 +18,8 @@ export const environment = {
 
   urlSimulationViewer: 'http://localhost:4203/simulations',
 
-  defaultUser: '***REMOVED***',
-  defaultPass: '***REMOVED***',
+  defaultUser: '?????????',
+  defaultPass: '?????????',
 
   firebase: {
     apiKey: '***REMOVED***',
