@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -79,7 +85,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
               readOnlyKey: false,
             },
             cellEditor: 'agPopupSelectCellEditor',
-            valueFormatter: CellRender.buildingFormatter.bind(this, this.currentProfile),
+            valueFormatter: CellRender.buildingFormatter.bind(
+              this,
+              this.currentProfile
+            ),
             cellEditorParams: {
               values: ['', ...buildings.map(building => building.building_id)],
             },
@@ -277,11 +286,14 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         buildingThisUnit && buildingThisUnit.name ? buildingThisUnit.name : '';
 
       nodeData['building_referenced'] =
-        buildingThisUnit && ManagerFunctions.isReferencedBuilding(buildingThisUnit);
+        buildingThisUnit &&
+        ManagerFunctions.isReferencedBuilding(buildingThisUnit);
       nodeData['building_referenced_osm'] =
-        buildingThisUnit && ManagerFunctions.isReferencedOSMBuilding(buildingThisUnit);
+        buildingThisUnit &&
+        ManagerFunctions.isReferencedOSMBuilding(buildingThisUnit);
       nodeData['building_referenced_st'] =
-        buildingThisUnit && ManagerFunctions.isReferencedSTBuilding(buildingThisUnit);
+        buildingThisUnit &&
+        ManagerFunctions.isReferencedSTBuilding(buildingThisUnit);
     }
   }
 
@@ -302,7 +314,9 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
         this.buildColumDefinitions(buildingsArray);
 
         unitsArray.forEach(unit => {
-          const layoutsThisUnit = layoutsArray.filter(layout => layout.unit_id === unit.unit_id);
+          const layoutsThisUnit = layoutsArray.filter(
+            layout => layout.unit_id === unit.unit_id
+          );
 
           const numLayouts = layoutsThisUnit.length;
           unit.layouts = numLayouts;
@@ -340,7 +354,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null || Object.keys(model).length > 0;
+            this.filterModelSet =
+              model !== null || Object.keys(model).length > 0;
             this.filtersHuman = ManagerFunctions.calculateHumanFilters(
               model,
               this.filterModelSet,
@@ -504,7 +519,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
 
         console.log('allRows ', allRows);
         allRows.forEach(oneRow => {
-          if (oneRow.unit_id && oneRow.unit_id !== null && oneRow.unit_id !== '') {
+          if (
+            oneRow.unit_id &&
+            oneRow.unit_id !== null &&
+            oneRow.unit_id !== ''
+          ) {
             const unit_id = oneRow.unit_id;
             delete oneRow.unit_id;
 

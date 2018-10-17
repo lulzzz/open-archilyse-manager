@@ -14,6 +14,7 @@ import { NavigationService } from '../../_services';
   styleUrls: ['./region-overview.component.scss'],
 })
 export class RegionOverviewComponent implements OnInit, OnDestroy {
+
   /**
    * Loading and general error
    */

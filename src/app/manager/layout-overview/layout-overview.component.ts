@@ -405,7 +405,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.viewModel,
             editable: false,
             cellClass: 'readOnly',
-          },
+          }
         ],
       },
       ...analysisColumns,
@@ -797,10 +797,6 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions(unitsArray);
 
-        /**
-         * Preparation for the ag-grid
-         * https://www.ag-grid.com/documentation-main/documentation.php
-         */
         this.gridOptions = {
           // <GridOptions>
           rowData: this.layoutsArray,

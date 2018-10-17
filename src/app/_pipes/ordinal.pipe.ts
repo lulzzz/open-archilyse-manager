@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 const ordinals: string[] = ['th', 'st', 'nd', 'rd'];
 
-@Pipe({ name: 'ordinal' })
 /**
  * Append ordinal to number (e.g. "1st" position)
  * Usage:
@@ -14,9 +13,13 @@ const ordinals: string[] = ['th', 'st', 'nd', 'rd'];
  *   {{ 23 |  ordinal:false}}
  *   formats to: 'rd'
  */
+@Pipe({ name: 'ordinal' })
 export class OrdinalPipe implements PipeTransform {
   transform(n: number, keepNumber: boolean = true) {
     const v = n % 100;
-    return (keepNumber ? n : '') + (ordinals[(v - 20) % 10] || ordinals[v] || ordinals[0]);
+    return (
+      (keepNumber ? n : '') +
+      (ordinals[(v - 20) % 10] || ordinals[v] || ordinals[0])
+    );
   }
 }

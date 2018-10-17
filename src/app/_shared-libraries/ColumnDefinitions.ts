@@ -71,7 +71,8 @@ export class ColumnDefinitions {
         {
           headerName: 'Organization Id',
           columnGroupShow: 'open',
-          headerTooltip: 'Organization from the user that changed the last value',
+          headerTooltip:
+            'Organization from the user that changed the last value',
           field: 'org_id',
           width: 250,
           editable: false,
@@ -416,15 +417,20 @@ export const columnDefsCompare = [
 ];
 
 export const columnDefs = [
-  ...getColumnDefsCommon(CellRender.distance, CellRender.duration, CellRender.score, [
-    {
-      headerName: 'Place name',
-      field: 'place_name',
-      width: 190,
-      editable: false,
-      cellClass: 'readOnly',
-    },
-  ]),
+  ...getColumnDefsCommon(
+    CellRender.distance,
+    CellRender.duration,
+    CellRender.score,
+    [
+      {
+        headerName: 'Place name',
+        field: 'place_name',
+        width: 190,
+        editable: false,
+        cellClass: 'readOnly',
+      },
+    ]
+  ),
   {
     headerName: 'Coordinates',
     children: [
