@@ -1,7 +1,9 @@
 import * as fromUser from '../actions/user.action';
 import { User } from '../../_models';
-// import { MOCK_USER } from '../../_mocks/mock-user';
 
+/**
+ * Application state
+ */
 export interface State {
   authenticated: boolean;
   authenticating: boolean;
@@ -15,6 +17,9 @@ export interface State {
   error?: string;
 }
 
+/**
+ * Initial application state
+ */
 const initialState: State = {
   authenticated: false,
   authenticating: false,
@@ -26,15 +31,21 @@ const initialState: State = {
   refreshed: false,
 };
 
-/*     META REDUCER     */
+/**     META REDUCER     */
 export function logout(reducer) {
   return function(state, action) {
-    return reducer(action.type === fromUser.UserActionTypes.LOG_OUT ? {} : state, action);
+    return reducer(
+      action.type === fromUser.UserActionTypes.LOG_OUT ? {} : state,
+      action
+    );
   };
 }
-/*  END OF META REDUCER  */
+/**  END OF META REDUCER  */
 
-export function reducer(state = initialState, action: fromUser.UserActions): State {
+export function reducer(
+  state = initialState,
+  action: fromUser.UserActions
+): State {
   switch (action.type) {
     case fromUser.UserActionTypes.AUTHENTICATE: {
       return {

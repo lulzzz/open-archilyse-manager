@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+/**
+ * The LogService stores all the requests done to be displayed in the API usage log for developers
+ */
 @Injectable()
 export class LogService {
   constructor() {}

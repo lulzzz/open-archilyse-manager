@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+/**
+ * The NavigationService controls the current menu in the navigation bar and changes the content.
+ * It also allow to manage the current profile of the application.
+ */
 @Injectable()
 export class NavigationService {
   private current = new Subject<string>();

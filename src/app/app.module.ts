@@ -41,7 +41,6 @@ import {
 } from './_services';
 
 // DIRECTIVES
-import { SharedDirectiveModule } from './_directives/shared-directives.module';
 
 // MODULES
 import { AppRoutingModule } from './app-routing.module';
@@ -101,7 +100,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    SharedDirectiveModule,
     MatSnackBarModule,
     MatDialogModule,
     MatSidenavModule,

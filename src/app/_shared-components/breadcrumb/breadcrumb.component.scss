@@ -9,13 +9,13 @@
   font-size: 25px;
   color: white;
 
-  /* Style the list */
+  /** Style the list */
   ul.breadcrumb {
     padding: 10px 0;
     list-style: none;
   }
 
-  /* Display list items side by side */
+  /** Display list items side by side */
   ul.breadcrumb li {
     display: inline;
     // color: $green;
@@ -24,7 +24,7 @@
     position: relative;
   }
 
-  /* Add a slash symbol (/) before/behind each list item */
+  /** Add a slash symbol (/) before/behind each list item */
   ul.breadcrumb li + li:before {
     padding: 8px 2px 8px 4px;
     color: $dark;
@@ -33,7 +33,7 @@
     opacity: 0.2;
   }
 
-  /* Add a color to all links inside the list */
+  /** Add a color to all links inside the list */
   ul.breadcrumb li a {
     color: $dark;
     opacity: 0.6;
@@ -41,7 +41,7 @@
     transform: opacity 100ms ease;
   }
 
-  /* Add a color on mouse-over */
+  /** Add a color on mouse-over */
   ul.breadcrumb li a:hover {
     // color: $green;
     opacity: 1;

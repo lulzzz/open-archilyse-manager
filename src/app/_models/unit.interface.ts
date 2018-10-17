@@ -21,6 +21,9 @@ export interface Unit {
   updated: string;
 }
 
+/**
+ * The address of a unit is defined by a floor_nr and additional information
+ */
 export interface AddressUnitReference {
   floor_nr?: number;
   additional?: string;

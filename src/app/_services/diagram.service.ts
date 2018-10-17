@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+/**
+ * This event identifies an elements and brings data attached.
+ */
 export class DiagramEvent {
   uniqueId: number;
   data;
@@ -12,6 +15,9 @@ export class DiagramEvent {
   }
 }
 
+/**
+ * Identifies the element by the coordinates and type
+ */
 export class ElementEvent {
   x: number;
   y: number;
@@ -24,6 +30,9 @@ export class ElementEvent {
   }
 }
 
+/**
+ * The DiagramService allow the different diagrams and graphs to work together and comunicate
+ */
 @Injectable()
 export class DiagramService {
   constructor() {}
@@ -35,7 +44,6 @@ export class DiagramService {
 
   private elementDropped = new Subject();
   elementDropped$ = this.elementDropped.asObservable();
-
 
   private seatSelected = new Subject<ElementEvent>();
   seatSelected$ = this.seatSelected.asObservable();
@@ -90,11 +98,9 @@ export class DiagramService {
 
   /** event */
 
-
   newElementDropped(data: ElementEvent) {
     this.elementDropped.next(data);
   }
-
 
   /** Seat */
 
@@ -157,7 +163,6 @@ export class DiagramService {
   displayElementSidebarDisplayed(isDisplayed) {
     this.isElementSidebarDisplayed.next(isDisplayed);
   }
-
 
   /** Display Mode in heatmap */
   changeDisplayMode(mode) {

@@ -1,5 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Helper ordinal list
+ */
 const ordinals: string[] = ['th', 'st', 'nd', 'rd'];
 
 /**

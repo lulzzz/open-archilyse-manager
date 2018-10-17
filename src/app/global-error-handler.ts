@@ -1,7 +1,5 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NotificationService } from './_services/notification.service';
-import { ErrorModalComponent } from './_shared-components/error-modal/error-modal.component';
 import { ToastrService } from 'ngx-toastr';
 // import { Router } from '@angular/router';
 

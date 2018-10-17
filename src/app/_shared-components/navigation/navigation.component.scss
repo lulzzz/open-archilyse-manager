@@ -12,14 +12,14 @@
     font-size: 10px;
   }
 
-  /* Style the list */
+  /** Style the list */
   ul.navigation {
     padding: 0;
     margin: 0;
     list-style: none;
   }
 
-  /* Display list items side by side */
+  /** Display list items side by side */
   ul.navigation li {
     // padding: 0 8px;
     margin-left: 20px;
@@ -59,7 +59,7 @@
     */
   }
 
-  /* Add a color to all links inside the list */
+  /** Add a color to all links inside the list */
   ul.navigation li a {
     color: $new_text_grey;
 
@@ -74,7 +74,7 @@
     }
   }
 
-  /* Add a color on mouse-over */
+  /** Add a color on mouse-over */
   ul.navigation li a:hover {
     opacity: 1;
       color: $new_table_header_blue;

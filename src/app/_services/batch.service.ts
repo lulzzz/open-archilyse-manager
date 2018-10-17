@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+/**
+ * This service allows to run batch operations.
+ * Designed to work with the Georeference tool.
+ */
 @Injectable()
 export class BatchService {
   constructor() {}

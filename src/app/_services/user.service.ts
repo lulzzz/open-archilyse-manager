@@ -13,6 +13,9 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
+/**
+ * User related data
+ */
 @Injectable()
 export class UserService {
   /**

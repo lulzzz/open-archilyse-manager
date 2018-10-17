@@ -31,9 +31,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
   ) {
     this.currentProfile = navigationService.profile.getValue();
 
-    this.user_sub = this.userService._authenticated.subscribe(_authenticated => {
-      this.isUserLoggedIn = _authenticated;
-    });
+    this.user_sub = this.userService._authenticated.subscribe(
+      _authenticated => {
+        this.isUserLoggedIn = _authenticated;
+      }
+    );
 
     navigationService.profile$.subscribe(newProfile => {
       this.currentProfile = newProfile;
@@ -106,7 +108,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.current = '';
     }
 
-    if (url === '/error' || url === '/login' || url === '/logout') {
+    if (
+      url === '/upgrade' ||
+      url === '/resetPassword' ||
+      url === '/error' ||
+      url === '/login' ||
+      url === '/logout'
+    ) {
       this.options = [];
     } else {
       this.options = this.optionsAvailable;
@@ -115,7 +123,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   prepareOptions() {
     let extraOptions = [];
-    if (this.currentProfile === 'analyst' || this.currentProfile === 'manager') {
+    if (
+      this.currentProfile === 'analyst' ||
+      this.currentProfile === 'manager'
+    ) {
       extraOptions = [
         {
           tooltip: 'Country overview',
@@ -172,15 +183,19 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptionNavCurrent = this.navigationService.current$.subscribe(current => {
-      this.current = current;
-    });
+    this.subscriptionNavCurrent = this.navigationService.current$.subscribe(
+      current => {
+        this.current = current;
+      }
+    );
     this.subscriptionNavdiagramLinkActive = this.navigationService.diagramLinkActive$.subscribe(
       diagramLinkActive => this.processDiagramLinkActive(diagramLinkActive)
     );
-    this.subscriptionNavOptions = this.navigationService.options$.subscribe(options => {
-      this.options = options;
-    });
+    this.subscriptionNavOptions = this.navigationService.options$.subscribe(
+      options => {
+        this.options = options;
+      }
+    );
   }
 
   changeVal(newValue) {

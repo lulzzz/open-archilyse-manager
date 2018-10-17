@@ -1,4 +1,10 @@
-import { Injectable, Inject, OnInit, Injector, ComponentRef } from '@angular/core';
+import {
+  Injectable,
+  Inject,
+  OnInit,
+  Injector,
+  ComponentRef,
+} from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 
@@ -7,6 +13,9 @@ import { InfoBoxOverlayComponent } from '../_shared-components/overlays/info-box
 import { GenericOverlayRef } from '../_shared-components/overlays/generic-overlay-ref';
 import { INFO_BOX_OVERLAY_DATA } from '../_shared-components/overlays/info-box-overlay/info-box-overlay.tokens';
 
+/**
+ * Configuration options of the Info box
+ */
 interface InfoBoxDialogConfig {
   panelClass?: string;
   hasBackdrop?: boolean;
@@ -15,12 +24,18 @@ interface InfoBoxDialogConfig {
   // image?: Image;
 }
 
+/**
+ * Default option of the Info box
+ */
 const DEFAULT_CONFIG: InfoBoxDialogConfig = {
   hasBackdrop: true,
   backdropClass: 'dark-backdrop',
   panelClass: 'info-box-dialog-panel',
 };
 
+/**
+ * The OverlayService allow to display messages for the user over the conntent
+ */
 @Injectable()
 export class OverlayService {
   constructor(private injector: Injector, private overlay: Overlay) {}
@@ -35,7 +50,11 @@ export class OverlayService {
     // Instantiate remote control
     const dialogRef = new GenericOverlayRef(overlayRef);
 
-    const overlayComponent = this.attachDialogContainer(overlayRef, dialogConfig, dialogRef);
+    const overlayComponent = this.attachDialogContainer(
+      overlayRef,
+      dialogConfig,
+      dialogRef
+    );
 
     overlayRef.backdropClick().subscribe(_ => dialogRef.close());
 
@@ -54,8 +73,14 @@ export class OverlayService {
   ) {
     const injector = this.createInjector(config, dialogRef);
 
-    const containerPortal = new ComponentPortal(InfoBoxOverlayComponent, null, injector);
-    const containerRef: ComponentRef<InfoBoxOverlayComponent> = overlayRef.attach(containerPortal);
+    const containerPortal = new ComponentPortal(
+      InfoBoxOverlayComponent,
+      null,
+      injector
+    );
+    const containerRef: ComponentRef<
+      InfoBoxOverlayComponent
+    > = overlayRef.attach(containerPortal);
 
     return containerRef.instance;
   }

@@ -9,6 +9,9 @@ import { UserService } from '../../_services';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Effects regarding Log in (authentication), Log out action from a user
+ */
 @Injectable()
 export class UserEffects {
   @Effect() name$: Observable<Action> = this.actions$.ofType('ACTIONTYPE');
@@ -22,22 +25,24 @@ export class UserEffects {
 
   // @ts-ignore
   @Effect()
-  authenticate$ = this.actions$.ofType(userActions.UserActionTypes.AUTHENTICATE).pipe(
-    map((action: userActions.Authenticate) => action.payload),
-    switchMap(user => {
-      return this.userService.authenticate(user.email, user.password).pipe(
-        map(credentials => {
-          this.toastr.success('Authenticated successfully');
-          return new userActions.AuthenticateSuccess(credentials.user);
-        }),
-        catchError(error => {
-          console.error('Failed to authenticate', error);
-          this.toastr.error('Failed to authenticate');
-          return of(new userActions.AuthenticateFailure(error.message));
-        })
-      );
-    })
-  );
+  authenticate$ = this.actions$
+    .ofType(userActions.UserActionTypes.AUTHENTICATE)
+    .pipe(
+      map((action: userActions.Authenticate) => action.payload),
+      switchMap(user => {
+        return this.userService.authenticate(user.email, user.password).pipe(
+          map(credentials => {
+            this.toastr.success('Authenticated successfully');
+            return new userActions.AuthenticateSuccess(credentials.user);
+          }),
+          catchError(error => {
+            console.error('Failed to authenticate', error);
+            this.toastr.error('Failed to authenticate');
+            return of(new userActions.AuthenticateFailure(error.message));
+          })
+        );
+      })
+    );
 
   @Effect()
   authenticateSuccess$ = this.actions$
@@ -46,7 +51,9 @@ export class UserEffects {
       map((action: userActions.AuthenticateSuccess) => action.payload),
       switchMap(payload => {
         console.log(payload);
-        return this.userService.user.pipe(map(user => new userActions.SignInSuccess(user)));
+        return this.userService.user.pipe(
+          map(user => new userActions.SignInSuccess(user))
+        );
       })
     );
 
@@ -69,15 +76,17 @@ export class UserEffects {
   );
 
   @Effect()
-  signInFailure$ = this.actions$.ofType(userActions.UserActionTypes.SIGN_IN_FAILURE).pipe(
-    map((action: userActions.SignInFailure) => {
-      return action.payload;
-    }),
-    switchMap(() => {
-      this.userService.signOut();
-      return of(new userActions.LogOutSuccess());
-    })
-  );
+  signInFailure$ = this.actions$
+    .ofType(userActions.UserActionTypes.SIGN_IN_FAILURE)
+    .pipe(
+      map((action: userActions.SignInFailure) => {
+        return action.payload;
+      }),
+      switchMap(() => {
+        this.userService.signOut();
+        return of(new userActions.LogOutSuccess());
+      })
+    );
 
   @Effect()
   logOut$ = this.actions$.ofType(userActions.UserActionTypes.LOG_OUT).pipe(

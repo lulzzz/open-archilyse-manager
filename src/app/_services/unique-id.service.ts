@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+/**
+ * Generated unique String id's to identify elements in front-end
+ */
 @Injectable()
 export class UniqueIdService {
   counter = 0;

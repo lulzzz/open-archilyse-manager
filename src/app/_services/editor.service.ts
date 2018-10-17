@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 
+/**
+ * This event identifies an elements and brings data attached.
+ */
 export class EditorEvent {
   uniqueId: number;
   data;
@@ -11,6 +14,10 @@ export class EditorEvent {
   }
 }
 
+/**
+ *  The EditorService communicates the editor ad the sidebar to work together and in a bi-directional way.
+ *  Changes in the editor are displayed in the sidebar, and changes in the sidebar are displayed in the editor
+ */
 @Injectable()
 export class EditorService {
   constructor() {}

@@ -77,7 +77,7 @@ export function convertFileToWorkbook(file, onComplete) {
   reader.onload = function(e) {
     const data = e.target['result'];
 
-    /* if binary string, read with type 'binary' */
+    /** if binary string, read with type 'binary' */
     const workbook = read(data, { type: 'binary' });
 
     onComplete(workbook);
