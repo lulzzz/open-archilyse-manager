@@ -21,16 +21,32 @@ const saveData = (() => {
  * Helper class to export Kml files
  */
 export class KmlExport {
+  /** API Layout object */
   layout;
+  /** Layout to Building address */
   address;
+
+  /** Selected simulation */
   currentSimulation;
+
+  /** Selected floor to display */
   currentFloor;
+
+  /** Floor array to display in the dropdown */
   floors;
 
+  /** Feature to draw */
   feature;
+
+  /** Detail map layer to take the elements from */
   detailSource;
+
+  /** Map view */
   view;
+
+  /** height to the ground */
   height;
+  /** height to the sea */
   absolute_height;
 
   /**
