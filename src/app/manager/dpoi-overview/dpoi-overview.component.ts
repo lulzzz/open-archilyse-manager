@@ -62,16 +62,25 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
    * ag- grid parameters:
    */
 
+  /** Ag-grid selected nodes */
+  selectedNodes = [];
+  /** Ag-grid selected rows */
+  selectedRows = [];
+
   buildingId;
   buildingIdCompare;
 
-  selectedNodes = [];
-  selectedRows = [];
-
+  /** ag-grid api */
   gridApi;
+  /** ag-grid column api */
   gridColumnApi;
+
+  /** are any filters set? */
   filterModelSet = false;
+
+  /** Configuration options for Ag-Grid  */
   gridOptions;
+
 
   /**
    * Local variables

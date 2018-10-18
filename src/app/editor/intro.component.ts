@@ -15,14 +15,19 @@ import { parseParms } from '../_shared-libraries/Url';
   styleUrls: ['./intro.component.scss'],
 })
 export class IntroEditorComponent implements OnInit, OnDestroy {
+  /** We subscribe to the route # parameters */
   fragment_sub: Subscription;
 
   constructor(private _router: Router, private route: ActivatedRoute) {}
 
+  /** Form object */
   editorForm = new FormGroup({
     layout: new FormControl('', Validators.required),
   });
 
+  /**
+   * After initialize the component we subscribe the url fragments to check if the layout was set
+   */
   ngOnInit() {
     this.fragment_sub = this.route.fragment.subscribe(fragment => {
       const urlParams = parseParms(fragment);

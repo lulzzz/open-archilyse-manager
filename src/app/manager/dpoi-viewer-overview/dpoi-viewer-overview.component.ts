@@ -28,6 +28,9 @@ import { environment } from '../../../environments/environment';
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
+/**
+ * Styling for the lines
+ */
 export const styleLine = new OlStyle({
   stroke: new OlStyleStroke({
     color: 'rgba(6, 143, 255, 0.5)',
@@ -68,6 +71,10 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
 
   view: OlView;
 
+  /**
+   * Mapbox Style selected
+   * light, dark, outdoors, streets, satellite
+   */
   mapStyle;
   mapVehicle = 'foot'; // 'bike', 'car'
 

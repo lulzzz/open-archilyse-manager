@@ -16,10 +16,14 @@ import {
 export class EditorSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Output() close = new EventEmitter<void>();
 
-  /** Sidebar content */
+  /** Sidebar title */
   title;
+  /** Sidebar subtitle or description */
   description;
+  /** Sidebar content */
   content;
+
+  /** Sidebar footer */
   footer;
 
   constructor() {}
@@ -50,10 +54,10 @@ export class EditorSidebarComponent implements OnInit, OnChanges, OnDestroy {
     event.stopPropagation();
   }
 
+  /** Click event */
   onClick(event: any) {
     // console.log('onClick');
     // event.preventDefault();
     event.stopPropagation();
   }
-
 }

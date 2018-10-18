@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  AfterViewInit,
+} from '@angular/core';
 import * as d3 from 'd3';
 
 import {
@@ -60,7 +67,9 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.bounds[0] === null) {
       this.bounds = geometriesToBounds(this.svgGeometries);
       if (this.bounds[0] === null) {
-        console.error('We were not able to get the bounds out of the geometries');
+        console.error(
+          'We were not able to get the bounds out of the geometries'
+        );
       } else {
         console.log('bounds based in all geometries');
       }
@@ -85,13 +94,14 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   drawGeometries() {
     // Bottom geometries
-    drawGeometriesFilter(this, this.svg, svgColorsMini, this.svgGeometries, null, [
-      'gauge',
-      'mask',
-      'floors',
-      'windows',
-      'lines',
-    ]);
+    drawGeometriesFilter(
+      this,
+      this.svg,
+      svgColorsMini,
+      this.svgGeometries,
+      null,
+      ['gauge', 'mask', 'floors', 'windows', 'lines']
+    );
 
     // Middle geometries
     drawGeometriesFilter(
@@ -113,10 +123,17 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
       ['gauge', 'mask']
     );
   }
+
+  /**
+   * We remove all the svg elements
+   */
   cleanSVG() {
     d3.select(`#${this.floorplanId} svg`).remove();
   }
 
+  /**
+   * We display the svg inside the bounds
+   */
   initialiseSVG(bounds) {
     const rectangle = d3
       .select(`#${this.floorplanId}`)
@@ -172,7 +189,13 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {string} category
    * @param {number} poligonNr
    */
-  drawPolygon(polygonVertecies: [number[]], layer, color, category: string, poligonNr: number) {
+  drawPolygon(
+    polygonVertecies: [number[]],
+    layer,
+    color,
+    category: string,
+    poligonNr: number
+  ) {
     const scaledVertecies = [];
 
     // Here we calculate the bounding box
@@ -184,7 +207,8 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
     if (polygonVertecies) {
       for (let i = 0; i < polygonVertecies.length; i += 1) {
         const x = (polygonVertecies[i][0] - this.startPosition[0]) * this.scale;
-        const y = -(polygonVertecies[i][1] - this.startPosition[1]) * this.scale;
+        const y =
+          -(polygonVertecies[i][1] - this.startPosition[1]) * this.scale;
 
         scaledVertecies.push([x, y]);
 
@@ -245,6 +269,9 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * On mouse over we scale the element
+   */
   onMouseOver() {
     const a = d3.select(`#${this.floorplanId} svg`);
     a
@@ -253,6 +280,9 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
       .attr('transform', 'scale(1.1,1.1) rotate(0) translate(0,0)');
   }
 
+  /**
+   * On out over we scale the element back to normal
+   */
   onMouseOut() {
     const a = d3.select(`#${this.floorplanId} svg`);
     a

@@ -70,10 +70,15 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
    * Data for the legend
    */
 
+  /** Matrix with all the hexagon values */
   legendData;
+  /** Value to color function */
   unit;
+  /** Unit of the current hexagon values */
   color;
+  /** Minimun value of the current range */
   min;
+  /** Maximun  value of the current range */
   max;
 
   /**
@@ -102,17 +107,31 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   selectPointerClick;
   selectPointerMove;
 
+  /**
+   * Mapbox Style selected
+   * light, dark, outdoors, streets, satellite
+   */
   mapStyle;
 
+  /** List of displayed cities for the drop-down */
   cities = [];
+  /** List of displayed countries for the drop-down */
   countries = [];
 
+  /** Selected Country to filter */
   filterCountry = null;
+  /** Selected City to filter */
   filterCity = null;
+
+  /** Selected Source to filter */
   filterSource = null;
+
+  /** display */
   showFilter = false;
 
   currentSimulation = 'buildings';
+
+  /** Floor displayed */
   currentFloor = 0;
   numberOfFloors = 1;
 
@@ -144,6 +163,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     this.start();
   }
 
+  /** Request all the data and set up the map */
   start() {
     ManagerFunctions.requestAllData(
       this.http,
@@ -184,6 +204,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     this.layer.setSource(this.source);
   }
 
+  /** Once we have the data we set up the open layers map*/
   setUpMap() {
     this.map = null;
     this.numGeoreferencedBuildings = 0;
@@ -575,17 +596,20 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Change the fimulation or the floor
-   */
-
+  /** Change the simulation and redraw the simulations */
   changeSimulation(data) {
-    this.currentSimulation = data.target.value;
-    this.redrawSimulations();
+    if (this.currentSimulation !== data.target.value) {
+      this.currentSimulation = data.target.value;
+      this.redrawSimulations();
+    }
   }
+
+  /** Change the floor and redraw the simulations */
   changeFloor(data) {
-    this.currentFloor = data.target.value;
-    this.redrawSimulations();
+    if (this.currentFloor !== data.target.value) {
+      this.currentFloor = data.target.value;
+      this.redrawSimulations();
+    }
   }
 
   /**
@@ -617,19 +641,19 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Change filters
-   */
-
+  /** Change country filter */
   filterByCountry(country) {
     this.filterCountry = country;
     this.setUpMap();
   }
 
+  /** Change city filter */
   filterByCity(city) {
     this.filterCity = city;
     this.setUpMap();
   }
+
+  /** Change map source */
   changeSource(data) {
     this.filterSource = data.target.value;
 
@@ -640,13 +664,13 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
     this.setUpMap();
   }
 
-  /**
-   * Enable and disable potential view
-   */
+  /** Enable potential view */
   enablePV() {
     this.enabledPV = true;
     this.correctVisibility(this.view.values_.resolution);
   }
+
+  /** Disable potential view */
   disablePV() {
     this.enabledPV = false;
 

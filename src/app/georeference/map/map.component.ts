@@ -65,14 +65,24 @@ export class MapComponent implements OnInit, OnDestroy {
   buildingId;
   layoutId;
 
-  // Batch information
+  /** Batch information */
   nextBatch;
+  /** Has batch next element */
   hasNextBatch;
 
+  /** https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html */
   map: OlMap;
+
+  /** https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ.html */
   source: OlXYZ;
+
+  /** The normal map tiles layer */
   layer: OlTileLayer;
+
+  /** The graphics layer */
   vectorLayer: OlVectorLayer;
+
+  /** https://openlayers.org/en/latest/apidoc/module-ol_View-View.html */
   view: OlView;
 
   mapHelp;
@@ -93,7 +103,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
   displayVectors = true;
 
+  /**
+   * Mapbox Style selected
+   * light, dark, outdoors, streets, satellite
+   */
   mapStyle;
+
   buildingReferenceId = null;
   buildingFeature = null;
 
@@ -101,10 +116,15 @@ export class MapComponent implements OnInit, OnDestroy {
   buildingReferenceIdPreselectedUser = null;
   buildingReferenceIdPreselectedDate = null;
 
+  /** change the style on mouse over */
   selectPointerMove;
+  /** change the style on click */
   selectPointerClick;
+  /** change the style of probable buildings */
   selectProbable;
+  /** change the style of VERY probable buildings */
   selectVeryProbable;
+  /** change the style of the preselected building */
   selectPreselected;
 
   processEnded;
@@ -112,9 +132,7 @@ export class MapComponent implements OnInit, OnDestroy {
   /** user profile */
   currentProfile;
 
-  /**
-   * Subscriptions
-   */
+  /** Subscriptions */
   fragment_sub: Subscription;
 
   constructor(

@@ -32,16 +32,23 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
    * ag- grid parameters:
    */
 
+  /** Ag-grid selected nodes */
   selectedNodes = [];
+  /** Ag-grid selected rows */
   selectedRows = [];
 
+  /** ag-grid api */
   gridApi;
+  /** ag-grid column api */
   gridColumnApi;
 
+  /** are any filters set? */
   filterModelSet = false;
 
+  /** Configuration options for Ag-Grid  */
   gridOptions;
 
+  /** Column definition for Ag-Grid */
   columnDefs;
 
   /** user profile */

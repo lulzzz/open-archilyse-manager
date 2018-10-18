@@ -5,15 +5,25 @@ import { User } from '../../_models';
  * Application state
  */
 export interface State {
+  /** is user authenticated */
   authenticated: boolean;
+  /** is user authenticating */
   authenticating: boolean;
+  /** is user loaded */
   loaded: boolean;
+  /** is user loading */
   loading: boolean;
+  /** user data */
   user?: User;
+  /** is user updating */
   updating: boolean;
+  /** is user updated */
   updated: boolean;
+  /** is user refreshing */
   refreshing: boolean;
+  /** is user refreshed */
   refreshed: boolean;
+  /** error string */
   error?: string;
 }
 
@@ -21,13 +31,21 @@ export interface State {
  * Initial application state
  */
 const initialState: State = {
+  /** is user authenticated */
   authenticated: false,
+  /** is user authenticating */
   authenticating: false,
+  /** is user loaded */
   loaded: false,
+  /** is user loading */
   loading: false,
+  /** is user updating */
   updating: false,
+  /** is user updated */
   updated: false,
+  /** is user refreshing */
   refreshing: false,
+  /** is user refreshed */
   refreshed: false,
 };
 

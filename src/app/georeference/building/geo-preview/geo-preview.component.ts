@@ -22,6 +22,7 @@ export class GeoPreviewComponent implements OnInit, OnDestroy {
   widthPrev;
   heightPrev;
 
+  /** Window listener with access to this */
   windowListener;
 
   constructor() {}
@@ -33,6 +34,9 @@ export class GeoPreviewComponent implements OnInit, OnDestroy {
     this.setUp();
   }
 
+  /**
+   * On window resize
+   */
   onWindowResize() {
     this.setUp();
   }

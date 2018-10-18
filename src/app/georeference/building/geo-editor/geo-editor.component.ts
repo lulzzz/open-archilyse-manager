@@ -72,7 +72,7 @@ export class GeoEditorComponent
 
   cameraInfo;
 
-  // On window Resize, (We need to store it to unsubscribe later)
+  /** On window Resize, (We need to store it to unsubscribe later) */
   windowListener;
   mousemoveListener;
   mouseoutListener;
@@ -84,7 +84,7 @@ export class GeoEditorComponent
   width; /** Here we store the width & height of the container */
   height;
 
-  // Container box of the SVG's
+  /** Container box of the SVG's */
   geometryBox;
 
   constructor() {}
@@ -110,27 +110,39 @@ export class GeoEditorComponent
    * MOUSE CONTROLS
    */
 
+  /** On mouse move we try to ray trace and identify the element */
   onMouseMove(event) {
     const rayCaster = this.onMouseUpdate(event);
     // calculate objects intersecting the picking ray
     EditorControls.onMouseMove(event, rayCaster);
   }
+
+  /** On click we try to ray trace and identify the element */
   onMouseClick(event) {
     const rayCaster = this.onMouseUpdate(event);
     // calculate objects intersecting the picking ray
     EditorControls.onMouseDown(event, rayCaster);
   }
+
+  /** On mouse out we try to ray trace and identify the element */
   onMouseOut(event) {
     const rayCaster = this.onMouseUpdate(event);
     // calculate objects intersecting the picking ray
     EditorControls.onMouseOut(event, rayCaster);
   }
+
+  /** On mouse up we try to ray trace and identify the element */
   onMouseUp(event) {
     const rayCaster = this.onMouseUpdate(event);
     // calculate objects intersecting the picking ray
     EditorControls.onMouseUp(event, rayCaster);
   }
 
+  /**
+   * Before any mouse events we have to normalize the x y coordinates of the mouse from -1 to 1
+   * @param eventX original position in pixels
+   * @param eventY original position in pixels
+   */
   updateMouseGeneral(eventX, eventY) {
     this.updateComponentCoordinates();
     this.mouse.x = (eventX - this.left) / this.width * 2 - 1;
@@ -141,6 +153,11 @@ export class GeoEditorComponent
     this.updateMouseGeneral(event.clientX, event.clientY);
   }
 
+  /**
+   * When resizing:
+   * Redraw all the elements and update the camera
+   * @param event
+   */
   onWindowResize(event) {
     this.addFloorplan(true);
     this.updateCamera();
@@ -297,6 +314,9 @@ export class GeoEditorComponent
     cameraRotation.z = this.cameraInfo.rotationZ;
   }
 
+  /**
+   * Set up the camera centered and up in the z Coordinate with rotation order: ZYX
+   */
   setUpCamera() {
     const props = this.containerProps();
     this.camera = new OrthographicCamera(

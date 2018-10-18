@@ -12,6 +12,7 @@ import { parseParms } from '../../_shared-libraries/Url';
   styleUrls: ['./intro.component.scss'],
 })
 export class IntroComponent implements OnInit, OnDestroy {
+  /** References could be: open_street_maps | swiss_topo */
   referenceSource = '';
 
   /**
@@ -25,14 +26,12 @@ export class IntroComponent implements OnInit, OnDestroy {
     private batchService: BatchService
   ) {}
 
-  /**
-   * We define 2 forms, for buildingId and for LayoutId
-   */
-
+  /** buildingId form and for LayoutId */
   buildingForm = new FormGroup({
     building: new FormControl('', Validators.required),
   });
 
+  /** LayoutId form */
   layoutForm = new FormGroup({
     layout: new FormControl('', Validators.required),
   });

@@ -42,18 +42,26 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   /**
    * TABLE DOCUMENTATION
    * https://www.ag-grid.com/angular-getting-started/
+   * ag- grid parameters:
    */
 
+  /** Ag-grid selected nodes */
   selectedNodes = [];
+  /** Ag-grid selected rows */
   selectedRows = [];
 
+  /** ag-grid api */
   gridApi;
+  /** ag-grid column api */
   gridColumnApi;
 
+  /** filters set */
   filterModelSet = false;
 
+  /** Configuration options for Ag-Grid  */
   gridOptions;
 
+  /** Column definition for Ag-Grid */
   columnDefs;
 
   /**

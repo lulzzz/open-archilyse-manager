@@ -28,12 +28,17 @@ export class EditorComponent implements OnInit, OnDestroy {
   /** String container of any error */
   error = null;
 
+  /** Identifier of the current layout */
   layoutId;
+  /** Current layout data */
   layout;
 
+  /** Model structure for the current layout */
   modelStructure;
 
+  /** Control to display the elements sidebar */
   elementBar = true;
+  /** Control to display the new layout dialog */
   newOfficeDialog = false;
 
   project = {};
@@ -55,6 +60,9 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.diagramService.displayElementSidebarDisplayed(event);
   }
 
+  /**
+   * Override the current layout model structure warning, and after confirmation saves
+   */
   override() {
     swal({
       title: `Are you sure?`,

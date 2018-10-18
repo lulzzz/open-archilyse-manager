@@ -32,7 +32,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./site-overview.component.scss'],
 })
 export class SiteOverviewComponent implements OnInit, OnDestroy {
-
   /** String container of any error */
   generalError = null;
 
@@ -45,16 +44,23 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * ag- grid parameters:
    */
 
+  /** Ag-grid selected nodes */
   selectedNodes = [];
+  /** Ag-grid selected rows */
   selectedRows = [];
 
+  /** ag-grid api */
   gridApi;
+  /** ag-grid column api */
   gridColumnApi;
 
+  /** are any filters set? */
   filterModelSet = false;
 
+  /** Configuration options for Ag-Grid  */
   gridOptions;
 
+  /** Column definition for Ag-Grid */
   columnDefs;
 
   /**

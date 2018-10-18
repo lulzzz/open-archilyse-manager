@@ -112,7 +112,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
 
   seatCenters;
 
-  // On window Resize, (We need to store it to unsubscribe later)
+  /** On window Resize, (We need to store it to unsubscribe later) */
   windowListener;
   mousemoveListener;
   mouseoutListener;

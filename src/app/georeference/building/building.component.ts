@@ -31,7 +31,7 @@ import {
 } from '../../_shared-libraries/PortfolioLinks';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
-import {environment} from '../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 /**
  * We need the scale to be in meters
@@ -61,8 +61,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
   building;
   buildingAddress = '';
 
-  // Batch information
+  /** Batch information */
   nextBatch;
+  /** Has batch next element */
   hasNextBatch;
 
   geoJson;
@@ -76,24 +77,33 @@ export class BuildingComponent implements OnInit, OnDestroy {
   currentFeature;
 
   coords = null;
-  previousCoords = null; // Selected previously by the user
-  allPossibleCoords = null; // Backend sugestions
 
+  /** Selected previously by the user */
+  previousCoords = null;
+  /** Backend sugestions */
+  allPossibleCoords = null;
+
+  /** https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html */
   map: OlMap;
+
+  /** https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ.html */
   source: OlXYZ;
+
+  /** The normal map tiles layer */
   layer: OlTileLayer;
 
-  // Side buildings
+  /** Side buildings */
   vectorLayer: OlVectorLayer;
-  // Current building
+  /** Current building */
   vectorLayerCurrent: OlVectorLayer;
 
+  /** https://openlayers.org/en/latest/apidoc/module-ol_View-View.html */
   view: OlView;
 
   feature: OlFeature;
   featureCoordinates;
 
-  // On window Resize, (We need to store it to unsubscribe later)
+  /** On window Resize, (We need to store it to unsubscribe later) */
   windowListener;
 
   showPreview = false;
@@ -105,6 +115,10 @@ export class BuildingComponent implements OnInit, OnDestroy {
   /** String container of any error */
   error = null;
 
+  /**
+   * Mapbox Style selected
+   * light, dark, outdoors, streets, satellite
+   */
   mapStyle;
 
   previousMovements;
@@ -176,7 +190,8 @@ export class BuildingComponent implements OnInit, OnDestroy {
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=' + environment.mapboxToken,
+        'access_token=' +
+        environment.mapboxToken,
     });
   }
 
@@ -687,7 +702,8 @@ export class BuildingComponent implements OnInit, OnDestroy {
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=' + environment.mapboxToken,
+        'access_token=' +
+        environment.mapboxToken,
     });
 
     this.layer.setSource(this.source);

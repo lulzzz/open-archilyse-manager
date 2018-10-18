@@ -73,10 +73,15 @@ export class ViewSimOverviewComponent extends KmlExport
    * Data for the legend
    */
 
+  /** Matrix with all the hexagon values */
   legendData;
+  /** Value to color function */
   unitStr;
+  /** Unit of the current hexagon values */
   color;
+  /** Minimun value of the current range */
   min;
+  /** Maximun  value of the current range */
   max;
 
   /**
@@ -110,6 +115,10 @@ export class ViewSimOverviewComponent extends KmlExport
   selectPointerClick;
   selectPointerMove;
 
+  /**
+   * Mapbox Style selected
+   * light, dark, outdoors, streets, satellite
+   */
   mapStyle;
 
   currentSimulation = 'buildings';

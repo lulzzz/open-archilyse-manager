@@ -28,6 +28,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
 
+/** Alias for georeference */
 const urlGeoreference = environment.urlGeoreference;
 
 /**
@@ -51,16 +52,23 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
    * ag- grid parameters:
    */
 
+  /** Ag-grid selected nodes */
   selectedNodes = [];
+  /** Ag-grid selected rows */
   selectedRows = [];
 
+  /** ag-grid api */
   gridApi;
+  /** ag-grid column api */
   gridColumnApi;
 
+  /** are any filters set? */
   filterModelSet = false;
 
+  /** Configuration options for Ag-Grid  */
   gridOptions;
 
+  /** Column definition for Ag-Grid */
   columnDefs;
 
   /**
