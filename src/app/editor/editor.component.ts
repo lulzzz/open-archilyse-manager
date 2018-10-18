@@ -22,6 +22,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements OnInit, OnDestroy {
+
   /** True to start and false once all the data is loaded */
   loading;
 
@@ -41,9 +42,10 @@ export class EditorComponent implements OnInit, OnDestroy {
   /** Control to display the new layout dialog */
   newOfficeDialog = false;
 
-  project = {};
-
+  /** Sidebar events */
   subscriptionSidebar: Subscription;
+
+  /** Layout events */
   subscriptionLayout: Subscription;
 
   constructor(
@@ -55,8 +57,11 @@ export class EditorComponent implements OnInit, OnDestroy {
     private toastr: ToastrService
   ) {}
 
+  /**
+   * Display the sidebar with elements to add
+   * @param event
+   */
   showElementBar(event) {
-    console.log('showElementBar ', event);
     this.diagramService.displayElementSidebarDisplayed(event);
   }
 
@@ -93,11 +98,13 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Open the sidebar to save as new */
   saveAsNew() {
     this.diagramService.displayElementSidebarDisplayed(false);
     this.newOfficeDialog = true;
   }
 
+  /** Close the sidebar */
   saveAsNewClose() {
     this.newOfficeDialog = false;
   }

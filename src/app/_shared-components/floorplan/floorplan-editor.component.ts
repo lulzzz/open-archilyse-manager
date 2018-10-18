@@ -1050,6 +1050,9 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     EditorControls.onMouseOut(event, raycaster);
   }
 
+  /**
+   * Container bounding box calculation
+   */
   updateComponentCoordinates() {
     const rect = this.container.getBoundingClientRect();
     const rectBody = document.body.getBoundingClientRect();

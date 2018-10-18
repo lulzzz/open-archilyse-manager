@@ -349,6 +349,9 @@ export class GeoEditorComponent
     // Display render debug data: console.log(this.renderer.info);
   }
 
+  /**
+   * Container bounding box calculation
+   */
   updateComponentCoordinates() {
     const rect = this.container.getBoundingClientRect();
     const rectBody = document.body.getBoundingClientRect();
@@ -360,14 +363,11 @@ export class GeoEditorComponent
     this.height = this.container.offsetHeight;
   }
 
+  /**
+   * Bounding box of the canvas container
+   */
   containerProps() {
     this.updateComponentCoordinates();
-
-    const geometryWidth = this.geometryBox.x2 - this.geometryBox.x1;
-    const geometryHeight = this.geometryBox.y2 - this.geometryBox.y1;
-
-    // const aspectRatio = geometryWidth / geometryHeight;
-    const aspectRatio = this.width / this.height;
 
     return {
       left: -this.width / 2,
