@@ -20,14 +20,14 @@ export const environment = {
   defaultPass: '',
 
   firebase: {
-    apiKey: '***REMOVED***',
+    apiKey: '***SECRET***',
     authDomain: 'archilyse-usermanagement.firebaseapp.com',
     databaseURL: 'https://archilyse-usermanagement.firebaseio.com',
     projectId: 'archilyse-usermanagement',
     storageBucket: 'archilyse-usermanagement.appspot.com',
-    messagingSenderId: '***REMOVED***',
+    messagingSenderId: '***SECRET***',
   },
 
   mapboxToken:
-    '***REMOVED***',
+    '***SECRET***',
 };
