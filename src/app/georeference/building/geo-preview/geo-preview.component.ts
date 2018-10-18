@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 
 @Component({
   selector: 'app-geo-preview',
@@ -58,5 +65,6 @@ export class GeoPreviewComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {}
 }

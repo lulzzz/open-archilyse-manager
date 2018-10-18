@@ -2,14 +2,20 @@ import {
   createSelector,
   createFeatureSelector,
   ActionReducerMap,
-  combineReducers,
 } from '@ngrx/store';
 import * as fromUser from './user.reducer';
 
+/**
+ * State of the full app
+ */
 export interface AppState {
+  /** User data */
   user: fromUser.State;
 }
 
+/**
+ * Reducers from the full app
+ */
 export const reducers: ActionReducerMap<AppState> = {
   user: fromUser.reducer,
 };
@@ -28,32 +34,50 @@ export const reducers: ActionReducerMap<AppState> = {
  * USER STATE
  */
 
-// Select the unit portion of our _store
+/** Select the unit portion of our _store */
 export const getUserState = createFeatureSelector<fromUser.State>('user');
 
-// Select the entities from the unit portion of the store
+/** Select the entities from the unit portion of the store */
 export const getUserMeta = createSelector(getUserState, fromUser.getUserMeta);
 
-// Select the entities from the unit portion of the store
+/** Select the entities from the unit portion of the store */
 export const getUser = createSelector(getUserState, fromUser.getUser);
 
-// Select the entities from the unit portion of the _store
+/** Select the entities from the unit portion of the _store */
 export const getUserError = createSelector(getUserState, fromUser.getUserError);
 
-// Get the loading state
-export const getUserLoading = createSelector(getUserState, fromUser.getUserLoading);
+/** Get the loading state */
+export const getUserLoading = createSelector(
+  getUserState,
+  fromUser.getUserLoading
+);
 
-// Get the loaded state
-export const getUserLoaded = createSelector(getUserState, fromUser.getUserLoaded);
+/** Get the loaded state */
+export const getUserLoaded = createSelector(
+  getUserState,
+  fromUser.getUserLoaded
+);
 
-// Get the loading state
-export const getUserUpdating = createSelector(getUserState, fromUser.getUserUpdating);
+/** Get the loading state */
+export const getUserUpdating = createSelector(
+  getUserState,
+  fromUser.getUserUpdating
+);
 
-// Get the loaded state
-export const getUserUpdated = createSelector(getUserState, fromUser.getUserUpdated);
+/** Get the loaded state */
+export const getUserUpdated = createSelector(
+  getUserState,
+  fromUser.getUserUpdated
+);
 
-// Get the authenticating state
-export const getUserAuthenticating = createSelector(getUserState, fromUser.getUserAuthenticating);
+/** Get the authenticating state */
+export const getUserAuthenticating = createSelector(
+  getUserState,
+  fromUser.getUserAuthenticating
+);
 
-// Get the authenticated state
-export const getUserAuthenticated = createSelector(getUserState, fromUser.getUserAuthenticated);
+/** Get the authenticated state */
+export const getUserAuthenticated = createSelector(
+  getUserState,
+  fromUser.getUserAuthenticated
+);

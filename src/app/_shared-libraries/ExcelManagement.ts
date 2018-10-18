@@ -1,6 +1,9 @@
 import { read } from 'xlsx';
 import { ManagerFunctions } from './ManagerFunctions';
 
+/**
+ * Information overlay for the excel.
+ */
 export const showInfoExcel = {
   data: {
     title: 'Excel instructions',
@@ -17,6 +20,11 @@ export const showInfoExcel = {
   },
 };
 
+/**
+ * Export options for the excel.
+ * Separator: ";"
+ * before export processing implementation (Render properly complex cells)
+ */
 export const exportOptions = {
   allColumns: true,
   columnGroups: true,
@@ -25,7 +33,9 @@ export const exportOptions = {
     if (params.column && params.column.colId) {
       if (params.column.colId === 'floors') {
         if (params.value && params.value.length > 0) {
-          return params.value.map(floor => floor.floor_nr + ' ' + floor.source).join(', ');
+          return params.value
+            .map(floor => floor.floor_nr + ' ' + floor.source)
+            .join(', ');
         }
         return '';
       }
@@ -66,12 +76,15 @@ export const exportOptions = {
   },
 };
 
+/**
+ * Add only selected to the default options
+ */
 export const exportSelectedOptions = {
   ...exportOptions,
   onlySelected: true,
 };
 
-// read the raw data and convert it to a XLSX workbook
+/** read the raw data and convert it to a XLSX workbook */
 export function convertFileToWorkbook(file, onComplete) {
   const reader = new FileReader();
   reader.onload = function(e) {
@@ -85,8 +98,7 @@ export function convertFileToWorkbook(file, onComplete) {
   reader.readAsBinaryString(file);
 }
 
-// pull out the values we're after, converting it into an array of rowData
-
+/** pull out the values we're after, converting it into an array of rowData */
 export function getRows(workbook, dictionary) {
   // our data is in the first sheet
   const firstSheetName = workbook.SheetNames[0];
@@ -127,7 +139,11 @@ export function getRows(workbook, dictionary) {
       const varName = dictionary[columns[column]];
 
       const cell = worksheet[column + rowIndex];
-      ManagerFunctions.changeValueByColumnStr(row, varName, cell && cell.w ? cell.w : '');
+      ManagerFunctions.changeValueByColumnStr(
+        row,
+        varName,
+        cell && cell.w ? cell.w : ''
+      );
     });
 
     rowData.push(row);

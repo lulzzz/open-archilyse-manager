@@ -34,10 +34,11 @@ const DEFAULT_CONFIG: InfoBoxDialogConfig = {
 };
 
 /**
- * The OverlayService allow to display messages for the user over the conntent
+ * The OverlayService allow to display messages for the user over the content
  */
 @Injectable()
 export class OverlayService {
+  /** Constructor */
   constructor(private injector: Injector, private overlay: Overlay) {}
 
   open(config: InfoBoxDialogConfig = {}) {

@@ -22,10 +22,19 @@ import { Subscription } from 'rxjs/Subscription';
 export class FloorplanHeatmapLegendComponent
   implements AfterViewInit, OnChanges, OnInit, OnDestroy {
   @Input() legendId;
+
+  /** Matrix with all the hexagon values */
   @Input() hexData;
+
+  /** Value to color function */
   @Input() color;
+
+  /** Unit of the current hexagon values */
   @Input() unit;
+
+  /** Minimun value of the current range */
   @Input() min;
+  /** Maximun  value of the current range */
   @Input() max;
 
   @Input() isCompare;
@@ -52,7 +61,9 @@ export class FloorplanHeatmapLegendComponent
 
   ngOnInit() {
     this.uniqueId = this.diagramService.getUniqueId();
-    this.subscription = this.diagramService.eventData$.subscribe(eventData => {});
+    this.subscription = this.diagramService.eventData$.subscribe(
+      eventData => {}
+    );
   }
 
   ngOnDestroy() {
@@ -63,7 +74,10 @@ export class FloorplanHeatmapLegendComponent
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ((changes.min && !changes.min.firstChange) || (changes.max && !changes.max.firstChange)) {
+    if (
+      (changes.min && !changes.min.firstChange) ||
+      (changes.max && !changes.max.firstChange)
+    ) {
       this._drawHistogramPlot = null;
       this.setUpDiagram();
     } else if (changes.hexData && !changes.hexData.firstChange) {
@@ -78,7 +92,12 @@ export class FloorplanHeatmapLegendComponent
   }
 
   setUpDiagram() {
-    const colorsAndLegend = getHexColorsAndLegend(this.hexData, this.min, this.max, 9);
+    const colorsAndLegend = getHexColorsAndLegend(
+      this.hexData,
+      this.min,
+      this.max,
+      9
+    );
     // console.log(colorsAndLegend);
     const legend = colorsAndLegend.legend;
 
@@ -117,7 +136,9 @@ export class FloorplanHeatmapLegendComponent
       });
 
     // create the div that will wrap the color range
-    this.rangeWrapper = this.rangeScaleWrapper.append('div').attr('class', 'range-wrapper');
+    this.rangeWrapper = this.rangeScaleWrapper
+      .append('div')
+      .attr('class', 'range-wrapper');
 
     // create the div that will hold the maximum value
     this.rangeMax = this.rangeScaleWrapper
@@ -137,7 +158,9 @@ export class FloorplanHeatmapLegendComponent
 
   plot(data) {
     if (this.data && this.data.length > 0) {
-      this._drawHistogramPlot = this.rangeWrapper.data(data).call(this.drawHeatmapLegend, this);
+      this._drawHistogramPlot = this.rangeWrapper
+        .data(data)
+        .call(this.drawHeatmapLegend, this);
     }
   }
 

@@ -5,9 +5,15 @@ import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { HttpClient } from '@angular/common/http';
 import { CellRender } from '../../_shared-libraries/CellRender';
 import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
-import { exportOptions, exportSelectedOptions } from '../../_shared-libraries/ExcelManagement';
+import {
+  exportOptions,
+  exportSelectedOptions,
+} from '../../_shared-libraries/ExcelManagement';
 import { NavigationService } from '../../_services';
 
+/**
+ * API region groping overview table
+ */
 @Component({
   selector: 'app-region-overview',
   templateUrl: './region-overview.component.html',
@@ -15,11 +21,10 @@ import { NavigationService } from '../../_services';
 })
 export class RegionOverviewComponent implements OnInit, OnDestroy {
 
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -39,6 +44,7 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs;
 
+  /** user profile */
   currentProfile;
   filtersHuman;
 
@@ -68,7 +74,12 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
             editable: false,
             cellClass: 'readOnly',
           },
-          { headerName: 'City', field: 'city', editable: false, cellClass: 'readOnly' },
+          {
+            headerName: 'City',
+            field: 'city',
+            editable: false,
+            cellClass: 'readOnly',
+          },
         ],
       },
       {
@@ -108,7 +119,9 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions();
 
-        const countries = buildingsArray.map(building => ManagerFunctions.getCountry(building));
+        const countries = buildingsArray.map(building =>
+          ManagerFunctions.getCountry(building)
+        );
         const countriesNoDuplicates = countries.filter(
           (item, pos) => countries.indexOf(item) === pos
         );
@@ -119,8 +132,12 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
             building => ManagerFunctions.getCountry(building) === countryVal
           );
 
-          const cities = buildingsThisCountry.map(building => ManagerFunctions.getCity(building));
-          const citiesNoDuplicates = cities.filter((item, pos) => cities.indexOf(item) === pos);
+          const cities = buildingsThisCountry.map(building =>
+            ManagerFunctions.getCity(building)
+          );
+          const citiesNoDuplicates = cities.filter(
+            (item, pos) => cities.indexOf(item) === pos
+          );
 
           citiesNoDuplicates.forEach(cityVal => {
             countryCitiesNoDuplicates.push({
@@ -132,8 +149,11 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
         const rowsData = countryCitiesNoDuplicates.map(countryCity => {
           const countryVal =
-            countryCity.country && countryCity.country.length ? countryCity.country : '';
-          const cityVal = countryCity.city && countryCity.city.length ? countryCity.city : '';
+            countryCity.country && countryCity.country.length
+              ? countryCity.country
+              : '';
+          const cityVal =
+            countryCity.city && countryCity.city.length ? countryCity.city : '';
 
           const buildingsThisCity = buildingsArray.filter(
             building =>
@@ -178,7 +198,8 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            this.filterModelSet =
+              model !== null && Object.keys(model).length > 0;
             this.filtersHuman = ManagerFunctions.calculateHumanFilters(
               model,
               this.filterModelSet,
@@ -216,15 +237,18 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -235,9 +259,11 @@ export class RegionOverviewComponent implements OnInit, OnDestroy {
    * Export functions
    */
 
+  /** Export everything */
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
+  /** Export selected nodes only */
   exportSelected() {
     this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }

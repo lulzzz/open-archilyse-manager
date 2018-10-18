@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 
+/** Padding when displaying many buildings in the map */
 export const paddingToBuildings = [25, 25, 25, 25];
 
 import OlMap from 'ol/Map';
@@ -15,6 +16,9 @@ import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 
+/**
+ * We need the scale to be in meters
+ */
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
@@ -41,32 +45,13 @@ import {
   drawHexBlocks,
   reduceHeatmap,
 } from '../../_shared-libraries/HexagonFunctions';
-import { colors } from '../potential-view-overview/potential-view-overview.component';
+
 import { NavigationService, OverlayService } from '../../_services';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { registerAllProjections } from '../../_shared-libraries/MapProjections';
+import { colors } from '../../_shared-libraries/SimData';
+import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
 registerAllProjections();
-
-const styleNormal = new OlStyle({
-  fill: new OlStyleFill({
-    color: 'rgba(210, 210, 210, 0.7)',
-  }),
-  stroke: new OlStyleStroke({
-    color: 'rgba(170, 170, 170, 1)',
-    width: 2,
-  }),
-});
-
-const styleOver = new OlStyle({
-  fill: new OlStyleFill({
-    color: 'rgba(150, 150, 150, 0.5)',
-  }),
-  stroke: new OlStyleStroke({
-    color: 'rgba(110, 110, 110, 0.5)',
-    width: 3,
-    lineCap: 'round',
-  }),
-});
 
 @Component({
   selector: 'app-map-overview',
@@ -74,11 +59,10 @@ const styleOver = new OlStyle({
   styleUrls: ['./map-overview.component.scss'],
 })
 export class MapOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -136,6 +120,7 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   enabledPV = false;
   displayedPV = false;
 
+  /** user profile */
   currentProfile;
 
   /**
@@ -216,9 +201,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
         // If the building has no address
         !building.address ||
         // If the building has no a country different than the selected
-        (this.filterCountry !== null && building.address.country !== this.filterCountry) ||
+        (this.filterCountry !== null &&
+          building.address.country !== this.filterCountry) ||
         // If the building has no a city different than the selected
-        (this.filterCity !== null && building.address.city !== this.filterCity) ||
+        (this.filterCity !== null &&
+          building.address.city !== this.filterCity) ||
         // If the building has no building_references
         !building['building_references']
       ) {
@@ -230,14 +217,18 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
 
       if (building && building.building_references) {
         let ref = building.building_references.find(
-          ref => ref.source === 'open_street_maps' && ref.id !== null && ref.id !== ''
+          ref =>
+            ref.source === 'open_street_maps' &&
+            ref.id !== null &&
+            ref.id !== ''
         );
         if (ref && ref.id !== '') {
           map_source = 'open_street_maps';
           referenced = ref.id;
         } else {
           ref = building.building_references.find(
-            ref => ref.source === 'swiss_topo' && ref.id !== null && ref.id !== ''
+            ref =>
+              ref.source === 'swiss_topo' && ref.id !== null && ref.id !== ''
           );
 
           // Swiss topo is defined
@@ -259,10 +250,14 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
         let feature;
         let epsg;
         if (building.footprints) {
-          const footprint = building.footprints.find(fp => fp.source === map_source);
+          const footprint = building.footprints.find(
+            fp => fp.source === map_source
+          );
           if (footprint) {
             epsg = footprint.epsg;
-            feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
+            feature = new OlFeature({
+              geometry: new OlPolygon(footprint.coordinates[0]),
+            });
             // To recover the value
             feature.setId(building.building_id);
           }
@@ -280,7 +275,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                 simulations['potential_view'].result
               ) {
                 // We order the potential view by height (If defined)
-                simulations['potential_view'].result.sort((a, b) => a.height - b.height);
+                simulations['potential_view'].result.sort(
+                  (a, b) => a.height - b.height
+                );
               }
 
               this.simulations[building.building_id] = simulations;
@@ -365,7 +362,10 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                       // It's an hexagon
 
                       const postion = featureId.indexOf('||') + 2;
-                      const buildingId = featureId.substr(postion, featureId.length - postion);
+                      const buildingId = featureId.substr(
+                        postion,
+                        featureId.length - postion
+                      );
 
                       this.router.navigate(['building'], {
                         fragment: `building_id=${buildingId}`,
@@ -434,8 +434,16 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   }
 
   drawSimulations(building, simulations, feature) {
-    if (simulations && simulations['potential_view'] && simulations['potential_view'].result) {
-      this.drawSimulation(building, feature, simulations['potential_view'].result);
+    if (
+      simulations &&
+      simulations['potential_view'] &&
+      simulations['potential_view'].result
+    ) {
+      this.drawSimulation(
+        building,
+        feature,
+        simulations['potential_view'].result
+      );
     } else {
       this.detailSource.addFeature(feature);
     }
@@ -443,7 +451,9 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
   }
 
   drawSimulation(building, feature, sim_result) {
-    const categorySimulations = sim_result.filter(sim => sim.category === this.currentSimulation);
+    const categorySimulations = sim_result.filter(
+      sim => sim.category === this.currentSimulation
+    );
     if (categorySimulations && categorySimulations.length) {
       // Always the hier number of floors
       const nOf = categorySimulations.length;
@@ -580,7 +590,11 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
    */
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
-    this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+    this.router.navigate([], {
+      fragment: newValue,
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
   }
 
   /**

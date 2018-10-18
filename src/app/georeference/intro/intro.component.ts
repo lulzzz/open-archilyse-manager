@@ -4,9 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BatchService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../../environments/environment';
-import {parseParms} from '../../_shared-libraries/Url';
-
-const urlPortfolio = environment.urlPortfolio;
+import { parseParms } from '../../_shared-libraries/Url';
 
 @Component({
   selector: 'app-intro',
@@ -64,9 +62,13 @@ export class IntroComponent implements OnInit, OnDestroy {
   /**
    * Form methods
    */
+
+  /** form building getter */
   get building() {
     return this.buildingForm.get('building');
   }
+
+  /** form layout getter */
   get layout() {
     return this.layoutForm.get('layout');
   }
@@ -116,7 +118,7 @@ export class IntroComponent implements OnInit, OnDestroy {
    * Link to the portfolio
    */
   portfolio() {
-    location.assign(urlPortfolio);
+    location.assign(environment.urlPortfolio);
   }
 
   /**

@@ -9,6 +9,9 @@ import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { HttpClient } from '@angular/common/http';
 
+/**
+ * Sidebar to change the layout properties
+ */
 @Component({
   selector: 'edit-layout',
   templateUrl: './edit-layout.component.html',

@@ -24,18 +24,19 @@ import { OverlayService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 
-const urlPortfolio = environment.urlPortfolio;
-
+/**
+ * API unit entity overview table
+ */
 @Component({
-  selector: 'app-floorplan-overview',
+  selector: 'app-unit-overview',
   templateUrl: './unit-overview.component.html',
   styleUrls: ['./unit-overview.component.scss'],
 })
 export class UnitOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -61,6 +62,8 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   @ViewChild('importFile') importField: ElementRef;
 
   buildingsArray;
+
+  /** user profile */
   currentProfile;
   filtersHuman;
 
@@ -267,7 +270,7 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
       return (
         `<i class="fas fa-key secondaryKey"></i> ` +
         params.value +
-        `<a href='${urlPortfolio}/building#building_id=` +
+        `<a href='${environment.urlPortfolio}/building#building_id=` +
         params.data.building_id +
         `' > View </a>`
       );
@@ -275,6 +278,10 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     return '';
   }
 
+  /**
+   * After editing, we need to react to the new values.
+   * New unit -> New building information
+   */
   unitReactionToEdit(nodeData, element) {
     // if the new Layout has new unit id, we update the building data.
     if (element.building_id) {
@@ -478,15 +485,18 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -496,9 +506,16 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
   /**
    * Import / Export functions
    */
+
+  /** Show import instructions to import an excel file */
   showInfoExcel() {
     this.infoDialog.open(showInfoExcel);
   }
+
+  /**
+   * Imports an Excel with unit
+   * @param files
+   */
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {
@@ -587,9 +604,11 @@ export class UnitOverviewComponent implements OnInit, OnDestroy {
    * Export functions
    */
 
+  /** Export everything */
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
+  /** Export selected nodes only */
   exportSelected() {
     this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }

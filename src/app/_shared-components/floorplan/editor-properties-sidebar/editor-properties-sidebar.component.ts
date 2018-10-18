@@ -12,7 +12,10 @@ import {
 import { Vector2, ShapeUtils } from 'three-full/builds/Three.es.js';
 import { EditorService } from '../../../_services';
 import { Subscription } from 'rxjs/Subscription';
-import { EditorConstants, groupToHuman } from '../../../_shared-libraries/EditorConstants';
+import {
+  EditorConstants,
+  groupToHuman,
+} from '../../../_shared-libraries/EditorConstants';
 import { COOR_X, COOR_Y } from '../../../_shared-libraries/SimData';
 
 @Component({
@@ -20,7 +23,8 @@ import { COOR_X, COOR_Y } from '../../../_shared-libraries/SimData';
   templateUrl: './editor-properties-sidebar.component.html',
   styleUrls: ['./editor-properties-sidebar.component.scss'],
 })
-export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDestroy {
+export class EditorPropertiesSidebarComponent
+  implements OnInit, OnChanges, OnDestroy {
   @Output() close = new EventEmitter<void>();
   @Input() sidebarProperties;
   @Input() sidebarPropertiesData;
@@ -43,9 +47,11 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
     this.evaluateContent();
 
     this.uniqueId = this.editorService.getUniqueId();
-    this.subscriptionEditor = this.editorService.eventData$.subscribe(eventData => {
-      console.log('EDITOR - SIDEBAR - eventData', this.uniqueId, eventData);
-    });
+    this.subscriptionEditor = this.editorService.eventData$.subscribe(
+      eventData => {
+        console.log('EDITOR - SIDEBAR - eventData', this.uniqueId, eventData);
+      }
+    );
   }
 
   evaluateContent() {
@@ -53,14 +59,20 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
     // console.log('this.sidebarPropertiesData.group ', this.sidebarPropertiesData.group);
 
     this.controls = null;
-    this.title = groupToHuman(this.sidebarPropertiesData.group, false, true) + ' properties.';
+    this.title =
+      groupToHuman(this.sidebarPropertiesData.group, false, true) +
+      ' properties.';
 
     const group = this.sidebarPropertiesData.group;
 
     if (group === EditorConstants.AREA) {
       const currentArray = this.sidebarPropertiesData.data.areaData;
-      const currentArrayVector = currentArray.map(coor => new Vector2(coor[COOR_X], coor[COOR_Y]));
-      const calculatedM2 = Math.abs(ShapeUtils.area(currentArrayVector)).toFixed(2);
+      const currentArrayVector = currentArray.map(
+        coor => new Vector2(coor[COOR_X], coor[COOR_Y])
+      );
+      const calculatedM2 = Math.abs(
+        ShapeUtils.area(currentArrayVector)
+      ).toFixed(2);
 
       this.content = `
         <div class="valueRow">
@@ -187,7 +199,10 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
       ];
 
       this.content = ``;
-    } else if (group === EditorConstants.DESK || group === EditorConstants.CHAIR) {
+    } else if (
+      group === EditorConstants.DESK ||
+      group === EditorConstants.CHAIR
+    ) {
       const reference = this.sidebarPropertiesData.data.object;
 
       const x = reference.pos[0];
@@ -321,6 +336,7 @@ export class EditorPropertiesSidebarComponent implements OnInit, OnChanges, OnDe
     this.evaluateContent();
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.subscriptionEditor) {
       this.subscriptionEditor.unsubscribe();

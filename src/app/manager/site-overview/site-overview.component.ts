@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -17,17 +23,20 @@ import {
 import { OverlayService, NavigationService } from '../../_services';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * API site entity overview table
+ */
 @Component({
   selector: 'app-site-overview',
   templateUrl: './site-overview.component.html',
   styleUrls: ['./site-overview.component.scss'],
 })
 export class SiteOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
 
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -52,6 +61,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * Local variables
    */
   @ViewChild('importFile') importField: ElementRef;
+
+  /** user profile */
   currentProfile;
   filtersHuman;
 
@@ -219,7 +230,8 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            this.filterModelSet =
+              model !== null && Object.keys(model).length > 0;
             this.filtersHuman = ManagerFunctions.calculateHumanFilters(
               model,
               this.filterModelSet,
@@ -349,15 +361,18 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -368,9 +383,16 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * Import / Export functions
    * https://stackoverflow.com/questions/11832930/html-input-file-accept-attribute-file-type-csv
    */
+
+  /** Show import instructions to import an excel file */
   showInfoExcel() {
     this.infoDialog.open(showInfoExcel);
   }
+
+  /**
+   * Imports an Excel with site
+   * @param files
+   */
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {
@@ -385,7 +407,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
 
         console.log('allRows ', allRows);
         allRows.forEach(oneRow => {
-          if (oneRow.site_id && oneRow.site_id !== null && oneRow.site_id !== '') {
+          if (
+            oneRow.site_id &&
+            oneRow.site_id !== null &&
+            oneRow.site_id !== ''
+          ) {
             const site_id = oneRow.site_id;
             delete oneRow.site_id;
 
@@ -448,9 +474,11 @@ export class SiteOverviewComponent implements OnInit, OnDestroy {
    * Export functions
    */
 
+  /** Export everything */
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
+  /** Export selected nodes only */
   exportSelected() {
     this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }

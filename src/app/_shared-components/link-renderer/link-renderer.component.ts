@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 
+/**
+ * Renders angular links in the ag-grid (with the angular routing)
+ * Normal links, primary and secondary keys with their icons
+ * Also adds parameters to filter
+ */
 @Component({
   selector: 'app-link-renderer',
   templateUrl: './link-renderer.component.html',

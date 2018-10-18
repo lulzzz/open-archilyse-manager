@@ -17,6 +17,9 @@ const saveData = (() => {
   };
 })();
 
+/**
+ * Helper class to export Kml files
+ */
 export class KmlExport {
   layout;
   address;
@@ -101,6 +104,9 @@ export class KmlExport {
     drawSimulation(this.feature);
   }
 
+  /**
+   * Export only one simulation
+   */
   exportSimulationKML() {
     const format = new KML();
     const features = this.detailSource.getFeatures();

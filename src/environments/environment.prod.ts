@@ -1,3 +1,6 @@
+/**
+ * Environment dependent variables, PRODUCTION
+ */
 export const environment = {
   production: true,
 

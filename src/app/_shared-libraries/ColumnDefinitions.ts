@@ -7,6 +7,9 @@ import { LayoutSimulationRendererComponent } from '../_shared-components/layout-
 import { LinkRendererComponent } from '../_shared-components/link-renderer/link-renderer.component';
 import { GeoreferenceRendererComponent } from '../_shared-components/georeference-renderer/georeference-renderer.component';
 
+/**
+ * Generic definitions of the AG-Grid columns
+ */
 export class ColumnDefinitions {
   /**
    * Parameters
@@ -244,7 +247,14 @@ export class ColumnDefinitions {
   }
 }
 
-function getColumnDefsCommon(distance, duration, score, nameColumns) {
+/**
+ * Common columns definition function for both single and compare view in Table DPOI
+ * @param distance
+ * @param duration
+ * @param score
+ * @param nameColumns
+ */
+function getColumnDpoiDefsCommon(distance, duration, score, nameColumns) {
   return [
     {
       headerName: 'Simulation',
@@ -390,8 +400,11 @@ function getColumnDefsCommon(distance, duration, score, nameColumns) {
   ];
 }
 
-export const columnDefsCompare = [
-  ...getColumnDefsCommon(
+/**
+ * Compare version of the DPOI table view
+ */
+export const columnDefsCompareDpoi = [
+  ...getColumnDpoiDefsCommon(
     CellRender.distanceCompare,
     CellRender.durationCompare,
     CellRender.scoreCompare,
@@ -416,8 +429,11 @@ export const columnDefsCompare = [
   ),
 ];
 
-export const columnDefs = [
-  ...getColumnDefsCommon(
+/**
+ * Default single (not compare) DPOI table view
+ */
+export const columnDefsDpoi = [
+  ...getColumnDpoiDefsCommon(
     CellRender.distance,
     CellRender.duration,
     CellRender.score,

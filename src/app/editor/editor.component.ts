@@ -1,5 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DiagramService, EditorService, NavigationService, OverlayService } from '../_services';
+import {
+  DiagramService,
+  EditorService,
+  NavigationService,
+  OverlayService,
+} from '../_services';
 import { Subscription } from 'rxjs/Subscription';
 import swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
@@ -8,13 +13,19 @@ import { getLayoutLink } from '../_shared-libraries/PortfolioLinks';
 import { ApiFunctions } from '../_shared-libraries/ApiFunctions';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ *  Main component for the Editor tool
+ */
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss'],
 })
 export class EditorComponent implements OnInit, OnDestroy {
+  /** True to start and false once all the data is loaded */
   loading;
+
+  /** String container of any error */
   error = null;
 
   layoutId;
@@ -126,6 +137,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.subscriptionSidebar) {
       this.subscriptionSidebar.unsubscribe();

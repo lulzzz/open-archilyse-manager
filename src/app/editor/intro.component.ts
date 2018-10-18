@@ -3,10 +3,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../environments/environment';
-import {parseParms} from '../_shared-libraries/Url';
+import { parseParms } from '../_shared-libraries/Url';
 
-const urlPortfolio = environment.urlPortfolio;
-
+/**
+ * Start page for the editor.
+ * Here the user can provide a Layout Id to edit
+ */
 @Component({
   selector: 'app-intro-editor',
   templateUrl: './intro.component.html',
@@ -30,19 +32,23 @@ export class IntroEditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** form layout getter */
   get layout() {
     return this.editorForm.get('layout');
   }
 
+  /** Link to the specified layout */
   start() {
     const layout = this.editorForm.get('layout').value;
     this._router.navigate(['editor', layout]);
   }
 
+  /** Link to the portfolio */
   portfolio() {
-    location.assign(urlPortfolio);
+    location.assign(environment.urlPortfolio);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();

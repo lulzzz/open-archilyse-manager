@@ -34,6 +34,7 @@ export class BuildingSimulationRendererComponent {
   urlRaw: any;
   urlPotencialView: any;
 
+  /** user profile */
   currentProfile;
 
   constructor(
@@ -61,8 +62,12 @@ export class BuildingSimulationRendererComponent {
     this.params = params;
 
     if (params.colDef.field === 'simulation_statuses.potential_view.status') {
-      this.urlPotencialView = `/manager/potentialView/${params.data.building_id}`;
-    } else if (params.colDef.field === 'simulation_statuses.accoustics.status') {
+      this.urlPotencialView = `/manager/potentialView/${
+        params.data.building_id
+      }`;
+    } else if (
+      params.colDef.field === 'simulation_statuses.accoustics.status'
+    ) {
     } else if (params.colDef.field === 'simulation_statuses.dpoi.status') {
     } else {
       console.error('Column simulations', params.colDef.field);
@@ -89,34 +94,70 @@ export class BuildingSimulationRendererComponent {
     const letterColor = '#3d383e';
 
     if (!this.addressSet) {
-      this.styles = { width: '30%', backgroundColor: '#2e67b1', color: letterColor };
+      this.styles = {
+        width: '30%',
+        backgroundColor: '#2e67b1',
+        color: letterColor,
+      };
     } else if (!this.georeferenced) {
-      this.styles = { width: '60%', backgroundColor: '#2e67b1', color: letterColor };
+      this.styles = {
+        width: '60%',
+        backgroundColor: '#2e67b1',
+        color: letterColor,
+      };
     } else if (params.value) {
       const status = params.value;
       if (status === 'failed') {
         this.failed = true;
-        this.styles = { width: '80%', backgroundColor: '#ff8582', color: letterColor };
+        this.styles = {
+          width: '80%',
+          backgroundColor: '#ff8582',
+          color: letterColor,
+        };
       } else if (status === 'complete') {
         this.complete = true;
-        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '100%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       } else if (status === 'outdated') {
         this.outdated = true;
         this.complete = true;
-        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '100%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       } else if (status === 'not_requested') {
         this.not_requested = true;
-        this.styles = { width: '80%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '80%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       } else if (status === 'pending' || status === 'Pending') {
         this.pending = true;
-        this.styles = { width: '90%', backgroundColor: '#ffc975', color: letterColor };
+        this.styles = {
+          width: '90%',
+          backgroundColor: '#ffc975',
+          color: letterColor,
+        };
       } else {
         this.ready = true;
-        this.styles = { width: '80%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '80%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       }
     } else {
       this.unknown = true;
-      this.styles = { width: '0%', backgroundColor: '#2e67b1', color: letterColor };
+      this.styles = {
+        width: '0%',
+        backgroundColor: '#2e67b1',
+        color: letterColor,
+      };
     }
 
     return true;
@@ -126,7 +167,9 @@ export class BuildingSimulationRendererComponent {
     console.log('this.building', this.building);
 
     // We request all the floors
-    const numberOfFloors = this.building.number_of_floors ? this.building.number_of_floors : 1;
+    const numberOfFloors = this.building.number_of_floors
+      ? this.building.number_of_floors
+      : 1;
     const floorArray = [];
     for (let i = 0; i < numberOfFloors; i += 1) {
       floorArray.push(i);
@@ -141,10 +184,19 @@ export class BuildingSimulationRendererComponent {
         },
       },
     ];
-    ManagerFunctions.requestBuildingSimulations(this.http, this.building, simsRequested, this.api);
+    ManagerFunctions.requestBuildingSimulations(
+      this.http,
+      this.building,
+      simsRequested,
+      this.api
+    );
   }
   requestStatus() {
-    ManagerFunctions.requestBuildingSimulationsStatus(this.http, this.building, this.api);
+    ManagerFunctions.requestBuildingSimulationsStatus(
+      this.http,
+      this.building,
+      this.api
+    );
   }
   georeference() {
     const src = 'swiss_topo';
@@ -160,7 +212,8 @@ export class BuildingSimulationRendererComponent {
     this.infoDialog.open({
       data: {
         title: 'Simulation outdated',
-        body: 'The georeference from this building changed after the simulation was calculated.',
+        body:
+          'The georeference from this building changed after the simulation was calculated.',
         image: null,
       },
     });

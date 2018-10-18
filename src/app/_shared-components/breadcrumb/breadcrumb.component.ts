@@ -3,6 +3,10 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Location } from '@angular/common';
 
+/**
+ * Breadcrumb in the top right navigation.
+ * Has a back button when outside the main menus
+ */
 @Component({
   selector: 'app-breadcrumb',
   templateUrl: './breadcrumb.component.html',
@@ -95,6 +99,7 @@ export class BreadcrumbComponent implements OnDestroy {
     this.router.navigate(['manager', 'building']);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.sub_mode) {
       this.sub_mode.unsubscribe();

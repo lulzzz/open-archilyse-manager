@@ -3,6 +3,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NavigationService, UserService } from '../../_services';
 
+/**
+ * Top right navigation in the page.
+ * Manages the main menus.
+ * Based on the profile Country or Region
+ */
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
@@ -20,6 +25,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   subscriptionNavOptions: Subscription;
   subscriptionNavdiagramLinkActive: Subscription;
 
+  /** user profile */
   currentProfile;
   currentUrl;
 
@@ -208,6 +214,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.options = [];
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.subscriptionNavCurrent) {
       this.subscriptionNavCurrent.unsubscribe();

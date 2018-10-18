@@ -12,7 +12,9 @@ export class CellRender {
    */
   public static siteFormatter(currentProfile, params) {
     if (params && params.value) {
-      const site = this['sitesArray'].find(site => site.site_id === params.value);
+      const site = this['sitesArray'].find(
+        site => site.site_id === params.value
+      );
       const isDev = currentProfile === 'developer';
       if (site && site.name && site.name !== '') {
         if (isDev) {
@@ -44,7 +46,11 @@ export class CellRender {
 
         if (ManagerFunctions.isAddressCorrect(building)) {
           return (
-            building.name + ' - ' + building.address.street + ', ' + building.address.street_nr
+            building.name +
+            ' - ' +
+            building.address.street +
+            ', ' +
+            building.address.street_nr
           );
         }
 
@@ -62,7 +68,9 @@ export class CellRender {
    */
   public static unitFormatter(currentProfile, params) {
     if (params && params.value) {
-      const unit = this['unitsArray'].find(unit => unit.unit_id === params.value);
+      const unit = this['unitsArray'].find(
+        unit => unit.unit_id === params.value
+      );
 
       const isDev = currentProfile === 'developer';
       if (unit && unit.name && unit.name !== '') {
@@ -70,7 +78,13 @@ export class CellRender {
           return unit.name + ' - ' + params.value;
         }
         if (unit.address.floor_nr && unit.address.additional) {
-          return unit.name + ' - Nr' + unit.address.floor_nr + ', ' + unit.address.additional;
+          return (
+            unit.name +
+            ' - Nr' +
+            unit.address.floor_nr +
+            ', ' +
+            unit.address.additional
+          );
         }
         if (unit.address.floor_nr) {
           return unit.name + ' - Nr' + unit.address.floor_nr;
@@ -96,7 +110,7 @@ export class CellRender {
 
   /**
    * Human names for DPOI
-   * @param params
+   * @param params (ag-grid cell parameters)
    */
   public static dpoiName(params) {
     if (params.value && params.value !== '') {
@@ -340,11 +354,15 @@ export class CellRender {
 
       if (params.data.category && params.data.category !== '') {
         return translate[params.value]
-          ? `<a href="https://wiki.openstreetmap.org/wiki/Tag:${params.data.category_original}=${
+          ? `<a href="https://wiki.openstreetmap.org/wiki/Tag:${
+              params.data.category_original
+            }=${
               params.value
             }" target="_blank"><i class="fas fa-info-circle"></i></a>  <a href="https://taginfo.openstreetmap.org/tags/${
               params.data.category_original
-            }=${params.value}" target="_blank"><i class="fas fa-tag"></i></a> &nbsp; ${
+            }=${
+              params.value
+            }" target="_blank"><i class="fas fa-tag"></i></a> &nbsp; ${
               translate[params.value]
             } `
           : params.value;
@@ -355,7 +373,9 @@ export class CellRender {
             params.value
           }" target="_blank"><i class="fas fa-info-circle"></i></a> <a href="https://taginfo.openstreetmap.org/keys/${
             params.value
-          }" target="_blank"><i class="fas fa-tag"></i></a> ${translate[params.value]} `
+          }" target="_blank"><i class="fas fa-tag"></i></a> ${
+            translate[params.value]
+          } `
         : params.value;
     }
     return ``;
@@ -394,6 +414,10 @@ export class CellRender {
     return `<span class="${classSpan}">${value.toFixed(6)}</span>`;
   }
 
+  /**
+   * Display distance compared, in meters
+   * @param params (ag-grid cell parameters)
+   */
   public static distanceCompare(params) {
     if (params.value && params.value !== '') {
       const value = Math.floor(params.value);
@@ -402,6 +426,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display duration compared, in seconds
+   * @param params (ag-grid cell parameters)
+   */
   public static durationCompare(params) {
     if (params.value && params.value !== '') {
       const value = Math.floor(params.value);
@@ -410,6 +438,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display score compared
+   * @param params (ag-grid cell parameters)
+   */
   public static scoreCompare(params) {
     if (params.value && params.value !== '') {
       const value = params.value;
@@ -418,6 +450,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display height in meters
+   * @param params (ag-grid cell parameters)
+   */
   public static viewHeight(params) {
     if (params.value && params.value !== '') {
       return Math.floor(params.value) + ' m.';
@@ -425,6 +461,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display distance in meters
+   * @param params (ag-grid cell parameters)
+   */
   public static distance(params) {
     if (params.value && params.value !== '') {
       return Math.floor(params.value) + ' m.';
@@ -432,6 +472,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display duration in seconds
+   * @param params (ag-grid cell parameters)
+   */
   public static duration(params) {
     if (params.value && params.value !== '') {
       return Math.floor(params.value) + ' secs.';
@@ -439,6 +483,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display score with 6 decimals
+   * @param params (ag-grid cell parameters)
+   */
   public static score(params) {
     if (params.value && params.value !== '') {
       return params.value.toFixed(6);
@@ -446,6 +494,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Display latitude and longitude with 15 decimals
+   * @param params (ag-grid cell parameters)
+   */
   public static latLan(params) {
     if (params.value && params.value !== '') {
       return params.value.toFixed(15);
@@ -453,6 +505,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * ag-grid renderer for latitude and longitude
+   * @param params (ag-grid cell parameters)
+   */
   public static viewLatLan(params) {
     if (
       params.data &&
@@ -463,7 +519,9 @@ export class CellRender {
     ) {
       const coordinates = params.api.getRowNode('coordinates');
 
-      return `<a href="https://www.google.com/maps/place/${params.data.latitude}N+${
+      return `<a href="https://www.google.com/maps/place/${
+        params.data.latitude
+      }N+${
         params.data.longitude
       }E/" target="_blank">View</a> &nbsp; &nbsp; <a href="https://www.google.com/maps/dir/${
         coordinates.data.latitude
@@ -478,6 +536,11 @@ export class CellRender {
    * RENDER FUNCTIONS
    */
 
+  /**
+   * Display each floor from the array with a link to the source (if Archilogic) when corresponding
+   * Ag-grid cell rendered
+   * @param params (ag-grid cell parameters)
+   */
   public static viewFloors(params) {
     if (params.value && params.value !== '') {
       const floors = params.value.map(floor => {
@@ -486,7 +549,9 @@ export class CellRender {
           text = `View floor ${floor.floor_nr} in Archilogic`;
         }
         return (
-          `${params.value.length > 1 ? ' ' + floor.floor_nr + ' ' : ''}<a href='` +
+          `${
+            params.value.length > 1 ? ' ' + floor.floor_nr + ' ' : ''
+          }<a href='` +
           floor.source +
           `' target="_blank"> ${text} </a>`
         );
@@ -497,6 +562,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Renders the images array of each entity with links with them
+   * @param params (ag-grid cell parameters)
+   */
   public static viewImg(params) {
     if (params.value && params.value !== '') {
       return `<a href='` + params.value + `' > View ` + params.value + `</a>`;
@@ -505,16 +574,38 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Filter only the regions in the specified country
+   * @param params (ag-grid cell parameters)
+   */
   public static viewCountryInRegion(params) {
     const country = params.value ? params.value : 'Not defined';
-    return country + ` <a href='/manager/region#country=` + params.value + `' > View regions</a>`;
+    return (
+      country +
+      ` <a href='/manager/region#country=` +
+      params.value +
+      `' > View regions</a>`
+    );
   }
 
+  /**
+   * Filter only the the specified country
+   * @param params (ag-grid cell parameters)
+   */
   public static viewCountryInCountry(params) {
     const country = params.value ? params.value : 'Not defined';
-    return country + ` <a href='/manager/country#country=` + params.value + `' > View </a>`;
+    return (
+      country +
+      ` <a href='/manager/country#country=` +
+      params.value +
+      `' > View </a>`
+    );
   }
 
+  /**
+   * Link to filter only the specified site and display a Key icon
+   * @param params (ag-grid cell parameters)
+   */
   public static viewSiteOfBuilding(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return (
@@ -530,7 +621,7 @@ export class CellRender {
 
   /**
    * Render a date in a human readable
-   * @param params
+   * @param params (ag-grid cell parameters)
    */
   public static viewDate(params) {
     if (params.value && params.value !== '') {
@@ -543,6 +634,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Allows to download the original floorplan as a PDF
+   * @param params (ag-grid cell parameters)
+   */
   public static cellPdfDownloadLink(params) {
     // if (params && params.value && params.value !== '') {
     return (
@@ -558,27 +653,55 @@ export class CellRender {
     */
   }
 
+  /**
+   * Allows to see if a floorplan in digitalized or not and links to the editor
+   * @param params (ag-grid cell parameters)
+   */
   public static viewModel(params) {
     if (params.value === 'Loading') {
       return `Loading ...`;
     }
 
     if (ManagerFunctions.isDigitalizedLayout(params.data)) {
-      return `<a href='/editor/` + params.data.layout_id + `' > View / edit model </a>`;
+      return (
+        `<a href='/editor/` +
+        params.data.layout_id +
+        `' > View / edit model </a>`
+      );
     }
 
     return `Not digitised`;
   }
 
+  /**
+   * Displays the total area information about a layout
+   * @param params (ag-grid cell parameters)
+   */
   public static areaInfoTotal(params) {
-    if (params.value && params.value !== '' && params.value !== 'None' && params.value.length > 0) {
-      return params.value.reduce((a, b) => a + b, 0).toFixed(2) + `m<sup>2</sup> `;
+    if (
+      params.value &&
+      params.value !== '' &&
+      params.value !== 'None' &&
+      params.value.length > 0
+    ) {
+      return (
+        params.value.reduce((a, b) => a + b, 0).toFixed(2) + `m<sup>2</sup> `
+      );
     }
     return ``;
   }
 
+  /**
+   * Display area information (area info is an array with m2 for each room)
+   * @param params (ag-grid cell parameters)
+   */
   public static areaInfo(params) {
-    if (params.value && params.value !== '' && params.value !== 'None' && params.value.length > 0) {
+    if (
+      params.value &&
+      params.value !== '' &&
+      params.value !== 'None' &&
+      params.value.length > 0
+    ) {
       if (params.value.length > 1) {
         return (
           `(${params.value.length}) ` +
@@ -596,6 +719,10 @@ export class CellRender {
     return ``;
   }
 
+  /**
+   * Allows to display a cell with an Id
+   * @param params (ag-grid cell parameters)
+   */
   public static cellId(params) {
     if (params.value && params.value !== '' && params.value !== 'None') {
       return `<i class="fas fa-key"></i> ` + params.value;

@@ -4,10 +4,12 @@ import { Subscription } from 'rxjs/Subscription';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { RouterEvent } from '@angular/router/src/events';
-import { UserService, NavigationService } from '../../_services/index';
+import { UserService, NavigationService } from '../../_services';
 import { environment } from '../../../environments/environment';
-const urlConsole = environment.urlConsole;
 
+/**
+ * Top bar in the application
+ */
 @Component({
   selector: 'nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -19,9 +21,11 @@ export class NavBarComponent implements OnInit, OnDestroy {
   showOptions = true;
   isDropdownActive = false;
 
-  urlConsole = urlConsole;
+  urlConsole = environment.urlConsole;
 
+  /** user profile */
   currentProfile;
+
   /**
    * Subscriptions
    */
@@ -72,6 +76,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
      */
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.user_sub) {
       this.user_sub.unsubscribe();

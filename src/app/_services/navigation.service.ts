@@ -20,9 +20,9 @@ export class NavigationService {
   public profile;
   public profile$;
 
+  /** Constructor */
   constructor() {
     const initialValue = localStorage.getItem('profile');
-    console.log('initialValue', initialValue);
     if (initialValue) {
       this.profile = new BehaviorSubject<string>(initialValue);
     } else {

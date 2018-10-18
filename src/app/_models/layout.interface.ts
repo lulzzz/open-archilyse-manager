@@ -4,20 +4,39 @@ import { Movement } from './movement.interface';
  * Entity layout from the API
  */
 export interface Layout {
+  /** id of the layout */
   layout_id: string;
+
+  /** name of the layout */
+  name?: string;
+
+  /** description of the layout */
+  description?: string;
+
+  /** unit that the layout belongs to */
   unit_id?: string;
 
-  name?: string;
-  description?: string;
+  /** string with images of the unit */
   images?: string;
+
+  /** Layout geoureference movements */
   movements?: Movement[];
+
+  /** Each floor source array */
   floors?: Floor[];
 
+  /** Digitalized version of the layout, floor array each of them with a tree structure */
   model_structure?: ModelStructure;
 
-  /** Control values */
+  /**
+   * Control values
+   **/
+
+  /** User that modified the date for the last time  */
   user_id: string;
+  /** Unit creation date  */
   created: string;
+  /** Last update date  */
   updated: string;
 }
 
@@ -58,6 +77,9 @@ export interface ElementStructure {
  * Floor number and ID or URL to the specific data.
  */
 export interface Floor {
+  /** the floor the data belongs to */
   floor_nr: number;
+
+  /** ID or URL to the original data source*/
   source: string;
 }

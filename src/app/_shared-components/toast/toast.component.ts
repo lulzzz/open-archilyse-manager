@@ -1,7 +1,20 @@
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  keyframes,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Toast, ToastrService, ToastPackage } from 'ngx-toastr';
 
+/**
+ * Little notification component to display events for the user.
+ * Documentation:
+ * https://www.npmjs.com/package/ngx-toastr
+ *
+ */
 @Component({
   selector: 'arch-toast',
   templateUrl: './toast.component.html',
@@ -43,7 +56,10 @@ export class ToastComponent extends Toast {
   undoString = 'undo';
 
   // constructor is only necessary when not using AoT
-  constructor(protected toastrService: ToastrService, public toastPackage: ToastPackage) {
+  constructor(
+    protected toastrService: ToastrService,
+    public toastPackage: ToastPackage
+  ) {
     super(toastrService, toastPackage);
   }
 

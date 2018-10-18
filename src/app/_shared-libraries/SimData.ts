@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { EditorConstants } from './EditorConstants';
 
-// Each area has a different color
+/** Each area has a different color */
 export const areaColors = [
   0xe6194b,
   0x0082c8,
@@ -24,7 +24,7 @@ export const areaColors = [
   0x000080,
 ];
 
-// Same colors, different format.
+/** Same colors, different format. */
 export const areaColorsHex = [
   '#e6194b',
   '#0082c8',
@@ -53,18 +53,24 @@ export const areaColorsHex = [
  */
 export const EXCLUDED_NUMBER = -666;
 
-/**
- * Coordinates constants to index point arrays
- * */
+/** Coordinates constants to index point arrays */
+/** X coordinate - 0 */
 export const COOR_X = 0;
+/** Y coordinate - 1 */
 export const COOR_Y = 1;
+/** Z coordinate - 2 */
 export const COOR_Z = 2;
 
+/** Top left X */
 export const BOUND_X1 = 0;
+/** Top left Y */
 export const BOUND_Y1 = 1;
+/** Top left X */
 export const BOUND_X2 = 2;
+/** Top left Y */
 export const BOUND_Y2 = 3;
 
+/** Default color set for simulations */
 export const colors = [
   '#2c7bb6',
   '#00a6ca',
@@ -77,6 +83,7 @@ export const colors = [
   '#d7191c',
 ];
 
+/** Color set for comparison red - blue */
 export const colorsCompareAB = [
   '#e0191d',
   '#e24445',
@@ -89,6 +96,7 @@ export const colorsCompareAB = [
   '#2989ff',
 ];
 
+/** Color set for comparison version 2 red - green */
 export const colorsCompareNeg = [
   '#d7191c',
   '#e76818',
@@ -101,6 +109,7 @@ export const colorsCompareNeg = [
   '#00df00',
 ];
 
+/** Color set for comparison version 3 white - green */
 export const colorsComparePos = [
   '#e9e9e9',
   '#D0ffD0',
@@ -199,6 +208,11 @@ export function boundingBox(modelStructure) {
   };
 }
 
+/**
+ * SVG Exporter to image
+ * @param container
+ * @param newContainer
+ */
 export function svgToImg(container, newContainer) {
   // let width = container.node().width();
   //  console.log('width', width);
@@ -223,7 +237,9 @@ export function svgToImg(container, newContainer) {
 
   // create a file blob of our SVG.
   //  + '</svg>'
-  const blob = new Blob([doctype + source], { type: 'image/svg+xml;charset=utf-8' });
+  const blob = new Blob([doctype + source], {
+    type: 'image/svg+xml;charset=utf-8',
+  });
   const url = window.URL.createObjectURL(blob);
 
   // Put the svg into an image tag so that the Canvas element can read it in.
@@ -269,7 +285,7 @@ export function svgToImg(container, newContainer) {
 }
 
 /**
- *
+ * returns the function that transforms a number in the range to a color
  * @param min
  * @param max
  * @returns {(v) => (string | any)}
@@ -337,6 +353,10 @@ export function geometriesToBounds(geometries, toInclude = null) {
   return bounds;
 }
 
+/**
+ * Based in the bounding box we check if it's vertical or horizontal
+ * @param bounds
+ */
 export function areBoundsVertical(bounds) {
   const height = bounds[BOUND_Y2] - bounds[BOUND_Y1];
   const width = bounds[BOUND_X2] - bounds[BOUND_X1];
@@ -454,6 +474,11 @@ export function isoPointToPoint(x, y, options, w, h) {
 // var polygon = [ [ 1, 1 ], [ 1, 2 ], [ 2, 2 ], [ 2, 1 ] ];
 // insidePolygon([ 1.5, 1.5 ], polygon); // true
 
+/**
+ * Determines if the point is inside the given polygon
+ * @param point
+ * @param vs
+ */
 export function insidePolygon(point, vs) {
   // ray-casting algorithm based on
   // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
@@ -468,7 +493,8 @@ export function insidePolygon(point, vs) {
     const xj = vs[j][0];
     const yj = vs[j][1];
 
-    const intersect = yi > y !== yj > y && x < (xj - xi) * (y - yi) / (yj - yi) + xi;
+    const intersect =
+      yi > y !== yj > y && x < (xj - xi) * (y - yi) / (yj - yi) + xi;
     if (intersect) {
       inside = !inside;
     }
@@ -500,11 +526,20 @@ export function drawGeometriesFilter(
         continue;
       }
 
-      if (categoriesToInclude === null || categoriesToInclude.includes(category)) {
+      if (
+        categoriesToInclude === null ||
+        categoriesToInclude.includes(category)
+      ) {
         if (colors[category]) {
           const color = colors[category];
           for (let i = 0; i < svgGeometries[category].length; i += 1) {
-            _this.drawPolygon(svgGeometries[category][i], layer, color, category, i);
+            _this.drawPolygon(
+              svgGeometries[category][i],
+              layer,
+              color,
+              category,
+              i
+            );
           }
         } else {
           console.error(`Color category doesn't exit`, category, colors);
@@ -515,7 +550,9 @@ export function drawGeometriesFilter(
 }
 
 /**
- *
+ * We make the data matrix flat.
+ * We get the color function with the min max
+ * We get the values to display the legend
  * @param dataArray
  * @param min
  * @param max
@@ -546,6 +583,10 @@ export function getHexColorsAndLegend(dataArray, min, max, numSteps = 30) {
   };
 }
 
+/**
+ * We get the bounding box out of a svg polygon
+ * @param polygonVertices
+ */
 export function svgBoundingBox(polygonVertices) {
   // Here we calculate the bounding box
   let boxX1 = null;
@@ -587,6 +628,9 @@ export function svgBoundingBox(polygonVertices) {
   };
 }
 
+/**
+ * Color definition to display a floorplan in SVG
+ */
 export const svgColors: object = {
   floors: {
     stroke: '#fff',
@@ -645,6 +689,9 @@ export const svgColors: object = {
   },
 };
 
+/**
+ * Color definition to display a mini floorplan in SVG
+ */
 export const svgColorsMini: object = {
   ...svgColors,
   desks: {

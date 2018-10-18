@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+/** Padding when displaying many buildings in the map */
 export const paddingToBuildings = [25, 25, 70, 25];
 
 import OlMap from 'ol/Map';
@@ -13,6 +14,9 @@ import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 
+/**
+ * We need the scale to be in meters
+ */
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
@@ -36,51 +40,20 @@ import {
   reduceHeatmap,
 } from '../../_shared-libraries/HexagonFunctions';
 import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
-
-export const colors = [
-  '#2c7bb6',
-  '#00a6ca',
-  '#00ccbc',
-  '#90eb9d',
-  '#ffff8c',
-  '#f9d057',
-  '#f29e2e',
-  '#e76818',
-  '#d7191c',
-];
-
-const styleNormal = new OlStyle({
-  fill: new OlStyleFill({
-    color: 'rgba(255, 0, 0, 0.7)',
-  }),
-  stroke: new OlStyleStroke({
-    color: 'rgba(255, 0, 0, 1)',
-    width: 2,
-  }),
-});
-
-const styleOver = new OlStyle({
-  fill: new OlStyleFill({
-    color: 'rgba(255, 0, 0, 0.5)',
-  }),
-  stroke: new OlStyleStroke({
-    color: 'rgba(255, 0, 0, 0.5)',
-    width: 3,
-    lineCap: 'round',
-  }),
-});
+import { colors } from '../../_shared-libraries/SimData';
+import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
 
 @Component({
   selector: 'app-potential-view-overview',
   templateUrl: './potential-view-overview.component.html',
   styleUrls: ['./potential-view-overview.component.scss'],
 })
-export class PotentialViewOverviewComponent extends KmlExport implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+export class PotentialViewOverviewComponent extends KmlExport
+  implements OnInit, OnDestroy {
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -130,6 +103,7 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
   numberOfFloors = 0;
   floors = [];
 
+  /** user profile */
   currentProfile;
 
   /**
@@ -179,11 +153,15 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
           if (building) {
             this.building = building;
             const address = building['address'];
-            const buildingName = building['name'] ? building['name'] : this.buildingId;
+            const buildingName = building['name']
+              ? building['name']
+              : this.buildingId;
             if (address) {
               const street = address.street ? address.street : '';
               const street_nr = address.street_nr ? address.street_nr : '';
-              const postal_code = address.postal_code ? address.postal_code : '';
+              const postal_code = address.postal_code
+                ? address.postal_code
+                : '';
               const city = address.city ? address.city : '';
               const country = address.country ? address.country : '';
 
@@ -222,8 +200,12 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
     let map_source_str = '';
 
     if (this.building['building_references']) {
-      const st = this.building['building_references'].find(br => br.source === 'swiss_topo');
-      const osm = this.building['building_references'].find(br => br.source === 'open_street_maps');
+      const st = this.building['building_references'].find(
+        br => br.source === 'swiss_topo'
+      );
+      const osm = this.building['building_references'].find(
+        br => br.source === 'open_street_maps'
+      );
 
       if (st && st.id) {
         map_source = 'swiss_topo';
@@ -239,11 +221,15 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
     if (referenced !== null) {
       let epsg;
       if (this.building.footprints) {
-        const footprint = this.building.footprints.find(fp => fp.source === map_source);
+        const footprint = this.building.footprints.find(
+          fp => fp.source === map_source
+        );
         if (footprint) {
           epsg = footprint.epsg;
 
-          this.feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
+          this.feature = new OlFeature({
+            geometry: new OlPolygon(footprint.coordinates[0]),
+          });
           // To recover the value
           this.feature.setId(this.building.building_id);
         }
@@ -317,12 +303,14 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
                       }
                     });
 
-                    this.fragment_sub = this.route.fragment.subscribe(fragment => {
-                      const urlParams = parseParms(fragment);
-                      if (urlParams.hasOwnProperty('mapStyle')) {
-                        this.changeMapStyle(urlParams['mapStyle']);
+                    this.fragment_sub = this.route.fragment.subscribe(
+                      fragment => {
+                        const urlParams = parseParms(fragment);
+                        if (urlParams.hasOwnProperty('mapStyle')) {
+                          this.changeMapStyle(urlParams['mapStyle']);
+                        }
                       }
-                    });
+                    );
 
                     // select interaction working on "pointermove"
                     this.selectPointerClick = new Select({
@@ -335,7 +323,10 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
                     this.selectPointerClick.on('select', e => {
                       if (e.selected.length > 0 && e.selected[0].id_) {
                         const featureId = e.selected[0].id_;
-                        if (featureId.includes('#') && featureId.includes('||')) {
+                        if (
+                          featureId.includes('#') &&
+                          featureId.includes('||')
+                        ) {
                           // It's an hexagon
 
                           const postion = featureId.indexOf('||');
@@ -343,7 +334,9 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
                             postion + 2,
                             featureId.length - postion
                           );
-                          const coords = featureId.substr(0, postion).split('#');
+                          const coords = featureId
+                            .substr(0, postion)
+                            .split('#');
 
                           const xx = Math.abs(coords[0]);
                           const yy = Math.abs(coords[1]);
@@ -553,12 +546,21 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
   }
 
   viewRaw() {
-    this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
+    this.router.navigate([
+      'manager',
+      'simulation',
+      'building',
+      this.buildingId,
+    ]);
   }
 
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
-    this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+    this.router.navigate([], {
+      fragment: newValue,
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
   }
 
   /**
@@ -601,6 +603,7 @@ export class PotentialViewOverviewComponent extends KmlExport implements OnInit,
     }
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();

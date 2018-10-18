@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
  */
 @Injectable()
 export class BatchService {
+  /** Constructor */
   constructor() {}
 
   private lines = new BehaviorSubject([]);

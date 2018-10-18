@@ -12,12 +12,12 @@ export function renderTime(params) {
 }
 
 /**
- *
+ * Renders a URL with a link target _blank
  * @param params
  */
 export function renderUrl(params) {
   if (params.value) {
-    return `<a href="${params.value}" >${params.value}</a>`;
+    return `<a href="${params.value}" target="_blank" >${params.value}</a>`;
   }
   return ``;
 }

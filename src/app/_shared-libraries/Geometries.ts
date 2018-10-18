@@ -10,6 +10,13 @@ import {
 } from 'three-full/builds/Three.es.js';
 import { COOR_X, COOR_Y, COOR_Z } from './SimData';
 
+/**
+ * Draws a Mark in the 3d scene to be displayed in isometric views
+ * @param container
+ * @param coordinates
+ * @param lineColor
+ * @param deltaZ
+ */
 export function drawMark(container, coordinates, lineColor, deltaZ) {
   const lineOpacity = 0.6;
 
@@ -32,7 +39,11 @@ export function drawMark(container, coordinates, lineColor, deltaZ) {
     new Vector3(coordinates[COOR_X], coordinates[COOR_Y], coordinates[COOR_Z])
   );
 
-  const end1 = new Vector3(coordinates[COOR_X], coordinates[COOR_Y], coordinates[COOR_Z] + deltaZ);
+  const end1 = new Vector3(
+    coordinates[COOR_X],
+    coordinates[COOR_Y],
+    coordinates[COOR_Z] + deltaZ
+  );
   const end2 = new Vector3(
     coordinates[COOR_X],
     coordinates[COOR_Y],
@@ -49,6 +60,14 @@ export function drawMark(container, coordinates, lineColor, deltaZ) {
   container.add(segmentEnd);
 }
 
+/**
+ * Draws only the line provided without filling
+ * @param container
+ * @param data
+ * @param lineColor
+ * @param lineWidth
+ * @param zIndex
+ */
 export function drawGeometries(container, data, lineColor, lineWidth, zIndex) {
   const material = new LineBasicMaterial({
     color: lineColor,
@@ -59,7 +78,9 @@ export function drawGeometries(container, data, lineColor, lineWidth, zIndex) {
     const geometry = new Geometry();
 
     d.forEach(coordinates => {
-      geometry.vertices.push(new Vector3(coordinates[COOR_X], coordinates[COOR_Y], 0.1));
+      geometry.vertices.push(
+        new Vector3(coordinates[COOR_X], coordinates[COOR_Y], 0.1)
+      );
     });
 
     const segment = new Line(geometry, material);
@@ -68,6 +89,17 @@ export function drawGeometries(container, data, lineColor, lineWidth, zIndex) {
   container.position.set(0, 0, zIndex);
 }
 
+/**
+ * draws the interior of a Polygon
+ * @param container
+ * @param objectClass
+ * @param polygonSegments
+ * @param materialColor
+ * @param zIndex
+ * @param forceMaterial
+ * @param polygonOpacity
+ * @param onCreate
+ */
 export function drawPolygons(
   container,
   objectClass,

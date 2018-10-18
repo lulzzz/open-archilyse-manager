@@ -1,6 +1,9 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { UniqueIdService } from '../../_services';
 
+/**
+ * Button that can be on or off
+ */
 @Component({
   selector: 'toggle-button',
   templateUrl: './toggle-button.component.html',

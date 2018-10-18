@@ -5,6 +5,9 @@ import { Store } from '@ngrx/store';
 import * as fromStore from '../../_store';
 import { slideInOut } from '../../_animations/slideInOut.animation';
 
+/**
+ * Sidebar to create a new Layout
+ */
 @Component({
   selector: 'create-layout',
   templateUrl: './create-layout.component.html',
@@ -18,7 +21,10 @@ export class CreateLayoutComponent implements OnInit {
   newLayoutForm: FormGroup;
   balance = null;
 
-  constructor(private store: Store<fromStore.AppState>, private formBuilder: FormBuilder) {
+  constructor(
+    private store: Store<fromStore.AppState>,
+    private formBuilder: FormBuilder
+  ) {
     this.newLayoutForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(150)]],
       description: ['', [Validators.maxLength(2000)]],

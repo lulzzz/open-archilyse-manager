@@ -9,58 +9,98 @@ import {
 
 import { EditorConstants } from './EditorConstants';
 
+/** TODO document */
 let controlsToIntersect = [];
+/** TODO document */
 let uuidToControl = {};
 
+/** TODO document */
 let selectedControl = null;
+/** TODO document */
 let selectedControlMetadata = null;
 
+/** TODO document */
 let controlsGroup;
+/** TODO document */
 let controlsGroupX;
+/** TODO document */
 let controlsGroupY;
 
+/** TODO document */
 let controlsGroupRealX;
+/** TODO document */
 let controlsGroupRealY;
 
+/** TODO document */
 let controlsInnerGroup;
 
+/** TODO document */
 let renderMethod;
 
+/** TODO document */
 let dragging = false;
+/** TODO document */
 let draggingElement = null;
+/** TODO document */
 let draggingType = null;
+/** TODO document */
 let onDragging = null;
 
+/** TODO document */
 let draggingRefX = null;
+/** TODO document */
 let draggingRefY = null;
 
+/** TODO document */
 let elementOriginalX = null;
+/** TODO document */
 let elementOriginalY = null;
+/** TODO document */
 let elementOriginalAngle = null;
+/** TODO document */
 let elementOriginalScale = null;
 
+/** TODO document */
 let scale;
+/** TODO document */
 let distance;
+/** TODO document */
 const distanceReference = 150;
 
+/** TODO document */
 let expandCoordX;
+/** TODO document */
 let expandCoordY;
 
+/** TODO document */
 let rotateCoordX;
+/** TODO document */
 let rotateCoordY;
 
+/** TODO document */
 let controlSizeX = 50;
+/** TODO document */
 let controlSizeY = 50;
 
+/** TODO document */
 let sceneContainer = null;
+/** TODO document */
 let sceneCamera = null;
 
+/** TODO document */
 let enableCamera;
+/** TODO document */
 let disableCamera;
 
+/** TODO document */
 let showScale;
+/** TODO document */
 let controlMode;
 
+/**
+ * The EditorControls class adds user controls to elements so can change the properties.
+ * Is used to Georeference Layouts and also in the Layout editor
+ */
 export class EditorControls {
   /**
    * Control modes
@@ -125,22 +165,34 @@ export class EditorControls {
    */
   public static onMouseMove(event, raycaster) {
     // calculate objects intersecting the picking ray
-    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+    this.identifyMaterial(
+      event,
+      raycaster.intersectObjects(controlsToIntersect)
+    );
   }
 
   public static onMouseDown(event, raycaster) {
     // calculate objects intersecting the picking ray
-    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+    this.identifyMaterial(
+      event,
+      raycaster.intersectObjects(controlsToIntersect)
+    );
   }
 
   public static onMouseUp(event, raycaster) {
     // calculate objects intersecting the picking ray
-    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+    this.identifyMaterial(
+      event,
+      raycaster.intersectObjects(controlsToIntersect)
+    );
   }
 
   public static onMouseOut(event, raycaster) {
     // calculate objects intersecting the picking ray
-    this.identifyMaterial(event, raycaster.intersectObjects(controlsToIntersect));
+    this.identifyMaterial(
+      event,
+      raycaster.intersectObjects(controlsToIntersect)
+    );
   }
 
   public static isDragging() {
@@ -214,7 +266,10 @@ export class EditorControls {
       if (draggingType === EditorConstants.MOVE) {
         controlsGroup.position.x = controlsGroupX + incX * scale;
         controlsGroup.position.y = controlsGroupY + incY * scale;
-      } else if (draggingType === EditorConstants.SIZE || draggingType === EditorConstants.ROTATE) {
+      } else if (
+        draggingType === EditorConstants.SIZE ||
+        draggingType === EditorConstants.ROTATE
+      ) {
         const rect = sceneContainer.getBoundingClientRect();
         const rectBody = document.body.getBoundingClientRect();
 
@@ -222,8 +277,12 @@ export class EditorControls {
         const top = tl.top;
         const left = tl.left;
 
-        const deltaX = Math.trunc(incX + draggingRefX - left - controlsGroupX - 25);
-        const deltaY = Math.trunc(incY + draggingRefY - top - controlsGroupY - 25);
+        const deltaX = Math.trunc(
+          incX + draggingRefX - left - controlsGroupX - 25
+        );
+        const deltaY = Math.trunc(
+          incY + draggingRefY - top - controlsGroupY - 25
+        );
 
         if (draggingType === EditorConstants.SIZE) {
           let dist = 150;
@@ -256,7 +315,14 @@ export class EditorControls {
         }
       }
 
-      onDragging(draggingElement, draggingType, newPositionX, newPositionY, newScale, newAngle);
+      onDragging(
+        draggingElement,
+        draggingType,
+        newPositionX,
+        newPositionY,
+        newScale,
+        newAngle
+      );
 
       // We intersected at least 1 element
     } else if (intersects.length) {
@@ -269,7 +335,10 @@ export class EditorControls {
         const lestDistanceObject = filtered[0].object;
         const control = uuidToControl[lestDistanceObject.uuid];
 
-        if (selectedControl !== null && selectedControl.uuid !== lestDistanceObject.uuid) {
+        if (
+          selectedControl !== null &&
+          selectedControl.uuid !== lestDistanceObject.uuid
+        ) {
           selectedControl.material = selectedControlMetadata.material1;
         }
 
@@ -355,9 +424,11 @@ export class EditorControls {
 
     const controlsGroupBounds = new Box3().setFromObject(element);
     const centerX =
-      controlsGroupBounds.min.x + (controlsGroupBounds.max.x - controlsGroupBounds.min.x) / 2;
+      controlsGroupBounds.min.x +
+      (controlsGroupBounds.max.x - controlsGroupBounds.min.x) / 2;
     const centerY =
-      controlsGroupBounds.min.y + (controlsGroupBounds.max.y - controlsGroupBounds.min.y) / 2;
+      controlsGroupBounds.min.y +
+      (controlsGroupBounds.max.y - controlsGroupBounds.min.y) / 2;
 
     draggingElement = element;
 
@@ -377,7 +448,17 @@ export class EditorControls {
     this.addControls(coorZ);
   }
 
-  public static addControl(coorX, coorY, coorZ, control_type, url1, url2, url3, url4, onComplete) {
+  public static addControl(
+    coorX,
+    coorY,
+    coorZ,
+    control_type,
+    url1,
+    url2,
+    url3,
+    url4,
+    onComplete
+  ) {
     new TextureLoader().load(url1, img1 => {
       new TextureLoader().load(url2, img2 => {
         new TextureLoader().load(url3, img3 => {

@@ -1,5 +1,6 @@
 import { environment } from '../../../environments/environment';
 
+/** short alias constant */
 const apiUrl = environment.apiUrl;
 
 /**
@@ -7,7 +8,12 @@ const apiUrl = environment.apiUrl;
  * @param params
  */
 export function renderRequestLinkDocs(params) {
-  if (params.data && params.data.request && params.data.request.url && params.data.request.method) {
+  if (
+    params.data &&
+    params.data.request &&
+    params.data.request.url &&
+    params.data.request.method
+  ) {
     const url = params.data.request.url;
     const method = params.data.request.method;
     const baseUrl = 'https://www.archilyse.com/api/docs/';
@@ -99,8 +105,18 @@ export function renderRequestLinkDocs(params) {
   return ``;
 }
 
-export function renderRequestDescription(params) {
-  if (params.data && params.data.request && params.data.request.url && params.data.request.method) {
+/**
+ * Out of a request gives a human description of the function
+ * @param params (ag-grid cell parameters)
+ * @return A description of the request
+ */
+export function renderRequestDescription(params): string {
+  if (
+    params.data &&
+    params.data.request &&
+    params.data.request.url &&
+    params.data.request.method
+  ) {
     const url = params.data.request.url;
     const method = params.data.request.method;
 

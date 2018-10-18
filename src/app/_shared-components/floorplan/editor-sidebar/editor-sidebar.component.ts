@@ -28,6 +28,7 @@ export class EditorSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {}
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {}
 
   mousemoveListener(event: any) {

@@ -42,6 +42,7 @@ export function logout(reducer) {
 }
 /**  END OF META REDUCER  */
 
+/**  Main user reducer */
 export function reducer(
   state = initialState,
   action: fromUser.UserActions
@@ -107,15 +108,24 @@ export function reducer(
   }
 }
 
+/**  gets the user  */
 export const getUser = (state: State) => state.user;
+/**  gets the error, id any  */
 export const getUserError = (state: State) => state.error;
+/**  get the user metadata  */
 export const getUserMeta = (state: State) => {
   const { user, ...meta } = state;
   return meta;
 };
+/**  is the user being loaded  */
 export const getUserLoading = (state: State) => state.loading;
+/**  was the user loaded  */
 export const getUserLoaded = (state: State) => state.loaded;
+/**  is the user being updated  */
 export const getUserUpdating = (state: State) => state.updating;
+/**  was the user Updated  */
 export const getUserUpdated = (state: State) => state.updated;
+/**  is the user being Authenticated  */
 export const getUserAuthenticating = (state: State) => state.authenticating;
+/**  was the user Authenticated  */
 export const getUserAuthenticated = (state: State) => state.authenticated;

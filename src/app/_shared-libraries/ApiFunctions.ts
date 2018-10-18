@@ -1,32 +1,82 @@
 import { environment } from '../../environments/environment';
-const apiUrl = environment.apiUrl;
 
 /**
  * Collection of functions to centralize the API calls.
  */
 export class ApiFunctions {
+  /**
+   * Helper function for API GET requests
+   * @param httpService
+   * @param url
+   * @param onComplete
+   * @param onError
+   * @param options
+   */
   public static get(httpService, url, onComplete, onError?, options?) {
     return httpService
-      .get(apiUrl + url, options)
-      .subscribe(onComplete, onError ? onError : console.error);
-  }
-  public static post(httpService, url, params, onComplete, onError?) {
-    return httpService
-      .post(apiUrl + url, params)
-      .subscribe(onComplete, onError ? onError : console.error);
-  }
-  public static delete(httpService, url, onComplete, onError?) {
-    return httpService
-      .delete(apiUrl + url)
-      .subscribe(onComplete, onError ? onError : console.error);
-  }
-  public static patch(httpService, url, params, onComplete, onError?) {
-    return httpService
-      .patch(apiUrl + url, params)
+      .get(environment.apiUrl + url, options)
       .subscribe(onComplete, onError ? onError : console.error);
   }
 
-  public static getPath(httpService, coord, coordDest, vehicle, onComplete, onError?) {
+  /**
+   * Helper function for API POST requests
+   * @param httpService
+   * @param url
+   * @param onComplete
+   * @param onError
+   * @param options
+   */
+  public static post(httpService, url, params, onComplete, onError?) {
+    return httpService
+      .post(environment.apiUrl + url, params)
+      .subscribe(onComplete, onError ? onError : console.error);
+  }
+
+  /**
+   * Helper function for API DELETE requests
+   * @param httpService
+   * @param url
+   * @param onComplete
+   * @param onError
+   * @param options
+   */
+  public static delete(httpService, url, onComplete, onError?) {
+    return httpService
+      .delete(environment.apiUrl + url)
+      .subscribe(onComplete, onError ? onError : console.error);
+  }
+
+  /**
+   * Helper function for API PATCH requests
+   * @param httpService
+   * @param url
+   * @param onComplete
+   * @param onError
+   * @param options
+   */
+  public static patch(httpService, url, params, onComplete, onError?) {
+    return httpService
+      .patch(environment.apiUrl + url, params)
+      .subscribe(onComplete, onError ? onError : console.error);
+  }
+
+  /**
+   * Helper funtion to request a DPOI path to the API
+   * @param httpService
+   * @param coord   origin coordinate [x,y]
+   * @param coordDest   destination coordinate [x,y]
+   * @param vehicle   foot / car / bicycle
+   * @param onComplete  result function
+   * @param onError  error function
+   */
+  public static getPath(
+    httpService,
+    coord,
+    coordDest,
+    vehicle,
+    onComplete,
+    onError?
+  ) {
     if (
       coord &&
       coord.latitude &&
@@ -36,9 +86,9 @@ export class ApiFunctions {
       coordDest.longitude
     ) {
       const url =
-        `?point=${coord.latitude}%2C${coord.longitude}&point=${coordDest.latitude}%2C${
-          coordDest.longitude
-        }` +
+        `?point=${coord.latitude}%2C${coord.longitude}&point=${
+          coordDest.latitude
+        }%2C${coordDest.longitude}` +
         `&type=json&locale=en-US&vehicle=${vehicle}&points_encoded=false&vehicle=car&weighting=fastest&elevation=false&use_miles=false&layer=Omniscale`;
 
       // TODO: Debug only

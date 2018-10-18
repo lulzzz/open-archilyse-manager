@@ -74,6 +74,9 @@ import { EditorComponent } from './editor/editor.component';
 import { IntroEditorComponent } from './editor/intro.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 
+/**
+ * Configuration for the perfect scrollbar library
+ */
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   // suppressScrollX: true,
 };

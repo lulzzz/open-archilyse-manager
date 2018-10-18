@@ -2,6 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { GenericOverlayRef } from '../generic-overlay-ref';
 import { INFO_BOX_OVERLAY_DATA } from './info-box-overlay.tokens';
 
+/**
+ * Information overlay layout
+ */
 @Component({
   selector: 'info-box-overlay',
   template: `

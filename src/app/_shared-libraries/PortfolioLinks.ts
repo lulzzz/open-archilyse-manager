@@ -1,17 +1,18 @@
+import { environment } from '../../environments/environment';
+
 /** Link to display layouts binded with the portfolio
  // HOW TO USE: ${getLayoutLink(this.layoutId)}
  When providing the layout object might use the Layout Name
  */
-import { environment } from '../../environments/environment';
-const urlPortfolio = environment.urlPortfolio;
-
 export function getLayoutLink(layoutId, layout?) {
   if (layoutId && layoutId !== '' && layoutId !== 'None') {
     let layoutName = layoutId;
     if (layout && layout.name && layout.name !== '') {
       layoutName = layout.name;
     }
-    return `<a href="${urlPortfolio}/layout#layout_id=${layoutId}">${layoutName}</a>`;
+    return `<a href="${
+      environment.urlPortfolio
+    }/layout#layout_id=${layoutId}">${layoutName}</a>`;
   }
   return `"undefined"`;
 }
@@ -26,7 +27,9 @@ export function getUnitLink(unitId, unit?) {
     if (unit && unit.name && unit.name !== '') {
       unitName = unit.name;
     }
-    return `<a href="${urlPortfolio}/unit#unit_id=${unitId}">${unitName}</a>`;
+    return `<a href="${
+      environment.urlPortfolio
+    }/unit#unit_id=${unitId}">${unitName}</a>`;
   }
   return `"undefined"`;
 }
@@ -41,7 +44,9 @@ export function getBuildingLink(buildingId, building?) {
     if (building && building.name && building.name !== '') {
       buildingName = building.name;
     }
-    return `<a href="${urlPortfolio}/building#building_id=${buildingId}">${buildingName}</a>`;
+    return `<a href="${
+      environment.urlPortfolio
+    }/building#building_id=${buildingId}">${buildingName}</a>`;
   }
   return `"undefined"`;
 }

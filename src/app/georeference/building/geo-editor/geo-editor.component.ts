@@ -20,10 +20,14 @@ import {
   Raycaster,
   Vector2,
 } from 'three-full/builds/Three.es.js';
-import { drawPolygons, drawGeometries } from '../../../_shared-libraries/Geometries';
+import {
+  drawPolygons,
+  drawGeometries,
+} from '../../../_shared-libraries/Geometries';
 import { EditorControls } from '../../../_shared-libraries/EditorControls';
 import { EditorConstants } from '../../../_shared-libraries/EditorConstants';
 
+/** zIndex for the user controls (move & rotate) */
 const LAYER_CONTROLS = 0.1;
 
 @Component({
@@ -31,7 +35,8 @@ const LAYER_CONTROLS = 0.1;
   templateUrl: './geo-editor.component.html',
   styleUrls: ['./geo-editor.component.scss'],
 })
-export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+export class GeoEditorComponent
+  implements OnInit, AfterContentInit, OnChanges, OnDestroy {
   @Input() previousCoords;
   @Input() allPossibleCoords;
   @Output() previews = new EventEmitter<any>();
@@ -231,7 +236,14 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
 
     return correctedAngle;
   }
-  updateObjectProperties(object, type, newPositionX, newPositionY, newScale, newAngle) {
+  updateObjectProperties(
+    object,
+    type,
+    newPositionX,
+    newPositionY,
+    newScale,
+    newAngle
+  ) {
     if (type === EditorConstants.SIZE) {
       object.scale.x = newScale;
       object.scale.y = newScale;
@@ -263,7 +275,10 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
       this.coords.x_pivot +
       this.referenceX;
     const newPosY =
-      -((newPositionY - mapDomBox['height'] / 2) / this.buildingPerimeterScale) -
+      -(
+        (newPositionY - mapDomBox['height'] / 2) /
+        this.buildingPerimeterScale
+      ) -
       this.coords.y_pivot +
       this.referenceY;
 
@@ -284,7 +299,14 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
 
   setUpCamera() {
     const props = this.containerProps();
-    this.camera = new OrthographicCamera(props.left, props.right, props.top, props.bottom, 1, 1000);
+    this.camera = new OrthographicCamera(
+      props.left,
+      props.right,
+      props.top,
+      props.bottom,
+      1,
+      1000
+    );
 
     // TOP
     this.camera.position.set(0, 0, -45);
@@ -356,12 +378,18 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
     if (changes.modelStructure && !changes.modelStructure.firstChange) {
       this.addFloorplan(true);
       this.render();
-      EditorControls.addControlsForElement(this.floorplanWrapper, LAYER_CONTROLS);
+      EditorControls.addControlsForElement(
+        this.floorplanWrapper,
+        LAYER_CONTROLS
+      );
     }
     if (changes.coords && !changes.coords.firstChange) {
       this.addFloorplan(true);
       this.render();
-      EditorControls.addControlsForElement(this.floorplanWrapper, LAYER_CONTROLS);
+      EditorControls.addControlsForElement(
+        this.floorplanWrapper,
+        LAYER_CONTROLS
+      );
     }
   }
 
@@ -457,16 +485,34 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
       /** OpeningType */
     } else if (structure.type === EditorConstants.DOOR) {
       if (structure.footprint && structure.footprint.coordinates) {
-        drawGeometries(this.floorplan, structure.footprint.coordinates, darkGrey, 1.5, -1);
+        drawGeometries(
+          this.floorplan,
+          structure.footprint.coordinates,
+          darkGrey,
+          1.5,
+          -1
+        );
       }
       if (structure.opening_area && structure.opening_area.coordinates) {
-        drawGeometries(this.floorplan, structure.opening_area.coordinates, darkGrey, 1.5, -1);
+        drawGeometries(
+          this.floorplan,
+          structure.opening_area.coordinates,
+          darkGrey,
+          1.5,
+          -1
+        );
       }
     } else if (
       structure.type === EditorConstants.WINDOW_ENVELOPE ||
       structure.type === EditorConstants.WINDOW_INTERIOR
     ) {
-      drawGeometries(this.floorplan, structure.footprint.coordinates, 0x333333, 1, -1);
+      drawGeometries(
+        this.floorplan,
+        structure.footprint.coordinates,
+        0x333333,
+        1,
+        -1
+      );
       drawPolygons(
         this.floorplan,
         structure.type,
@@ -578,7 +624,13 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
 
     this.removeOldBuilding();
 
-    drawGeometries(this.building, [this.buildingPerimeter], lineColor, 5, zIndex);
+    drawGeometries(
+      this.building,
+      [this.buildingPerimeter],
+      lineColor,
+      5,
+      zIndex
+    );
 
     drawPolygons(
       this.building,
@@ -621,6 +673,7 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
     this.clearGroup(this.building);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.windowListener) {
       // Unsubscribe from window events
@@ -690,7 +743,9 @@ export class GeoEditorComponent implements OnInit, AfterContentInit, OnChanges, 
    */
   backToDefaultCoordinates() {
     // Back to default position
-    this.coords = this.previousCoords ? this.previousCoords : this.allPossibleCoords[0];
+    this.coords = this.previousCoords
+      ? this.previousCoords
+      : this.allPossibleCoords[0];
 
     this.addFloorplan(true);
     this.render();

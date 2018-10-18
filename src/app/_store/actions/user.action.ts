@@ -15,44 +15,83 @@ export enum UserActionTypes {
   LOG_OUT_SUCCESS = '[User] Log Out Success ',
 }
 
+/**
+ * User tries to Authenticate
+ */
 export class Authenticate implements Action {
+  /** Authenticate type */
   readonly type = UserActionTypes.AUTHENTICATE;
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User Authenticate complete
+ */
 export class AuthenticateSuccess implements Action {
+  /** AuthenticateSuccess type */
   readonly type = UserActionTypes.AUTHENTICATE_SUCCESS;
-  // constructor(public payload: Partial<User>) {}
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User Authenticate error
+ */
 export class AuthenticateFailure implements Action {
+  /** AuthenticateFailure type */
   readonly type = UserActionTypes.AUTHENTICATE_FAILURE;
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User tries to Sign In
+ */
 export class SignIn implements Action {
+  /** SignIn type */
   readonly type = UserActionTypes.SIGN_IN;
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User Sign In complete
+ */
 export class SignInSuccess implements Action {
+  /** SignInSuccess type */
   readonly type = UserActionTypes.SIGN_IN_SUCCESS;
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User Sign In error
+ */
 export class SignInFailure implements Action {
+  /** SignInFailure type */
   readonly type = UserActionTypes.SIGN_IN_FAILURE;
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User Log Out
+ */
 export class LogOut implements Action {
+  /** LogOut type */
   readonly type = UserActionTypes.LOG_OUT;
+  /** Action constructor */
   constructor(public payload: any) {}
 }
 
+/**
+ * User Log Out Success
+ */
 export class LogOutSuccess implements Action {
+  /** LogOutSuccess type */
   readonly type = UserActionTypes.LOG_OUT_SUCCESS;
+  /** Action constructor */
   constructor() {}
 }
 

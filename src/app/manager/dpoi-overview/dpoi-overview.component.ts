@@ -2,14 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import {
   ColumnDefinitions,
-  columnDefs,
-  columnDefsCompare,
+  columnDefsDpoi,
+  columnDefsCompareDpoi,
 } from '../../_shared-libraries/ColumnDefinitions';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
-import { exportOptions, exportSelectedOptions } from '../../_shared-libraries/ExcelManagement';
+import {
+  exportOptions,
+  exportSelectedOptions,
+} from '../../_shared-libraries/ExcelManagement';
 import { getCategory } from '../../_shared-libraries/DpoiCategories';
 import { NavigationService } from '../../_services';
 
@@ -34,8 +37,10 @@ function getDiffCat(res, resC, catStr) {
  * @param attrStr - Attribute string
  */
 function getDiff(res, resC, catStr, attrStr) {
-  const val = res && res[catStr] && res[catStr][attrStr] ? res[catStr][attrStr] : 0;
-  const valC = resC && resC[catStr] && resC[catStr][attrStr] ? resC[catStr][attrStr] : 0;
+  const val =
+    res && res[catStr] && res[catStr][attrStr] ? res[catStr][attrStr] : 0;
+  const valC =
+    resC && resC[catStr] && resC[catStr][attrStr] ? resC[catStr][attrStr] : 0;
   return val - valC;
 }
 
@@ -45,11 +50,10 @@ function getDiff(res, resC, catStr, attrStr) {
   styleUrls: ['./dpoi-overview.component.scss'],
 })
 export class DpoiOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -85,7 +89,9 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   updatedCompare;
   statusCompare;
 
+  /** user profile */
   currentProfile;
+
   /**
    * Subscriptions
    */
@@ -115,7 +121,9 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
     if (this.buildingId) {
       ApiFunctions.get(this.http, `buildings/${this.buildingId}`, building => {
         const address = building['address'];
-        const buildingName = building['name'] ? building['name'] : this.buildingId;
+        const buildingName = building['name']
+          ? building['name']
+          : this.buildingId;
         if (address) {
           const street = address.street ? address.street : '';
           const street_nr = address.street_nr ? address.street_nr : '';
@@ -145,22 +153,32 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
             let simulationsArray;
 
             if (this.buildingIdCompare) {
-              ApiFunctions.get(this.http, `buildings/${this.buildingIdCompare}`, building => {
-                const address = building['address'];
-                const buildingName = building['name'] ? building['name'] : this.buildingId;
-                if (address) {
-                  const street = address.street ? address.street : '';
-                  const street_nr = address.street_nr ? address.street_nr : '';
-                  const postal_code = address.postal_code ? address.postal_code : '';
-                  const city = address.city ? address.city : '';
-                  const country = address.country ? address.country : '';
+              ApiFunctions.get(
+                this.http,
+                `buildings/${this.buildingIdCompare}`,
+                building => {
+                  const address = building['address'];
+                  const buildingName = building['name']
+                    ? building['name']
+                    : this.buildingId;
+                  if (address) {
+                    const street = address.street ? address.street : '';
+                    const street_nr = address.street_nr
+                      ? address.street_nr
+                      : '';
+                    const postal_code = address.postal_code
+                      ? address.postal_code
+                      : '';
+                    const city = address.city ? address.city : '';
+                    const country = address.country ? address.country : '';
 
-                  const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
-                  this.addressHelpCompare = `<span class="label-dpoi">Compared to "${buildingName}" :</span> <span class="address-text">${addressStr}</span>`;
-                } else {
-                  this.addressHelpCompare = `Address not defined for building <span class="address-text">${buildingName}</span>`;
+                    const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
+                    this.addressHelpCompare = `<span class="label-dpoi">Compared to "${buildingName}" :</span> <span class="address-text">${addressStr}</span>`;
+                  } else {
+                    this.addressHelpCompare = `Address not defined for building <span class="address-text">${buildingName}</span>`;
+                  }
                 }
-              });
+              );
 
               ApiFunctions.get(
                 this.http,
@@ -180,8 +198,12 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
                       const resC = resultComapre[simKey];
                       return {
                         name: simKey,
-                        category: getCategory(simKey, res && res.category ? res.category : ''),
-                        category_original: res && res.category ? res.category : '',
+                        category: getCategory(
+                          simKey,
+                          res && res.category ? res.category : ''
+                        ),
+                        category_original:
+                          res && res.category ? res.category : '',
                         place_name: res && res.name ? res.name : '',
                         place_name_compare: resC && resC.name ? resC.name : '',
                         bike: getDiffCat(res, resC, 'bike'),
@@ -210,7 +232,10 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
                 const res = result[simKey];
                 return {
                   name: simKey,
-                  category: getCategory(simKey, res && res.category ? res.category : ''),
+                  category: getCategory(
+                    simKey,
+                    res && res.category ? res.category : ''
+                  ),
                   category_original: res && res.category ? res.category : '',
                   place_name: res && res.name ? res.name : '',
                   bike: res.bike,
@@ -246,7 +271,9 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   prepareGrid(simulationsArray) {
     this.gridOptions = {
       rowData: simulationsArray,
-      columnDefs: this.buildingIdCompare ? columnDefsCompare : columnDefs,
+      columnDefs: this.buildingIdCompare
+        ? columnDefsCompareDpoi
+        : columnDefsDpoi,
 
       /** Pagination */
       ...ColumnDefinitions.pagination,
@@ -271,13 +298,14 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
 
         this.fragment_sub = ManagerFunctions.setDefaultFilters(
           this.route,
-          this.buildingIdCompare ? columnDefsCompare : columnDefs,
+          this.buildingIdCompare ? columnDefsCompareDpoi : columnDefsDpoi,
           this.gridApi
         );
       },
     };
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -289,7 +317,12 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
    */
 
   seeRawData() {
-    this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
+    this.router.navigate([
+      'manager',
+      'simulation',
+      'building',
+      this.buildingId,
+    ]);
   }
   seeMapView() {
     this.router.navigate(['manager', 'dpoiView', this.buildingId]);
@@ -300,14 +333,21 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
   }
 
   switchDpoi() {
-    this.router.navigate(['manager', 'dpoi', this.buildingIdCompare, this.buildingId]);
+    this.router.navigate([
+      'manager',
+      'dpoi',
+      this.buildingIdCompare,
+      this.buildingId,
+    ]);
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
@@ -316,9 +356,11 @@ export class DpoiOverviewComponent implements OnInit, OnDestroy {
    * Export functions
    */
 
+  /** Export everything */
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
+  /** Export selected nodes only */
   exportSelected() {
     this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }

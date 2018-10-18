@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+/**
+ * Display procents in ag-grid
+ */
 @Component({
   selector: 'app-procent-renderer',
   templateUrl: './procent-renderer.component.html',

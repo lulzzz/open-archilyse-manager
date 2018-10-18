@@ -1,7 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { paddingToBuilding, styleCurrent, styleNormalFaded } from '../../_shared-libraries/OlMapStyles';
+import {
+  paddingToBuilding,
+  styleCurrent,
+  styleNormalFaded,
+} from '../../_shared-libraries/OlMapStyles';
 
 import OlMap from 'ol/Map';
 import OlXYZ from 'ol/source/XYZ';
@@ -28,6 +32,9 @@ import {
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 
+/**
+ * We need the scale to be in meters
+ */
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
@@ -62,6 +69,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
   referenceSourceHumanStr;
   referenceCoordinates;
 
+  /** True to start and false once all the data is loaded */
   loading;
   features;
   currentFeature;
@@ -93,6 +101,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
 
   coordsToSave = null;
 
+  /** String container of any error */
   error = null;
 
   mapStyle;
@@ -101,6 +110,7 @@ export class BuildingComponent implements OnInit, OnDestroy {
   previousMovementsCurrent;
   previousMovementsOthers;
 
+  /** user profile */
   currentProfile;
 
   /**
@@ -203,10 +213,16 @@ export class BuildingComponent implements OnInit, OnDestroy {
 
         if (!layout) {
           this.loading = false;
-          this.error = `Layout ${getLayoutLink(this.layoutId, layout)} not found.`;
+          this.error = `Layout ${getLayoutLink(
+            this.layoutId,
+            layout
+          )} not found.`;
         } else if (!layout['unit_id']) {
           this.loading = false;
-          this.error = `Layout ${getLayoutLink(this.layoutId, layout)} has no unit assigned.`;
+          this.error = `Layout ${getLayoutLink(
+            this.layoutId,
+            layout
+          )} has no unit assigned.`;
         } else {
           this.layout = layout;
           this.unitId = layout['unit_id'];
@@ -234,10 +250,16 @@ export class BuildingComponent implements OnInit, OnDestroy {
           this.error = `Unit ${getUnitLink(
             this.unitId,
             unit
-          )} not found for layout Layout ${getLayoutLink(this.layoutId, this.layout)}`;
+          )} not found for layout Layout ${getLayoutLink(
+            this.layoutId,
+            this.layout
+          )}`;
         } else if (!unit['building_id']) {
           this.loading = false;
-          this.error = `Unit ${getUnitLink(this.unitId, unit)} has no building assigned`;
+          this.error = `Unit ${getUnitLink(
+            this.unitId,
+            unit
+          )} has no building assigned`;
         } else {
           this.unit = unit;
           this.buildingId = unit['building_id'];
@@ -247,10 +269,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
       },
       error => {
         this.loading = false;
-        this.error = `Unit ${getUnitLink(this.unitId)} not found for layout ${getLayoutLink(
-          this.layoutId,
-          this.layout
-        )}.`;
+        this.error = `Unit ${getUnitLink(
+          this.unitId
+        )} not found for layout ${getLayoutLink(this.layoutId, this.layout)}.`;
       }
     );
   }
@@ -264,7 +285,10 @@ export class BuildingComponent implements OnInit, OnDestroy {
       'buildings/' + this.buildingId,
       building => {
         if (!building) {
-          this.error = `Building ${getBuildingLink(this.buildingId, building)} not found.`;
+          this.error = `Building ${getBuildingLink(
+            this.buildingId,
+            building
+          )} not found.`;
         } else {
           this.building = building;
           const address = building['address'];
@@ -283,7 +307,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
       },
       error => {
         this.loading = false;
-        this.error = `Building ${getBuildingLink(this.buildingId)} not found for unit ${getUnitLink(
+        this.error = `Building ${getBuildingLink(
+          this.buildingId
+        )} not found for unit ${getUnitLink(
           this.unitId,
           this.unit
         )}, layout ${getLayoutLink(this.layoutId, this.layout)}.`;
@@ -323,7 +349,10 @@ export class BuildingComponent implements OnInit, OnDestroy {
       this.http,
       'buildings/' + this.buildingId + '/surroundings',
       surroundings => {
-        if (typeof surroundings['source'] !== 'undefined' && surroundings['source'] !== null) {
+        if (
+          typeof surroundings['source'] !== 'undefined' &&
+          surroundings['source'] !== null
+        ) {
           this.referenceSource = surroundings['source'];
           this.referenceToHuman();
         }
@@ -357,11 +386,17 @@ export class BuildingComponent implements OnInit, OnDestroy {
             this.loading = false;
             this.error = `GeoJson for "${
               this.referenceSourceHumanStr
-            }" has no feature list for layout ${getLayoutLink(this.layoutId, this.layout)}`;
+            }" has no feature list for layout ${getLayoutLink(
+              this.layoutId,
+              this.layout
+            )}`;
           }
         } else {
           this.loading = false;
-          this.error = `Building ${getBuildingLink(this.buildingId, this.building)}
+          this.error = `Building ${getBuildingLink(
+            this.buildingId,
+            this.building
+          )}
                                       was not referenced for the source ${
                                         this.referenceSourceHumanStr
                                       }`;
@@ -385,10 +420,15 @@ export class BuildingComponent implements OnInit, OnDestroy {
   startDataWithFeatures() {
     ApiFunctions.get(
       this.http,
-      'layouts/' + this.layoutId + '/georef_proposals?source=' + this.referenceSource,
+      'layouts/' +
+        this.layoutId +
+        '/georef_proposals?source=' +
+        this.referenceSource,
       proposals => {
         const vectorSource = new Vector({
-          features: this.features.filter(feature => feature.getId() !== this.buildingReferenceId),
+          features: this.features.filter(
+            feature => feature.getId() !== this.buildingReferenceId
+          ),
         });
 
         this.currentFeature = this.features.filter(
@@ -554,7 +594,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
   }
 
   centerToPolygon() {
-    this.feature = this.geoJson.features.find(feature => feature.id === this.buildingReferenceId);
+    this.feature = this.geoJson.features.find(
+      feature => feature.id === this.buildingReferenceId
+    );
 
     if (this.feature) {
       let polygon;
@@ -577,7 +619,9 @@ export class BuildingComponent implements OnInit, OnDestroy {
      padding: paddingToBuilding
      */
     } else {
-      this.error = `Georeferenced building (${this.buildingReferenceId}) not found.`;
+      this.error = `Georeferenced building (${
+        this.buildingReferenceId
+      }) not found.`;
     }
   }
 
@@ -617,7 +661,11 @@ export class BuildingComponent implements OnInit, OnDestroy {
 
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
-    this._router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+    this._router.navigate([], {
+      fragment: newValue,
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
   }
 
   selectApiSource(newSource) {
@@ -652,7 +700,12 @@ export class BuildingComponent implements OnInit, OnDestroy {
     const next = this.batchService.getNextLine();
     if (next !== null) {
       if (next.building && next.layout) {
-        this._router.navigate(['georeference', 'map', next.building, next.layout]);
+        this._router.navigate([
+          'georeference',
+          'map',
+          next.building,
+          next.layout,
+        ]);
       } else if (next.building) {
         this._router.navigate(['georeference', 'map', next.building]);
       } else if (next.layout) {

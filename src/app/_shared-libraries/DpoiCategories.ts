@@ -1,31 +1,31 @@
 /**
- * Human readable category values
- */
-const culture = 'Entertainment, Arts & Culture';
-const nature = 'Nature';
-const outdoor_category = 'Outdoor Facilities';
-const sustenance = 'Sustenance';
-const healthcare = 'Healthcare';
-const transportation_category = 'Transportation';
-const gear = 'Gear Shop';
-const foods = 'Fine Foods';
-const vegetation = 'Vegetation';
-const clothing = 'Clothing';
-const education = 'Education';
-const religion = 'Religion';
-const stores = 'General Store';
-const furniture_category = 'Furniture';
-const hardware_category = 'Hardware';
-const money = 'Money';
-const accommodation = 'Accommodation';
-const nightlife = 'Nightlife';
-
-/**
  * We translate the Open Street Maps key into categories (Human value).
  * @param key Open Street Maps key
  * @param category Open Street Maps category (Not used yet)
  */
 export function getCategory(key, category) {
+  /**
+   * Human readable category values
+   */
+  const culture = 'Entertainment, Arts & Culture';
+  const nature = 'Nature';
+  const outdoor_category = 'Outdoor Facilities';
+  const sustenance = 'Sustenance';
+  const healthcare = 'Healthcare';
+  const transportation_category = 'Transportation';
+  const gear = 'Gear Shop';
+  const foods = 'Fine Foods';
+  const vegetation = 'Vegetation';
+  const clothing = 'Clothing';
+  const education = 'Education';
+  const religion = 'Religion';
+  const stores = 'General Store';
+  const furniture_category = 'Furniture';
+  const hardware_category = 'Hardware';
+  const money = 'Money';
+  const accommodation = 'Accommodation';
+  const nightlife = 'Nightlife';
+
   // Category validations
   if (category === '') {
   } else if (category === 'shop') {

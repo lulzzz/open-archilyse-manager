@@ -30,11 +30,12 @@ export class ElementEvent {
   }
 }
 
+@Injectable()
 /**
  * The DiagramService allow the different diagrams and graphs to work together and comunicate
  */
-@Injectable()
 export class DiagramService {
+  /** Constructor */
   constructor() {}
 
   private uniqueId = 1000;

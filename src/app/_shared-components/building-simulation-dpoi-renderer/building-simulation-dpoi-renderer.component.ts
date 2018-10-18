@@ -32,6 +32,7 @@ export class BuildingSimulationRendererDpoiComponent {
   urlDpoi: any;
   urlDpoiMap: any;
 
+  /** user profile */
   currentProfile;
 
   constructor(
@@ -84,33 +85,65 @@ export class BuildingSimulationRendererDpoiComponent {
     const letterColor = '#3d383e';
 
     if (!this.addressSet) {
-      this.styles = { width: '30%', backgroundColor: '#2e67b1', color: letterColor };
+      this.styles = {
+        width: '30%',
+        backgroundColor: '#2e67b1',
+        color: letterColor,
+      };
     } else if (params.value) {
       const status = params.value;
 
       if (status === 'failed') {
         this.failed = true;
-        this.styles = { width: '60%', backgroundColor: '#ff8582', color: letterColor };
+        this.styles = {
+          width: '60%',
+          backgroundColor: '#ff8582',
+          color: letterColor,
+        };
       } else if (status === 'complete') {
         this.complete = true;
-        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '100%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       } else if (status === 'outdated') {
         this.outdated = true;
         this.complete = true;
-        this.styles = { width: '100%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '100%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       } else if (status === 'not_requested') {
         this.not_requested = true;
-        this.styles = { width: '60%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '60%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       } else if (status === 'pending' || status === 'Pending') {
         this.pending = true;
-        this.styles = { width: '80%', backgroundColor: '#ffc975', color: letterColor };
+        this.styles = {
+          width: '80%',
+          backgroundColor: '#ffc975',
+          color: letterColor,
+        };
       } else {
         this.ready = true;
-        this.styles = { width: '60%', backgroundColor: '#2e67b1', color: letterColor };
+        this.styles = {
+          width: '60%',
+          backgroundColor: '#2e67b1',
+          color: letterColor,
+        };
       }
     } else {
       this.unknown = true;
-      this.styles = { width: '0%', backgroundColor: '#2e67b1', color: letterColor };
+      this.styles = {
+        width: '0%',
+        backgroundColor: '#2e67b1',
+        color: letterColor,
+      };
     }
     return true;
   }
@@ -121,11 +154,20 @@ export class BuildingSimulationRendererDpoiComponent {
         name: 'dpoi',
       },
     ];
-    ManagerFunctions.requestBuildingSimulations(this.http, this.building, simsRequested, this.api);
+    ManagerFunctions.requestBuildingSimulations(
+      this.http,
+      this.building,
+      simsRequested,
+      this.api
+    );
   }
 
   requestStatus() {
-    ManagerFunctions.requestBuildingSimulationsStatus(this.http, this.building, this.api);
+    ManagerFunctions.requestBuildingSimulationsStatus(
+      this.http,
+      this.building,
+      this.api
+    );
   }
 
   /**
@@ -135,7 +177,8 @@ export class BuildingSimulationRendererDpoiComponent {
     this.infoDialog.open({
       data: {
         title: 'Simulation outdated',
-        body: 'The georeference from this building changed after the simulation was calculated.',
+        body:
+          'The georeference from this building changed after the simulation was calculated.',
         image: null,
       },
     });

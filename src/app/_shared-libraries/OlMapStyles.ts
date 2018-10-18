@@ -2,9 +2,13 @@ import OlStyle from 'ol/style/Style';
 import OlStyleFill from 'ol/style/Fill';
 import OlStyleStroke from 'ol/style/Stroke';
 
+/** Padding when displaying only one building in the map */
 export const paddingToBuilding = [20, 20, 20, 20];
+
+/** Padding when displaying many buildings in the map */
 export const paddingToBuildings = [50, 50, 50, 50];
 
+/** Map style definition, current building */
 export const styleCurrent = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(255, 255, 255, 0.8)',
@@ -15,6 +19,7 @@ export const styleCurrent = new OlStyle({
   }),
 });
 
+/** Map style definition, default building */
 export const styleNormal = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(255, 255, 255, 0.6)',
@@ -25,6 +30,7 @@ export const styleNormal = new OlStyle({
   }),
 });
 
+/** Map style definition, faded building */
 export const styleNormalFaded = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(255, 255, 255, 0.3)',
@@ -36,6 +42,7 @@ export const styleNormalFaded = new OlStyle({
   }),
 });
 
+/** Map style definition, selected building */
 export const styleSelected = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(110,198,181, 0.45)',
@@ -47,6 +54,7 @@ export const styleSelected = new OlStyle({
   }),
 });
 
+/** Map style definition, mouse over building */
 export const styleOver = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(200, 200, 200, 0.6)',
@@ -58,6 +66,7 @@ export const styleOver = new OlStyle({
   }),
 });
 
+/** Map style definition, identified as probable building */
 export const styleProbable = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(251,219,79, 0.45)', // $new_highlighted_yellow
@@ -69,6 +78,7 @@ export const styleProbable = new OlStyle({
   }),
 });
 
+/** Map style definition, identified as very probable building */
 export const styleVeryProbable = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(242,117,123, 0.45)', // $new_highlighted_red
@@ -80,6 +90,7 @@ export const styleVeryProbable = new OlStyle({
   }),
 });
 
+/** Map style definition, preselected building */
 export const selectPreselected = new OlStyle({
   fill: new OlStyleFill({
     color: 'rgba(98,88,165, 0.45)',

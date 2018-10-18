@@ -29,7 +29,11 @@ import {
 } from 'ol/events/condition';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
-import { BatchService, NavigationService, OverlayService } from '../../_services';
+import {
+  BatchService,
+  NavigationService,
+  OverlayService,
+} from '../../_services';
 
 /**
  * Add the Swiss topo projection
@@ -40,8 +44,11 @@ import { parseParms } from '../../_shared-libraries/Url';
 import { getBuildingLink } from '../../_shared-libraries/PortfolioLinks';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
-import {registerAllProjections} from '../../_shared-libraries/MapProjections';
+import { registerAllProjections } from '../../_shared-libraries/MapProjections';
 
+/**
+ * We need the scale to be in meters
+ */
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
@@ -77,7 +84,10 @@ export class MapComponent implements OnInit, OnDestroy {
   candidates_ids;
   top_shot_id;
   features;
+
+  /** True to start and false once all the data is loaded */
   loading;
+  /** String container of any error */
   error = null;
 
   displayVectors = true;
@@ -97,6 +107,8 @@ export class MapComponent implements OnInit, OnDestroy {
   selectPreselected;
 
   processEnded;
+
+  /** user profile */
   currentProfile;
 
   /**
@@ -196,7 +208,9 @@ export class MapComponent implements OnInit, OnDestroy {
           const addressStr = `${street} ${street_nr}, ${postal_code} ${city} - (${country}) `;
           this.mapHelp = `Current address : <span class="whiteText">${addressStr}</span>`;
         } else {
-          const buildingName = building['name'] ? building['name'] : this.buildingId;
+          const buildingName = building['name']
+            ? building['name']
+            : this.buildingId;
           this.mapHelp = `Address not defined for building <span class="whiteText">${buildingName}</span>`;
         }
 
@@ -218,7 +232,10 @@ export class MapComponent implements OnInit, OnDestroy {
           this.http,
           'buildings/' + this.buildingId + '/surroundings',
           surroundings => {
-            if (typeof surroundings['source'] !== 'undefined' && surroundings['source'] !== null) {
+            if (
+              typeof surroundings['source'] !== 'undefined' &&
+              surroundings['source'] !== null
+            ) {
               this.referenceSource = surroundings['source'];
               this.referenceToHuman();
             }
@@ -328,7 +345,10 @@ export class MapComponent implements OnInit, OnDestroy {
               });
 
               this.map.on('pointermove', function(evt) {
-                const hit = this.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                const hit = this.forEachFeatureAtPixel(evt.pixel, function(
+                  feature,
+                  layer
+                ) {
                   return true;
                 });
 
@@ -369,7 +389,10 @@ export class MapComponent implements OnInit, OnDestroy {
       },
       error => {
         this.loading = false;
-        this.error = `Building ${getBuildingLink(this.buildingId, this.building)} not found.`;
+        this.error = `Building ${getBuildingLink(
+          this.buildingId,
+          this.building
+        )} not found.`;
         console.error(error);
       }
     );
@@ -385,7 +408,9 @@ export class MapComponent implements OnInit, OnDestroy {
       this.buildingReferenceIdPreselected !== null &&
       this.buildingReferenceIdPreselected !== this.buildingReferenceId
     ) {
-      const found = this.features.find(f => f.id_ === this.buildingReferenceIdPreselected);
+      const found = this.features.find(
+        f => f.id_ === this.buildingReferenceIdPreselected
+      );
 
       if (found) {
         selected_collection.push(found);
@@ -457,7 +482,11 @@ export class MapComponent implements OnInit, OnDestroy {
 
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
-    this._router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+    this._router.navigate([], {
+      fragment: newValue,
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
   }
 
   changeMapStyle(mapStyle) {
@@ -505,9 +534,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
       if (next !== null) {
         if (next.building && next.layout) {
-          this._router.navigate(['georeference', 'map', next.building, next.layout], {
-            replaceUrl: true,
-          });
+          this._router.navigate(
+            ['georeference', 'map', next.building, next.layout],
+            {
+              replaceUrl: true,
+            }
+          );
         } else if (next.building) {
           this._router.navigate(['georeference', 'map', next.building], {
             replaceUrl: true,
@@ -598,7 +630,10 @@ export class MapComponent implements OnInit, OnDestroy {
         this.nextBuilding();
       },
       error => {
-        this.error = `Error saving ${getBuildingLink(this.buildingId, this.building)}`;
+        this.error = `Error saving ${getBuildingLink(
+          this.buildingId,
+          this.building
+        )}`;
         console.error(error);
       }
     );
@@ -624,6 +659,7 @@ export class MapComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();

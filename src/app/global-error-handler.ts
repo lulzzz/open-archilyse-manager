@@ -3,6 +3,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 // import { Router } from '@angular/router';
 
+/**
+ * Global error handler
+ */
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
   constructor(private injector: Injector) {}

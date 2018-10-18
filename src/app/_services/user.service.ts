@@ -22,9 +22,14 @@ export class UserService {
    * True if authenticated
    */
   _authenticated;
+
+  /** The api key of the current user */
   apiKey;
+
+  /** The user object */
   user;
 
+  /** Constructor */
   constructor(
     private router: Router,
     private http: HttpClient,

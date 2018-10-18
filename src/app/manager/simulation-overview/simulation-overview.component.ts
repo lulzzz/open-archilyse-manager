@@ -4,27 +4,36 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { NavigationService } from '../../_services';
 
+/**
+ * JSON provided from the API parsed but raw as it is provided
+ */
 @Component({
   selector: 'app-simulation-overview',
   templateUrl: './simulation-overview.component.html',
   styleUrls: ['./simulation-overview.component.scss'],
 })
 export class SimulationOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
 
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
-  /**
+  /** *************
    * Local variables
    */
 
+  /** Id of the building to display the simulations */
   buildingId;
+
+  /** Id of the layout to display the simulations */
   layoutId;
 
+  /** JSON simulation value */
   json;
+
+  /** user profile */
   currentProfile;
 
   constructor(
@@ -77,5 +86,6 @@ export class SimulationOverviewComponent implements OnInit, OnDestroy {
     this.json = simulations;
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {}
 }

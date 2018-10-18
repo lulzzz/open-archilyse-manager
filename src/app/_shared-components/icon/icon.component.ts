@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
 
+/**
+ * Allows to display the specified icon
+ */
 @Component({
   selector: 'app-icon',
   template: `

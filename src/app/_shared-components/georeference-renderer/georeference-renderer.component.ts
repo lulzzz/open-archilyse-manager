@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 
+/**
+ * ag-grid helper to display georeferenced data of buildings or layouts
+ */
 @Component({
   selector: 'app-georeference-renderer',
   templateUrl: './georeference-renderer.component.html',
@@ -22,7 +25,9 @@ export class GeoreferenceRendererComponent {
 
     if (params.type === 'building_osm') {
       if (params.data.building_references) {
-        const found = params.data.building_references.find(br => br.source === 'open_street_maps');
+        const found = params.data.building_references.find(
+          br => br.source === 'open_street_maps'
+        );
         if (found && found.id) {
           this.url = `/georeference/map/${params.data.building_id}`;
           this.fragment = 'source=open_street_maps';
@@ -31,7 +36,9 @@ export class GeoreferenceRendererComponent {
       }
     } else if (params.type === 'building_st') {
       if (params.data.building_references) {
-        const found = params.data.building_references.find(br => br.source === 'swiss_topo');
+        const found = params.data.building_references.find(
+          br => br.source === 'swiss_topo'
+        );
         if (found && found.id) {
           this.url = `/georeference/map/${params.data.building_id}`;
           this.fragment = 'source=swiss_topo';

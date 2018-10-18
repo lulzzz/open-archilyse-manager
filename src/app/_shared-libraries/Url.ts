@@ -1,3 +1,8 @@
+/**
+ * Heper funtion to parse the String parameters of a URL
+ * ?param1=val1&param2=val2....
+ * @param str
+ */
 export function parseParms(str) {
   const data = {};
   if (str) {

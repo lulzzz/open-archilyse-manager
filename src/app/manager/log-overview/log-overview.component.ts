@@ -14,17 +14,19 @@ import {
   renderUrl,
 } from './logRenderMethods';
 
+/**
+ * API request log overview table for developers
+ */
 @Component({
   selector: 'app-log-overview',
   templateUrl: './log-overview.component.html',
   styleUrls: ['./log-overview.component.scss'],
 })
 export class LogOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -160,6 +162,7 @@ export class LogOverviewComponent implements OnInit, OnDestroy {
     };
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();

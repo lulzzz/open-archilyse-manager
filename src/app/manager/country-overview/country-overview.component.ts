@@ -5,20 +5,25 @@ import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 import { HttpClient } from '@angular/common/http';
 import { CellRender } from '../../_shared-libraries/CellRender';
 import { ColumnDefinitions } from '../../_shared-libraries/ColumnDefinitions';
-import { exportOptions, exportSelectedOptions } from '../../_shared-libraries/ExcelManagement';
+import {
+  exportOptions,
+  exportSelectedOptions,
+} from '../../_shared-libraries/ExcelManagement';
 import { NavigationService } from '../../_services';
 
+/**
+ * API country entity overview table
+ */
 @Component({
   selector: 'app-country-overview',
   templateUrl: './country-overview.component.html',
   styleUrls: ['./country-overview.component.scss'],
 })
 export class CountryOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -39,6 +44,7 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
   columnDefs;
 
+  /** user profile */
   currentProfile;
   filtersHuman;
 
@@ -117,7 +123,9 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
         this.buildColumDefinitions();
 
-        const countries = buildingsArray.map(building => ManagerFunctions.getCountry(building));
+        const countries = buildingsArray.map(building =>
+          ManagerFunctions.getCountry(building)
+        );
         const countriesNoDuplicates = countries.filter(
           (item, pos) => countries.indexOf(item) === pos
         );
@@ -166,7 +174,8 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null || Object.keys(model).length > 0;
+            this.filterModelSet =
+              model !== null || Object.keys(model).length > 0;
             this.filtersHuman = ManagerFunctions.calculateHumanFilters(
               model,
               this.filterModelSet,
@@ -204,15 +213,18 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -223,9 +235,11 @@ export class CountryOverviewComponent implements OnInit, OnDestroy {
    * Export functions
    */
 
+  /** Export everything */
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
+  /** Export selected nodes only */
   exportSelected() {
     this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }

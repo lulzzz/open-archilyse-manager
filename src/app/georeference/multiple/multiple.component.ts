@@ -5,8 +5,7 @@ import { BatchService } from '../../_services';
 import { Subscription } from 'rxjs/Subscription';
 
 import { environment } from '../../../environments/environment';
-import {parseParms} from '../../_shared-libraries/Url';
-const urlPortfolio = environment.urlPortfolio;
+import { parseParms } from '../../_shared-libraries/Url';
 
 @Component({
   selector: 'app-multiple',
@@ -25,17 +24,28 @@ export class MultipleComponent implements OnInit, OnDestroy {
     private batchService: BatchService
   ) {}
 
+  /** Number of lines for the batch */
   numberOfLines = 0;
+
+  /** Global error */
   error = null;
 
+  /** First building to link to */
   firstBuilding = null;
+  /** First layout to link to */
   firstLayout = null;
 
+  /** Main form has the list for the batch and the map source OSM or ST */
   geoForm = new FormGroup({
     list: new FormControl('', Validators.required),
     source: new FormControl(''),
   });
 
+  /**
+   * We subscribe to the route fragment to read the parameters set in the URL with HASH
+   * list
+   * source
+   */
   ngOnInit() {
     this.fragment_sub = this.route.fragment.subscribe(fragment => {
       const urlParams = parseParms(fragment);
@@ -51,9 +61,12 @@ export class MultipleComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** form list getter */
   get list() {
     return this.geoForm.get('list');
   }
+
+  /** form source getter */
   get source() {
     return this.geoForm.get('source');
   }
@@ -72,10 +85,15 @@ export class MultipleComponent implements OnInit, OnDestroy {
     this._router.navigate(['georeference'], extras);
   }
 
+  /** Link to the portfolio*/
   portfolio() {
-    location.assign(urlPortfolio);
+    this._router.navigate(['manager']);
   }
 
+  /**
+   * We listen to key down events to be able to have TABS in the list
+   * @param event
+   */
   onKeydown(event) {
     if (event.key === 'Tab') {
       //  && !event.shiftKey
@@ -85,12 +103,15 @@ export class MultipleComponent implements OnInit, OnDestroy {
       const end = event.target.selectionEnd;
 
       event.target.value =
-        event.target.value.substring(0, start) + '\t' + event.target.value.substring(end);
+        event.target.value.substring(0, start) +
+        '\t' +
+        event.target.value.substring(end);
 
       event.target.selectionStart = event.target.selectionEnd = start + 1;
     }
   }
 
+  /** We display an error from one of the batch lines */
   addErrorLine(line, error) {
     const text = `Line ${line + 1} ${error}`;
     if (this.error === null) {
@@ -100,6 +121,7 @@ export class MultipleComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** We review all the text from the batch */
   reviewText(textValue) {
     const textValueLines = textValue.split('\n');
     this.error = null;
@@ -127,17 +149,31 @@ export class MultipleComponent implements OnInit, OnDestroy {
           if (buildingId.length !== 0 && buildingId.length !== 24) {
             this.addErrorLine(
               i,
-              'should have a building Id with 24 hexadecimal characters, has ' + buildingId.length
+              'should have a building Id with 24 hexadecimal characters, has ' +
+                buildingId.length
             );
-          } else if (buildingId.length !== 0 && !buildingId.match(/^[0-9a-fA-F]{24}$/)) {
-            this.addErrorLine(i, 'has a wrong buildingId, should have 24 hexadecimal characters');
+          } else if (
+            buildingId.length !== 0 &&
+            !buildingId.match(/^[0-9a-fA-F]{24}$/)
+          ) {
+            this.addErrorLine(
+              i,
+              'has a wrong buildingId, should have 24 hexadecimal characters'
+            );
           } else if (layoutId.length !== 0 && layoutId.length !== 24) {
             this.addErrorLine(
               i,
-              'should have a layout Id with 24 hexadecimal characters, has ' + layoutId.length
+              'should have a layout Id with 24 hexadecimal characters, has ' +
+                layoutId.length
             );
-          } else if (layoutId.length !== 0 && !layoutId.match(/^[0-9a-fA-F]{24}$/)) {
-            this.addErrorLine(i, 'has a wrong layoutId, should have 24 hexadecimal characters');
+          } else if (
+            layoutId.length !== 0 &&
+            !layoutId.match(/^[0-9a-fA-F]{24}$/)
+          ) {
+            this.addErrorLine(
+              i,
+              'has a wrong layoutId, should have 24 hexadecimal characters'
+            );
           } else {
             if (buildingId === '') {
               buildingId = null;
@@ -167,15 +203,24 @@ export class MultipleComponent implements OnInit, OnDestroy {
     this.numberOfLines = numberOfLines;
   }
 
+  /** Start the batch process */
   start() {
     /**
      * We've to review before submitting
      */
     this.reviewText(this.geoForm.get('list').value);
 
-    if (this.error === null && (this.firstBuilding !== null || this.firstLayout !== null)) {
+    if (
+      this.error === null &&
+      (this.firstBuilding !== null || this.firstLayout !== null)
+    ) {
       if (this.firstBuilding !== null && this.firstLayout !== null) {
-        this._router.navigate(['georeference', 'map', this.firstBuilding, this.firstLayout]);
+        this._router.navigate([
+          'georeference',
+          'map',
+          this.firstBuilding,
+          this.firstLayout,
+        ]);
       } else if (this.firstBuilding !== null) {
         this._router.navigate(['georeference', 'map', this.firstBuilding]);
       } else if (this.firstLayout !== null) {

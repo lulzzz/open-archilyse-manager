@@ -5,8 +5,13 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class LogService {
+  /** Constructor */
   constructor() {}
 
+  /**
+   * We save the array with the request in memory only
+   * Once the site reloads is lost, but is sufficient
+   */
   private requestLog = [];
 
   /**

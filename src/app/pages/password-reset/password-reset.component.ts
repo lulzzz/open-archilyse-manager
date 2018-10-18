@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -8,6 +13,9 @@ import { environment } from '../../../environments/environment';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { ManagerFunctions } from '../../_shared-libraries/ManagerFunctions';
 
+/**
+ * Form to reset user password by sending an email
+ */
 @Component({
   selector: 'app-password-reset',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,8 +36,13 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
     private _router: Router
   ) {}
 
+  /** Email form */
+
   resetEmailForm = new FormGroup({
-    email: new FormControl(environment.defaultUser, [Validators.required, Validators.email]),
+    email: new FormControl(environment.defaultUser, [
+      Validators.required,
+      Validators.email,
+    ]),
   });
 
   ngOnInit() {
@@ -42,7 +55,8 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
         } else if (typeof error === 'string') {
           this.userErrorString = error;
         } else {
-          this.userErrorString = 'Unknown server error, please contact our technical service.';
+          this.userErrorString =
+            'Unknown server error, please contact our technical service.';
         }
       } else {
         this.userErrorString = '';
@@ -50,16 +64,21 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.errorLoaded_sub) {
       this.errorLoaded_sub.unsubscribe();
     }
   }
 
+  /** form email getter */
   get email() {
     return this.resetEmailForm.get('email');
   }
 
+  /**
+   * Sends an email to the user, displays a success window and then sends him to the login.
+   */
   passwordReset() {
     const email = this.resetEmailForm.get('email').value.toLowerCase();
     this.afAuth.auth.sendPasswordResetEmail(email);
@@ -74,10 +93,12 @@ export class PasswordResetComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Link to portfolio */
   navigateToDashboard() {
-    this._router.navigate(['/']);
+    this._router.navigate(['/manager']);
   }
 
+  /** Link to login */
   navigateToLogin() {
     this._router.navigate(['/login']);
   }

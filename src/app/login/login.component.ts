@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -7,6 +12,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { environment } from '../../environments/environment';
 import { AngularFireAuth } from 'angularfire2/auth';
 
+/**
+ * Login component with email - password form.
+ */
 @Component({
   selector: 'app-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +39,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {}
 
   logInForm = new FormGroup({
-    email: new FormControl(environment.defaultUser, [Validators.required, Validators.email]),
+    email: new FormControl(environment.defaultUser, [
+      Validators.required,
+      Validators.email,
+    ]),
     password: new FormControl(environment.defaultPass, Validators.required),
   });
 
@@ -53,7 +64,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         } else if (typeof error === 'string') {
           this.userErrorString = error;
         } else {
-          this.userErrorString = 'Unknown server error, please contact our technical service.';
+          this.userErrorString =
+            'Unknown server error, please contact our technical service.';
         }
       } else {
         this.userErrorString = '';
@@ -61,6 +73,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.errorLoaded_sub) {
       this.errorLoaded_sub.unsubscribe();
@@ -70,9 +83,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** form email getter */
   get email() {
     return this.logInForm.get('email');
   }
+  /** form password getter */
   get password() {
     return this.logInForm.get('password');
   }

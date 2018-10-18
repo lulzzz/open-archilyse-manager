@@ -21,6 +21,9 @@ import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { NavigationService } from '../../_services';
 import { paddingToBuildings } from '../map-overview/map-overview.component';
 
+/**
+ * We need the scale to be in meters
+ */
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
@@ -38,11 +41,10 @@ export const styleLine = new OlStyle({
   styleUrls: ['./dpoi-viewer-overview.component.scss'],
 })
 export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   building;
@@ -76,7 +78,9 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
   updated;
   status;
 
+  /** user profile */
   currentProfile;
+
   /**
    * Subscriptions
    */
@@ -96,6 +100,10 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {}
 
+  /**
+   * Reset the component and load the data.
+   * On init and on change profile
+   */
   initComponent() {
     console.log('initComponent');
 
@@ -139,6 +147,9 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * We load the DPOI simulations
+   */
   loadSims() {
     const simKeys = Object.keys(this.simulations.dpoi.result);
     const dpoiResult = this.simulations.dpoi.result;
@@ -172,6 +183,9 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * We load the open Layers map
+   */
   setUpMap() {
     console.log('setUpMap', this.map);
     if (this.map === null) {
@@ -245,7 +259,11 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
    */
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
-    this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+    this.router.navigate([], {
+      fragment: newValue,
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
   }
 
   /**
@@ -266,6 +284,10 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
     this.layer.setSource(this.source);
   }
 
+  /**
+   * We change the vehicle and load the simulations (if value changed).
+   * @param mapVehicle foot | bike | car
+   */
   changeVehicle(mapVehicle) {
     // Only if we change
     if (this.mapVehicle !== mapVehicle) {
@@ -274,13 +296,21 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
+  /** ********************************
    * Links
    */
 
+  /** Link to display DPOI raw as a JSON object */
   seeRawData() {
-    this.router.navigate(['manager', 'simulation', 'building', this.buildingId]);
+    this.router.navigate([
+      'manager',
+      'simulation',
+      'building',
+      this.buildingId,
+    ]);
   }
+
+  /** Link to display DPOI in a table */
   seeTableView() {
     this.router.navigate(['manager', 'dpoi', this.buildingId]);
   }

@@ -3,6 +3,10 @@ import { parseParms } from './Url';
 import { Building, Layout, Site, Unit } from '../_models';
 import { ApiFunctions } from './ApiFunctions';
 
+/**
+ * First letter uppercase
+ * @param string
+ */
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -60,7 +64,11 @@ export class ManagerFunctions {
         )}</span>`;
       }
 
-      if (data['country'] && data['country'].type && data['country'].type === 'equals') {
+      if (
+        data['country'] &&
+        data['country'].type &&
+        data['country'].type === 'equals'
+      ) {
         return `<label>Filtering by country: </label> <span class="whiteText" >${capitalizeFirstLetter(
           data['country'].filter
         )}</span>`;
@@ -90,7 +98,11 @@ export class ManagerFunctions {
         )}</span>`;
       }
 
-      if (data.building_id && data.building_id.type && data.building_id.type === 'equals') {
+      if (
+        data.building_id &&
+        data.building_id.type &&
+        data.building_id.type === 'equals'
+      ) {
         return `<label>Filtering building:</label> <span class="whiteText" >${ManagerFunctions.getName(
           buildingsArray,
           data.building_id.filter,
@@ -106,7 +118,11 @@ export class ManagerFunctions {
         )}</span>`;
       }
 
-      if (data.layout_id && data.layout_id.type && data.layout_id.type === 'equals') {
+      if (
+        data.layout_id &&
+        data.layout_id.type &&
+        data.layout_id.type === 'equals'
+      ) {
         return `<label>Filtering layout:</label> <span class="whiteText" >${ManagerFunctions.getName(
           layoutsArray,
           data.layout_id.filter,
@@ -218,10 +234,14 @@ export class ManagerFunctions {
   }
 
   public static getCountry(building) {
-    return building.address && building.address.country ? building.address.country : '';
+    return building.address && building.address.country
+      ? building.address.country
+      : '';
   }
   public static getCity(building) {
-    return building.address && building.address.city ? building.address.city : '';
+    return building.address && building.address.city
+      ? building.address.city
+      : '';
   }
 
   /**
@@ -230,7 +250,11 @@ export class ManagerFunctions {
    * @param unitsArray
    * @param layoutsArray
    */
-  public static progressOutOfBuildings(buildingsList, unitsArray, layoutsArray) {
+  public static progressOutOfBuildings(
+    buildingsList,
+    unitsArray,
+    layoutsArray
+  ) {
     const numBuildings = buildingsList.length;
     const buildingsReferenced = buildingsList.filter(building =>
       ManagerFunctions.isReferencedBuilding(building)
@@ -256,9 +280,11 @@ export class ManagerFunctions {
     const numLayouts = layoutsThisCountry.length;
     const numLayoutsReferenced = layoutsReferenced.length;
 
-    const progressBuildings = numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
+    const progressBuildings =
+      numBuildings > 0 ? numBuildingsReferenced * 100 / numBuildings : 0;
 
-    const progressLayouts = numLayouts > 0 ? numLayoutsReferenced * 100 / numLayouts : 0;
+    const progressLayouts =
+      numLayouts > 0 ? numLayoutsReferenced * 100 / numLayouts : 0;
 
     return {
       numberOfBuildings: numBuildings,
@@ -284,7 +310,8 @@ export class ManagerFunctions {
     // Swiss open_street_maps is defined
     if (building && building.building_references) {
       const ref = building.building_references.find(
-        ref => ref.source === 'open_street_maps' && ref.id !== null && ref.id !== ''
+        ref =>
+          ref.source === 'open_street_maps' && ref.id !== null && ref.id !== ''
       );
 
       return ref && ref.id !== '';
@@ -349,7 +376,12 @@ export class ManagerFunctions {
                   'sites',
                   sites => {
                     const sitesArray = <Site[]>sites;
-                    onComplete(sitesArray, buildingsArray, unitsArray, layoutsArray);
+                    onComplete(
+                      sitesArray,
+                      buildingsArray,
+                      unitsArray,
+                      layoutsArray
+                    );
                   },
                   onError
                 );
@@ -380,7 +412,9 @@ export class ManagerFunctions {
       const model = {};
       Object.keys(urlParams).forEach(key => {
         columnDefs.forEach(group => {
-          const found = group.children.find(columnDef => columnDef.field === key);
+          const found = group.children.find(
+            columnDef => columnDef.field === key
+          );
           if (found) {
             model[key] = {
               filter: urlParams[key],
@@ -438,9 +472,13 @@ export class ManagerFunctions {
         selectedRows.forEach(selectedRow => {
           const elementKey = selectedRow[key];
 
-          ApiFunctions.delete(httpService, route + '/' + elementKey, elements => {
-            console.log(`DELETE ${plural}`, elements, elementKey);
-          });
+          ApiFunctions.delete(
+            httpService,
+            route + '/' + elementKey,
+            elements => {
+              console.log(`DELETE ${plural}`, elements, elementKey);
+            }
+          );
         });
 
         gridApi.updateRowData({
@@ -453,12 +491,22 @@ export class ManagerFunctions {
   }
 
   public static showErroruser(error) {
-    ManagerFunctions.showWarning('Unexpected error', error.message, 'Ok', () => {
-      location.reload();
-    });
+    ManagerFunctions.showWarning(
+      'Unexpected error',
+      error.message,
+      'Ok',
+      () => {
+        location.reload();
+      }
+    );
   }
   public static showErrorUserNoReload(error) {
-    ManagerFunctions.showWarning('Unexpected error', error.message, 'Ok', () => {});
+    ManagerFunctions.showWarning(
+      'Unexpected error',
+      error.message,
+      'Ok',
+      () => {}
+    );
   }
 
   public static showWarning(titleVal, textVal, confirmButtonTextVal, onResult) {
@@ -473,7 +521,15 @@ export class ManagerFunctions {
     });
   }
 
-  public static patchElement(httpService, node, url, newValue, gridApi, extraReaction?, onError?) {
+  public static patchElement(
+    httpService,
+    node,
+    url,
+    newValue,
+    gridApi,
+    extraReaction?,
+    onError?
+  ) {
     ApiFunctions.patch(
       httpService,
       url,
@@ -521,7 +577,14 @@ export class ManagerFunctions {
     }
   }
 
-  public static reactToEdit(httpService, params, key, route, gridApi, extraReaction?) {
+  public static reactToEdit(
+    httpService,
+    params,
+    key,
+    route,
+    gridApi,
+    extraReaction?
+  ) {
     const element = params.data;
     const elementKey = element[key];
 
@@ -547,6 +610,13 @@ export class ManagerFunctions {
     ManagerFunctions.changeValueByColumnStr(newValue, column, columnValue);
 
     const url = route + '/' + elementKey;
-    ManagerFunctions.patchElement(httpService, node, url, newValue, gridApi, extraReaction);
+    ManagerFunctions.patchElement(
+      httpService,
+      node,
+      url,
+      newValue,
+      gridApi,
+      extraReaction
+    );
   }
 }

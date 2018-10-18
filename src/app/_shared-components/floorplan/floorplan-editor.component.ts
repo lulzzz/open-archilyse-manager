@@ -33,13 +33,25 @@ const colorOver = 0xff99;
 
 import { Subscription } from 'rxjs/Subscription';
 import { hideLegend } from '../../_shared-libraries/Legend';
-import { drawGeometries, drawPolygons } from '../../_shared-libraries/Geometries';
+import {
+  drawGeometries,
+  drawPolygons,
+} from '../../_shared-libraries/Geometries';
 
 import { DiagramService, ElementEvent, EditorService } from '../../_services';
 import { EditorConstants } from '../../_shared-libraries/EditorConstants';
-import { boundingBox, COOR_X, COOR_Y, COOR_Z } from '../../_shared-libraries/SimData';
+import {
+  boundingBox,
+  COOR_X,
+  COOR_Y,
+  COOR_Z,
+} from '../../_shared-libraries/SimData';
 import { EditorControls } from '../../_shared-libraries/EditorControls';
 
+/**
+ * Container for the editor and the sidebar
+ * Provides data for both elements
+ */
 @Component({
   selector: 'floorplan-editor',
   templateUrl: './floorplan-editor.component.html',
@@ -113,15 +125,20 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
   subscriptionSidebar: Subscription;
   newElementDropped: Subscription;
 
-  constructor(private editorService: EditorService, private diagramService: DiagramService) {}
+  constructor(
+    private editorService: EditorService,
+    private diagramService: DiagramService
+  ) {}
 
   ngOnInit() {
     this.uniqueId = this.editorService.getUniqueId();
-    this.subscriptionEditor = this.editorService.eventData$.subscribe(eventData => {
-      if (this.uniqueId !== eventData.uniqueId) {
-        console.log('EDITOR - eventData', this.uniqueId, eventData);
+    this.subscriptionEditor = this.editorService.eventData$.subscribe(
+      eventData => {
+        if (this.uniqueId !== eventData.uniqueId) {
+          console.log('EDITOR - eventData', this.uniqueId, eventData);
+        }
       }
-    });
+    );
 
     this.subscriptionSidebar = this.diagramService.isElementSidebarDisplayed$.subscribe(
       isVisible => {
@@ -132,65 +149,67 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       }
     );
 
-    this.newElementDropped = this.diagramService.elementDropped$.subscribe(data => {
-      const eventData = <ElementEvent>data;
-      if (
-        !(
-          eventData.x < this.left ||
-          eventData.y < this.top ||
-          eventData.x > this.left + this.width ||
-          eventData.y > this.top + this.height
-        )
-      ) {
-        this.updateMouseGeneral(eventData.x, eventData.y);
+    this.newElementDropped = this.diagramService.elementDropped$.subscribe(
+      data => {
+        const eventData = <ElementEvent>data;
+        if (
+          !(
+            eventData.x < this.left ||
+            eventData.y < this.top ||
+            eventData.x > this.left + this.width ||
+            eventData.y > this.top + this.height
+          )
+        ) {
+          this.updateMouseGeneral(eventData.x, eventData.y);
 
-        const raycaster = new Raycaster();
-        raycaster.setFromCamera(this.mouse, this.camera);
-        // calculate objects intersecting the picking ray
-        const result = this.identifyMaterialElementDrop(
-          raycaster.intersectObjects(this.objectsToIntersectElement)
-        );
-        if (result !== null) {
-          const coorX = result.x;
-          const coorY = result.y;
+          const raycaster = new Raycaster();
+          raycaster.setFromCamera(this.mouse, this.camera);
+          // calculate objects intersecting the picking ray
+          const result = this.identifyMaterialElementDrop(
+            raycaster.intersectObjects(this.objectsToIntersectElement)
+          );
+          if (result !== null) {
+            const coorX = result.x;
+            const coorY = result.y;
 
-          if (eventData.type === 'Chair') {
-            const sizeX = 0.5 / 2;
-            const sizeY = 0.4 / 2;
+            if (eventData.type === 'Chair') {
+              const sizeX = 0.5 / 2;
+              const sizeY = 0.4 / 2;
 
-            const seatPolygons = [
-              [
-                [coorX - sizeX, coorY - sizeY],
-                [coorX + sizeX, coorY - sizeY],
-                [coorX + sizeX, coorY + sizeY],
-                [coorX - sizeX, coorY + sizeY],
-                [coorX - sizeX, coorY - sizeY],
-              ],
-            ];
+              const seatPolygons = [
+                [
+                  [coorX - sizeX, coorY - sizeY],
+                  [coorX + sizeX, coorY - sizeY],
+                  [coorX + sizeX, coorY + sizeY],
+                  [coorX - sizeX, coorY + sizeY],
+                  [coorX - sizeX, coorY - sizeY],
+                ],
+              ];
 
-            this.drawSeatGroup(this.seatPolygons, {}, seatPolygons);
-          } else {
-            const sizeX = 0.75 / 2;
-            const sizeY = 1.2 / 2;
+              this.drawSeatGroup(this.seatPolygons, {}, seatPolygons);
+            } else {
+              const sizeX = 0.75 / 2;
+              const sizeY = 1.2 / 2;
 
-            const deskPolygons = [
-              [
-                [coorX - sizeX, coorY - sizeY],
-                [coorX + sizeX, coorY - sizeY],
-                [coorX + sizeX, coorY + sizeY],
-                [coorX - sizeX, coorY + sizeY],
-                [coorX - sizeX, coorY - sizeY],
-              ],
-            ];
+              const deskPolygons = [
+                [
+                  [coorX - sizeX, coorY - sizeY],
+                  [coorX + sizeX, coorY - sizeY],
+                  [coorX + sizeX, coorY + sizeY],
+                  [coorX - sizeX, coorY + sizeY],
+                  [coorX - sizeX, coorY - sizeY],
+                ],
+              ];
 
-            this.drawDeskGroup(this.deskPolygons, {}, deskPolygons);
+              this.drawDeskGroup(this.deskPolygons, {}, deskPolygons);
+            }
+
+            this.calculateObjectsToIntersect();
+            this.render();
           }
-
-          this.calculateObjectsToIntersect();
-          this.render();
         }
       }
-    });
+    );
 
     this.init3d(false);
   }
@@ -206,9 +225,17 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       this.mousedownListener = this.onMouseClick.bind(this);
       this.mouseupListener = this.onMouseUp.bind(this);
 
-      this.container.addEventListener('mousemove', this.mousemoveListener, false);
+      this.container.addEventListener(
+        'mousemove',
+        this.mousemoveListener,
+        false
+      );
       this.container.addEventListener('mouseout', this.mouseoutListener, false);
-      this.container.addEventListener('mousedown', this.mousedownListener, false);
+      this.container.addEventListener(
+        'mousedown',
+        this.mousedownListener,
+        false
+      );
       this.container.addEventListener('mouseup', this.mouseupListener, false);
 
       this.windowListener = this.onWindowResize.bind(this);
@@ -272,7 +299,14 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     this.calculateObjectsToIntersect();
   }
 
-  updateObjectProperties(object, type, newPositionX, newPositionY, newScale, newAngle) {
+  updateObjectProperties(
+    object,
+    type,
+    newPositionX,
+    newPositionY,
+    newScale,
+    newAngle
+  ) {
     /** center of the element
     const buildingBounds = new Box3().setFromObject(object);
     const xxx = buildingBounds.min.x + (buildingBounds.max.x - buildingBounds.min.x) / 2;
@@ -316,7 +350,14 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
 
   setUpCamera() {
     const props = this.containerProps();
-    this.camera = new OrthographicCamera(props.left, props.right, props.top, props.bottom, 1, 1000);
+    this.camera = new OrthographicCamera(
+      props.left,
+      props.right,
+      props.top,
+      props.bottom,
+      1,
+      1000
+    );
 
     // TOP
     this.camera.position.set(0, 0, 90);
@@ -458,7 +499,9 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
   }
 
   distance(coor1X, coor1Y, coor2X, coor2Y) {
-    return Math.sqrt(Math.pow(coor2X - coor1X, 2) + Math.pow(coor2Y - coor1Y, 2));
+    return Math.sqrt(
+      Math.pow(coor2X - coor1X, 2) + Math.pow(coor2Y - coor1Y, 2)
+    );
   }
 
   drawDoors(buildingStructure, data) {
@@ -516,10 +559,38 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
 
-    const point00 = this.correctCoordinatesByAngle(pX, pY, -dX2, -dY2, cos, sin);
-    const point01 = this.correctCoordinatesByAngle(pX, pY, +dX2, -dY2, cos, sin);
-    const point11 = this.correctCoordinatesByAngle(pX, pY, -dX2, +dY2, cos, sin);
-    const point10 = this.correctCoordinatesByAngle(pX, pY, +dX2, +dY2, cos, sin);
+    const point00 = this.correctCoordinatesByAngle(
+      pX,
+      pY,
+      -dX2,
+      -dY2,
+      cos,
+      sin
+    );
+    const point01 = this.correctCoordinatesByAngle(
+      pX,
+      pY,
+      +dX2,
+      -dY2,
+      cos,
+      sin
+    );
+    const point11 = this.correctCoordinatesByAngle(
+      pX,
+      pY,
+      -dX2,
+      +dY2,
+      cos,
+      sin
+    );
+    const point10 = this.correctCoordinatesByAngle(
+      pX,
+      pY,
+      +dX2,
+      +dY2,
+      cos,
+      sin
+    );
 
     if (originalObject.footprint) {
       console.error('Generic element with footprint');
@@ -713,7 +784,13 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       // TODO: Fill seatCntrs
 
       this.modelStructure.floors.forEach(floor => {
-        this.analyzeStructure(buildingStructure, seatPolygons, deskPolygons, areaPolygons, floor);
+        this.analyzeStructure(
+          buildingStructure,
+          seatPolygons,
+          deskPolygons,
+          areaPolygons,
+          floor
+        );
       });
 
       buildingStructure
@@ -745,7 +822,13 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     console.error('modelStructure not found', this.modelStructure);
   }
 
-  analyzeStructure(buildingStructure, seatPolygons, deskPolygons, areaPolygons, structure) {
+  analyzeStructure(
+    buildingStructure,
+    seatPolygons,
+    deskPolygons,
+    areaPolygons,
+    structure
+  ) {
     if (structure.type) {
       /** Features */
 
@@ -772,7 +855,11 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
         structure.type === EditorConstants.ENVELOPE
       ) {
         // ************ structure.footprint.coordinates
-        this.drawWalls(buildingStructure, structure, structure.footprint.coordinates);
+        this.drawWalls(
+          buildingStructure,
+          structure,
+          structure.footprint.coordinates
+        );
 
         /** AreaType */
       } else if (
@@ -836,7 +923,13 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
 
     if (structure.children) {
       structure.children.forEach(child => {
-        this.analyzeStructure(buildingStructure, seatPolygons, deskPolygons, areaPolygons, child);
+        this.analyzeStructure(
+          buildingStructure,
+          seatPolygons,
+          deskPolygons,
+          areaPolygons,
+          child
+        );
       });
     }
   }
@@ -906,7 +999,11 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
 
     if (!EditorControls.isDragging()) {
       // calculate objects intersecting the picking ray
-      this.identifyMaterial(event, raycaster.intersectObjects(this.objectsToIntersect), 0x00ff00);
+      this.identifyMaterial(
+        event,
+        raycaster.intersectObjects(this.objectsToIntersect),
+        0x00ff00
+      );
     }
   }
 
@@ -918,7 +1015,11 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
 
     if (!EditorControls.isDragging()) {
       // calculate objects intersecting the picking ray
-      this.identifyMaterial(event, raycaster.intersectObjects(this.objectsToIntersect), 0xff0000);
+      this.identifyMaterial(
+        event,
+        raycaster.intersectObjects(this.objectsToIntersect),
+        0xff0000
+      );
     }
   }
 
@@ -1113,6 +1214,7 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
     this.isSidebarPropertiesVisible = false;
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.subscriptionEditor) {
       this.subscriptionEditor.unsubscribe();
@@ -1145,7 +1247,10 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       opacity: 0.5,
     });
 
-    if (this.previousMeshOver !== null && this.previousMeshOver.uuid === mesh.uuid) {
+    if (
+      this.previousMeshOver !== null &&
+      this.previousMeshOver.uuid === mesh.uuid
+    ) {
       this.previousMeshMaterial = this.previousMeshOverMaterial;
     } else {
       this.previousMeshMaterial = mesh.material;
@@ -1162,9 +1267,15 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    if (this.previousMeshOver !== null && this.previousMeshOver.uuid === mesh.uuid) {
+    if (
+      this.previousMeshOver !== null &&
+      this.previousMeshOver.uuid === mesh.uuid
+    ) {
       this.previousMeshOver = null;
-    } else if (this.previousMesh !== null && this.previousMesh.uuid === mesh.uuid) {
+    } else if (
+      this.previousMesh !== null &&
+      this.previousMesh.uuid === mesh.uuid
+    ) {
       // Do nothing
     } else {
       const material = new MeshPhongMaterial({
@@ -1200,7 +1311,10 @@ export class FloorplanEditorComponent implements OnInit, OnDestroy {
       }
 
       // No restore when was clicked
-      if (this.previousMesh !== null && this.previousMesh.uuid === this.previousMeshOver.uuid) {
+      if (
+        this.previousMesh !== null &&
+        this.previousMesh.uuid === this.previousMeshOver.uuid
+      ) {
         this.previousMeshOver = null;
         return false;
       }

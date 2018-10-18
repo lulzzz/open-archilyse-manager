@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
  */
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
+  /** Constructor */
   constructor(
     private router: Router,
     private userService: UserService,

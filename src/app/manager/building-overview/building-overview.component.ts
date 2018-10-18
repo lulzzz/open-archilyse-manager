@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -23,17 +29,19 @@ import { ToastrService } from 'ngx-toastr';
 import { registerAllProjections } from '../../_shared-libraries/MapProjections';
 registerAllProjections();
 
+/**
+ * API building entity overview table
+ */
 @Component({
   selector: 'app-building-overview',
   templateUrl: './building-overview.component.html',
   styleUrls: ['./building-overview.component.scss'],
 })
 export class BuildingOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -57,6 +65,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   @ViewChild('importFile') importField: ElementRef;
 
   sitesArray;
+
+  /** user profile */
   currentProfile;
   filtersHuman;
 
@@ -154,7 +164,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             cellEditorParams: {
               values: ['', ...sites.map(site => site.site_id)],
             },
-            valueFormatter: CellRender.siteFormatter.bind(this, this.currentProfile),
+            valueFormatter: CellRender.siteFormatter.bind(
+              this,
+              this.currentProfile
+            ),
             editable: true,
           },
           {
@@ -210,8 +223,18 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
             editable: true,
           },
           { headerName: 'Street', field: 'address.street', editable: true },
-          { headerName: 'Street Nr', field: 'address.street_nr', width: 100, editable: true },
-          { headerName: 'Postal Code', field: 'address.postal_code', width: 110, editable: true },
+          {
+            headerName: 'Street Nr',
+            field: 'address.street_nr',
+            width: 100,
+            editable: true,
+          },
+          {
+            headerName: 'Postal Code',
+            field: 'address.postal_code',
+            width: 110,
+            editable: true,
+          },
         ],
       },
       ...analysisColumns.concat([
@@ -321,6 +344,13 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     ];
   }
 
+  /**
+   * When a building is edited side effects might happen like:
+   * Georeferenced -> number_of_floors, height & footprints are set
+   * Changed address -> Georeferenced -> number_of_floors, height & footprints are set
+   * @param nodeData
+   * @param element
+   */
   buildingReactionToEdit(nodeData, element) {
     // if the new Layout has new unit id, we update the building data.
     if (element.site_id || element.site_id === '') {
@@ -342,14 +372,20 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
 
     // Update if it's referenced
-    nodeData['building_referenced_st'] = ManagerFunctions.isReferencedSTBuilding(element);
-    nodeData['building_referenced_osm'] = ManagerFunctions.isReferencedOSMBuilding(element);
+    nodeData[
+      'building_referenced_st'
+    ] = ManagerFunctions.isReferencedSTBuilding(element);
+    nodeData[
+      'building_referenced_osm'
+    ] = ManagerFunctions.isReferencedOSMBuilding(element);
     nodeData['building_referenced'] =
       nodeData['building_referenced_st'] || nodeData['building_referenced_osm'];
   }
   setBuildingSiteData(building) {
     if (building.site_id || building.site_id === '') {
-      const site = this.sitesArray.find(site => site.site_id === building.site_id);
+      const site = this.sitesArray.find(
+        site => site.site_id === building.site_id
+      );
       if (site) {
         building['site_name'] = site.name ? site.name : '';
       } else {
@@ -362,6 +398,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {}
 
+  /**
+   * Main set up of the table
+   */
   initComponent() {
     this.loading = true;
     this.filterModelSet = false;
@@ -412,7 +451,8 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            this.filterModelSet =
+              model !== null && Object.keys(model).length > 0;
             this.filtersHuman = ManagerFunctions.calculateHumanFilters(
               model,
               this.filterModelSet,
@@ -450,6 +490,7 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     );
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
@@ -528,7 +569,10 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
       delete newRow['updated'];
       delete newRow['created'];
 
-      if (newRow['site_id'] && (newRow['site_id'] === '' || newRow['site_id'] === 'None')) {
+      if (
+        newRow['site_id'] &&
+        (newRow['site_id'] === '' || newRow['site_id'] === 'None')
+      ) {
         delete newRow['site_id'];
       }
       delete newRow['site_name'];
@@ -609,29 +653,33 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         // For each building
         const building = node.data;
         const buildingId = building['building_id'];
-        ApiFunctions.get(this.http, 'buildings/' + buildingId + '/surroundings', surroundings => {
-          console.log('surroundings', surroundings);
-          if (surroundings['top_shot_id']) {
-            ApiFunctions.patch(
-              this.http,
-              'buildings/' + buildingId,
-              {
-                building_references: [
-                  {
-                    id: surroundings['top_shot_id'],
-                    source: 'swiss_topo',
-                  },
-                ],
-              },
-              building => {
-                const node = this.gridOptions.api.getRowNode(buildingId);
-                this.buildingReactionToEdit(building, building);
-                node.setData(building);
-              },
-              ManagerFunctions.showErrorUserNoReload
-            );
+        ApiFunctions.get(
+          this.http,
+          'buildings/' + buildingId + '/surroundings',
+          surroundings => {
+            console.log('surroundings', surroundings);
+            if (surroundings['top_shot_id']) {
+              ApiFunctions.patch(
+                this.http,
+                'buildings/' + buildingId,
+                {
+                  building_references: [
+                    {
+                      id: surroundings['top_shot_id'],
+                      source: 'swiss_topo',
+                    },
+                  ],
+                },
+                building => {
+                  const node = this.gridOptions.api.getRowNode(buildingId);
+                  this.buildingReactionToEdit(building, building);
+                  node.setData(building);
+                },
+                ManagerFunctions.showErrorUserNoReload
+              );
+            }
           }
-        });
+        );
       }
     });
   }
@@ -684,11 +732,13 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -703,7 +753,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     nodes.forEach(node => {
       const building = node.data;
       console.log('get Building simulation status for ', building.building_id);
-      ManagerFunctions.requestBuildingSimulationsStatus(this.http, building, this.gridOptions.api);
+      ManagerFunctions.requestBuildingSimulationsStatus(
+        this.http,
+        building,
+        this.gridOptions.api
+      );
     });
   }
 
@@ -727,6 +781,9 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Get all the selected nodes and try to start the simulations
+   */
   startSimulations() {
     const nodes = this.gridOptions.api.getSelectedNodes();
     const buildings = nodes.map(node => node.data);
@@ -752,12 +809,17 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Try to start the simulations for the selected buildings
+   */
   startSimulationsViaBuildings(buildings) {
     buildings.forEach(building => {
       console.log('Start Building simulations for ', building.building_id);
 
       // We request all the floors
-      const numberOfFloors = building.number_of_floors ? building.number_of_floors : 1;
+      const numberOfFloors = building.number_of_floors
+        ? building.number_of_floors
+        : 1;
       const floorArray = [];
       for (let i = 0; i < numberOfFloors; i += 1) {
         floorArray.push(i);
@@ -786,10 +848,16 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
   /**
    * Import / Export functions
    */
+
+  /** Show import instructions to import an excel file */
   showInfoExcel() {
     this.infoDialog.open(showInfoExcel);
   }
 
+  /**
+   * Imports an Excel with buildings
+   * @param files
+   */
   importExcel(files) {
     console.log('files', files);
 
@@ -824,7 +892,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
         let updatedRows = 0;
 
         allRows.forEach(oneRow => {
-          if (oneRow.building_id && oneRow.building_id !== null && oneRow.building_id !== '') {
+          if (
+            oneRow.building_id &&
+            oneRow.building_id !== null &&
+            oneRow.building_id !== ''
+          ) {
             const building_id = oneRow.building_id;
             delete oneRow.building_id;
 
@@ -889,9 +961,11 @@ export class BuildingOverviewComponent implements OnInit, OnDestroy {
    * Export functions
    */
 
+  /** Export everything */
   export() {
     this.gridOptions.api.exportDataAsCsv(exportOptions);
   }
+  /** Export selected nodes only */
   exportSelected() {
     this.gridOptions.api.exportDataAsCsv(exportSelectedOptions);
   }

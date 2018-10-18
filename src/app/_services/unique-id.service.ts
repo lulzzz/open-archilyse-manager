@@ -5,11 +5,14 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class UniqueIdService {
-  counter = 0;
+  /** Increase the counter with each request */
+  private _counter = 0;
+
+  /** Constructor */
   constructor() {}
 
   /**
    * We get an unique Id as a string
    */
-  getNewId = () => (this.counter += 1).toString();
+  getNewId = () => (this._counter += 1).toString();
 }

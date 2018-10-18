@@ -1,4 +1,10 @@
-import { Component, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '@angular/common/http';
@@ -24,17 +30,19 @@ import { COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
 
 const urlGeoreference = environment.urlGeoreference;
 
+/**
+ * API layout entity overview table
+ */
 @Component({
-  selector: 'app-floorplan-overview',
+  selector: 'app-layout-overview',
   templateUrl: './layout-overview.component.html',
   styleUrls: ['./layout-overview.component.scss'],
 })
 export class LayoutOverviewComponent implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
-
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -65,7 +73,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   layoutsArray;
   unitsArray;
 
+  /** user profile */
   currentProfile;
+
   /**
    * Subscriptions
    */
@@ -86,7 +96,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   }
 
   sourceForm = new FormGroup({
-    floor: new FormControl(1, [Validators.required, Validators.min(1), Validators.max(200)]),
+    floor: new FormControl(1, [
+      Validators.required,
+      Validators.min(1),
+      Validators.max(200),
+    ]),
     sourceUrl: new FormControl('', Validators.required),
   });
 
@@ -342,7 +356,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
               readOnlyKey: false,
             },
             cellEditor: 'agPopupSelectCellEditor',
-            valueFormatter: CellRender.unitFormatter.bind(this, this.currentProfile),
+            valueFormatter: CellRender.unitFormatter.bind(
+              this,
+              this.currentProfile
+            ),
             cellEditorParams: {
               values: ['', ...units.map(unit => unit.unit_id)],
             },
@@ -405,7 +422,7 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
             cellRenderer: CellRender.viewModel,
             editable: false,
             cellClass: 'readOnly',
-          }
+          },
         ],
       },
       ...analysisColumns,
@@ -592,7 +609,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
   setLayoutBuildingData(layout) {
     if (layout.unit_id || layout.unit_id === '') {
-      const unit = this.unitsArray.find(unit => unit.unit_id === layout.unit_id);
+      const unit = this.unitsArray.find(
+        unit => unit.unit_id === layout.unit_id
+      );
       if (unit) {
         layout['unit'] = unit;
 
@@ -603,7 +622,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
           building => building.building_id === unit.building_id
         );
 
-        layout['building_referenced'] = building && ManagerFunctions.isReferencedBuilding(building);
+        layout['building_referenced'] =
+          building && ManagerFunctions.isReferencedBuilding(building);
 
         // Has to be a building with that id and has to be georeferenced
         layout['building_referenced_osm'] =
@@ -611,7 +631,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         layout['building_referenced_st'] =
           building && ManagerFunctions.isReferencedSTBuilding(building);
 
-        layout['building_name'] = building && building.name ? building.name : '';
+        layout['building_name'] =
+          building && building.name ? building.name : '';
         layout['building'] = building;
       } else {
         layout['building'] = {};
@@ -769,7 +790,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
    */
   calculateArea(element) {
     const currentArray = element.footprint.coordinates[0];
-    const currentArrayVector = currentArray.map(coor => new Vector2(coor[COOR_X], coor[COOR_Y]));
+    const currentArrayVector = currentArray.map(
+      coor => new Vector2(coor[COOR_X], coor[COOR_Y])
+    );
     return Math.abs(ShapeUtils.area(currentArrayVector));
   }
 
@@ -820,7 +843,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
           onFilterChanged: params => {
             const model = params.api.getFilterModel();
-            this.filterModelSet = model !== null && Object.keys(model).length > 0;
+            this.filterModelSet =
+              model !== null && Object.keys(model).length > 0;
             this.filtersHuman = ManagerFunctions.calculateHumanFilters(
               model,
               this.filterModelSet,
@@ -937,7 +961,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       delete newRow['updated'];
       delete newRow['created'];
 
-      if (newRow['unit_id'] && (newRow['unit_id'] === '' || newRow['unit_id'] === 'None')) {
+      if (
+        newRow['unit_id'] &&
+        (newRow['unit_id'] === '' || newRow['unit_id'] === 'None')
+      ) {
         delete newRow['unit_id'];
       }
 
@@ -988,7 +1015,10 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     this.gridOptions.api.selectAll();
     const nodes = this.gridOptions.api.getSelectedNodes();
     nodes.forEach(node => {
-      if (!node.data.building_referenced || ManagerFunctions.isReferencedLayout(node.data)) {
+      if (
+        !node.data.building_referenced ||
+        ManagerFunctions.isReferencedLayout(node.data)
+      ) {
         node.setSelected(false);
       }
     });
@@ -1090,7 +1120,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         return false;
       }
 
-      const unit_found = this.unitsArray.find(unit => unit.unit_id === node.data.unit_id);
+      const unit_found = this.unitsArray.find(
+        unit => unit.unit_id === node.data.unit_id
+      );
       const building_found = this.buildingsArray.find(
         building => building.building_id === unit_found.building_id
       );
@@ -1106,14 +1138,19 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       }
 
       ManagerFunctions.openLink(
-        urlGeoreference + '/building/' + layout_id + (src ? `#source=${src}` : '')
+        urlGeoreference +
+          '/building/' +
+          layout_id +
+          (src ? `#source=${src}` : '')
       );
     } else if (nodes.length > 1) {
       const layouts_data = nodes.map(node => {
         const layout = node.data;
         const layout_id_found = layout.layout_id;
 
-        const model_structure_found = ManagerFunctions.isDigitalizedLayout(layout);
+        const model_structure_found = ManagerFunctions.isDigitalizedLayout(
+          layout
+        );
         let unit_found = null;
         let unit_id_found = null;
         let building_found = null;
@@ -1122,7 +1159,9 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
         if (layout.unit_id || layout.unit_id === '') {
           unit_id_found = layout.unit_id;
-          unit_found = this.unitsArray.find(unit => unit.unit_id === unit_id_found);
+          unit_found = this.unitsArray.find(
+            unit => unit.unit_id === unit_id_found
+          );
           if (unit_found) {
             building_id_found = unit_found.building_id;
             building_found = this.buildingsArray.find(
@@ -1131,7 +1170,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
 
             // Has to be a building with that id and has to be georeferenced
             building_referenced_found =
-              building_found && ManagerFunctions.isReferencedBuilding(building_found);
+              building_found &&
+              ManagerFunctions.isReferencedBuilding(building_found);
           } else {
             building_referenced_found = false;
           }
@@ -1171,7 +1211,8 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
       );
       const withNoAdress = layouts_data.reduce(
         (accumulator, layout_data) =>
-          layout_data.building_referenced_osm || layout_data.building_referenced_st
+          layout_data.building_referenced_osm ||
+          layout_data.building_referenced_st
             ? accumulator
             : accumulator + 1,
         0
@@ -1207,27 +1248,38 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         confirmed => {
           if (confirmed) {
             ManagerFunctions.openLink(
-              urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
+              urlGeoreference +
+                '/multiple#list=' +
+                list +
+                '' +
+                (src ? `&source=${src}` : '')
             );
           }
         }
       );
     } else {
       ManagerFunctions.openLink(
-        urlGeoreference + '/multiple#list=' + list + '' + (src ? `&source=${src}` : '')
+        urlGeoreference +
+          '/multiple#list=' +
+          list +
+          '' +
+          (src ? `&source=${src}` : '')
       );
     }
   }
 
+  /** Clean all the selected rows from the Ag-grid table */
   clearSelection() {
     ManagerFunctions.clearSelection(this.gridOptions.api);
   }
 
+  /** Clean all the filters from the Ag-grid table */
   clearFilters() {
     this.filterModelSet = false;
     this.gridApi.setFilterModel(null);
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
@@ -1243,7 +1295,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
     const layouts = nodes.map(node => node.data);
     layouts.forEach(layout => {
       console.log('get layout simulation status for ', layout.layout_id);
-      ManagerFunctions.requestLayoutSimulationsStatus(this.http, layout, this.gridOptions.api);
+      ManagerFunctions.requestLayoutSimulationsStatus(
+        this.http,
+        layout,
+        this.gridOptions.api
+      );
     });
   }
 
@@ -1269,10 +1325,16 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
   /**
    * Import / Export functions
    */
+
+  /** Show import instructions to import an excel file */
   showInfoExcel() {
     this.infoDialog.open(showInfoExcel);
   }
 
+  /**
+   * Imports an Excel with layouts
+   * @param files
+   */
   importExcel(files) {
     if (files.length === 1) {
       convertFileToWorkbook(files[0], result => {
@@ -1296,7 +1358,11 @@ export class LayoutOverviewComponent implements OnInit, OnDestroy {
         let updatedRows = 0;
 
         allRows.forEach(oneRow => {
-          if (oneRow.layout_id && oneRow.layout_id !== null && oneRow.layout_id !== '') {
+          if (
+            oneRow.layout_id &&
+            oneRow.layout_id !== null &&
+            oneRow.layout_id !== ''
+          ) {
             const layout_id = oneRow.layout_id;
             delete oneRow.layout_id;
             updatedRows += 1;

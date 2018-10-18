@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+/**
+ *  Margin when centering the screen, in pixels
+ */
 export const paddingToBuildings = [25, 25, 25, 25];
 
 import OlMap from 'ol/Map';
@@ -13,6 +16,9 @@ import OlFeature from 'ol/Feature';
 import OlPolygon from 'ol/geom/Polygon';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 
+/**
+ * We need the scale to be in meters
+ */
 const scaleLineControl = new ScaleLine();
 scaleLineControl.setUnits('metric');
 
@@ -43,52 +49,24 @@ import {
 } from '../../_shared-libraries/PortfolioLinks';
 import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
 import { EditorConstants } from '../../_shared-libraries/EditorConstants';
-import { COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
+import { colors, COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
+import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
 
-export const colors = [
-  '#2c7bb6',
-  '#00a6ca',
-  '#00ccbc',
-  '#90eb9d',
-  '#ffff8c',
-  '#f9d057',
-  '#f29e2e',
-  '#e76818',
-  '#d7191c',
-];
-
-const styleNormal = new OlStyle({
-  fill: new OlStyleFill({
-    color: 'rgba(255, 0, 0, 0.7)',
-  }),
-  stroke: new OlStyleStroke({
-    color: 'rgba(255, 0, 0, 1)',
-    width: 2,
-  }),
-});
-
-const styleOver = new OlStyle({
-  fill: new OlStyleFill({
-    color: 'rgba(255, 0, 0, 0.5)',
-  }),
-  stroke: new OlStyleStroke({
-    color: 'rgba(255, 0, 0, 0.5)',
-    width: 3,
-    lineCap: 'round',
-  }),
-});
-
+/**
+ * Displays a real view simulation from a Layout
+ */
 @Component({
   selector: 'app-view-sim-overview',
   templateUrl: './view-sim-overview.component.html',
   styleUrls: ['./view-sim-overview.component.scss'],
 })
-export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDestroy {
-  /**
-   * Loading and general error
-   */
+export class ViewSimOverviewComponent extends KmlExport
+  implements OnInit, OnDestroy {
 
+  /** String container of any error */
   generalError = null;
+
+  /** True to start and false once all the data is loaded */
   loading = true;
 
   /**
@@ -145,6 +123,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
   numberOfFloors = 0;
   floors = [];
 
+  /** user profile */
   currentProfile;
 
   /**
@@ -199,12 +178,16 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
             this.startWithLayout();
           } else {
             this.loading = false;
-            this.generalError = `Layout ${getLayoutLink(this.layoutId)} not found.`;
+            this.generalError = `Layout ${getLayoutLink(
+              this.layoutId
+            )} not found.`;
           }
         },
         error => {
           this.loading = false;
-          this.generalError = `Layout ${getLayoutLink(this.layoutId)} not found.`;
+          this.generalError = `Layout ${getLayoutLink(
+            this.layoutId
+          )} not found.`;
           console.error(error);
         }
       );
@@ -237,13 +220,19 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
           this.loading = false;
           this.generalError = `Unit ${getUnitLink(
             this.unitId
-          )} not found for layout ${getLayoutLink(this.layoutId, this.layout)}.`;
+          )} not found for layout ${getLayoutLink(
+            this.layoutId,
+            this.layout
+          )}.`;
           console.error(error);
         }
       );
     } else {
       this.loading = false;
-      this.generalError = `Layout ${getLayoutLink(this.layoutId, this.layout)} has not unit id.`;
+      this.generalError = `Layout ${getLayoutLink(
+        this.layoutId,
+        this.layout
+      )} has not unit id.`;
     }
   }
 
@@ -275,14 +264,20 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
       );
     } else {
       this.loading = false;
-      this.generalError = `Unit ${getUnitLink(this.unitId, this.unit)} has not building id.`;
+      this.generalError = `Unit ${getUnitLink(
+        this.unitId,
+        this.unit
+      )} has not building id.`;
     }
   }
 
   startWithBuilding() {
     let buildingRefId = null;
 
-    if (this.building['building_references'] && this.building['building_references'].length) {
+    if (
+      this.building['building_references'] &&
+      this.building['building_references'].length
+    ) {
       const br = this.building['building_references'][0];
       if (br && br.id) {
         buildingRefId = br.id;
@@ -298,7 +293,9 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
       )} was not referenced`;
     }
 
-    const layoutName = this.layout['name'] ? this.layout['name'] : this.layoutId;
+    const layoutName = this.layout['name']
+      ? this.layout['name']
+      : this.layoutId;
     this.address = `<span class="label-dpoi">Layout "${layoutName}"</span>`;
     this.setUpMap();
   }
@@ -314,8 +311,12 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     let map_source_str = '';
 
     if (this.building['building_references']) {
-      const st = this.building['building_references'].find(br => br.source === 'swiss_topo');
-      const osm = this.building['building_references'].find(br => br.source === 'open_street_maps');
+      const st = this.building['building_references'].find(
+        br => br.source === 'swiss_topo'
+      );
+      const osm = this.building['building_references'].find(
+        br => br.source === 'open_street_maps'
+      );
 
       if (st && st.id) {
         map_source = 'swiss_topo';
@@ -331,11 +332,15 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     if (referenced !== null) {
       let epsg;
       if (this.building.footprints) {
-        const footprint = this.building.footprints.find(fp => fp.source === map_source);
+        const footprint = this.building.footprints.find(
+          fp => fp.source === map_source
+        );
         if (footprint) {
           epsg = footprint.epsg;
 
-          this.feature = new OlFeature({ geometry: new OlPolygon(footprint.coordinates[0]) });
+          this.feature = new OlFeature({
+            geometry: new OlPolygon(footprint.coordinates[0]),
+          });
           // To recover the value
           this.feature.setId(this.building.building_id);
         }
@@ -452,7 +457,12 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
           zoom: false,
         }).extend([scaleLineControl]),
         target: 'map',
-        layers: [this.layer, this.globalLayer, this.detailLayer, this.layoutLayer],
+        layers: [
+          this.layer,
+          this.globalLayer,
+          this.detailLayer,
+          this.layoutLayer,
+        ],
         view: this.view,
       });
 
@@ -486,13 +496,18 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
             // It's an hexagon
 
             const postion = featureId.indexOf('||');
-            const layoutId = featureId.substr(postion + 2, featureId.length - postion);
+            const layoutId = featureId.substr(
+              postion + 2,
+              featureId.length - postion
+            );
             const coords = featureId.substr(0, postion).split('#');
 
             const xx = Math.abs(coords[0]);
             const yy = Math.abs(coords[1]);
 
-            const thisHeightSims = this.sim_result.filter(sim => sim.height === this.height);
+            const thisHeightSims = this.sim_result.filter(
+              sim => sim.height === this.height
+            );
 
             let totalValue = 0;
             const simValues = thisHeightSims.map(sim => {
@@ -700,7 +715,12 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
       structure.type === EditorConstants.ENVELOPE ||
       structure.type === EditorConstants.RAILING
     ) {
-      this.drawPolygons(movement, EditorConstants.WALL, structure.footprint.coordinates, black);
+      this.drawPolygons(
+        movement,
+        EditorConstants.WALL,
+        structure.footprint.coordinates,
+        black
+      );
 
       /** AreaType */
     } else if (
@@ -725,7 +745,13 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
       /** OpeningType */
     } else if (structure.type === EditorConstants.DOOR) {
       if (structure.footprint && structure.footprint.coordinates) {
-        this.drawGeometries(movement, structure.type, structure.footprint.coordinates, white, 1.5);
+        this.drawGeometries(
+          movement,
+          structure.type,
+          structure.footprint.coordinates,
+          white,
+          1.5
+        );
       }
       console.log('opening_area ', structure);
       if (structure.opening_area) {
@@ -767,15 +793,32 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
             points.push(newPoint);
           }
 
-          this.drawGeometries(movement, structure.type, [points], darkGrey, 1.5);
+          this.drawGeometries(
+            movement,
+            structure.type,
+            [points],
+            darkGrey,
+            1.5
+          );
         }
       }
     } else if (
       structure.type === EditorConstants.WINDOW_ENVELOPE ||
       structure.type === EditorConstants.WINDOW_INTERIOR
     ) {
-      this.drawGeometries(movement, structure.type, structure.footprint.coordinates, 0x333333, 1);
-      this.drawPolygons(movement, structure.type, structure.footprint.coordinates, white);
+      this.drawGeometries(
+        movement,
+        structure.type,
+        structure.footprint.coordinates,
+        0x333333,
+        1
+      );
+      this.drawPolygons(
+        movement,
+        structure.type,
+        structure.footprint.coordinates,
+        white
+      );
 
       /** Undefined */
     } else if (structure.type === EditorConstants.to_be_filled) {
@@ -791,7 +834,9 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
   }
 
   distance(coor1X, coor1Y, coor2X, coor2Y) {
-    return Math.sqrt(Math.pow(coor2X - coor1X, 2) + Math.pow(coor2Y - coor1Y, 2));
+    return Math.sqrt(
+      Math.pow(coor2X - coor1X, 2) + Math.pow(coor2Y - coor1Y, 2)
+    );
   }
 
   removeOldLayout() {
@@ -846,7 +891,11 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
 
   changeMap(data) {
     const newValue = `mapStyle=${data.target.value}`;
-    this.router.navigate([], { fragment: newValue, relativeTo: this.route, replaceUrl: true });
+    this.router.navigate([], {
+      fragment: newValue,
+      relativeTo: this.route,
+      replaceUrl: true,
+    });
   }
 
   /**
@@ -884,6 +933,7 @@ export class ViewSimOverviewComponent extends KmlExport implements OnInit, OnDes
     }
   }
 
+  /** Unsubscribe before destroying */
   ngOnDestroy(): void {
     if (this.fragment_sub) {
       this.fragment_sub.unsubscribe();
