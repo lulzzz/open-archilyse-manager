@@ -28,10 +28,15 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() svgGeometries;
   @Input() bounds;
 
+  /** canvas container */
   svg;
+
+  /** scaling factor */
   scale;
 
+  /** component container width */
   width;
+  /** component container height */
   height;
 
   startPosition;
@@ -57,6 +62,9 @@ export class FloorplanComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * After the component was rendered
+   */
   ngAfterViewInit() {
     //
     setTimeout(this.initialize.bind(this), 100);

@@ -18,8 +18,10 @@ export class EditorSidebarComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Sidebar title */
   title;
+
   /** Sidebar subtitle or description */
   description;
+
   /** Sidebar content */
   content;
 
