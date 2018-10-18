@@ -51,6 +51,7 @@ import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { registerAllProjections } from '../../_shared-libraries/MapProjections';
 import { colors } from '../../_shared-libraries/SimData';
 import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
+import { environment } from '../../../environments/environment';
 registerAllProjections();
 
 @Component({
@@ -176,7 +177,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=***REMOVED***',
+        'access_token=' +
+        environment.mapboxToken,
     });
 
     this.layer.setSource(this.source);
@@ -303,7 +305,8 @@ export class MapOverviewComponent implements OnInit, OnDestroy {
                     'https://api.tiles.mapbox.com/v4/mapbox.' +
                     this.mapStyle +
                     '/{z}/{x}/{y}.png?' +
-                    'access_token=***REMOVED***',
+                    'access_token=' +
+                    environment.mapboxToken,
                 });
 
                 this.detailSource = new Vector({

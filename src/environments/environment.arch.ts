@@ -27,4 +27,7 @@ export const environment = {
     storageBucket: 'archilyse-usermanagement.appspot.com',
     messagingSenderId: '***REMOVED***',
   },
+
+  mapboxToken:
+    '***REMOVED***',
 };

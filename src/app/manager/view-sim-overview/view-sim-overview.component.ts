@@ -51,6 +51,7 @@ import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
 import { EditorConstants } from '../../_shared-libraries/EditorConstants';
 import { colors, COOR_X, COOR_Y } from '../../_shared-libraries/SimData';
 import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
+import { environment } from '../../../environments/environment';
 
 /**
  * Displays a real view simulation from a Layout
@@ -62,7 +63,6 @@ import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
 })
 export class ViewSimOverviewComponent extends KmlExport
   implements OnInit, OnDestroy {
-
   /** String container of any error */
   generalError = null;
 
@@ -156,7 +156,8 @@ export class ViewSimOverviewComponent extends KmlExport
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=***REMOVED***',
+        'access_token=' +
+        environment.mapboxToken,
     });
 
     this.layer.setSource(this.source);
@@ -414,7 +415,8 @@ export class ViewSimOverviewComponent extends KmlExport
           'https://api.tiles.mapbox.com/v4/mapbox.' +
           this.mapStyle +
           '/{z}/{x}/{y}.png?' +
-          'access_token=***REMOVED***',
+          'access_token=' +
+          environment.mapboxToken,
       });
 
       this.detailSource = new Vector({

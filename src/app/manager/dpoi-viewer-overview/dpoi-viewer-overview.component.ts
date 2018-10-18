@@ -20,6 +20,7 @@ import OlXYZ from 'ol/source/XYZ';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { NavigationService } from '../../_services';
 import { paddingToBuildings } from '../map-overview/map-overview.component';
+import { environment } from '../../../environments/environment';
 
 /**
  * We need the scale to be in meters
@@ -196,7 +197,8 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
           'https://api.tiles.mapbox.com/v4/mapbox.' +
           this.mapStyle +
           '/{z}/{x}/{y}.png?' +
-          'access_token=***REMOVED***',
+          'access_token=' +
+          environment.mapboxToken,
       });
 
       this.detailSource = new Vector({
@@ -278,7 +280,8 @@ export class DpoiViewerOverviewComponent implements OnInit, OnDestroy {
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=***REMOVED***',
+        'access_token=' +
+        environment.mapboxToken,
     });
 
     this.layer.setSource(this.source);

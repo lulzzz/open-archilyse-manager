@@ -42,6 +42,7 @@ import {
 import { KmlExport } from '../../_shared-components/KMLexport/kmlExport';
 import { colors } from '../../_shared-libraries/SimData';
 import { styleNormal, styleOver } from '../../_shared-libraries/OlMapStyles';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-potential-view-overview',
@@ -136,7 +137,8 @@ export class PotentialViewOverviewComponent extends KmlExport
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=***REMOVED***',
+        'access_token=' +
+        environment.mapboxToken,
     });
 
     this.layer.setSource(this.source);
@@ -257,7 +259,8 @@ export class PotentialViewOverviewComponent extends KmlExport
                         'https://api.tiles.mapbox.com/v4/mapbox.' +
                         this.mapStyle +
                         '/{z}/{x}/{y}.png?' +
-                        'access_token=***REMOVED***',
+                        'access_token=' +
+                        environment.mapboxToken,
                     });
 
                     this.detailSource = new Vector({

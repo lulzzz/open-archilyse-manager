@@ -45,6 +45,7 @@ import { getBuildingLink } from '../../_shared-libraries/PortfolioLinks';
 import { defaults as defaultControls, ScaleLine } from 'ol/control';
 import { ApiFunctions } from '../../_shared-libraries/ApiFunctions';
 import { registerAllProjections } from '../../_shared-libraries/MapProjections';
+import { environment } from '../../../environments/environment';
 
 /**
  * We need the scale to be in meters
@@ -156,7 +157,8 @@ export class MapComponent implements OnInit, OnDestroy {
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=***REMOVED***',
+        'access_token=' +
+        environment.mapboxToken,
     });
   }
 
@@ -497,7 +499,8 @@ export class MapComponent implements OnInit, OnDestroy {
         'https://api.tiles.mapbox.com/v4/mapbox.' +
         this.mapStyle +
         '/{z}/{x}/{y}.png?' +
-        'access_token=***REMOVED***',
+        'access_token=' +
+        environment.mapboxToken,
     });
 
     this.layer.setSource(this.source);
