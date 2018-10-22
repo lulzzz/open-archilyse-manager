@@ -16,18 +16,20 @@ export const environment = {
   urlSimulationViewer: 'https://simulation-viewer.archilyse.com',
   urlEditorFloorplan: 'https://floorplan.archilyse.com',
 
+  /**
+   * CHANGE THE VALUES BELOW
+   */
   defaultUser: '',
   defaultPass: '',
 
   firebase: {
-    apiKey: '***SECRET***',
-    authDomain: 'archilyse-usermanagement.firebaseapp.com',
-    databaseURL: 'https://archilyse-usermanagement.firebaseio.com',
-    projectId: 'archilyse-usermanagement',
-    storageBucket: 'archilyse-usermanagement.appspot.com',
-    messagingSenderId: '***SECRET***',
+    apiKey: 'YOUR_API_KEY',
+    authDomain: 'YOUR_AUTH_DOMAIN',
+    databaseURL: 'YOUR_DATABASE_URL',
+    projectId: 'YOUR_PROJECT_ID',
+    storageBucket: 'YOUR_STORAGE_BUCKET',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
   },
 
-  mapboxToken:
-    '***SECRET***',
+  mapboxToken: 'YOUR_MAPBOX_TOKEN',
 };

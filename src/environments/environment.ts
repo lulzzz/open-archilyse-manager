@@ -14,7 +14,6 @@ export const environment = {
   production: false,
 
   apiUrl: 'https://api.archilyse.com/v0.1/',
-  // apiUrl: 'https://test-api.archilyse.com/v0.1/',
   apiPath: 'http://graphhopper.fission.prod.archilyse.com/route',
 
   /** Development */
@@ -23,21 +22,23 @@ export const environment = {
   urlGeoreference: 'http://localhost:4200/georeference',
   urlPortfolio: 'http://localhost:4200/manager',
   urlEditorFloorplan: 'http://localhost:4200/editor',
-
   urlSimulationViewer: 'http://localhost:4203/simulations',
 
-  defaultUser: '***SECRET***',
-  defaultPass: '***SECRET***',
+  /**
+   * CHANGE THE VALUES BELOW
+   */
+  defaultUser: 'USER@EXAMPLE.COM',
+  defaultPass: 'PASSWORD',
 
   firebase: {
-    apiKey: '***SECRET***',
-    authDomain: 'archilyse-usermanagement.firebaseapp.com',
-    databaseURL: 'https://archilyse-usermanagement.firebaseio.com',
-    projectId: 'archilyse-usermanagement',
-    storageBucket: 'archilyse-usermanagement.appspot.com',
-    messagingSenderId: '***SECRET***',
+    apiKey: 'YOUR_API_KEY',
+    authDomain: 'YOUR_AUTH_DOMAIN',
+    databaseURL: 'YOUR_DATABASE_URL',
+    projectId: 'YOUR_PROJECT_ID',
+    storageBucket: 'YOUR_STORAGE_BUCKET',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
   },
 
-  mapboxToken: '***SECRET***'
+  mapboxToken: 'YOUR_MAPBOX_TOKEN',
 
 };
